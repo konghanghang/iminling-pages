@@ -1,4 +1,4 @@
-baseurl: https://example.com/
+baseurl: https://www.iminling.com/
 languageCode: zh-cn
 theme: hugo-theme-stack
 title: 记录点滴 - 分享
@@ -6,6 +6,17 @@ copyright: Example Person
 
 # Set hasCJKLanguage to true since we're using Chinese
 hasCJKLanguage: true
+
+# Sitemap configuration
+sitemap:
+  changefreq: weekly
+  priority: 0.5
+  filename: sitemap.xml
+
+# Taxonomy pages sitemap priority
+taxonomies:
+  category: categories
+  tag: tags
 
 services:
     # Change it to your Disqus shortname before using
