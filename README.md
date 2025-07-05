@@ -32,11 +32,21 @@
    cd iminling-pages
    ```
 
-2. **安装依赖**
+2. **安装主题（重要！）**
+   
+   **方式一：使用 Git Submodules（推荐）**
    ```bash
-   # 初始化子模块（如果使用）
+   # 初始化并更新子模块
    git submodule update --init --recursive
    ```
+   
+   **方式二：手动克隆主题**
+   ```bash
+   # 如果子模块方式失败，可以手动克隆主题
+   git clone https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
+   ```
+
+   > ⚠️ **重要提醒**：本项目使用 Hugo Stack 主题，首次运行前必须确保 `themes/hugo-theme-stack` 目录存在且包含主题文件，否则会出现 "Page Not Found" 错误。
 
 3. **本地运行**
    ```bash
@@ -45,6 +55,28 @@
 
 4. **访问网站**
    打开浏览器访问 `http://localhost:1313`
+
+### 主题管理
+
+本项目使用 Git Submodules 来管理主题，这样可以：
+
+- 🔄 **版本控制**：主题版本与项目版本分离管理
+- 📦 **依赖管理**：自动处理主题依赖关系
+- 🚀 **快速部署**：一键更新主题到最新版本
+
+#### 更新主题
+```bash
+# 更新主题到最新版本
+git submodule update --remote themes/hugo-theme-stack
+```
+
+#### 切换主题版本
+```bash
+# 切换到特定版本
+cd themes/hugo-theme-stack
+git checkout v4.0.0
+cd ../..
+```
 
 ## 📚 文章引用功能
 
