@@ -1,0 +1,22 @@
+{{- $ref := .Get 0 -}}
+{{- $page := .Site.GetPage $ref -}}
+{{- if $page -}}
+<div class="post-reference-card">
+    <a href="{{ $page.RelPermalink }}" class="post-ref-link">
+        <div class="post-ref-content">
+            <h3 class="post-ref-title">{{ $page.Title }}</h3>
+            <p class="post-ref-summary">{{ $page.Summary | truncate 150 }}</p>
+            <div class="post-ref-meta">
+                <span class="post-ref-date">{{ $page.Date.Format "2006-01-02" }}</span>
+                {{- if $page.Params.categories -}}
+                <span class="post-ref-category">{{ delimit $page.Params.categories ", " }}</span>
+                {{- end -}}
+            </div>
+        </div>
+    </a>
+</div>
+{{- else -}}
+<div class="post-reference-error">
+    <p>无法找到文章: {{ $ref }}</p>
+</div>
+{{- end -}} 

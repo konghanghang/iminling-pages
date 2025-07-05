@@ -1,0 +1,68 @@
+/* 文章引用卡片样式 */
+.post-reference-card {
+    background: var(--card-background);
+    border: 1px solid var(--card-border-color);
+    border-radius: 8px;
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.post-ref-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.post-ref-content {
+    padding: 1rem;
+}
+
+.post-ref-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--accent-color);
+    line-height: 1.4;
+}
+
+.post-ref-summary {
+    font-size: 0.9rem;
+    color: var(--body-text-color);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.5;
+}
+
+.post-ref-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--body-text-color);
+    opacity: 0.7;
+}
+
+.post-ref-date::before {
+    content: "📅 ";
+}
+
+.post-ref-category::before {
+    content: "📁 ";
+}
+
+.post-reference-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+} 

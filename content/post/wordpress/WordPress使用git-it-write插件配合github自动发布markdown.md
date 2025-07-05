@@ -5,7 +5,7 @@ type: post
 date: 2025-04-06T09:20:36+00:00
 excerpt: 以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了WP-Githuber-MD这个插件，再探索的过程中无意又发现了git-it-write这个可以自动化的插件，于是就开始了折腾之旅行。
 url: /2025/wordpress-use-git-it-write-and-github-publish-markdown-file
-description: WordPress使用git-it-write插件配合github自动发布markdown<figure class="wp-block-image size-full"</figure以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。
+description: 详细介绍WordPress使用git-it-write插件配合GitHub自动发布markdown文章的完整流程，包括插件安装配置、仓库设置、Webhook配置等实用技巧。
 sha:
   - c83493c52aa405d3e38f1bc7f32699e8409133d4
 github_url:
@@ -18,7 +18,7 @@ tags:
   - markdown
   - wordpress
 ---
-# WordPress使用git-it-write插件配合github自动发布markdown<figure class="wp-block-image size-full">
+# WordPress使用git-it-write插件配合github自动发布markdown
 
 ![What Is Markdown, and How Do You Use It?](https://images.iminling.com/app/hide.php?key=SlBudmJhK1kyNkJ5NGtnVm53c1kwOUpBdFNJd1I2dHR5NXk5VjM1QkNsN1VtWm9DVWNJdi9jdEEyL0o0eTZDTXJPNUhlT3c9)
 </figure>
@@ -132,7 +132,7 @@ github中添加webhook如下，需要填写url，content type以及secret，这�
 在markdown文件中，每个文件的顶部可以使用yaml来设置一些属性信息，这些属性信息就可以来设置我们发布文章的一些属性信息。设置的格式如下：
 
     ---
-
+    
     title: "Wordpress使用git-it-write插件配合github自动发布markdown"
     date: 2025-04-06
     post_excerpt: 以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了WP-Githuber-MD这个插件，再探索的过程中无意又发现了git-it-write这个可以自动化的插件，于是就开始了折腾之旅行。
@@ -147,7 +147,7 @@ github中添加webhook如下，需要填写url，content type以及secret，这�
         - git-it-write
         - markdown
     slug: "wordpress-use-git-it-write-and-github-publish-markdown-file"
-
+    
     ---
 
 是以`---`开始，然后设置一些特殊的属性。我这里介绍一下我上边使用到的一些信息。
