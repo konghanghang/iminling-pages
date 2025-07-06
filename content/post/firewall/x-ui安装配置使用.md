@@ -5,11 +5,9 @@ type: post
 date: 2023-03-26T01:39:01+00:00
 url: /2023/x-ui-configuration-and-use
 description: 今天我们主要来介绍一下x-ui的安装使用。 x-ui在原地址是：[x-ui](https://github.com/vaxilu/x-ui) 但是由于原仓库太久没更新，我们今天使用的是改版的FranzKafkaYu/x-ui,支持单个端口多用户，还能分别统计流量，比原版较完善。
-featured_image: /wp-content/uploads/2023/03/1680014847697-480x300.jpg
+image: https://images.iminling.com/app/hide.php?key=dmRweU41MERsbjlVeVBxMUJOMzZSN0VyRE15VzhId1FsY3JiWHBtL1FKWXEyUzczTXMzemFCc2twSDMvOWU0dEFyNGpqOFU9
 categories:
-  - VPS
-  - x-ui
-  - Xray
+  - xray
 tags:
   - x-ui
   - xray
@@ -84,13 +82,7 @@ x-ui v0.3.4.1 安装完成，面板已启动
 
 第一次需要使用ip+端口的形式进行登录，登录x-ui后我们进入`面板设置`-`面板url根路径配置`，默认是`/`,我们将它改为我们想要使用的路径，我这里改为`/ui`.
 
-<div id="attachment_389" style="width: 900px" class="wp-caption alignnone">
-  ![xui配置](https://www.iminling.com/wp-content/uploads/2023/03/61B14FAC174D72C1E8A8E657FB1C7727.png)
-
-  <p id="caption-attachment-389" class="wp-caption-text">
-    xui配置
-  </p>
-</div>
+![xui配置](https://images.iminling.com/app/hide.php?key=M0ZsZ1d2SjlQNkhZMGJTN0luR3cycXlYTEVraDVhSjN2STUramYvUDhXUG9GTlN5ZllxMjlENFBueFJMVm1SNjFiOVp6UjQ9)
 
 ### nginx配置 {.ant-list-item-meta-title}
 
@@ -121,13 +113,7 @@ server {
 
 现在最常用的节点还是vless节点，下边就添加一个vless节点来使用：
 
-<div id="attachment_390" style="width: 910px" class="wp-caption alignnone">
-  ![vless](https://www.iminling.com/wp-content/uploads/2023/03/2D50578117F812968AE4D838CC57F379.png)
-
-  <p id="caption-attachment-390" class="wp-caption-text">
-    vless
-  </p>
-</div>
+![vless](https://images.iminling.com/app/hide.php?key=RHVjMFo5ZUNNUWE5S0ZYRjMyODJkZDU1QlQzQ0wrbzhkaXVwa3FNSHFkYkRXaUh0RDMzeEdSNzdXTERvYk1vaEdqZ1hObnM9)
 
 用户就使用xui自己生成的用户信息就可以了。
 
@@ -141,12 +127,6 @@ serverNames可以使用xui自己生成的，也可以使用我们自己找的。
 
 这里演示一下openwrt中的配置：
 
-<div id="attachment_391" style="width: 910px" class="wp-caption alignnone">
-  ![openwrt-vless](https://www.iminling.com/wp-content/uploads/2023/03/CBE7615DE20625625BA4CFE3F9C740E8.png)
-
-  <p id="caption-attachment-391" class="wp-caption-text">
-    openwrt-vless
-  </p>
-</div>
+![openwrt-vless](https://images.iminling.com/app/hide.php?key=RjdVZk1laDdiQThEOUZPVi9xR0R4Zk5MVXp5dENaNzFxM3U5Zmdpb3oyQmdSMWl6bnVYa3hmZXZkYlc3b2NNZFR5UzVTMUk9)
 
 基本就是对着xui里的进行抄就行了，地址就是自己的vps地址，端口在xui的截图里没有截取到，按自己添加的端口进行填写就行了。然后就可以愉快的上网了。

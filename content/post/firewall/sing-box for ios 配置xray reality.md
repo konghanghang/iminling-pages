@@ -5,8 +5,9 @@ type: post
 date: 2023-05-18T16:52:19+00:00
 url: /2023/sing-box-for-ios-configuration-xray-reality
 description: 在ios端虽然有很多可以用来代理的软件，但是大多知名的软件都没法完整的支持reality, 小火箭(shadowrocket)是支持最好的一个软件了，支持到了xray1.7.5的版本，可以来配置rprx-vision,截止写这篇文章的时候还没有支持reality。
+image: https://images.iminling.com/app/hide.php?key=MWZYT1hrOWxrOW0xcmZhcEF6WUNnUGo2ZWJEb0E0dFlvZnJtYU9ydnZZRERsRkZGcElubXpMaVUwZ0ZWVDVqdldVL1J4KzQ9
 categories:
-  - Xray
+  - xray
 tags:
   - sing-box
 ---
@@ -18,11 +19,11 @@ tags:
 
 `TestFlight`安装后的界面：
 
-![](https://www.iminling.com/wp-content/uploads/2023/05/f36e4a186dae8f90df69ea4e8bbd5f09.png)
+![](https://images.iminling.com/app/hide.php?key=UkZtVXMvTUxMSzZCNURpVHdqUlozWDJFbjFuUUhFa0w5dllmMHBVTnNwVlFJeHpiUDdBVDRnWDQzb2RyQXVwWUdvMUYrQTQ9)
 
 软件：
 
-![](https://www.iminling.com/wp-content/uploads/2023/05/4ad7296421302af39c7c58760dec8e38.png)
+![](https://images.iminling.com/app/hide.php?key=NFRJU0prRWxiVXQ0eTgxNmFrS3dlZ2lDWXFWZkFEb3pPci9jWXo1ZnNaQ2ZWbjUwNUJva0lrZjFXZzJiNmo4U01IZUNJanc9)
 
 ## 使用
 
@@ -30,7 +31,7 @@ tags:
 
 下面我们先看一下软件打开后的界面：
 
-![](https://www.iminling.com/wp-content/uploads/2023/05/c4b75d88165230940c610ce63b1b2d3d.png)
+![](https://images.iminling.com/app/hide.php?key=Q0ExYW9jN0hlN1FhZU1WQnFobCt3aHQ4YTFVS2RsRUxEUnBQR3o2S1dQQTlTSHJqYVdaa3hpQjQ3U1hHNkNvSEI4c25OV289)
 
 初次打开的时候，Dashboard界面会有所不同，会提示安装一个配置文件，根据提示安装就可以了。
 
@@ -42,7 +43,7 @@ Name随便起一个名字就可以了，Type可以选择local(本地),icloud以�
 
 我们可以先在本地创建一个新的配置文件。
 
-![](https://www.iminling.com/wp-content/uploads/2023/05/75290eea80dda04c448c183e931905e8.png)
+![](https://images.iminling.com/app/hide.php?key=bUl6UGdiL01WRmxOZ1FEcFh6SWlDTW9pdTMvb3ZQd0I3MGNvMGhYVEtLRGFXWDYvU0themswMEVtNzNWU3ptRWxQN3RIajQ9)
 
 具体的配置文件如下：
 
@@ -160,7 +161,7 @@ Name随便起一个名字就可以了，Type可以选择local(本地),icloud以�
 
 通过上边的准备，现在已经可以开始使用了，在DashBoard界面，启动就可以了。也可以在Logs查看当前的连接情况，以及分流情况。
 
-![](https://www.iminling.com/wp-content/uploads/2023/05/2724d888db02002a22733fef23fa39d0.png)
+![](https://images.iminling.com/app/hide.php?key=V0lZV1htWGtXZGtldnE4eW03b0pSVi9LNExEUVh5WlozM2tLUzlOMEFOekhab0JEb1gwb1UxZC9iYkJjd1R5K1lMbzlPb1E9)
 
 ## 总结
 

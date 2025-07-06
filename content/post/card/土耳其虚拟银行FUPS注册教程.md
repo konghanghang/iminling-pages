@@ -5,9 +5,9 @@ type: post
 date: 2024-01-29T15:10:25+00:00
 url: /2024/turkey-fups-register
 description: 以前注册过Oldubil，后来Oldubil限制交易后，一直没有去研究新的代替方案，最近在论坛看到有人成功使用FUPS来购买的Telegram的会员，想着自己的termius会员也快要过期了，所以就研究一下如何注册FUPS来代替Oldubil，下面分享一下注册流程。
-featured_image: /wp-content/uploads/2024/01/fups-card.jpg
+image: https://images.iminling.com/app/hide.php?key=MVR5VDd0N0p4aGdsc2s1azE5bng2aHZMb2RndnVrM211TVgxTFNSck1ualZzVnQxVWZ5Q3lvSU1DQkJVYTZTVE40Nm11c2M9
 categories:
-  - 国外信用卡
+  - card
 tags:
   - FUPS
   - 信用卡
@@ -28,7 +28,7 @@ tags:
 
 对于经常撸土耳其相关服务的人来说，肯定都知道可以找接码平台，但是并不是随便哪个接码平台就可以接FUPS的码，比如我经常使用的[sms-activate](https://sms-activate.org/?ref=2355147)就没有可以接FUPS的服务，不过功夫不负有心人，在另一个接码平台[sms-man](https://sms-man.com/?ref=jjJA_8w7Yirb)还是找到了:
 
-![sms-man-fups](https://www.iminling.com/wp-content/uploads/2024/01/12AD447C18FC0955BFBA1DA790C04C76.png)
+![sms-man-fups](https://images.iminling.com/app/hide.php?key=akg5bkh2Mk50Q0JlaXFqV2pWd3ROZEVKNkZOWmtmejVBZmo2SUp0ckYxdGgrTE5saHVhT0FsL053ZXdHdEE1ckVFQUxkM009)
 
 上边就是在[sms-man](https://sms-man.com/?ref=jjJA_8w7Yirb)平台通过先选择国家，然后再选择服务后锁定的FUPS的可用接码服务。成功解决了手机号问题。
 
@@ -46,11 +46,11 @@ tags:
 
 满足了两上边两个条件后，注册就变的很简单了，手机下载FUPS的应用程序，首次打开默认显示的是土耳其语，我想大部分人都是看不懂的，可以点又上角的_**三个点**_设置语言为英文，最起码可以读懂一些：
 
-![fups-setting](https://www.iminling.com/wp-content/uploads/2024/01/008C4FB016C6EF32443798BE9BE7DE71.jpg)
+![fups-setting](https://images.iminling.com/app/hide.php?key=bkRVSU1JeHU0TXZYZ2M3cnJGUzg1eUxOL0hoVlc4QTJkN0Fod1JJRTQ4MkxxTUd0YXF2aHpLTitOQnlkeW1PeTJlYmhUclE9)
 
 点击第一个按钮：register，进入注册页面：
 
-![fups-register](https://www.iminling.com/wp-content/uploads/2024/01/008C4FB016C6EF32443798BE9BE7DE70.jpg)
+![fups-register](https://images.iminling.com/app/hide.php?key=dFhldU9uY0lDd0NwQTllc09ZcVpPZ2UrZHp4TUUzeEtQVGdSQmJHQysveEtpZEFhUXRiaVpSVjdyem9sK3ZiSmJFTUVtY1E9)
 
 相关信息填写如下：
 
@@ -68,11 +68,11 @@ Birth: 购买的土耳其信息中的出生日期
 
 注册成功后我们就可以去获取虚拟卡了，我们默认注册的账户是标准账户，限制最大金额是2750里拉，更高的限额需要升级账户等级，升级可能就需要更多资料了，默认2750也是够用的。
 
-![fups-limit](https://www.iminling.com/wp-content/uploads/2024/01/008C4FB016C6EF32443798BE9BE7DE74.jpg)
+![fups-limit](https://images.iminling.com/app/hide.php?key=M1RSR0VoUEc3QmcvRWdkR3ZFZkVUbWNZSFJEVkpPaEM1OFZadFc2cTRMYTlLSDMzVjd1Q0FxbkpOVUVvU0pwWXpZckt0bXM9)
 
 登录后，点击下方的transactions菜单进行，然后选择New Card选项来进行开卡：
 
-![fups-transactions](https://www.iminling.com/wp-content/uploads/2024/01/008C4FB016C6EF32443798BE9BE7DE73.jpg)
+![fups-transactions](https://images.iminling.com/app/hide.php?key=cVRSZXo4eTRHMTZoY1lTNVNRNCtwUEl0MGdDSHBvbnRWMlRWTHhHeGNMdmltb1BaKzZCWU5Cc2t4aEdMUGFjVk1JZk5GUjQ9)
 
 点击了New Card后跳转到如下页面，选择virtual Card进行开卡:
 
@@ -86,4 +86,4 @@ Birth: 购买的土耳其信息中的出生日期
 
 上边介绍了如何注册FUPS，但是距离能购物还有一段距离，教程就先到这里，后续再更新如何入金到FUPS中来进行购物。
 
-入金教程已更新，详细：[使用火币给土耳其虚拟银行FUPS进行快速入金](https://www.iminling.com/2024/01/31/410.html "使用火币给土耳其虚拟银行FUPS进行快速入金")。
+入金教程已更新，详细：[使用火币给土耳其虚拟银行FUPS进行快速入金]({{< ref "/post/card/使用火币给土耳其虚拟银行FUPS进行快速入金.md" >}})。

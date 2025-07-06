@@ -5,8 +5,9 @@ type: post
 date: 2023-03-11T18:30:56+00:00
 url: /2023/xray-configutaion-reality
 description: 最近xray新版本1.8发布了，备受期待的reality也随之而来，下面介绍一下我折腾reality的过程。
+image: https://images.iminling.com/app/hide.php?key=TUVLUjRhOHdSS21VVjh4dDdmbElGUVhHZHRFRlR3c3h1R2F2Qi8wOEg0V3V6cGZReGx5NUs1Z3FQYjRhVXdCdm14WWVma2c9
 categories:
-  - Xray
+  - xray
 tags:
   - reality
   - tls
@@ -21,7 +22,7 @@ tags:
 
 下面开始配置reality服务器端，配置模板如下：
 
-```
+```json
 {
     "inbounds": [ // 服务端入站配置
         {
@@ -67,7 +68,7 @@ tags:
 
 `clients`的配置和以前的`vless`配置一样，`id`可以使用`xray`核心程序来生成：
 
-```
+```bash
 root@r-6c5317:~/xray# ./xray uuid
 94281a1a-33bc-445a-ace9-0fdd56a0c14a
 ```
@@ -84,7 +85,7 @@ root@r-6c5317:~/xray# ./xray uuid
   当我们选择了一个<code>dest</code> 域名后，可以使用xray核心来确定<code>serverNames</code>如何填，我们先来看看xray核心有那些命令可以使用：
 </p>
 
-```
+```bash
 root@r-6c5317:~/xray# ./xray -h
 Xray is a platform for building proxies.
 
@@ -108,7 +109,7 @@ Use "xray help <command>" for more information about a command.
 
 有一个tls tools，可以使用它来确定`serverNames`，执行 xray tls ping 目标网站网址，填 "Allowed domains" 的值。我这里使用微软的域名，所以情况如下：
 
-```
+```bash
 root@r-6c5317:~/xray# ./xray tls ping www.microsoft.com
 Tls ping:  www.microsoft.com
 Using IP:  23.3.85.234
@@ -125,15 +126,14 @@ Tls ping finished
 
 可以把上面的域名填写到`serverNames`中，客户端在使用的时候找一个域名来填写。
 
-<h2 dir="auto">
-  privateKey
-</h2>
+## privateKey
+
 
 <p dir="auto">
   下边说一下<code>privateKey</code>参数，也是要使用xray核心程序来生成的，在上面我们查看xray -h的时候有一个x25519的命令，生成如下：
 </p>
 
-```
+```bash
 root@r-6c5317:~/xray# ./xray x25519
 Private key: YIHyZpW1NJLck_XTCG8IYMMqq1JG7w2Vm95HMAbB51g
 Public key: Xh_hBw4E5SBFjreeAQQjnUMlvLvFPeELy2Xdvur6XwU
@@ -141,15 +141,14 @@ Public key: Xh_hBw4E5SBFjreeAQQjnUMlvLvFPeELy2Xdvur6XwU
 
 服务器端就使用 `privateKey`，客户端在使用的时候就用`publicKey`。
 
-<h2 dir="auto">
-  完整服务端配置
-</h2>
+## 完整服务端配置
+
 
 <p dir="auto">
   所以完整的xray服务端的配置config.json如下：
 </p>
 
-```
+```json
 {
     "log": {
       "loglevel": "warning",
@@ -249,7 +248,7 @@ Public key: Xh_hBw4E5SBFjreeAQQjnUMlvLvFPeELy2Xdvur6XwU
 
 客户端我使用的是v2rayN，配置如下：
 
-![](https://www.iminling.com/wp-content/uploads/2023/03/1678579177943.jpg)
+![](https://images.iminling.com/app/hide.php?key=cUdTSFBIVXpZcWRFOWc2SGVidDVvcEtwUm85MHg0RkdBYW5qeEtXVkl2eHFKU3JmeGxYSFdNMVFZZ09IRWFISUZLZktBdnc9)
 
 以上就是折腾的整个过程，完美上网。
 
