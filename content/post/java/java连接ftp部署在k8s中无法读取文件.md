@@ -5,7 +5,7 @@ type: post
 date: 2023-06-01T17:21:12+00:00
 url: /2023/java-ftp-cannot-read-file-in-k8s
 description: 起因 最近工作中需要使用到ftp工具，就在网上找了一个java编写的ftp工具类，功能也是挺齐全的，我在本地测试的时候对文件的下载和上传都是没有问题，正常使用。等到功能开发完成后，部署到k8s就出现了无法读取ftp服务器的文件的情况，起初以为是ftp服务器的问题，就又重新搭建了新的ftp服务器还是同样的问题。
-featured_image: /wp-content/uploads/2023/05/168392380225353-480x300.webp
+image: https://images.iminling.com/app/hide.php?key=cStKcGRtRXppeGVqL01GdXRLaVRCbDlEN2JJSjZTaHBoL210b1ZaUW1xdDRSVU9ObzdzSGM4c3BqVHh1ZTNKc25nbEdvVk09
 categories:
   - Java
 tags:
@@ -17,7 +17,7 @@ tags:
 
 最近工作中需要使用到ftp工具，就在网上找了一个java编写的ftp工具类，功能也是挺齐全的，我在本地测试的时候对文件的下载和上传都是没有问题，正常使用。等到功能开发完成后，部署到k8s就出现了无法读取ftp服务器的文件的情况，起初以为是ftp服务器的问题，就又重新搭建了新的ftp服务器还是同样的问题。中间也想过是不是工具类的功能，就在网上查询了好久，大家基本都是用的`commons-net`这个包，具体的maven依赖如下：
 
-```
+```xml
 <dependency>
   <groupId>commons-net</groupId>
   <artifactId>commons-net</artifactId>
@@ -67,7 +67,7 @@ FTP客户端连接到FTP服务器的21端口，发送用户名和密码登录，
 
 代码如下：
 
-```
+```java
 FTPClient ftpClient = new FTPClient();
 
 ftpClient.connect(url, port);

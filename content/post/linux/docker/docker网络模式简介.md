@@ -5,23 +5,26 @@ type: post
 date: 2023-08-07T21:29:16+00:00
 url: /2023/introduction-to-docker-network-mode
 description: 日常开发中都有使用到docker，一直对docker的网络不是很清楚，所以花了点时间了解一下docker的网络，这里对了解的知识进行一下总结。
-featured_image: /wp-content/uploads/2023/08/docker-2.png
+image: https://images.iminling.com/app/hide.php?key=alYxQXJQb1dGYk9kMFhXVUtHR2NKNElMWkFmL2JGekd5a09YNmNzbWJBSERqeWR2OUFTTXo1a25MZGRPS2JlKytwUFgvQWs9
 categories:
   - docker
 tags:
   - docker
 ---
-![docker](https://www.iminling.com/wp-content/uploads/2023/08/docker-2.png)
-
 日常开发中都有使用到docker，一直对docker的网络不是很清楚，所以花了点时间了解一下docker的网络，这里对了解的知识进行一下总结。
 
 当我们安装好docker后，docker默认给我们创建了3个网络，如下：
 
-<pre class="core-next-code-pre"><code>ubuntu@VM-20-3-ubuntu:~$ docker network ls
+```bash
+ubuntu@VM-20-3-ubuntu:~$ docker network ls
 NETWORK ID     NAME            DRIVER    SCOPE
 cde83331f977   bridge          bridge    local
 0e504852d7be   host            host      local
-cdc83d5d9388   none            null      local</code></pre>
+cdc83d5d9388   none            null      local
+```
+
+
+
 
 分别是bridge,host和none。下边我们就来看一下这三种网络的区别。
 
@@ -29,7 +32,8 @@ cdc83d5d9388   none            null      local</code></pre>
 
 桥接网络也是docker的默认网络，当我们安装好docker后，docker会在宿主机创建一个网卡`docker0`：
 
-<pre class="core-next-code-pre"><code>1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+```
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
@@ -46,11 +50,16 @@ cdc83d5d9388   none            null      local</code></pre>
     inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
        valid_lft forever preferred_lft forever
     inet6 fe80::42:cff:febe:59f7/64 scope link
-       valid_lft forever preferred_lft forever</code></pre>
+       valid_lft forever preferred_lft forever
+```
+
+
+
 
 如上，docker0网络就是docker默认的网络，他的网关是`172.17.0.1`,我们可以先查看一下这个bridge网络的情况(已去除多余属性)：
 
-<pre class="core-next-code-pre"><code>ubuntu@VM-20-3-ubuntu:~$ docker inspect bridge
+```bash
+ubuntu@VM-20-3-ubuntu:~$ docker inspect bridge
 [
     {
         "Name": "bridge",
@@ -71,13 +80,18 @@ cdc83d5d9388   none            null      local</code></pre>
         },
         "Containers": {}
     }
-]</code></pre>
+]
+```
+
+
+
 
 subnet和docker0是一样的，containers那里暂时也是没有容器，当我们启动一个容器来使用默认的bridge网络的时候，这里边就会有对应的容器了。
 
 我们来启动一个nginx容器，然后再来查看一下这个网络：
 
-<pre class="core-next-code-pre"><code>ubuntu@VM-20-3-ubuntu:~$ docker run -d --name nginx-test nginx:1.22.0
+```bash
+ubuntu@VM-20-3-ubuntu:~$ docker run -d --name nginx-test nginx:1.22.0
 4ee2915a41fa9ed6e2591f852789f5762343e3de5bdabe718896778305df3569
 ubuntu@VM-20-3-ubuntu:~$ docker inspect bridge
 [
@@ -108,23 +122,40 @@ ubuntu@VM-20-3-ubuntu:~$ docker inspect bridge
             }
         }
     }
-]</code></pre>
+]
+```
+
+
+
 
 containers中已经有刚才创建的nginx的容器了。如果该容器想要和外界进行交互就需要暴露端口出来，然后外界才能和他进行网络通信，否则就只能从容器内部访问到外部，而无法从外部访问到容器内部。
 
-<pre class="core-next-code-pre"><code>ubuntu@VM-20-3-ubuntu:~$ docker ps
+```bash
+ubuntu@VM-20-3-ubuntu:~$ docker ps
 CONTAINER ID   IMAGE                           COMMAND                  CREATED         STATUS         PORTS        NAMES
-4ee2915a41fa   nginx:1.22.0                    "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   80/tcp      nginx-test</code></pre>
+4ee2915a41fa   nginx:1.22.0                    "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   80/tcp      nginx-test
+```
+
+
+
 
 我们刚才的容器，内部会暴露80端口，如果我们需要和外部的端口映射，需要在启动容器的时候加上-v参数来映射端口，这里就不再演示了。
 
 在默认bridge网络下的容器是无法相互通过容器名称进行通信的，因为没有进行name的主机解析，如果需要让多个容器通过name进行访问，就需要我们创建自己的bridge网络了。创建命令如下：
 
-<pre class="core-next-code-pre"><code>docker network create --driver bridge --subnet 192.168.0.0/16 --gateway 192.168.0.1 mynet</code></pre>
+```
+docker network create --driver bridge --subnet 192.168.0.0/16 --gateway 192.168.0.1 mynet
+```
+
+
 
 上边命令创建了一个mynet的桥接网络，然后在创建容器的时候使用这个网络，不同的容器间就可以使用容器名进行网络访问，创建容器命令：
 
-<pre class="core-next-code-pre"><code>ubuntu@VM-20-3-ubuntu:~$ docker run -d --network mynet --name nginx-test nginx:1.22.0</code></pre>
+```
+ubuntu@VM-20-3-ubuntu:~$ docker run -d --network mynet --name nginx-test nginx:1.22.0
+```
+
+
 
 通过--network指定容器工作的网络。
 
@@ -132,7 +163,8 @@ CONTAINER ID   IMAGE                           COMMAND                  CREATED 
 
 host顾名思义就是和宿主机共用同一个网络，容器没有和宿主机很好的隔离，容器占用的端口就是宿主机的端口，被容器占用的端口宿主机里的程序就没办法使用，容器里可以直接访问宿主机的其他应用程序服务，无需经过其他特殊的设置。
 
-<pre class="core-next-code-pre"><code>ubuntu@VM-20-3-ubuntu:~$ docker inspect host
+```bash
+ubuntu@VM-20-3-ubuntu:~$ docker inspect host
 [
     {
         "Name": "host",
@@ -157,7 +189,11 @@ host顾名思义就是和宿主机共用同一个网络，容器没有和宿主�
         "Options": {},
         "Labels": {}
     }
-]</code></pre>
+]
+```
+
+
+
 
 我们使用host模式创建的容器也不会显示在containers里边。
 
@@ -165,7 +201,8 @@ host顾名思义就是和宿主机共用同一个网络，容器没有和宿主�
 
 在这种模式下，docker容器没有任何网络设置，无法访问宿主机网络，宿主机也没办法访问容器的网络，做到了很好的隔离，开发中也很少用到。
 
-<pre class="core-next-code-pre"><code>ubuntu@VM-20-3-ubuntu:~$ docker inspect none
+```bash
+ubuntu@VM-20-3-ubuntu:~$ docker inspect none
 [
     {
         "Name": "none",
@@ -190,6 +227,10 @@ host顾名思义就是和宿主机共用同一个网络，容器没有和宿主�
         "Options": {},
         "Labels": {}
     }
-]</code></pre>
+]
+```
+
+
+
 
 我们正常使用的话，还是bridge网络用的多一些，因为各服务都是需要相互调用的，要做到网络互通。以上就是对docker三种模式的一些总结。

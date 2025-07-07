@@ -5,7 +5,7 @@ type: post
 date: 2023-07-30T00:21:32+00:00
 url: /2023/docker-use-certbot-apply-lets-encrypt
 description: 最近想给域名申请一个免费的证书，经过查询找到了Let's Encrypt，并且可以使用certbot来申请，因为一直在使用docker,所以就想着看是否可以使用docker来进行证书的申请，于是就开启了此次的折腾之路：使用docker部署certbot申请Let's Encrypt证书。
-featured_image: /wp-content/uploads/2023/07/c7affd9a44cc655928e103db5974fdf9.png
+image: https://images.iminling.com/app/hide.php?key=UVQ4dnZwSDJWNWNTTFNwWXo3QUxlM2wvcFhCdGEyU1diN0lUbGVKZ0gxQXExdFFJV2FIazdvVEorM0Vsak5xWFNDQ1FVNVU9
 categories:
   - docker
 tags:
@@ -39,12 +39,17 @@ certbot的安装方式有很多种，官方也有一些系统的安装文档，�
 
 docker文件的目录如下：
 
-<pre class="core-next-code-pre"><code>├── certs //存放证书
+```bash
+├── certs //存放证书
 ├── conf
 │   ├── cloudflare.ini //配置文件
 ├── logs //日志
 └── docker-compose.yml //docker-compse文件
-└── .env //环境变量信息</code></pre>
+└── .env //环境变量信息
+```
+
+
+
 
 ### certs
 
@@ -58,11 +63,11 @@ docker文件的目录如下：
 
 具体的生成方式看下图：
 
-![](https://www.iminling.com/wp-content/uploads/2023/07/2b10ab6732a555c77c7dbbef500b7157.png)
+![](https://images.iminling.com/app/hide.php?key=bXFYU3d3Tll0N0VuR3NRbURGdVlKeGVWK2NXZzlzMW51ejZqSHRuUjFOVEJYZVpqSzdiMWtpOCswWXF4WUlBRzFnbXg1ZG89)
 
 选择创建令牌：
 
-![](https://www.iminling.com/wp-content/uploads/2023/07/b18db6009f4218e5be527153bc39a15d.png)
+![](https://images.iminling.com/app/hide.php?key=T2lrU0Nic2NsQWg4UTk4czJuWm5rZVJKeTRjcTI0K0RPVEFUdzlqOWJVY1R5dGE3bFVlbk9KMmFZc1lYRlQweGVmYngxL0E9)
 
 区域中选择DNS给一个编辑权限，然后就是区域字段选择自己的域名，我这里是给每个域名单独的token，所以需要选择一个域名，可以根据自己需求选择。
 
@@ -74,7 +79,8 @@ logs中是存在certbot执行日志的地方。
 
 docker-compose.yaml文件内容如下：
 
-<pre class="core-next-code-pre"><code>version: "3"
+```yaml
+version: "3"
 services:
   certbot:
     image: certbot/dns-cloudflare:v2.4.0
@@ -90,7 +96,11 @@ services:
     # issue --force-renewal
     command: certonly --dns-cloudflare --agree-tos --non-interactive --dns-cloudflare-credentials /secrets/cloudflare.ini --email ${CERTBOT_EMAIL} --dns-cloudflare-propagation-seconds 20 -d ${CERTBOT_DOMAIN}
     # renew
-    # command: renew --dns-cloudflare --no-self-upgrade --agree-tos --non-interactive --dns-cloudflare-credentials /secrets/cloudflare.ini --dns-cloudflare-propagation-seconds 20</code></pre>
+    # command: renew --dns-cloudflare --no-self-upgrade --agree-tos --non-interactive --dns-cloudflare-credentials /secrets/cloudflare.ini --dns-cloudflare-propagation-seconds 20
+```
+
+
+
 
 使用.env配置文件，然后把certbot中的/etc/letsencrypt目录映射到容器外部的certs目录，另外就是日志以及cloudflare的配置文件。
 
@@ -121,13 +131,18 @@ CERTBOT_EMAIL=your_email</code></pre>
 
 经过上边的文件准备，接下来就可以开始申请了，使用docker compose up 来进行申请。申请后的证书就在certs目录下。
 
-<pre class="core-next-code-pre"><code>├── 1.txt
+```
+├── 1.txt
 ├── accounts
 ├── archive
 ├── live
 ├── renewal
 ├── renewal-hooks
-└── ssl</code></pre>
+└── ssl
+```
+
+
+
 
 证书文件在live下。然后我们就可以在nginx中使用我们申请的证书文件了。
 

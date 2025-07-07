@@ -5,7 +5,7 @@ type: post
 date: 2024-05-19T02:02:03+00:00
 url: /2024/gradle-kts-push-jar-to-maven-central
 description: 上篇文章记录了如何使用maven来发布自己的个人项目到中央仓库，后边项目改使用gradle来管理依赖了，为了能及时的把jar发布到maven仓库，所以就又折腾了一遍如何使用gradle来发布自己的jar到中央仓库，在这里记录一下折腾和踩坑经历，并分享给大家。
-featured_image: /wp-content/uploads/2023/10/3F5D90BA94A32843C781364B437AB148.png
+image: https://images.iminling.com/app/hide.php?key=YmduQTFleVVSNGloQzkvRXJvK2dtcjNiZEtrUjRMSEdYRFVzeitxNXUrNzVPeFpRQ2pBVzBlU2I4dGtPRWUxeWFZNWJQdzg9
 categories:
   - Gradle
 tags:
@@ -18,7 +18,7 @@ tags:
 
 ## 前提准备
 
-如果你是第一次发布jar到仓库，则需要参考我的另一篇文章：[发布个人项目的jar包文件到maven中央仓库](https://www.iminling.com/2024/05/08/603.html "发布个人项目的jar包文件到maven中央仓库") 来创建好sonatype账号并生成gpg key。这些就不在另外说明了。
+如果你是第一次发布jar到仓库，则需要参考我的另一篇文章：[发布个人项目的jar包文件到maven中央仓库]({{< ref "/post/java/发布个人项目的jar包文件到maven中央仓库.md" >}}) 来创建好sonatype账号并生成gpg key。这些就不在另外说明了。
 
 本篇文章就是在我已经使用了maven发布过jar到中央仓库，然后在此基础上把项目迁移到gradle，然后使用gradle来继续发布项目到中央仓库。
 
@@ -28,7 +28,7 @@ tags:
 
 想要把jar发布的maven仓库需要先将项目的代码打包成jar，然后对jar进行签名，最后发布到maven仓库，三步对应三个插件：
 
-```
+```kotlin
 plugins {
     `java-library`
     `maven-publish`
@@ -42,7 +42,7 @@ plugins {
 
 下边设置对项目进行打包成jar的设置
 
-```
+```kotlin
 tasks.jar {
     dependsOn(tasks.withType(GenerateMavenPom::class))
     manifest {
@@ -73,7 +73,7 @@ java {
 
 主要是配置仓库，pom文件以及签名等信息，先贴一下整个配置，下面单独讲。
 
-```
+```kotlin
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
@@ -157,7 +157,7 @@ publishing {
 
 指定仓库地址，以及配置sonetype的账号和密码，可以放在用户目录的gradle.properties中：
 
-```
+```kotlin
 # k @ MacBook-Pro in ~/.gradle [9:30:05]
 $ pwd
 /Users/k/.gradle
@@ -178,7 +178,7 @@ systemProp.SONATYPE_NEXUS_PASSWORD=aaa
 
 指定签名哪个publications，名字要和上边publications中配置的名称一致。另外有一点还需要特别进行配置，我maven发布的时候使用gpg生成了key，在使用gradle的时候还需要导出私钥，同样是导出到用户家目录下的.gnupg目录下，进入到此目录执行`gpg --export-secret-keys -o secring.gpg` ：
 
-```
+```bash
 # k @ MacBook-Pro in ~ [9:39:08] C:1
 $ cd .gnupg
 
@@ -193,7 +193,7 @@ $ gpg --export-secret-keys -o secring.gpg
 
 会生成一个secring.gpg的文件，这时候需要在`/Users/k/.gradle/gradle.properties`进行配置
 
-```
+```bash
 # k @ MacBook-Pro in ~/.gradle [9:41:37]
 $ cat gradle.properties
 signing.keyId=44405DA7
@@ -205,7 +205,7 @@ systemProp.SONATYPE_NEXUS_PASSWORD=aa
 
 上边有三个参数，keyId使用gpg --list-keys中展示出来的pub下`C87B0403E54CD05D431E5C1A7204BFB944405DA7` 中的后8位。
 
-```
+```bash
 $ gpg --list-keys
 gpg: checking the trustdb
 gpg: marginals needed: 3  completes needed: 1  trust model: pgp
@@ -235,7 +235,7 @@ secretKeyRingFile则是刚才使用gpg导出的文件。
 
 publishing下有几个选项，主要用的还是publishToMavenLocal，这个是发布到本地的maven仓库，可以在本地测试使用。另外就是publish直接往maven仓库中发布。
 
-![gradle](https://www.iminling.com/wp-content/uploads/2024/05/7CAE3057848173E2CCEB4307097347CF.png)
+![gradle](https://images.iminling.com/app/hide.php?key=SDhNZkxreTRURWpUbTMxTVJEUForSFZwRUFsZFVLMmQ1VGNhb2c3QzZBazdmUW10elAweFR3NnpJdVBCNU1pZmx1MDF1NHM9)
 
 双击上边的任务进行运行，或者直接在终端使用gradle + 具体的参数来运行，比如：`gradle publishToMavenLocal` 。
 
@@ -243,7 +243,7 @@ publishing下有几个选项，主要用的还是publishToMavenLocal，这个是
 
 在经过上边配置后发现发布到maven仓库里的只有.moudle的文件，并没有我们的jar和doc相关的文件，经过网上查询添加以下配置就可以了：
 
-```
+```kotlin
 // 解决打包后生成.module文件，导致发布到中央仓库时只上传了.module文件没有上传jar文件
 tasks.withType<GenerateModuleMetadata> {
       enabled = false

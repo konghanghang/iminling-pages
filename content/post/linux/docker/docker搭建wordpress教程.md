@@ -5,6 +5,7 @@ type: post
 date: 2023-03-07T06:59:39+00:00
 url: /2023/docker-install-wordpress
 description: 搭建一个wordpress网站。本文主要介绍使用docker搭建一个完整的wordpress网站。 安装docker就不做多介绍了. 准备wordpress的docker-compose.yaml文件： 使用官方的6.1.0版本的镜像，把文件中的数据库的信息改成自己的就可以正常启动了。
+image: https://images.iminling.com/app/hide.php?key=U3grOTJQSUZnQ1N0T2hlU0gydlRwbGdXalNiNmdMSGl4Rk1XNTF2dE0ydlpydmFkZXA0WFhsUEZ5d0o5MnZ4c2tHTkEzSm89
 categories:
   - wordpress
 tags:

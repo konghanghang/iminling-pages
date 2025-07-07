@@ -4,8 +4,8 @@ author: 要名俗气
 type: post
 date: 2023-05-20T04:18:39+00:00
 url: /2023/apply-jetbrains-open-source-development-license
-description: 开发需要使用idea，以前使用的是破解版，使用起来没什么区别，后边觉得破解实在是麻烦，就转正购买了正式版，随意升级的感觉还是很美好的，哈哈。等到第二年快要续费的时候才了解到可以使用开源项目来申请idea全家桶的License，于是就开始了折腾之路。 申请准备 想要申请免费的License还是需要准备一些事情的： 满足以下条件的开源项目： {.wt-h3} 开源定义。
-featured_image: /wp-content/uploads/2023/05/jetbrains-logo-480x300.png
+description: 开发需要使用idea，以前使用的是破解版，使用起来没什么区别，后边觉得破解实在是麻烦，就转正购买了正式版，随意升级的感觉还是很美好的，哈哈。等到第二年快要续费的时候才了解到可以使用开源项目来申请idea全家桶的License，于是就开始了折腾之路。
+image: https://images.iminling.com/app/hide.php?key=a3ZmSmVFVjBZbzZDQkpDKzNPQ0hCQ1p3VFpIYVVWU0tUSk54LzZVbjY3R0t1VXVzRThlcDdGOGFXYmtzREE3NW1rY3duQzg9
 categories:
   - Java
 tags:
@@ -48,7 +48,7 @@ tags:
 
 github的邮箱要设置成公开的，`keep my email addresses private`去掉勾选：
 
-![](https://www.iminling.com/wp-content/uploads/2023/05/7fadf57a0de401df8ba246d0da80de55.png)
+![](https://images.iminling.com/app/hide.php?key=TCtiV1lEVVFLVU9nQ3V6UXl5TFM3RFRaTzI1V2ExOGJscVA2ZGFwbTROek80Q2hnMzk4WVVmQjFsajhxUXNSOC92b0FRd0U9)
 
 然后就可以开始申请了。
 
@@ -64,13 +64,13 @@ github的邮箱要设置成公开的，`keep my email addresses private`去掉�
 
 填写自己项目的一些信息：项目名称，项目网站地址(如果没有项目网站地址可以和仓库地址填写同一个地址)，仓库地址，License地址(仓库中的开源协议文件)，以及一些项目的信息，如实填写就可以了。
 
-![](https://www.iminling.com/wp-content/uploads/2023/05/7fa5efc9d88c11447c7ca043e8a1cf43.png)
+![](https://images.iminling.com/app/hide.php?key=b2wwN1dtSFZBaSs5SSsra2libVlGSThNK0hLeTJYUmRHSTVUR2hKRytaaVhldGRjdW4yVDNwTWtJUWVZQkhvSFBvN1EvNzg9)
 
 ### 关于我们自己
 
 主要就是邮箱，github个人主页，以及姓名，填写完成后再勾选一些协议信息就可以提交了。整个过程还是很快的。提交后就会收到邮件：
-
-> <pre class="core-next-code-pre"><code>Hello xxx,
+```
+Hello xxx,
 
 Thank you for your OSS development license request.
 
@@ -82,15 +82,16 @@ Kind regards,
 
 JetBrains Community Support Team
 www.jetbrains.com
-The Drive to Develop</code></pre>
+The Drive to Develop
+```
 
 提示已经收到了我们的申请，需要一个星期来审核我们的申请。接下来就是耐心等待了。
 
 ## 审核结果
 
 大概四五天就会出审核结果，审核不通过就是下边的邮件：
-
-> <pre class="core-next-code-pre"><code>Hello xxx,
+```
+Hello xxx,
 
 Thank you for contacting us.
 
@@ -106,11 +107,11 @@ JetBrains Americas
 Phone: 609-714-7883
 Fax: 866-838-6784
 https://www.jetbrains.com
-The Drive to Develop</code></pre>
-
+The Drive to Develop
+```
 如果审核通过则是下边的邮件：
-
-> <pre class="core-next-code-pre"><code>Dear xxx,
+```
+Dear xxx,
 
 Congratulations, your request to JetBrains for Open Source development license(s) has been approved! The license certificate is attached to this message.
 
@@ -131,13 +132,14 @@ Kind regards,
 
 JetBrains Community Support Team
 https://www.jetbrains.com
-The Drive to Develop</code></pre>
+The Drive to Develop
+```
 
 ## 续期
 
 免费的license需要一年一续的，在到期前会有邮件通知我们来进行续期：
-
-> <pre class="core-next-code-pre"><code>Hi xxx,
+```
+Hi xxx,
 
 Your JetBrains All Products Pack license(s) will expire in two weeks, on June 3, 2023.
 
@@ -150,15 +152,16 @@ Thank you!
 Kind regards,
 JetBrains Community Support Team
 https://www.jetbrains.com
-The Drive to Develop</code></pre>
+The Drive to Develop
+```
 
 我们可以直接点击邮件里的`applying for renewal`来续期我们的license。
 
 填写的信息和第一次申请基本一样，只是在第一项新老用户选择的时候选择老用户，然后填写第一次申请通过的license ID就可以了。
 
 提交申请后还是会有邮件通知：
-
-> <pre class="core-next-code-pre"><code>Hello xx,
+```
+Hello xx,
 
 We're writing to you in regards to your OSS development license request.
 
@@ -173,11 +176,12 @@ Thank you!
 The Community Support team
 JetBrains
 https://www.jetbrains.com
-The Drive to Develop</code></pre>
+The Drive to Develop
+```
 
 由于我的项目最近三个月没有提交过记录，很快就收到了拒绝的邮件，所以如果想续期，续期前的三个月最好提交一下commit：
-
-> <pre class="core-next-code-pre"><code>Hello xxx,
+```
+Hello xxx,
 
 Thank you for your OSS development license request. We will evaluate your project, and we’ll notify you of our decision by email.
 
@@ -188,13 +192,14 @@ If you need assistance with an urgent license renewal request, please contact us
 Kind regards,
 JetBrains Community Support Team
 www.jetbrains.com
-The Drive to Develop</code></pre>
+The Drive to Develop
+```
 
 ### 后续
 
 终于等到了3个月，2023-07-01日马上又提交了申请，这次终于过了检查，有开始了漫长的等待。07-07凌晨收到了一封邮件：
-
-<pre class="core-next-code-pre"><code>Dear xx,
+```
+Dear xx,
 
 Thanks for your interest in our Open Source Program!
 
@@ -208,11 +213,12 @@ xx
 Community Support Team
 JetBrains
 www.jetbrains.com
-The Drive to Develop</code></pre>
+The Drive to Develop
+```
 
 早上就赶紧回复邮件，介绍了一下项目情况，以及对哪些工具感兴趣，当天晚上就收到了通过的邮件，比初次申请的时候稍微麻烦了一点：
-
-<pre class="core-next-code-pre"><code>Hi xx,
+```
+Hi xx,
 
 Thank you for providing such detailed information.
 
@@ -225,7 +231,8 @@ xx
 Community Support Team
 JetBrains
 www.jetbrains.com
-The Drive to Develop</code></pre>
+The Drive to Develop
+```
 
 最后祝大家都可以成功的申请下来。
 

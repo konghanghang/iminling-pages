@@ -5,6 +5,7 @@ type: post
 date: 2023-03-08T06:50:58+00:00
 url: /2023/springboot-fastjson-doesnot-work
 description: 最近在尝试搭建springboot+dubbo+shiro基于注解的一个项目,突发奇想想把消息转换器从jackson换成fastjson,于是就开始了折腾之路. 轻车熟路的去自定了一个去继承,然后就发现这个竟然过时了?what?点进去看源码,可以看到从spring5.0开始就被@Deprecated,原来是java8中支持接口中有默认方法,所以我们现在可以...
+image: https://images.iminling.com/app/hide.php?key=SmJabnJsdTlXbDExYlljU3RzemUyTVRlcHFScHFZRUJYSTR1c1BoYkhrZHE3L2RpK05qbkpLQlprcTFPY2QvY3lJaVB3Y3M9
 categories:
   - Spring
 tags:
@@ -16,7 +17,7 @@ tags:
 
 轻车熟路的去自定了一个`SpringMvcConfigure`去继承`WebMvcConfigurerAdapter`,然后就发现这个`WebMvcConfigurerAdapter`竟然过时了?what?点进去看源码:
 
-```
+```java
 /**
  * An implementation of {@link WebMvcConfigurer} with empty methods allowing
  * subclasses to override only the methods they're interested in.
@@ -35,7 +36,7 @@ public abstract class WebMvcConfigurerAdapter implements WebMvcConfigurer {}
 
 于是就实现了`WebMvcConfigurer`:
 
-```
+```java
 @Configuration
 public class SpringMvcConfigure implements WebMvcConfigurer {
 
@@ -62,11 +63,11 @@ public class SpringMvcConfigure implements WebMvcConfigurer {
 
 本以为这样子配置就可以完事儿,但是诡异的事情发生了,我明明注释了`SerializerFeature.WriteMapNullValue`,可是返回的json中仍然有为`null`的字段,然后我就去`com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter`中的`write`和`writeInternal`打了断点,再次执行,竟然什么都没有发生,根本没有走这两个方法,于是在自定义的`SpringMvcConfigure`中`configureMessageConverters`方法内打了断点,想看看这个方法参数`converters`里边到底有什么:
 
-![](https://www.iminling.com/wp-content/uploads/2023/03/32057648475b6fa5b6985d3.png)
+![](https://images.iminling.com/app/hide.php?key=Q3JqbUgyZFo4WENDVlE0ZG1hV1NUQjM4K2lxR2NjT21FdGhmWGlnbGRxQ2FpU29CWkZQMW9qTTdNWEhIcVYzVDVWb3djYkU9)
 
 看到这里就想到,肯定是我自己添加的fastjson在后边,所以没有生效,所以就加了以下代码:
 
-```
+```java
 @Override
 public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     converters = converters.stream()
@@ -87,7 +88,7 @@ public void configureMessageConverters(List<HttpMessageConverter<?>> converters)
 
 竟然还没有生效,后来开始追踪,开始方法是从`org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport`类中的一个bean配置:
 
-```
+```java
 @Bean
 public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
     RequestMappingHandlerAdapter adapter = createRequestMappingHandlerAdapter();
@@ -120,7 +121,7 @@ public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
 
 `getMessageConverters()`方法:
 
-```
+```java
 protected final List<HttpMessageConverter<?>> getMessageConverters() {
     if (this.messageConverters == null) {
         this.messageConverters = new ArrayList<>();
@@ -157,7 +158,7 @@ private final HttpMessageConverters messageConverters;
 
 for循环里的`delegate.configureMessageConverters(converters)`调用了`WebMvcAutoConfiguration`中的`configureMessageConverters`方法:
 
-```
+```java
 @Override
 public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     converters.addAll(this.messageConverters.getConverters());
@@ -169,7 +170,7 @@ public void configureMessageConverters(List<HttpMessageConverter<?>> converters)
 
 于是再次改变那个lambda表达式为普通的增强for循环:
 
-```
+```java
 @Override
 public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     /*converters = converters.stream().
@@ -195,7 +196,7 @@ public void configureMessageConverters(List<HttpMessageConverter<?>> converters)
 
 再次运行,wtf?报错了:`ConcurrentModificationException`,原来使用for循环遍历过程中不能进行remove操作,于是换成`Iterator`:
 
-```
+```java
 @Override
 public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     /*converters = converters.stream()

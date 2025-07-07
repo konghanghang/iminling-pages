@@ -4,7 +4,8 @@ author: 要名俗气
 type: post
 date: 2023-06-09T21:49:42+00:00
 url: /2023/linux-install-docker
-image: /wp-content/uploads/2023/06/docker-480x300.webp
+description: docker可以快速的构建我们的应用，并且应用之间的环境相互隔离，非常方便，本文就ubuntu和debian下安装docker和docker compose进行简单的记录。
+image: https://images.iminling.com/app/hide.php?key=dnp6YVlCOXUzcXZ3NHRyMlZGVEZDYUY3c3h6eW9ET21TY3YrWWwrZTZBcllvQU1ZQkIxWXlaQnRpRVR5cml3VDVIRUJUTFk9
 categories:
   - docker
 tags:
@@ -15,8 +16,6 @@ tags:
 
 ---
 记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。
-
-![aa](https://www.iminling.com/wp-content/uploads/2023/06/docker.webp)
 
 ## ubuntu安装
 

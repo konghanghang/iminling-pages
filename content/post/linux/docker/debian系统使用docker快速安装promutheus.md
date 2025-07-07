@@ -14,14 +14,13 @@ tags:
 ---
 [Prometheus](https://prometheus.io/)是一套开源的监控&报警&时间序列数据库的组合,起始是由SoundCloud公司开发的。它的功能强大，被广泛使用。今天这边文章就简单介绍一下如何使用docker快速的搭建一个prometheus的服务，其他相关的知识在后续的文章里再详细分享。先把服务跑起来。
 
-如果还没有安装docker的同学可以参考的我另一篇文章来快速的安装docker环境：[docker安装](https://www.iminling.com/2023/06/10/164.html "docker安装")。
+如果还没有安装docker的同学可以参考的我另一篇文章来快速的安装docker环境：[docker安装]({{< ref "/post/linux/docker/linux服务器快速安装docker和docker-compose.md" >}})。
 
 ## docker-compose文件准备
 
 我习惯直接使用docker-compose来安装所有服务，我的所有服务都使用同一个网络，实现服务的互通，下边贴出我的配置：
 
-```
-version: '3'
+```yaml
 networks:
   mynet:
     external: true
@@ -62,7 +61,7 @@ services:
 
 上边是docker-compose的配置信息，里边指定了prometheus启动的配置文件地址，我们准备一个最简单的配置文件，prometheus自己拉取自己的监控信息：
 
-```
+```yaml
 global:
   scrape_interval: 1m
 
@@ -77,7 +76,7 @@ scrape_configs:
 
 整个的目录结构如下：
 
-```
+```bash
 prometheus
 ├── README.md
 ├── config
@@ -95,7 +94,7 @@ docker compose up -d
 
 启动后可以使用docker ps 来查看服务是否启动成功，如下启动成功：
 
-```
+```bash
 root@WIKI-HK-A1:~# docker ps
 CONTAINER ID   IMAGE                     COMMAND                  CREATED        STATUS          PORTS                                         NAMES
 9b24b2c868ad   prom/prometheus:v2.46.0   "/bin/prometheus --c…"   3 hours ago    Up 34 minutes   0.0.0.0:9090->9090/tcp, :::9090->9090/tcp   prometheus
@@ -105,10 +104,10 @@ CONTAINER ID   IMAGE                     COMMAND                  CREATED       
 
 prometheus启动占用的是9090端口，我们可以使用自己服务器的ip:9090来访问：
 
-![](https://www.iminling.com/wp-content/uploads/2023/11/00765DF535989AEA3C316113128135D8-1.png)
+![](https://images.iminling.com/app/hide.php?key=clZkV3BZeklFSTNzRmJERkN1d0t2K0JSN0trQVRicUVlckpYVUlDYy9taC9TOVJHMmNtamxCNnBORUlwUTFFU0JFODFyMGc9)
 
 访问后如上，我们可以在staus-targets中查看我们添加的那个任务：
 
-![](https://www.iminling.com/wp-content/uploads/2023/11/CF95519DE34BE996729BEF932926FD07.png)
+![](https://images.iminling.com/app/hide.php?key=Q1AvdXgyWU5aZjRFY3dqeEt5OWlBUkhoclVPbWdQQm9URVAvSERHTGw1b1FkZ0ZWKzN2dnRPZ1cwK0lqTVpVTVlKWGk1b2c9)
 
 以上就是简单的安装prometheus的过程，希望可以帮到大家。

@@ -5,14 +5,12 @@ type: post
 date: 2023-10-04T15:04:07+00:00
 url: /2023/custom-nginx-log-output-json
 description: 日志在日常开发中是非常重要的东西，在出现错误后可以快速的进行排查，对Nginx而言同样也很重要，同Nginx的日志我们可以清晰的了解什么url被访问，是什么Ip访问过来等一些重要信息，所以无论是在开发中还是线上环境，都会开启日志。下边就来了解一下Nginx的日志。
-featured_image: /wp-content/uploads/2023/08/1ef7c7ccb883ef295d80a5edb4752750.jpg
+image: https://images.iminling.com/app/hide.php?key=eEZmbmFBSW14MCtoRHpiR0RHeW52cHZqTmNJRU1Zblg0cCtiYWo1Z3VSbHNiNUY2cHF0OHJKZHlpbGVCQUpGRVRMWmRwYXM9
 categories:
   - nginx
 tags:
   - nginx
 ---
-![](https://www.iminling.com/wp-content/uploads/2023/08/459feb46c0c414a826f2055d8d28cd27.png)
-
 日志在日常开发中是非常重要的东西，在出现错误后可以快速的进行排查，对Nginx而言同样也很重要，同Nginx的日志我们可以清晰的了解什么url被访问，是什么Ip访问过来等一些重要信息，所以无论是在开发中还是线上环境，都会开启日志。下边就来了解一下Nginx的日志。
 
 ## 日志类型

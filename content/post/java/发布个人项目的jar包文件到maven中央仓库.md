@@ -5,7 +5,7 @@ type: post
 date: 2024-05-08T14:33:57+00:00
 url: /2024/push-jar-to-maven-central
 description: 自己有一个项目想要在任何机器上都能引用到，最简单的办法就是在所要使用的机器上把项目下载下来，然后install到本地仓库，但是如何直接通过引用坐标就能引用到呢？答案就是发布到maven的中央仓库，这样子无论你在什么机器上，只要能上网输入gav三个坐标就可以引入了。这篇文章就介绍一下自己项目打成jar包并发布到maven中央仓库的完整过程。
-featured_image: /wp-content/uploads/2024/05/011ABDE59EE899C2F7CB8D9ECBEC066C.png
+image: https://images.iminling.com/app/hide.php?key=VmhUVjAvWExidzB3U04rbmdWZjJwRG54MDgvZkZYZjZjdFYxNXNXbHlXVlU1MmRGVVJmeFpEV0FFeXBQbkdHbXpVMDA5TW89
 categories:
   - Maven
 tags:
@@ -13,7 +13,7 @@ tags:
   - java
   - maven
 ---
-自己有一个项目想要在任何机器上都能引用到，最简单的办法就是在所要使用的机器上把项目下载下来，然后install到本地仓库，但是如何直接通过引用坐标就能引用到呢？答案就是发布到maven的中央仓库，这样子无论你在什么机器上，只要能上网输入gav三个坐标就可以引入了。这篇文章就介绍一下自己项目打成jar包并发布到maven中央仓库的完整过程。mac安装maven可以参考我的另一篇文章：[Mac使用Homebrew安装maven环境](https://www.iminling.com/2023/10/27/277.html "Mac使用Homebrew安装maven环境")。
+自己有一个项目想要在任何机器上都能引用到，最简单的办法就是在所要使用的机器上把项目下载下来，然后install到本地仓库，但是如何直接通过引用坐标就能引用到呢？答案就是发布到maven的中央仓库，这样子无论你在什么机器上，只要能上网输入gav三个坐标就可以引入了。这篇文章就介绍一下自己项目打成jar包并发布到maven中央仓库的完整过程。mac安装maven可以参考我的另一篇文章：[Mac使用Homebrew安装maven环境]({{< ref "/post/mac/Mac使用Homebrew安装maven环境.md" >}})。
 
 ## 账号注册
 
@@ -25,7 +25,7 @@ tags:
 
 点击新建按钮，项目选择`open`的那个，问题类型选择`new project`，概要，描述随便写就ok了
 
-![sonatype工单](https://www.iminling.com/wp-content/uploads/2024/05/743AA473A26B0C2236A6C3B2EC8840BC.png)
+![sonatype工单](https://images.iminling.com/app/hide.php?key=bGVlVUNlOWJaenRqanBmM1dySVdLcVdGdVF0aTh2V3RXMjFHYW8xckpSdmFYTVRVakJ4eEZXYWFlNTBMZjk3bHZGdXcvTEU9)
 
 摘要根据自己需要填写，我这里填写的是项目的名称。
 
@@ -37,21 +37,21 @@ SCM url就是在project URL后边加上`.git`
 
 其他的默认就可以了，创建。新建完成后如下图：
 
-![工单](https://www.iminling.com/wp-content/uploads/2024/05/1CBB45AE01C8EE964E17AC1E924592CC.png)
+![工单](https://images.iminling.com/app/hide.php?key=T3FlMFIyb0ZZRHRLQ0ZsRHdUK2ZwMzIrYnRNWTRQL1hOWGJhWGNSSXBwaTZmbzZmU1pyM3VzWUNZd1VueHhlWmQzRWVzUUE9)
 
 ### 添加TXT记录
 
 如上边的图所示，它为了验证你是域名的所有者，会让你去解析一条txt记录。两种方案选一种就可以了，我这里选择的是添加一条txt的记录，如下图所示，我这里是不清楚规则，提交了两个工单，所以添加了两条记录，最后其中一个工单被认为是重复提交，已关闭。其中记录值填写你的工单地址，下图中框住的部分，主机记录就是`jira tiket`.
 
-![sonatype txt](https://www.iminling.com/wp-content/uploads/2024/05/E5A938D31A629B94379B42FA6DBAD231.png)
+![sonatype txt](https://images.iminling.com/app/hide.php?key=SVRrd1BlcWx2bFE0OUhNRlpJTURjdmZJMTBzTitnM1o2a2ExSUlrL0FhODNZb25qdkxhTnIzRVI3Z1l0a29XT0FyT1VUU0U9)
 
 这里txt解析的值来源就是你的问题url，如下：
 
-![txt record](https://www.iminling.com/wp-content/uploads/2024/05/ED9DE32D2805BFC9248F67E6FE8C774C.png)
+![txt record](https://images.iminling.com/app/hide.php?key=STFZMHNLcERrUndGWnprckwxc0RjVmFqM0lndWFmQjZFNU13QnNhcE5QbzE5RWtUanBJTm9UNHNUaHpqTDVRNitkZHlZOXM9)
 
 解析完后就可以再等待审核了，我的大概是凌晨3点进行的审核，通过以后会有邮件通知，工单下边也有评论,此时我们就可以准备发布我们的jar包了。
 
-```
+```bash
 com.iminling has been prepared, now user(s) yslaoo can:
 Publish snapshot and release artifacts to https://oss.sonatype.org
 Have a look at this section of our official guide for deployment instructions:
@@ -72,7 +72,7 @@ windows安装了git客户端就自带了这个功能。
 
 检查自己的gpg的版本，有些是gpg，有些则需要输入gpg2.
 
-```
+```bash
 # 或者使用gpg2 --version 就看自己的电脑上哪个命令可以运行
 $ gpg --version
 gpg (GnuPG) 2.2.13-unknown
@@ -95,7 +95,7 @@ Compression: Uncompressed, ZIP, ZLIB, BZIP2
 
 不论是mac还是windows都是使用命令`gpg --gen-key`来生成。
 
-```
+```bash
 $ gpg --gen-key
 gpg (GnuPG) 2.2.27; Copyright (C) 2021 Free Software Foundation, Inc.
 This is free software: you are free to change and redistribute it.
@@ -137,7 +137,7 @@ sub   rsa3072 2021-02-20 [E] [有效至：2023-02-20]
 
 先查看key：
 
-```
+```bash
 $ gpg --list-keys
 gpg: checking the trustdb
 gpg: marginals needed: 3  completes needed: 1  trust model: pgp
@@ -153,7 +153,7 @@ sub   rsa2048 2021-02-20 [E] [expires: 2023-02-20]
 
 然后发布：
 
-```
+```bash
 # 命令格式：gpg --keyserver [key的服务器](这个有很多，随便找一个就行了) --send-keys [key] key就是查看key操作中pub对应的那串字符串
 $ gpg --keyserver hkp://keyserver.ubuntu.com:11371 --send-keys C87B0403E54CD05D431E5C1A7204BFB944405DA7
 gpg: sending key 7204BFB944405DA7 to hkp://keyserver.ubuntu.com:11371
@@ -163,7 +163,7 @@ gpg: sending key 7204BFB944405DA7 to hkp://keyserver.ubuntu.com:11371
 
 修改pom.xml, 添加以下代码
 
-```
+```xml
 <!--父级是project-->
 <distributionManagement>
     <snapshotRepository>
@@ -197,7 +197,7 @@ gpg: sending key 7204BFB944405DA7 to hkp://keyserver.ubuntu.com:11371
 
 在`setting.xml`中添加认证信息,此处的id要和`pom`文件中的`distributionManagement`下`snapshotRepository`和`repository`的id保持一致.
 
-```
+```xml
 <settings>
   <servers>
     <server>
@@ -215,7 +215,7 @@ gpg: sending key 7204BFB944405DA7 to hkp://keyserver.ubuntu.com:11371
 
 在pom.xml中添加配置如下
 
-```
+```xml
 <build>
   <plugins>
     <plugin>
@@ -271,7 +271,7 @@ gpg: sending key 7204BFB944405DA7 to hkp://keyserver.ubuntu.com:11371
 
 在setting.xml中添加gpg profile配置,`gpg.executable`属性要根据自己的电脑环境进行添加.
 
-```
+```xml
 <settings>
   <profiles>
     <profile>
@@ -294,7 +294,7 @@ gpg: sending key 7204BFB944405DA7 to hkp://keyserver.ubuntu.com:11371
 
 在pom.xml中添加以下内容
 
-```
+```xml
 <plugin>
   <groupId>org.sonatype.plugins</groupId>
   <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -318,7 +318,7 @@ gpg: sending key 7204BFB944405DA7 to hkp://keyserver.ubuntu.com:11371
 
 项目的版本如果是以`-SNAPSHOT`结尾的,就会发布到快照仓库,如下:
 
-```
+```bash
 D:\project\idea\base-iminling-parent>mvn clean deploy
 INFO] Scanning for projects...
 [WARNING]
@@ -364,7 +364,7 @@ Uploaded to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/i
 
 项目的版本不是以`-SNAPSHOT`结尾的,就会发布到release仓库,如下:
 
-```
+```bash
 D:\project\idea\base-iminling-parent>mvn clean deploy
 [INFO] Scanning for projects...
 [WARNING]
@@ -405,7 +405,7 @@ Uploaded to ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/
 
 在mac上进行发布的时候遇到下边问题：
 
-```
+```bash
 [INFO] --- maven-gpg-plugin:1.5:sign (sign-artifacts) @ base-iminling-parent ---
 gpg: 签名时失败： Inappropriate ioctl for device
 gpg: signing failed: Inappropriate ioctl for device
@@ -425,7 +425,7 @@ gpg: signing failed: Inappropriate ioctl for device
 
 发布后我们还需要在sonatype中问题下方进行评论,来激活同步到maven中心仓库.
 
-![sync maven centrl](https://www.iminling.com/wp-content/uploads/2024/05/5A48C989D866A911702A5ED09278C106.png)
+![sync maven centrl](https://images.iminling.com/app/hide.php?key=alYxQXJQb1dGYk9kMFhXVUtHR2NKL3cwd3JOZXhIZGlaODJMK2tvK2tRTGlGWnZQYVVXa1dva0lFTHptKy9ZaHA3QWtLVjA9)
 
 后续的release就可以同步到maven仓库了。
 
@@ -439,7 +439,7 @@ gpg: signing failed: Inappropriate ioctl for device
 
 快照版本需要引入仓库地址：
 
-```
+```xml
 <!--定义snapshots库的地址-->
 <repositories>
     <repository>

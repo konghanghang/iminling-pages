@@ -21,7 +21,7 @@ tags:
 # WordPress使用git-it-write插件配合github自动发布markdown
 
 ![What Is Markdown, and How Do You Use It?](https://images.iminling.com/app/hide.php?key=SlBudmJhK1kyNkJ5NGtnVm53c1kwOUpBdFNJd1I2dHR5NXk5VjM1QkNsN1VtWm9DVWNJdi9jdEEyL0o0eTZDTXJPNUhlT3c9)
-</figure>
+
 
 以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了**WP-Githuber-MD**这个插件，再探索的过程中无意又发现了**git-it-write**这个可以自动化的插件，于是就开始了折腾之旅行。
 
