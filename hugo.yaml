@@ -1,4 +1,4 @@
-baseurl: https://www.iminling.com/
+baseurl: /
 languageCode: zh-cn
 theme: hugo-theme-stack
 title: 记录点滴 - 分享

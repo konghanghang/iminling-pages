@@ -26,8 +26,8 @@ jobs:
           hugo-version: 'latest'
           extended: true
 
-      - name: Build site
-        run: hugo --minify
+      - name: Build for GitHub Pages
+        run: hugo --minify --baseURL "https://konghanghang.github.io/iminling-pages/"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
