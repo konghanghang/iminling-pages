@@ -1,0 +1,240 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="在默认情况下，docker默认只是配置了ipv4地址，并没有ipv6地址，需要我们手动的去进行ipv6地址配置。下面就介绍一下容器支持ipv6的一种方式。 docker启用ipv6 具体的方式我们先参考docker的官方文档：[Enable IPv6 support](https://docs.docker.com/config/daemon/ipv6/),启用docker对ipv6的支持。"><title>docker容器配置ipv6</title><link rel=canonical href=https://www.iminling.com/2023/docker-container-configuration-ipv6/><link rel=stylesheet href=/scss/style.min.3d6a5ee04e8710bed041e927cc6e05e92f4112a233dbc27f5e305653fa21c8fe.css><meta property='og:title' content="docker容器配置ipv6"><meta property='og:description' content="在默认情况下，docker默认只是配置了ipv4地址，并没有ipv6地址，需要我们手动的去进行ipv6地址配置。下面就介绍一下容器支持ipv6的一种方式。 docker启用ipv6 具体的方式我们先参考docker的官方文档：[Enable IPv6 support](https://docs.docker.com/config/daemon/ipv6/),启用docker对ipv6的支持。"><meta property='og:url' content='https://www.iminling.com/2023/docker-container-configuration-ipv6/'><meta property='og:site_name' content='记录点滴 - 分享'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='docker'><meta property='article:published_time' content='2023-07-15T21:34:56+00:00'><meta property='article:modified_time' content='2023-07-15T21:34:56+00:00'><meta name=twitter:title content="docker容器配置ipv6"><meta name=twitter:description content="在默认情况下，docker默认只是配置了ipv4地址，并没有ipv6地址，需要我们手动的去进行ipv6地址配置。下面就介绍一下容器支持ipv6的一种方式。 docker启用ipv6 具体的方式我们先参考docker的官方文档：[Enable IPv6 support](https://docs.docker.com/config/daemon/ipv6/),启用docker对ipv6的支持。"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu_b22a428fdb3aa6b9.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>记录点滴 - 分享</a></h1><h2 class=site-description>记录点滴，分享生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>主页</span></a></li><li><a href=/%E5%85%B3%E4%BA%8E/><svg class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>关于</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#docker启用ipv6>docker启用ipv6</a></li><li><a href=#创建网络>创建网络</a><ol><li><a href=#创建ipv6网络>创建ipv6网络</a></li></ol></li><li><a href=#容器支持ipv6>容器支持ipv6</a><ol><li><a href=#docker-run>docker run</a></li><li><a href=#docker-compose>docker compose</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/docker/>Docker</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/2023/docker-container-configuration-ipv6/>docker容器配置ipv6</a></h2><h3 class=article-subtitle>在默认情况下，docker默认只是配置了ipv4地址，并没有ipv6地址，需要我们手动的去进行ipv6地址配置。下面就介绍一下容器支持ipv6的一种方式。 docker启用ipv6 具体的方式我们先参考docker的官方文档：[Enable IPv6 support](https://docs.docker.com/config/daemon/ipv6/),启用docker对ipv6的支持。</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Jul 15, 2023</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>3 minute read</time></div></footer></div></header><section class=article-content><p>在默认情况下，docker默认只是配置了ipv4地址，并没有ipv6地址，需要我们手动的去进行ipv6地址配置。下面就介绍一下容器支持ipv6的一种方式。</p><h2 id=docker启用ipv6>docker启用ipv6</h2><p>具体的方式我们先参考docker的官方文档：<a class=link href=https://docs.docker.com/config/daemon/ipv6/ target=_blank rel=noopener><span class=md-plain>Enable IPv6 support</span></a>,启用docker对ipv6的支持。需要修改daemon.json文件，具体位置为/etc/docker/目录下，如果没有则自己创建daemon.json,添加以下内容：</p><p>{
+&ldquo;experimental&rdquo;: true,
+&ldquo;ip6tables&rdquo;: true
+}</p><p>然后对docker进行重启。<code>systemctl restart docker</code></p><h2 id=创建网络>创建网络</h2><p>我安装docker后都会自己创建一个桥接网络已方便启动的各个容器之间的网络通信。创建网络的命令如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>docker network create --driver bridge --subnet 192.168.0.0/16 --gateway 192.168.0.1 mynet
+</span></span></code></pre></td></tr></table></div></div><p>如上创建了一个名字为<code>mynet</code>的网络，可以使用docker inspect来查看这个网络：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>root@us-la:~# docker inspect mynet
+</span></span><span class=line><span class=cl><span class=o>[</span>
+</span></span><span class=line><span class=cl>    <span class=o>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Name&#34;</span>: <span class=s2>&#34;mynet&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Id&#34;</span>: <span class=s2>&#34;914c2a3a0a6ae0bdc0b8d51ba4782b6d232e6c978f2b0596fc4b7938d6c72ddd&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Created&#34;</span>: <span class=s2>&#34;2022-08-21T09:19:48.858428501Z&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Scope&#34;</span>: <span class=s2>&#34;local&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Driver&#34;</span>: <span class=s2>&#34;bridge&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;EnableIPv6&#34;</span>: false,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;IPAM&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;Driver&#34;</span>: <span class=s2>&#34;default&#34;</span>,
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;Options&#34;</span>: <span class=o>{}</span>,
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;Config&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>                <span class=o>{</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;Subnet&#34;</span>: <span class=s2>&#34;192.168.0.0/16&#34;</span>,
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;Gateway&#34;</span>: <span class=s2>&#34;192.168.0.1&#34;</span>
+</span></span><span class=line><span class=cl>                <span class=o>}</span>
+</span></span><span class=line><span class=cl>            <span class=o>]</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Internal&#34;</span>: false,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Attachable&#34;</span>: false,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Ingress&#34;</span>: false,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;ConfigFrom&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;Network&#34;</span>: <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;ConfigOnly&#34;</span>: false,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Containers&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;edfd85b3884679256388f3c13afcd1774ac282a34de2438191bdad824a68f765&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;Name&#34;</span>: <span class=s2>&#34;nginx&#34;</span>,
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;EndpointID&#34;</span>: <span class=s2>&#34;eafe61ed19613cfd2a7f56ee1737987d907a26210f0de557499fe4e6c1171e9c&#34;</span>,
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;MacAddress&#34;</span>: <span class=s2>&#34;02:42:c0:a8:00:02&#34;</span>,
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;IPv4Address&#34;</span>: <span class=s2>&#34;192.168.0.2/16&#34;</span>,
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;IPv6Address&#34;</span>: <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>            <span class=o>}</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Options&#34;</span>: <span class=o>{}</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Labels&#34;</span>: <span class=o>{}</span>
+</span></span><span class=line><span class=cl>    <span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>这个网络只支持ipv4，我们可以ping一下v6看看：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>root@us-la:~# docker run --rm -it --net mynet busybox ping -6 -c4 ipv6-test.com
+</span></span><span class=line><span class=cl>PING ipv6-test.com <span class=o>(</span>2001:41d0:701:1100::29c8<span class=o>)</span>: <span class=m>56</span> data bytes
+</span></span><span class=line><span class=cl>ping: sendto: Cannot assign requested address
+</span></span></code></pre></td></tr></table></div></div><p>如果我们需要支持ipv6，需要创建一个ipv6网络。</p><h3 id=创建ipv6网络>创建ipv6网络</h3><p>用以下命令来创建一个ipv6网络：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>docker network create --ipv6 --subnet=&#34;2001:db8:1::/64&#34; --subnet=&#34;192.168.0.0/24&#34; mynet
+</span></span><span class=line><span class=cl>9db7d457fd11f8c7c4256a1f4b2e00085d537f34e15dd0b0636bc00d4aa6d234
+</span></span></code></pre></td></tr></table></div></div><p>再次检查 网络：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>root@WIKIHOST-221108EU1RTF:~/images# docker network ls
+</span></span><span class=line><span class=cl>NETWORK ID     NAME      DRIVER    SCOPE
+</span></span><span class=line><span class=cl>9a75cccf2d9a   bridge    bridge    <span class=nb>local</span>
+</span></span><span class=line><span class=cl>5677c5bdadce   host      host      <span class=nb>local</span>
+</span></span><span class=line><span class=cl>9db7d457fd11   mynet     bridge    <span class=nb>local</span>
+</span></span><span class=line><span class=cl>86ce569ad194   none      null      <span class=nb>local</span>
+</span></span><span class=line><span class=cl>root@1RTF:~/images# docker inspect mynet
+</span></span><span class=line><span class=cl><span class=o>[</span>
+</span></span><span class=line><span class=cl>    <span class=o>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Name&#34;</span>: <span class=s2>&#34;mynet&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Id&#34;</span>: <span class=s2>&#34;9db7d457fd11f8c7c4256a1f4b2e00085d537f34e15dd0b0636bc00d4aa6d234&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Created&#34;</span>: <span class=s2>&#34;2023-07-12T09:48:08.273299482-04:00&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Scope&#34;</span>: <span class=s2>&#34;local&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Driver&#34;</span>: <span class=s2>&#34;bridge&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;EnableIPv6&#34;</span>: true,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;IPAM&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;Driver&#34;</span>: <span class=s2>&#34;default&#34;</span>,
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;Options&#34;</span>: <span class=o>{}</span>,
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;Config&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>                <span class=o>{</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;Subnet&#34;</span>: <span class=s2>&#34;192.168.0.0/24&#34;</span>
+</span></span><span class=line><span class=cl>                <span class=o>}</span>,
+</span></span><span class=line><span class=cl>                <span class=o>{</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;Subnet&#34;</span>: <span class=s2>&#34;2001:db8:1::/64&#34;</span>
+</span></span><span class=line><span class=cl>                <span class=o>}</span>
+</span></span><span class=line><span class=cl>            <span class=o>]</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Internal&#34;</span>: false,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Attachable&#34;</span>: false,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Ingress&#34;</span>: false,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;ConfigFrom&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;Network&#34;</span>: <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;ConfigOnly&#34;</span>: false,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Containers&#34;</span>: <span class=o>{}</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Options&#34;</span>: <span class=o>{}</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Labels&#34;</span>: <span class=o>{}</span>
+</span></span><span class=line><span class=cl>    <span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>多了一个ipv6的子网。</p><h2 id=容器支持ipv6>容器支持ipv6</h2><h3 id=docker-run>docker run</h3><p>使用docker run命令运行容器的时候只需要加上&ndash;net 就可以使用我们创建的网络了：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>root@U1RTF:~# docker run --rm -it --net mynet busybox ping -6 -c4 ipv6-test.com
+</span></span><span class=line><span class=cl>PING ipv6-test.com <span class=o>(</span>2001:41d0:701:1100::29c8<span class=o>)</span>: <span class=m>56</span> data bytes
+</span></span><span class=line><span class=cl><span class=m>64</span> bytes from 2001:41d0:701:1100::29c8: <span class=nv>seq</span><span class=o>=</span><span class=m>0</span> <span class=nv>ttl</span><span class=o>=</span><span class=m>45</span> <span class=nv>time</span><span class=o>=</span>249.606 ms
+</span></span><span class=line><span class=cl><span class=m>64</span> bytes from 2001:41d0:701:1100::29c8: <span class=nv>seq</span><span class=o>=</span><span class=m>1</span> <span class=nv>ttl</span><span class=o>=</span><span class=m>45</span> <span class=nv>time</span><span class=o>=</span>249.622 ms
+</span></span><span class=line><span class=cl><span class=m>64</span> bytes from 2001:41d0:701:1100::29c8: <span class=nv>seq</span><span class=o>=</span><span class=m>2</span> <span class=nv>ttl</span><span class=o>=</span><span class=m>45</span> <span class=nv>time</span><span class=o>=</span>249.691 ms
+</span></span></code></pre></td></tr></table></div></div><p>通过上边命令可以发现已经支持了ipv6了。</p><h3 id=docker-compose>docker compose</h3><p>编写docker-compose.yaml文件 ，使用刚才创建的网络。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;3&#39;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>networks</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>mynet</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>external</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>xray</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>teddysun/xray</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>unless-stopped</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container_name</span><span class=p>:</span><span class=w> </span><span class=l>xray</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=c># 自定义host</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>XRAY_HOST=${XRAY_HOST}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=m>13100</span><span class=p>:</span><span class=m>13100</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>mynet</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./log:/var/log/xray</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./conf/config.json:/etc/xray/config.json</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>运行上边的xray后再执行ping v6，也是可以正常ping通的。</p><p>至次，我们已经可以给docker容器分配ipv6地址了，以上就是折腾过程，记录一下。</p></section><footer class=article-footer><section class=article-tags><a href=/tags/docker/>Docker</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class=article-lastmod><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>Last updated on Jul 15, 2023 21:34 UTC</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Related content</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/2023/debian-use-docker-install-promutheus/><div class=article-details><h2 class=article-title>debian系统使用docker快速安装promutheus</h2></div></a></article><article class=has-image><a href=/2023/introduction-to-docker-network-mode/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=alYxQXJQb1dGYk9kMFhXVUtHR2NKNElMWkFmL2JGekd5a09YNmNzbWJBSERqeWR2OUFTTXo1a25MZGRPS2JlKytwUFgvQWs9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=alYxQXJQb1dGYk9kMFhXVUtHR2NKNElMWkFmL2JGekd5a09YNmNzbWJBSERqeWR2OUFTTXo1a25MZGRPS2JlKytwUFgvQWs9"></div><div class=article-details><h2 class=article-title>docker网络模式简介</h2></div></a></article><article class=has-image><a href=/2023/docker-use-certbot-apply-lets-encrypt/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=UVQ4dnZwSDJWNWNTTFNwWXo3QUxlM2wvcFhCdGEyU1diN0lUbGVKZ0gxQXExdFFJV2FIazdvVEorM0Vsak5xWFNDQ1FVNVU9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=UVQ4dnZwSDJWNWNTTFNwWXo3QUxlM2wvcFhCdGEyU1diN0lUbGVKZ0gxQXExdFFJV2FIazdvVEorM0Vsak5xWFNDQ1FVNVU9"></div><div class=article-details><h2 class=article-title>docker部署certbot申请Let’s Encrypt证书</h2></div></a></article><article class=has-image><a href=/2023/linux-install-docker/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=dnp6YVlCOXUzcXZ3NHRyMlZGVEZDYUY3c3h6eW9ET21TY3YrWWwrZTZBcllvQU1ZQkIxWXlaQnRpRVR5cml3VDVIRUJUTFk9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=dnp6YVlCOXUzcXZ3NHRyMlZGVEZDYUY3c3h6eW9ET21TY3YrWWwrZTZBcllvQU1ZQkIxWXlaQnRpRVR5cml3VDVIRUJUTFk9"></div><div class=article-details><h2 class=article-title>linux服务器快速安装docker和docker-compose</h2></div></a></article><article class=has-image><a href=/2023/linux-install-docker/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=dnp6YVlCOXUzcXZ3NHRyMlZGVEZDYUY3c3h6eW9ET21TY3YrWWwrZTZBcllvQU1ZQkIxWXlaQnRpRVR5cml3VDVIRUJUTFk9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=dnp6YVlCOXUzcXZ3NHRyMlZGVEZDYUY3c3h6eW9ET21TY3YrWWwrZTZBcllvQU1ZQkIxWXlaQnRpRVR5cml3VDVIRUJUTFk9"></div><div class=article-details><h2 class=article-title>linux服务器快速安装docker和docker-compose</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//hugo-theme-stack.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2025 iminling.com</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.30.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

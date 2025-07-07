@@ -1,0 +1,1548 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nginx on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/nginx/</link><description>Recent content in Nginx on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Mon, 05 Feb 2024 13:12:33 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/nginx/index.xml" rel="self" type="application/rss+xml"/><item><title>docker配置fail2ban拦截nginx非法请求ip</title><link>https://www.iminling.com/2024/docker-install-fail2ban-interception-nginx-ip/</link><pubDate>Mon, 05 Feb 2024 13:12:33 +0000</pubDate><guid>https://www.iminling.com/2024/docker-install-fail2ban-interception-nginx-ip/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=S2lnNFVkM3BpS1h5b1RvRlF3V0tocVFuZ3YrTHQ3YWhJQXp6YnNJdUZlenRpSTZOdmF2b0M0MTJpR2VoaVU1eG1PNTZ6Z1E9" alt="Featured image of post docker配置fail2ban拦截nginx非法请求ip" />&lt;p>前边写过一篇通过fail2ban来拦截ssh暴力破解：&lt;a class="link" href="https://www.iminling.com/2024/docker-install-fail2ban-protect-ssh/" >docker安装fail2ban并配置防止ssh登录爆破&lt;/a>，fail2ban能做到的远不止这些，如果你有一个属于自己的网站，那么一定会遇到有无数不知明ip来访问你网站的敏感路径，总是想着要来获取你网站的一些有用信息。今天我们就来使用fail2ban去拦截那些非法访问的ip地址。&lt;/p>
+&lt;h2 id="环境与目录情况">环境与目录情况
+&lt;/h2>&lt;p>fail2ban如上篇：中的安装方式，是使用docker来安装的
+nginx也是使用docker来安装的，并使用的是桥接网络。
+然后再来看一下配置的目录：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban$ tree
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── data
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── filter.d
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   │   └── nginx-cc.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   └── jail.d
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── nginx-cc.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── sshd.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── docker-compose.yaml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── .env
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── logs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上，需要创建两个文件，一个是针对非法访问的日志的过滤规则，另一个是针对非法访问的ip的监狱规则。我这里暂定这个监狱的名称就叫做：&lt;code>nginx-cc&lt;/code>,&lt;code>filter.d&lt;/code>和&lt;code>jail.d&lt;/code>中的配置文件名称一致。&lt;/p>
+&lt;h2 id="过滤配置">过滤配置
+&lt;/h2>&lt;p>先来看一下过滤规则的配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">[Definition]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">failregex = ^&amp;lt;HOST&amp;gt; .* &amp;#34;(GET|POST|HEAD).*HTTP.*&amp;#34; (404|503) .*$
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ignoreregex =.*(robots.txt|favicon.ico|jpg|png)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>failregex&lt;/code>配置的就是针对错误访问日志进行过滤的正则表达试，以ip开头，并把ip使用&lt;code>&amp;lt;HOST&amp;gt;&lt;/code>代替。这里是针对访问状态是404和503的请求。
+&lt;code>ignoreregex&lt;/code>配置了针对什么样的路径日志进行忽略。&lt;/p>
+&lt;p>以上是nginx默认日志的访问日志匹配的正则，如果你修改了自己的nginx的访问日志输出格式，则需要按自己的日志输出格式来编写失败请求的正则表达式。&lt;/p>
+&lt;h2 id="监狱配置">监狱配置
+&lt;/h2>&lt;p>直接先看一下监狱的具体配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cc&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">enabled&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">filter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">nginx&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">chain&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">DOCKER&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">USER&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#action = iptables-multiport[name=nginx-cc, port=&amp;#34;http,https&amp;#34;, protocol=tcp]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">http&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">https&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">logpath&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">maxretry&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bantime&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">86400&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">findtime&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3600&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ignoreip&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mf">192.168&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">0.1&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">24&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>下边详细说明一下各参数：
+&lt;code>filter&lt;/code>对应的就是上边的过滤规则中的名称
+&lt;code>chain&lt;/code>为&lt;code>DOCKER-USER&lt;/code>,因为nginx是使用docker安装的，所以需要把iptables的规则添加到&lt;code>DOCKER-USER&lt;/code>中，&lt;code>DOCKER-USER&lt;/code>中的规则在Docker自动创建的任何规则之前加载，拥有更高的优先级。
+&lt;code>port&lt;/code>满足添加是禁止的端口
+&lt;code>logpath&lt;/code>读取的日志路径
+&lt;code>findtime&lt;/code>日志文件中分析错误连接数的时间。以秒计算&lt;/p>
+&lt;h2 id="启动配置">启动配置
+&lt;/h2>&lt;p>因为以前已经配置过sshd的监狱，并且fail2ban也是正常运行的，此时只需要对配置进行重新加载就可以了，可以使用以下命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~/&lt;/span>&lt;span class="n">images&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fail2ban&lt;/span>&lt;span class="o">$&lt;/span> &lt;span class="n">docker&lt;/span> &lt;span class="n">exec&lt;/span> &lt;span class="n">fail2ban&lt;/span> &lt;span class="n">fail2ban&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">client&lt;/span> &lt;span class="n">reload&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">OK&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>再来查看当前生效的监狱有哪些：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban# docker exec fail2ban fail2ban-client status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">|- Number of jail: 2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">`- Jail list: nginx-cc, sshd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到&lt;code>nginx-cc&lt;/code>监狱已经生效了，再来看一下这个监狱的详细情况：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~/&lt;/span>&lt;span class="n">images&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fail2ban&lt;/span>&lt;span class="c1"># docker exec fail2ban fail2ban-client status nginx-cc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Status&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">jail&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">nginx&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|-&lt;/span> &lt;span class="n">Filter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="o">|-&lt;/span> &lt;span class="n">Currently&lt;/span> &lt;span class="n">failed&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="o">|-&lt;/span> &lt;span class="n">Total&lt;/span> &lt;span class="n">failed&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">134&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="ne">File&lt;/span> &lt;span class="n">list&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="n">Actions&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|-&lt;/span> &lt;span class="n">Currently&lt;/span> &lt;span class="n">banned&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|-&lt;/span> &lt;span class="n">Total&lt;/span> &lt;span class="n">banned&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">21&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="n">Banned&lt;/span> &lt;span class="ne">IP&lt;/span> &lt;span class="n">list&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到鉴于的详细信息，此时不出意外就可以拦截到那些异常情况了。&lt;/p>
+&lt;h2 id="遇到的问题">遇到的问题
+&lt;/h2>&lt;p>不出意外，肯定会出意外。我在debian11的机器上安装，请求404的url会被记录到&lt;code>Total failed&lt;/code>里，并且请求失败的ip也会出现在&lt;code>Banned Ip list&lt;/code>里，但是被ban后竟然还可以访问，此时通过查看&lt;code>fail2ban&lt;/code>容器发现竟然添加iptables规则的时候出现了异常。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Zk9mSUhyREttOTBtYU45dXlrNEZwclE1NW9NTVpkeGt4WG5tQU5mdndsQkxLYVhuRFNUbHBLR3ZjTGZmbWE4a3RmWTNzUk09"
+loading="lazy"
+alt="fail2ban add fail"
+>&lt;/p>
+&lt;p>如上图，出现&lt;code>iptables: No chain/target/match by that name&lt;/code> 错误，导致iptables规则添加失败，通过&lt;code>iptables -nvL&lt;/code>的确也看不添加的被禁的ip。在网上找了好久不知道是什么原因，后来发现官方的github仓库的说明里就有关于这个的说明&lt;a class="link" href="https://github.com/crazy-max/docker-fail2ban?tab=readme-ov-file#use-iptables-tooling-without-nftables-backend" target="_blank" rel="noopener"
+>crazy-max/docker-fail2ban&lt;/a>：&lt;/p>
+&lt;blockquote>
+&lt;p>If your system&amp;rsquo;s &lt;code>iptables&lt;/code> tooling uses the nftables backend, this will throw the error &lt;code>stderr: 'iptables: No chain/target/match by that name.'&lt;/code>. You need to switch the &lt;code>iptables&lt;/code> tooling to &amp;rsquo;legacy&amp;rsquo; mode to avoid these problems. This is the case on at least Debian 10 (Buster), Ubuntu 19.04, Fedora 29 and newer releases of these distributions by default. RHEL 8 does not support switching to legacy mode, and is therefore currently incompatible with this image.&lt;/p>&lt;/blockquote>
+&lt;p>原来是因为iptable的模式问题，默认debian11使用的&lt;code>nf_tables&lt;/code>模式,按照官方的提示需要切换为&lt;code>legacy&lt;/code>模式，如何查看自己的iptables是哪种模式呢？可以使用&lt;code>iptables --version&lt;/code>来查看，如下就使用的是&lt;code>nf_tables&lt;/code>模式。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~# iptables --version
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">iptables v1.8.7 (nf_tables)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>那如何修改成&lt;code>legacy&lt;/code>模式呢？官方也给了解决方案：&lt;/p>
+&lt;p>On Ubuntu or Debian：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ update-alternatives --set iptables /usr/sbin/iptables-legacy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ update-alternatives --set arptables /usr/sbin/arptables-legacy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ update-alternatives --set ebtables /usr/sbin/ebtables-legacy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>On Fedora:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ update-alternatives --set iptables /usr/sbin/iptables-legacy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我的系统是debian，所以按照上边的四条来执行，后边两条并没有执行成功，提示没有开启，那就不管了。执行完后可以再使用上边的version命令查看模式是否已经改过来了:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban# iptables --version
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">iptables v1.8.7 (legacy)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:service networking restart
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到，已经切换成功了，并且重启了&lt;code>networking&lt;/code>服务。此时再去看禁止ip发现还是不行，仍然可以访问，&lt;strong>官方建议重启&lt;/strong>，我以为重启&lt;code>networking&lt;/code>就可以了，但是并不行，最后只好&lt;strong>对服务器进行了重启&lt;/strong>，最终终于生效，成功的对异常访问ip进行了禁止。&lt;/p>
+&lt;p>以上就是折腾过程，希望可以帮助到大家。&lt;/p></description></item><item><title>自定义Nginx日志属性并设置日志以JSON输出</title><link>https://www.iminling.com/2023/custom-nginx-log-output-json/</link><pubDate>Wed, 04 Oct 2023 15:04:07 +0000</pubDate><guid>https://www.iminling.com/2023/custom-nginx-log-output-json/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=eEZmbmFBSW14MCtoRHpiR0RHeW52cHZqTmNJRU1Zblg0cCtiYWo1Z3VSbHNiNUY2cHF0OHJKZHlpbGVCQUpGRVRMWmRwYXM9" alt="Featured image of post 自定义Nginx日志属性并设置日志以JSON输出" />&lt;p>日志在日常开发中是非常重要的东西，在出现错误后可以快速的进行排查，对Nginx而言同样也很重要，同Nginx的日志我们可以清晰的了解什么url被访问，是什么Ip访问过来等一些重要信息，所以无论是在开发中还是线上环境，都会开启日志。下边就来了解一下Nginx的日志。&lt;/p>
+&lt;h2 id="日志类型">日志类型
+&lt;/h2>&lt;p>在Nginx的配置文件中，日志相关的配置可以出现在_&lt;strong>http,server,location&lt;/strong>_中，通常我们会设置以下格式：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listen&lt;/span> &lt;span class="mi">443&lt;/span> &lt;span class="n">ssl&lt;/span> &lt;span class="n">http2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_name&lt;/span> &lt;span class="n">_&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">index&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">html&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">htm&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">root&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">www&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">html&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_tokens&lt;/span> &lt;span class="n">off&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">client_max_body_size&lt;/span> &lt;span class="mi">75&lt;/span>&lt;span class="n">M&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">access_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">error&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>设置了access和error两种类型的日志，日志的设置语法是：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">access_log path [format [buffer=size] [gzip[=level]] [flush=time] [if=condition]];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">access_log off;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以设置开启日志，也可以设置关闭日志。access_log中记录了所有的访问日志，error_log中则记录访问中的一些异常请求，方便在出现问题的时候进行错误排查。&lt;/p>
+&lt;p>另外也可以定义缓存区以及刷新时间等属性。&lt;/p>
+&lt;p>如果使用 gzip 参数，则缓冲数据将在写入文件之前被压缩。压缩级别可以设置在 1（最快，压缩程度较低）和 9（最慢，压缩效果最佳）之间。默认情况下，缓冲区大小等于64K字节，压缩级别设置为1。由于数据被压缩在原子块中，因此日志文件可以随时由“zcat”解压或读取。使用gzip有一个要求，那就是在构建Nginx必须使用 zlib 库构建。&lt;/p>
+&lt;p>以上只是设置了访问日志和错误日志的记录位置或者不记录日志，那么日志记录的格式是怎样的呢？&lt;/p>
+&lt;h2 id="日志格式">日志格式
+&lt;/h2>&lt;p>上边的配置没有指定具体的日志格式，那么Nginx有一个默认的日志记录格式：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">log_format combined &amp;#39;$remote_addr - $remote_user [$time_local] &amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;#34;$request&amp;#34; $status $body_bytes_sent &amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;#34;$http_referer&amp;#34; &amp;#34;$http_user_agent&amp;#34;&amp;#39;;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>它的名称叫combined,具体log_format的语法如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">log_format name [escape=default|json|none] string ...;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>每一个日志格式都有一个名称，然后在配置access_log的时候可以指定用哪种格式来进行记录日志。log_format只能定义在_&lt;strong>http&lt;/strong>_块中。查看在Nginx配置文件中的定义：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">http&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">log_format&lt;/span> &lt;span class="n">main&lt;/span> &lt;span class="s1">&amp;#39;$remote_addr - $remote_user [$time_local] &amp;#34;$request&amp;#34; &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;$status $body_bytes_sent &amp;#34;$http_referer&amp;#34; &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;$http_user_agent&amp;#34; &amp;#34;$http_x_forwarded_for&amp;#34;&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">access_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span> &lt;span class="n">main&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">error&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上在http块中定义了一个名称为main的日志格式，在server块中通过名称对该日志格式进行了引用，这样子日志的格式都会按找main中定义的一些属性来进行记录访问信息。&lt;/p>
+&lt;p>escape 参数（1.11.8）允许在变量中设置 json 或默认字符转义，默认情况下使用默认转义。 none 值 (1.13.10) 禁用转义。&lt;/p>
+&lt;p>对于默认转义，字符“&amp;quot;”、“\”以及其他值小于32（0.7.0）或大于126（1.1.6）的字符将被转义为“\xXX”。如果找不到变量值，将记录连字符（“-”）。&lt;/p>
+&lt;p>对于json转义，JSON字符串中不允许的所有字符都将被转义：字符“&amp;quot;”和“\”被转义为“\”和“\”，值小于32的字符被转义为“\n”， “\r”、“\t”、“\b”、“\f”或“\u00XX”。&lt;/p>
+&lt;p>但是这些属性究竟什么意思？Nginx有哪些属性可以使用呢？&lt;/p>
+&lt;h2 id="日志属性">日志属性
+&lt;/h2>&lt;p>日志属性可以包含公共变量以及仅在日志写入时存在的变量：&lt;/p>
+&lt;ul>
+&lt;li>$bytes_sent：发送到客户端的字节数&lt;/li>
+&lt;li>$connection：连接序列号&lt;/li>
+&lt;li>$connection_requests：当前通过连接发出的请求数 (1.1.18)&lt;/li>
+&lt;li>$msec：日志写入时的时间（以秒为单位，精度为毫秒）&lt;/li>
+&lt;li>$pipe：如果请求是通过管道传输的，则为“p”，“.”否则&lt;/li>
+&lt;li>$request_length：请求长度（包括请求行、请求头和请求正文）&lt;/li>
+&lt;li>$request_time：请求处理时间以秒为单位，精度为毫秒；从客户端读取第一个字节与将最后一个字节发送到客户端后写入日志之间经过的时间&lt;/li>
+&lt;li>$status：响应状态&lt;/li>
+&lt;li>$time_iso8601：ISO 8601 标准格式的当地时间&lt;/li>
+&lt;li>$time_local：通用日志格式中的本地时间&lt;/li>
+&lt;/ul>
+&lt;p>具体的参考：&lt;a class="link" href="http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format" target="_blank" rel="noopener"
+>Module ngx_http_log_module&lt;/a>&lt;/p>
+&lt;h2 id="设置json格式">设置JSON格式
+&lt;/h2>&lt;p>通过上边对日志格式和日志文件的一些了解，我们就可以非常容易的把日志的格式设置成JSON了，只需要定义一个log_format，把它的格式定义成一个json字符串，然后在打印日志的时候引用这个格式就可以实现了，下边是一个完成的定义文件:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">http&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">log_format&lt;/span> &lt;span class="n">json&lt;/span> &lt;span class="n">escape&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">json&lt;/span> &lt;span class="s1">&amp;#39;{&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;msec&amp;#34;: &amp;#34;$msec&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># request unixtime in seconds with a milliseconds resolution&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;connection&amp;#34;: &amp;#34;$connection&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># connection serial number&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;connection_requests&amp;#34;: &amp;#34;$connection_requests&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># number of requests made in connection&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;pid&amp;#34;: &amp;#34;$pid&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># process pid&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request_id&amp;#34;: &amp;#34;$request_id&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># the unique request id&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request_length&amp;#34;: &amp;#34;$request_length&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># request length (including headers and body)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;remote_addr&amp;#34;: &amp;#34;$remote_addr&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># client IP&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;remote_user&amp;#34;: &amp;#34;$remote_user&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># client HTTP username&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;remote_port&amp;#34;: &amp;#34;$remote_port&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># client port&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;time_local&amp;#34;: &amp;#34;$time_local&amp;#34;, &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;time_iso8601&amp;#34;: &amp;#34;$time_iso8601&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># local time in the ISO 8601 standard format&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request&amp;#34;: &amp;#34;$request&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># full path no arguments if the request&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request_uri&amp;#34;: &amp;#34;$request_uri&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># full path and arguments if the request&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;args&amp;#34;: &amp;#34;$args&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># args&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;status&amp;#34;: &amp;#34;$status&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># response status code&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;body_bytes_sent&amp;#34;: &amp;#34;$body_bytes_sent&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># the number of body bytes exclude headers sent to a client&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;bytes_sent&amp;#34;: &amp;#34;$bytes_sent&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># the number of bytes sent to a client&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;http_referer&amp;#34;: &amp;#34;$http_referer&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># HTTP referer&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;http_user_agent&amp;#34;: &amp;#34;$http_user_agent&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># user agent&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;http_x_forwarded_for&amp;#34;: &amp;#34;$http_x_forwarded_for&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># http_x_forwarded_for&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;http_host&amp;#34;: &amp;#34;$http_host&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># the request Host: header&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;server_name&amp;#34;: &amp;#34;$server_name&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># the name of the vhost serving the request&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request_time&amp;#34;: &amp;#34;$request_time&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># request processing time in seconds with msec resolution&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream&amp;#34;: &amp;#34;$upstream_addr&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># upstream backend server for proxied requests&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream_connect_time&amp;#34;: &amp;#34;$upstream_connect_time&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># upstream handshake time incl. TLS&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream_header_time&amp;#34;: &amp;#34;$upstream_header_time&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># time spent receiving upstream headers&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream_response_time&amp;#34;: &amp;#34;$upstream_response_time&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># time spend receiving upstream body&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream_response_length&amp;#34;: &amp;#34;$upstream_response_length&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># upstream response length&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream_cache_status&amp;#34;: &amp;#34;$upstream_cache_status&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># cache HIT/MISS where applicable&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;ssl_protocol&amp;#34;: &amp;#34;$ssl_protocol&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># TLS protocol&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;ssl_cipher&amp;#34;: &amp;#34;$ssl_cipher&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># TLS cipher&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;scheme&amp;#34;: &amp;#34;$scheme&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># http or https&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request_method&amp;#34;: &amp;#34;$request_method&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># request method&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;server_protocol&amp;#34;: &amp;#34;$server_protocol&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># request protocol, like HTTP/1.1 or HTTP/2.0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;pipe&amp;#34;: &amp;#34;$pipe&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># &amp;#34;p&amp;#34; if request was pipelined, &amp;#34;.&amp;#34; otherwise&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;gzip_ratio&amp;#34;: &amp;#34;$gzip_ratio&amp;#34;, &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;http_cf_ray&amp;#34;: &amp;#34;$http_cf_ray&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;}&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listen&lt;/span> &lt;span class="mi">443&lt;/span> &lt;span class="n">ssl&lt;/span> &lt;span class="n">http2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_name&lt;/span> &lt;span class="n">_&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">access_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span> &lt;span class="n">json&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上定义了一个完成的json格式的输出形式，实际的请求输出是这样子的：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;msec&amp;#34;: &amp;#34;1696428300.136&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;connection&amp;#34;: &amp;#34;849615&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;connection_requests&amp;#34;: &amp;#34;1&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;pid&amp;#34;: &amp;#34;89&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request_id&amp;#34;: &amp;#34;f17e4e5dcda30462ac83b120f05fedab&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request_length&amp;#34;: &amp;#34;619&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;remote_addr&amp;#34;: &amp;#34;65.108.78.33&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;remote_user&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;remote_port&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;time_local&amp;#34;: &amp;#34;04/Oct/2023:22:05:00 +0800&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;time_iso8601&amp;#34;: &amp;#34;2023-10-04T22:05:00+08:00&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request&amp;#34;: &amp;#34;GET /category/%E4%BF%A1%E7%94%A8%E5%8D%A1 HTTP/1.1&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request_uri&amp;#34;: &amp;#34;/category/%E4%BF%A1%E7%94%A8%E5%8D%A1&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;args&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;status&amp;#34;: &amp;#34;200&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;body_bytes_sent&amp;#34;: &amp;#34;12354&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;bytes_sent&amp;#34;: &amp;#34;12987&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;http_referer&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;http_user_agent&amp;#34;: &amp;#34;Mozilla/5.0 (compatible; MJ12bot/v1.4.8; http://mj12bot.com/)&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;http_x_forwarded_for&amp;#34;: &amp;#34;65.108.78.33&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;http_host&amp;#34;: &amp;#34;www.iminling.com&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;server_name&amp;#34;: &amp;#34;www.iminling.com,iminling.com&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request_time&amp;#34;: &amp;#34;0.093&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream&amp;#34;: &amp;#34;192.168.0.3:9000&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream_connect_time&amp;#34;: &amp;#34;0.000&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream_header_time&amp;#34;: &amp;#34;0.092&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream_response_time&amp;#34;: &amp;#34;0.093&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream_response_length&amp;#34;: &amp;#34;49160&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream_cache_status&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;ssl_protocol&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;ssl_cipher&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;scheme&amp;#34;: &amp;#34;http&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request_method&amp;#34;: &amp;#34;GET&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;server_protocol&amp;#34;: &amp;#34;HTTP/1.1&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;pipe&amp;#34;: &amp;#34;.&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;gzip_ratio&amp;#34;: &amp;#34;3.98&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;http_cf_ray&amp;#34;: &amp;#34;810dfa2978c4376f-HEL&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;geoip_country_code&amp;#34;: &amp;#34;FI&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;geoip_city&amp;#34;: &amp;#34;Helsinki&amp;#34; #这里的国家和城市需要开启新的功能，后续再详细说。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上就是对日志格式的说明以及如何实现以json格式输出日志。&lt;/p></description></item><item><title>nginx中location使用方法总结</title><link>https://www.iminling.com/2023/nginx-location-use-summary/</link><pubDate>Wed, 30 Aug 2023 14:57:18 +0000</pubDate><guid>https://www.iminling.com/2023/nginx-location-use-summary/</guid><description>&lt;p>在nignx中我们比较长使用的就是location，我们使用location来定位资源或者转发请求，使用不当经常就会遇到404错误，无法找到资源或者请求异常。下面我们来详细了解一下location的用法。&lt;/p>
+&lt;h2 id="语法">语法
+&lt;/h2>&lt;p>location的具体语法如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">location [ = | ~ | ~* | ^~ ] uri { ... }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">location @name { ... }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;span class="md-plain md-expand">语法规则很简单，一个&lt;/span>&lt;span class="md-pair-s" spellcheck="false">&lt;code>location&lt;/code>&lt;/span>&lt;span class="md-plain md-expand">关键字，后面跟着可选的修饰符，后面是要匹配的字符，花括号中是要执行的操作。&lt;/span>&lt;/p>
+&lt;h2 id="修饰符">修饰符
+&lt;/h2>&lt;p>在语法中可以看到location有四中修饰符，其实还有一种就是修饰符就是什么也没有，location后边直接跟uri，下边来详细了解一下各种修饰符的作用：&lt;/p>
+&lt;p>&lt;code>=&lt;/code> 表示精确匹配。只有请求的url路径与后面的字符串完全相等时，才会命中。&lt;/span>
+&lt;code>~&lt;/code> 表示该规则是使用正则定义的，区分大小写。&lt;/span>
+&lt;code>~*&lt;/code> 表示该规则是使用正则定义的，不区分大小写。&lt;/span>
+&lt;code>^~&lt;/code> 表示如果该符号后面的字符是最佳匹配，采用该规则，不再进行后续的查找。&lt;/span>
+&lt;code>无修饰符&lt;/code> 表示前缀匹配&lt;/p>
+&lt;p>&lt;code>=&lt;/code>、&lt;code>~&lt;/code>和&lt;code>^~&lt;/code>是非正则匹配，&lt;code>~&lt;/code>和&lt;code>~*&lt;/code>是正则匹配。&lt;/p>
+&lt;p>location匹配还有一个特点：**非正则匹配优先！**非正则&amp;gt;正则&lt;/p>
+&lt;h2 id="匹配过程">匹配过程
+&lt;/h2>&lt;p>总共5种修饰符，如果一个url请求过来可以匹配到多种，那nginx会如何选择呢？下边来看一下完整的匹配过程：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>用所有的前缀字符串去匹配URI(这里说的前缀字符串，是除&lt;del>和&lt;/del>*修饰的字符串外的所有字符串，包括=、^~及无修饰符三种都算是前缀字符串)；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果找到=号修饰的字符串与URI匹配(无论它在哪个位置)，则终止匹配过程，并进入该location内部执行具体操作；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果不找到=号修饰的字符串，则继续匹配普通前缀字符串(即用^~修饰的或无修饰符的字符串)；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在^~修饰的或无修饰符的字符串中如果有多个规则能匹配上URI，则会查看最长的那一个是否用^~修饰；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果最长的那个有用^~修饰，则终止匹配，这个用^~修饰的“最长”的匹配就是最终被选用的location，但是如果这个“最长”的匹配没有用^~修饰(说明它是无修饰符的)，则会暂时把它存储下来，但不会终止匹配，而是继续进行后面的正则匹配；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>开始正则匹配，匹配所有用&lt;del>或&lt;/del>*修饰的字符串&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>匹配到第一个正则表达式后终止匹配，使用对应的location；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果没有匹配到正则表达式，则使用之前存储的前缀字符串对应的location，至此，整个匹配过程结束。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="路径匹配">路径匹配
+&lt;/h2>&lt;p>使用location的时候，代码块里一般会使用&lt;code>root&lt;/code>或者&lt;code>alias&lt;/code>或者&lt;code>proxy_pass&lt;/code>下边详细说一下proxy_pass的用法。&lt;/p>
+&lt;h3 id="proxy_pass">proxy_pass
+&lt;/h3>&lt;p>Nginx的&lt;a class="link" href="http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass" target="_blank" rel="noopener"
+>官网&lt;/a>将proxy_pass分为两种类型：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>种是只包含IP和端口号的（连端口之后的/也没有，这里要特别注意），比如proxy_pass http://localhost:8080，这种方式称为不带URI方式；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>另一种是在端口号之后有其他路径的，包含了只有单个/的，如proxy_pass http://localhost:8080/，以及其他路径，比如proxy_pass http://localhost:8080/abc。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="不带uri方式相对路径">不带URI方式(相对路径)
+&lt;/h4>&lt;p>对于不带URI方式，Nginx将会保留location中路径部分，比如：&amp;lt;&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">location /api1/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">  proxy_pass http://localhost:8080;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在访问&lt;code>http://localhost/api1/xxx&lt;/code>时，会代理到`http://localhost:8080/api1/xxx&lt;/p>
+&lt;h4 id="带uri方式绝对路径">带URI方式(绝对路径)
+&lt;/h4>&lt;p>对于带URI方式，nginx将使用诸如alias的替换方式对URL进行替换，并且这种替换只是字面上的替换，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">location /api2/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">  proxy_pass http://localhost:8080/;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>当访问&lt;code>http://localhost/api2/xxx&lt;/code>时，&lt;code>http://localhost/api2/&lt;/code>（注意最后的/）被替换成了&lt;code>http://localhost:8080/&lt;/code>，然后再加上剩下的&lt;code>xxx&lt;/code>，于是变成了&lt;code>http://localhost:8080/xxx&lt;/code>。
+下面再给一些例子来帮助大家理解相对路径和绝对路径：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">server {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> listen 80;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> server_name localhost;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是相对路径，所以会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api1/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api1/xxx -&amp;gt; http://localhost:8080/api1/xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api2/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api2/xxx -&amp;gt; http://localhost:8080/xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是相对路径，所以会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api3 {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api3/xxx -&amp;gt; http://localhost:8080/api3/xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api4 {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api4/xxx -&amp;gt; http://localhost:8080//xxx，匹配到/api4/xxx,location中是/api4需去掉剩下/xxx，加上proxy_pass则是//xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api5/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/haha;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api5/xxx -&amp;gt; http://localhost:8080/hahaxxx，匹配到/api5/xxx, 去掉location中的/api5/剩下xxx，加上proxy_pass则是hahaxxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api6/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/haha/;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api6/xxx -&amp;gt; http://localhost:8080/haha/xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api7 {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/haha;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api7/xxx -&amp;gt; http://localhost:8080/haha/xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api8 {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/haha/;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api8/xxx -&amp;gt; http://localhost:8080/haha//xxx，匹配到/api8/xxx,去掉location中的/api8剩下/xxx,加上proxy_pass则是/haha//xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上就是nginx中location的使用方法，匹配规则，以及代码块中proxy_pass的使用方法，希望可以帮到大家。&lt;/p></description></item><item><title>nginx配置隐藏版本号提升安全</title><link>https://www.iminling.com/2023/nginx-hides-version-number/</link><pubDate>Sat, 05 Aug 2023 19:21:16 +0000</pubDate><guid>https://www.iminling.com/2023/nginx-hides-version-number/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=eEZmbmFBSW14MCtoRHpiR0RHeW52cHZqTmNJRU1Zblg0cCtiYWo1Z3VSbHNiNUY2cHF0OHJKZHlpbGVCQUpGRVRMWmRwYXM9" alt="Featured image of post nginx配置隐藏版本号提升安全" />&lt;div>
+Nginx (engine x) 是一个高性能的HTTP和反向代理web服务器  ，同时也提供了IMAP/POP3/SMTP服务，是个软件肯定都会多多少少有一些漏洞，所以我们需要隐藏nginx的版本号，让攻击者没那么容易很快的攻破我们的网站。
+&lt;/div>
+&lt;div>
+&lt;/div>
+&lt;div>
+nginx官方提供了关闭显示版本号的方法，其实也很简单，只需要添加&lt;code>server_tokens off&lt;/code>就可以了，server_tokens可以到http,server和location块中，我们找一个合适的位置添加进去就可以了。
+&lt;/div>
+&lt;h2 id="添加前">添加前
+&lt;/h2>&lt;div>
+没有添加之前请求网站信息如下：
+&lt;/div>
+```bash
+$ curl -I https://www.iminling.com
+HTTP/2 200
+server: nginx/2.24.2
+date: Sun, 06 Aug 2023 03:02:12 GMT
+content-type: text/html; charset=UTF-8
+x-powered-by: PHP
+link: &lt;https://www.iminling.com/wp-json/>; rel="https://api.w.org/"
+```
+&lt;p>如上，server中会把nginx的完整版本号信息展示出来。&lt;/p>
+&lt;h2 id="添加server_token">添加server_token
+&lt;/h2>&lt;p>我这里把server_token添加到server块中，如下：&lt;/p>
+&lt;pre>&lt;code>server {
+listen 8443 ssl http2;
+server_name www.iminling.com;
+index index.php index.html index.htm;
+root /var/www/html;
+server_tokens off; # 添加server_tokens屏蔽显示版本号
+include conf.d/ssl_params.conf;
+location / {
+try_files $uri $uri/ /index.php$is_args$args;
+}
+}
+&lt;/code>&lt;/pre>
+&lt;p>如上，在server中添加server_tokens为off，然后我们再去验证一下。&lt;/p>
+&lt;h2 id="添加后">添加后
+&lt;/h2>&lt;p>再来看一下请求网站的信息：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ curl -I https://www.iminling.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">HTTP/2 &lt;span class="m">200&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">server: nginx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">date: Sun, &lt;span class="m">06&lt;/span> Aug &lt;span class="m">2023&lt;/span> 03:02:31 GMT
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">content-type: text/html&lt;span class="p">;&lt;/span> &lt;span class="nv">charset&lt;/span>&lt;span class="o">=&lt;/span>UTF-8
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-powered-by: PHP
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">link: &amp;lt;https://www.iminling.com/wp-json/&amp;gt;&lt;span class="p">;&lt;/span> &lt;span class="nv">rel&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://api.w.org/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上，server里只显示了nginx。&lt;/p>
+&lt;p>经过上边的配置就可以隐藏nginx的版本号了。&lt;/p></description></item><item><title>xray搭建reality和网站共用443端口启用网站SSL</title><link>https://www.iminling.com/2023/both-xray-reality-website-use-443/</link><pubDate>Mon, 31 Jul 2023 06:30:46 +0000</pubDate><guid>https://www.iminling.com/2023/both-xray-reality-website-use-443/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=TUVLUjRhOHdSS21VVjh4dDdmbElGUVhHZHRFRlR3c3h1R2F2Qi8wOEg0V3V6cGZReGx5NUs1Z3FQYjRhVXdCdm14WWVma2c9" alt="Featured image of post xray搭建reality和网站共用443端口启用网站SSL" />&lt;p>当我们只有一个vps，又想部署网站同时又想搭建代理，当然两个程序可以分开占用端口，做到不冲突，但是感觉不怎么优雅，所以想要让两个程序都去共用一个443端口，这样子网站可以使用域名并开启ssl，代理也可以使用443(心理作用，感觉代理走443会更好一些，毕竟代理使用了ssl，走其他端口怪怪的)。下面就开启折腾之路。&lt;/p>
+&lt;h2 id="代理协议">代理协议
+&lt;/h2>&lt;p>目前比较稳定的协议要数reality了，所以自己搭建的代理也是使用reality，reality可以使用自己的证书，也可以使用其他域名的证书：就是宣传的“偷证书”。既然我的网站要使用443开启ssl，那我当时使用自己的证书最方便，而且延迟最小。&lt;/p>
+&lt;h2 id="证书申请">证书申请
+&lt;/h2>&lt;p>安装reality可以使用xui来安装，具体的xui安装可以参考我的文章：&lt;a class="link" href="https://www.iminling.com/2023/x-ui-configuration-and-use/" >x-ui安装配置使用&lt;/a>。xui本身可以帮助我们申请证书，如果不想使用xui的证书申请，还可以参考我的另一篇文章使用certbot来申请证书：&lt;a class="link" href="https://www.iminling.com/2023/docker-use-certbot-apply-lets-encrypt/" >docker部署certbot申请Let’s Encrypt证书&lt;/a>，我这里就使用certbot来申请证书。&lt;/p>
+&lt;h2 id="站点部署">站点部署
+&lt;/h2>&lt;p>这里是为了演示，所以我这里就只启动nginx，然后配置ssl，对域名启用ssl。nginx我使用的是docker来启动的，具体的目录如下,所在的路径是：&lt;code>/root/images/nginx&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">├── README.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ ├── conf.d
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ └── nginx.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── docker-compose.yaml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── html
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ └── index.html
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── logs
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ├── 1.txt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ├── access.log
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ├── error.log&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>conf目录下是站点的配置文件，nginx.conf是默认的，它包含了conf.d目录为的所有&lt;code>.conf&lt;/code>结尾的文件。&lt;/p>
+&lt;h3 id="nginxconf">nginx.conf
+&lt;/h3>&lt;p>nginx.conf的配置如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">user&lt;/span> &lt;span class="n">nginx&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">worker_processes&lt;/span> &lt;span class="n">auto&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">error_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">error&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span> &lt;span class="n">notice&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">pid&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">run&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pid&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">events&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">worker_connections&lt;/span> &lt;span class="mi">1024&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">http&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">include&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">mime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">types&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">default_type&lt;/span> &lt;span class="n">application&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">octet&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">stream&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">log_format&lt;/span> &lt;span class="n">main&lt;/span> &lt;span class="s1">&amp;#39;$remote_addr - $remote_user [$time_local] &amp;#34;$request&amp;#34; &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;$status $body_bytes_sent &amp;#34;$http_referer&amp;#34; &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;$http_user_agent&amp;#34; &amp;#34;$http_x_forwarded_for&amp;#34;&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">access_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span> &lt;span class="n">main&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sendfile&lt;/span> &lt;span class="n">on&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">#tcp_nopush on;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">keepalive_timeout&lt;/span> &lt;span class="mi">65&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">#gzip on;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">include&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">conf&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>&lt;span class="o">/*.&lt;/span>&lt;span class="n">conf&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>很简单就是默认配置。&lt;/p>
+&lt;h3 id="webconf">web.conf
+&lt;/h3>&lt;p>web.conf是在conf.d目录下的，就是我们部署的站点的配置文件，如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 设置 HTTP 服务器，将所有 HTTP 请求都重定向到 HTTPS&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listen&lt;/span> &lt;span class="mi">80&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_name&lt;/span> &lt;span class="n">test&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xxx&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">me&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 重定向所有 HTTP 请求到 HTTPS&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">location&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="mi">301&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//$&lt;/span>&lt;span class="n">server_name&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">request_uri&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 设置 HTTPS 服务器&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listen&lt;/span> &lt;span class="mi">443&lt;/span> &lt;span class="n">ssl&lt;/span> &lt;span class="n">http2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_name&lt;/span> &lt;span class="n">test&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xxx&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">me&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1"># ======域名，需要改成自己的=========&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># SSL 证书和密钥文件的路径&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_certificate&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">letsencrypt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ssl&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">xx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fullchain&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pem&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1"># ======自己的证书文件路径=========&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_certificate_key&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">letsencrypt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ssl&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">xx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">privkey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pem&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="c1"># ====自己的证书文件路径=======&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 可选：设置 SSL 会话缓存&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_session_cache&lt;/span> &lt;span class="n">shared&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">SSL&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="n">m&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_session_timeout&lt;/span> &lt;span class="mi">10&lt;/span>&lt;span class="n">m&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 可选：设置 SSL 协议和加密算法&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_protocols&lt;/span> &lt;span class="n">TLSv1&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">2&lt;/span> &lt;span class="n">TLSv1&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_ciphers&lt;/span> &lt;span class="s2">&amp;#34;ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 可选：开启 OCSP Stapling，提高 SSL 握手性能&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_stapling&lt;/span> &lt;span class="n">on&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_stapling_verify&lt;/span> &lt;span class="n">on&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_trusted_certificate&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">letsencrypt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ssl&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">xx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fullchain&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pem&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1"># ======自己的证书文件路径=======&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 可选：设置 Content Security Policy（内容安全策略）头&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># add_header Content-Security-Policy &amp;#34;default-src &amp;#39;self&amp;#39;;&amp;#34; always;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 可选：设置访问日志&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">access_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">test&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">test&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">error&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">location&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">root&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">share&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">html&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">index&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">html&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">htm&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>访问80端口强制转到443端口，证书使用的是docker中的使用certbot申请的证书。证书的路径是和下边的docker-compose.yaml中挂载的目录相关的，xx只是为了在nginx容器中找到正确的目录。&lt;/p>
+&lt;h3 id="docker-composeyaml">docker-compose.yaml
+&lt;/h3>&lt;p>具体内容如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">version&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;3&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">networks&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mynet&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">external&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">services&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">nginx&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">image&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">nginx&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">1.22&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">restart&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">unless&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">stopped&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">container_name&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">nginx&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">volumes&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">./&lt;/span>&lt;span class="n">conf&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">conf&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">conf&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">./&lt;/span>&lt;span class="n">conf&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">conf&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">conf&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">./&lt;/span>&lt;span class="n">html&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">share&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">html&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">./&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">root&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">images&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">certbot&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">certs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">letsencrypt&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">root&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">images&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">certbot&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">certs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">live&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">test&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ml520&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">me&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">letsencrypt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ssl&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">xx&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">networks&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">mynet&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ports&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="mi">80&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">80&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="mi">443&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">443&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这里映射了letsencrypt的两个目录，配合nginx，找到对应的证书路径，如果不是在docker中就按找实际的证书路径处理就行了。&lt;/p>
+&lt;h3 id="indexhtml">index.html
+&lt;/h3>&lt;p>index.html就是一个非常简单的网页了，里边的内容很随意,就是一个欢迎语。&lt;/p>
+&lt;p>这时候我们把nginx启动起来，通过域名访问我们的网站看是否已经可以正常使用https。&lt;/p>
+&lt;h2 id="代理配置">代理配置
+&lt;/h2>&lt;p>代理的配置这里就简单带过，通过x-ui或者直接安装xray-core来运行。也可以通过我的镜像：&lt;a class="link" href="https://github.com/konghanghang/images/tree/master/xray" target="_blank" rel="noopener"
+>xray&lt;/a>，直接使用docker安装，参考文章：&lt;a class="link" href="https://www.iminling.com/2023/xray-configutaion-reality/" >xray配置使用reality&lt;/a>&lt;/p>
+&lt;p>xray的配置文件如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;span class="lnt">64
+&lt;/span>&lt;span class="lnt">65
+&lt;/span>&lt;span class="lnt">66
+&lt;/span>&lt;span class="lnt">67
+&lt;/span>&lt;span class="lnt">68
+&lt;/span>&lt;span class="lnt">69
+&lt;/span>&lt;span class="lnt">70
+&lt;/span>&lt;span class="lnt">71
+&lt;/span>&lt;span class="lnt">72
+&lt;/span>&lt;span class="lnt">73
+&lt;/span>&lt;span class="lnt">74
+&lt;/span>&lt;span class="lnt">75
+&lt;/span>&lt;span class="lnt">76
+&lt;/span>&lt;span class="lnt">77
+&lt;/span>&lt;span class="lnt">78
+&lt;/span>&lt;span class="lnt">79
+&lt;/span>&lt;span class="lnt">80
+&lt;/span>&lt;span class="lnt">81
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;log&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;loglevel&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;warning&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;access&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;/var/log/xray/access.log&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;error&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;/var/log/xray/error.log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;api&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;services&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;HandlerService&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;LoggerService&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;StatsService&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;tag&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;api&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;inbounds&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;listen&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;port&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">8443&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;protocol&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;vless&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;settings&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;clients&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;0c41318a-32b6-4017-9938-4033bf261234&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;flow&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;xtls-rprx-vision&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;email&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;reality@xray.com&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;decryption&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;none&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;streamSettings&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;network&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;tcp&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;security&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;reality&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;realitySettings&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;show&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;dest&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;www.microsoft.com:443&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;xver&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;serverNames&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;www.microsoft.com&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;privateKey&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;uPPcl9806d81DMdlojRB_ps78jrxNpT0wcG0ueOmD69&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;shortIds&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;6ba85179e30d4fc2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;sniffing&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;enabled&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;destOverride&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;http&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;tls&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;outbounds&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;tag&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;common&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;protocol&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;freedom&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;routing&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;rules&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;type&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;field&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;outboundTag&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;common&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;network&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;udp,tcp&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;policy&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;statsInboundUplink&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;statsInboundDownlink&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;statsOutboundUplink&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;statsOutboundDownlink&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;dns&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;transport&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;stats&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;reverse&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;fakeDns&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这里先使用偷微软的证书进行验证。不出意外就已经ok了，此时xray用的8443，nginx使用的443，两个单独占用端口，是完全可以正常访问的。&lt;/p>
+&lt;h2 id="共用端口">共用端口
+&lt;/h2>&lt;p>经过上边的准备，现在我们就可以开始来合并端口了，首先是修改nginx的配置，原来的nginx容器是暴露了80和443端口，现在我们需要把443端口让给xray，所以需要修改docker-compose.yaml文件，改变端口映射，让它的https使用18443，并且需要修改nginx的web.conf配置文件。&lt;/p>
+&lt;h3 id="docker-composeyaml-1">docker-compose.yaml
+&lt;/h3>&lt;p>内容如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;3&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">networks&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">mynet&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">external&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">nginx&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">nginx:1.22.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">restart&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">unless-stopped&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">container_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">nginx&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./conf/nginx.conf:/etc/nginx/nginx.conf&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./conf/conf.d:/etc/nginx/conf.d&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./html:/usr/share/nginx/html&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./logs:/var/log/nginx&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./../naiveproxy/conf/cert:/ssl&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./../wordpress/html:/wordpress&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">/root/images/certbot/certs:/etc/letsencrypt&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">/root/images/certbot/certs/live/test.ml520.me:/etc/letsencrypt/ssl/xx&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">networks&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">mynet&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="m">80&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">80&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="m">18443&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">18443&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># 主要是修改这里，改变端口映射&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>主要是修改了端口，由原来的443改成18443，把443端口让给xray使用。&lt;/p>
+&lt;p>改了开放端口后，还需要修改web.conf，把监听的443变成18443以及一些其他配置。&lt;/p>
+&lt;h3 id="webconf-1">web.conf
+&lt;/h3>&lt;p>先放出配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 设置 HTTP 服务器，将所有 HTTP 请求都重定向到 HTTPS&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listen&lt;/span> &lt;span class="mi">80&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_name&lt;/span> &lt;span class="n">test&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xxx&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">me&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 重定向所有 HTTP 请求到 HTTPS&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">location&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="mi">301&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//$&lt;/span>&lt;span class="n">server_name&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">request_uri&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 设置 HTTPS 服务器&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listen&lt;/span> &lt;span class="mi">18443&lt;/span> &lt;span class="n">ssl&lt;/span> &lt;span class="n">http2&lt;/span> &lt;span class="n">proxy_protocol&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1"># =======修改了这里======&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_name&lt;/span> &lt;span class="n">test&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xxx&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">me&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">set_real_ip_from&lt;/span> &lt;span class="mf">127.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">0.1&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1"># ======添加了这里=======&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">real_ip_header&lt;/span> &lt;span class="n">proxy_protocol&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1"># ======添加了这里======&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># SSL 证书和密钥文件的路径&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_certificate&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">letsencrypt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ssl&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">xx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fullchain&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pem&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1"># 证书文件，通常不区分扩展名，证书文件需要使用fullchain（全SSL证书链）&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_certificate_key&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">letsencrypt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ssl&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">xx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">privkey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pem&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1"># 私钥文件，通常不区分扩展名&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 可选：设置 SSL 会话缓存&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_session_cache&lt;/span> &lt;span class="n">shared&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">SSL&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="n">m&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_session_timeout&lt;/span> &lt;span class="mi">10&lt;/span>&lt;span class="n">m&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 可选：设置 SSL 协议和加密算法&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_protocols&lt;/span> &lt;span class="n">TLSv1&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">2&lt;/span> &lt;span class="n">TLSv1&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_ciphers&lt;/span> &lt;span class="s2">&amp;#34;ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 可选：开启 OCSP Stapling，提高 SSL 握手性能&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_stapling&lt;/span> &lt;span class="n">on&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_stapling_verify&lt;/span> &lt;span class="n">on&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssl_trusted_certificate&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">letsencrypt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ssl&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">xx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fullchain&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pem&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 可选：设置访问日志&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">access_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">test&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">test&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">error&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">location&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">root&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">share&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">html&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">index&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">html&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">htm&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>主要是修改了listen的配置，添加了proxy_protocol,另外添加了&lt;code>set_real_ip_from&lt;/code>和&lt;code>real_ip_header&lt;/code>。&lt;/p>
+&lt;p>接下来就是修改xray的配置文件了。&lt;/p>
+&lt;h3 id="xray配置">xray配置
+&lt;/h3>&lt;p>主要是修改config.json文件，从原来的8443换成可，以及域名配置，详细改动如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;span class="lnt">64
+&lt;/span>&lt;span class="lnt">65
+&lt;/span>&lt;span class="lnt">66
+&lt;/span>&lt;span class="lnt">67
+&lt;/span>&lt;span class="lnt">68
+&lt;/span>&lt;span class="lnt">69
+&lt;/span>&lt;span class="lnt">70
+&lt;/span>&lt;span class="lnt">71
+&lt;/span>&lt;span class="lnt">72
+&lt;/span>&lt;span class="lnt">73
+&lt;/span>&lt;span class="lnt">74
+&lt;/span>&lt;span class="lnt">75
+&lt;/span>&lt;span class="lnt">76
+&lt;/span>&lt;span class="lnt">77
+&lt;/span>&lt;span class="lnt">78
+&lt;/span>&lt;span class="lnt">79
+&lt;/span>&lt;span class="lnt">80
+&lt;/span>&lt;span class="lnt">81
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;log&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;loglevel&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;warning&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;access&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;/var/log/xray/access.log&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;error&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;/var/log/xray/error.log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;api&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;services&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;HandlerService&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;LoggerService&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;StatsService&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;tag&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;api&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;inbounds&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;listen&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;port&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">443&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;protocol&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;vless&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;settings&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;clients&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;0c41234a-32b6-4017-9938-4033bf26b948&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;flow&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;xtls-rprx-vision&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;email&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;reality@xray.com&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;decryption&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;none&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;streamSettings&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;network&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;tcp&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;security&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;reality&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;realitySettings&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;show&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;dest&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;nginx:18443&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="err">#&lt;/span> &lt;span class="err">这里目标网站要换成我们的nginx里的地址，这里使用了容器名加ssl监听端口&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;xver&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="err">#&lt;/span> &lt;span class="err">该参数我也不知道是什么意思&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;serverNames&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;test.xxx.me&amp;#34;&lt;/span> &lt;span class="err">#&lt;/span> &lt;span class="err">域名就换成自己的域名&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;privateKey&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;uPPcl3v45d81DMdlojRB_ps78jrxNpT0wcG0ueOmD12&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;shortIds&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;6ba85179e30d4fc2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;sniffing&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;enabled&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;destOverride&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;http&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;tls&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;outbounds&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;tag&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;common&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;protocol&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;freedom&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;routing&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;rules&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;type&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;field&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;outboundTag&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;common&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;network&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;udp,tcp&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;policy&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;statsInboundUplink&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;statsInboundDownlink&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;statsOutboundUplink&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;statsOutboundDownlink&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;dns&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;transport&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;stats&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;reverse&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;fakeDns&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">null&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上，改动不大，主要是dest、xver和server_name。另外需要修改xray的docker-compose.yaml,把原来的8443端口改成443端口，并重新build启动。&lt;/p>
+&lt;h2 id="验证">验证
+&lt;/h2>&lt;p>经过上边的改变后，通过域名就可以访问到项目，并且reality也同时在监听443，代理工具的配置改成443端口，域名也改成自己的就可以正常使用了。我这里就不再贴图了。完美的实现网站和xray共存，xray也成功的偷了自己的证书。&lt;/p>
+&lt;p>最后祝大家都能成功配置。&lt;/p>
+&lt;p>参考：&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a class="link" href="https://github.com/chika0801/Xray-examples/tree/main/VLESS-XTLS-uTLS-REALITY/steal_yourself" target="_blank" rel="noopener"
+>steal_yourself&lt;/a>&lt;/p>&lt;/blockquote></description></item></channel></rss>

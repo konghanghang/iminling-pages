@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Iperf3 on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/iperf3/</link><description>Recent content in Iperf3 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Fri, 03 May 2024 05:52:37 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/iperf3/index.xml" rel="self" type="application/rss+xml"/><item><title>服务器带宽测速iperf3工具使用</title><link>https://www.iminling.com/2024/how-to-use-iperf3/</link><pubDate>Fri, 03 May 2024 05:52:37 +0000</pubDate><guid>https://www.iminling.com/2024/how-to-use-iperf3/</guid><description>&lt;p>网络测速相信很多人都使用过，想要看看自己家里的宽带网速怎么样，最简单的方式就是搜索&lt;a class="link" href="https://www.speedtest.cn/" target="_blank" rel="noopener"
+>测速网&lt;/a>，然后等结果出来就可以了，比较简单。今天要介绍的主角是：iperf3,由于经常要和vps打交到，想要测试本地到服务器的速度，使用iperf3会更准确一点，接下来就介绍一下&lt;a class="link" href="https://iperf.fr/" target="_blank" rel="noopener"
+>iperf3&lt;/a>，以及如何使用&lt;a class="link" href="https://iperf.fr/" target="_blank" rel="noopener"
+>iperf3&lt;/a>来进行测试速度。&lt;/p>
+&lt;h2 id="iperf3是什么">iperf3是什么
+&lt;/h2>&lt;p>&lt;a class="link" href="https://iperf.fr/" target="_blank" rel="noopener"
+>iPerf3&lt;/a> 是一种主动测量 IP 网络上可实现的最大带宽的工具。 它支持调整与计时、缓冲区和协议（TCP、UDP、SCTP 与 IPv4 和 IPv6）相关的各种参数。 对于每次测试，它都会报告带宽、损耗和其他参数。它是一个 C/S 类型的测速工具，在服务器上开放某个端口，然后在客户机上连接该服务器对应的端口，就可以开始进行 tcp 或 udp 的下载速度了&lt;/p>
+&lt;h2 id="iperf3安装">iperf3安装
+&lt;/h2>&lt;p>iperf3的官网也详细介绍了几种操作平台的安装，具体的地址：&lt;a class="link" href="https://iperf.fr/iperf-download.php" target="_blank" rel="noopener"
+>安装iperf3&lt;/a>。下边说明一下几种操作系统的安装。&lt;/p>
+&lt;h3 id="windows">Windows
+&lt;/h3>&lt;p>直接去官方下载地址：&lt;a class="link" href="https://files.budman.pw/" target="_blank" rel="noopener"
+>budman.pw&lt;/a>或者&lt;a class="link" href="https://github.com/ar51an/iperf3-win-builds/releases" target="_blank" rel="noopener"
+>github&lt;/a>去下载安装文件,下载最新的就可以了。&lt;/p>
+&lt;h3 id="mac-os">Mac OS
+&lt;/h3>&lt;p>mac可以使用homebrew来进行安装，如果还没有安装homebrew可以参考我的另一篇文章来进行安装：&lt;a class="link" href="https://www.iminling.com/2023/10/02/265.html" title="Mac更换源更快速的安装Homebrew"
+target="_blank" rel="noopener"
+>Mac更换源更快速的安装Homebrew&lt;/a>.然后通过命令&lt;code>brew install iperf3&lt;/code>。&lt;/p>
+&lt;h3 id="ubuntudebian">Ubuntu/Debian
+&lt;/h3>&lt;p>使用命令：&lt;code>sudo apt-get install iperf3&lt;/code>进行安装。如果当前用户是root用户，则可以省略&lt;code>sudo&lt;/code>.&lt;/p>
+&lt;h3 id="centosred-hat">Centos/Red hat
+&lt;/h3>&lt;p>使用命令：&lt;code>yum install iperf3&lt;/code>进行安装。&lt;/p>
+&lt;h2 id="iperf3使用">iperf3使用
+&lt;/h2>&lt;p>iperf3分为客户端和服务端，服务端开放端口，客户端则连上对应的端口进行发包，达到测速。下边来使用命令来快速的进行一轮测速：&lt;/p>
+&lt;h3 id="服务端">服务端
+&lt;/h3>&lt;p>服务端执行命令&lt;code>iperf3 -s -p 1111&lt;/code>就启动了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@docker:~# iperf3 -s -p 1111
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">-----------------------------------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Server listening on 1111 (test #1)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">-----------------------------------------------------------
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>服务端开启&lt;code>1111&lt;/code>端口后就等待客户端连上来。&lt;/p>
+&lt;h3 id="客户端">客户端
+&lt;/h3>&lt;p>客户端执行命令&lt;span class="s1">&lt;code>iperf3 -c 192.168.1.222 -p 1111 -i 1 -t 10&lt;/code> ,其中&lt;code>192.168.1.222&lt;/code>是你服务端所在服务器的ip，执行后客户端输出如下：&lt;/span>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ iperf3 -c 192.168.1.222 -p 1111 -i 1 -t 10
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Connecting to host 192.168.1.222, port 1111
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reverse mode, remote host 192.168.1.222 is sending
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] local 192.168.1.10 port 56431 connected to 192.168.1.222 port 1111
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ ID] Interval Transfer Bitrate
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 0.00-1.00 sec 52.1 MBytes 435 Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 1.00-2.00 sec 67.4 MBytes 567 Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 2.00-3.00 sec 58.6 MBytes 492 Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 3.00-4.00 sec 71.4 MBytes 600 Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 4.00-5.00 sec 69.2 MBytes 579 Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 5.00-6.00 sec 69.8 MBytes 586 Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 6.00-7.00 sec 67.5 MBytes 568 Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 7.00-8.00 sec 70.9 MBytes 593 Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 8.00-9.00 sec 73.1 MBytes 613 Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 9.00-10.00 sec 73.1 MBytes 613 Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">- - - - - - - - - - - - - - - - - - - - - - - - -
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ ID] Interval Transfer Bitrate Retr
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 0.00-10.03 sec 676 MBytes 565 Mbits/sec 2 sender
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[ 5] 0.00-10.00 sec 673 MBytes 564 Mbits/sec receiver
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">iperf Done.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>一次测速就完成了。服务端也会有同样的日志输出。可见速度大概是500Mb/s。&lt;/p>
+&lt;h2 id="参数详解">参数详解
+&lt;/h2>&lt;p>具体的参数详细解释可以参考&lt;a class="link" href="https://iperf.fr/iperf-doc.php" target="_blank" rel="noopener"
+>官网的文档&lt;/a>;这里我也简单的介绍一下。&lt;/p>
+&lt;h3 id="通用参数">通用参数
+&lt;/h3>&lt;p>通用参数就是客户端和服务端都可以使用的参数。&lt;/p>
+&lt;table class="tableau">
+&lt;tr>
+&lt;th colspan="2">
+通用选项
+&lt;/th>
+&lt;/tr>
+&lt;tr>
+&lt;th>
+命令行选项
+&lt;/th>
+&lt;pre>&lt;code>&amp;lt;th&amp;gt;
+说明
+&amp;lt;/th&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3port">
+**-p**, --port ***n***
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+服务器侦听和客户端连接的服务器端口。 这在客户端和服务器中应该是相同的。 默认值为 5201。
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3cport">
+**--cport** ***n***
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+指定客户端端口的选项。 (iPerf 3.1新特性)
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3format">
+**-f**, --format ***[kmKM]***
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+指定打印带宽数字的格式的字母。支持的格式有&amp;lt;/p&amp;gt;
+&amp;lt;pre&amp;gt;    'k' = Kbits/sec           'K' = KBytes/sec
+&lt;/code>&lt;/pre>
+&lt;p>    &amp;rsquo;m&amp;rsquo; = Mbits/sec           &amp;lsquo;M&amp;rsquo; = MBytes/sec&lt;/pre>&lt;/p>
+&lt;p>
+自适应格式根据需要在千级和兆级之间进行选择。&lt;/td> &lt;/tr>
+&lt;tr>
+&lt;td id="3interval">
+**-i**, --interval ***n***
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+设置周期性带宽、抖动和丢失报告之间的间隔时间（以秒为单位）。 如果非零，则自上次报告以来每隔带宽秒数就会生成一份报告。 如果为零，则不打印定期报告。 默认为零。
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3filname">
+**-F**, --file name
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+**客户端:** 从文件中读取并写入网络，而不是使用随机数据；&amp;lt;br /&amp;gt; **服务端:** 从网络读取并写入文件，而不是丢弃数据。
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3affinity">
+**-A**, --affinity ***n/n,m-F***
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+如果可能的话，设置 CPU 关联性（仅限 Linux 和 FreeBSD）。 在客户端和服务器上，您可以使用此参数的 n 形式（其中 n 是 CPU 编号）来设置本地关联性。 此外，在客户端，您可以使用 n,m 形式的参数覆盖服务器的关联性，仅用于该测试。 请注意，使用此功能时，进程将仅绑定到单个 CPU（而不是包含潜在多个 CPU 的集合）。
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3bind">
+**-B**, --bind ***host***
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+绑定到特定网卡，即该计算机的地址之一。 对于客户端，这设置出站网卡接口。 对于服务器，这设置传入网卡接口。 这仅在具有多个网卡接口的多宿主主机上有用。
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3verbose">
+**-V**, --verbose
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+给出更详细的输出
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3json">
+**-J**, --json
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+以 JSON 格式输出
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3logfile">
+**--logfile** file
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+将输出发送到日志文件。(iPerf 3.1新特性)
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3debug">
+**--d**, --debug
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+发出调试输出。 主要供开发人员使用。
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3version">
+**-v**, --version
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+显示版本信息并退出。
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3help">
+**-h**, --help
+&lt;/td>
+&lt;pre>&lt;code>&amp;lt;td&amp;gt;
+显示帮助概要并退出。
+&amp;lt;/td&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/tr>&lt;/tbody> &lt;/table>
+&lt;p>
+以上是通用的参数说明，可以根据需求在执行命令的时候添加。
+&lt;/p>
+&lt;h3>
+服务端参数
+&lt;/h3>
+&lt;p>
+下边对服务端特有参数进行说明：
+&lt;/p>
+&lt;table class="tableau">
+&lt;tr>
+&lt;th colspan="2">
+服务端特定选项
+&lt;/th>
+&lt;/tr>
+&lt;pre>&lt;code>&amp;lt;tr&amp;gt;
+&amp;lt;th&amp;gt;
+命令行选项
+&amp;lt;/th&amp;gt;
+&amp;lt;th&amp;gt;
+说明
+&amp;lt;/th&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3server&amp;quot;&amp;gt;
+**-s**, --server
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+在服务器模式下运行 iPerf。 （这一次只允许一个 iperf 连接）
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3daemon&amp;quot;&amp;gt;
+**-D**, --daemon
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+服务器作为守护进程在后台运行。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3pidfile&amp;quot;&amp;gt;
+**-I**, --pidfile***file***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+写入一个包含进程 ID 的文件，这在作为守护进程运行时最有用。 (iPerf 3.1新特性)
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;/table>
+&lt;p>
+服务端的命令选项相对来说少一些。
+&lt;/p>
+&lt;h3>
+客户端参数
+&lt;/h3>
+&lt;p>
+下边对客户端特有参数进行说明：
+&lt;/p>
+&lt;table class="tableau">
+&lt;tr>
+&lt;th colspan="2">
+客户端特定选项
+&lt;/th>
+&lt;/tr>
+&lt;pre>&lt;code>&amp;lt;tr&amp;gt;
+&amp;lt;th&amp;gt;
+命令行选项
+&amp;lt;/th&amp;gt;
+&amp;lt;th&amp;gt;
+说明
+&amp;lt;/th&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3client&amp;quot;&amp;gt;
+**-c**, --client ***host***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+在客户端模式下运行 iPerf，连接到主机上运行的 iPerf 服务器。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3sctp&amp;quot;&amp;gt;
+**--sctp**
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+使用 SCTP 而不是 TCP（Linux、FreeBSD 和 Solaris）。 (iPerf 3.1新特性)
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3udp&amp;quot;&amp;gt;
+**-u**, --udp
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+使用 UDP 而不是 TCP。 另请参阅 -b 选项。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3bandwidth&amp;quot;&amp;gt;
+**-b**, --bandwidth ***n[KM]***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+将目标带宽设置为 n 位/秒（UDP 默认为 1 Mbit/秒，TCP 无限制）。 如果有多个流（-P 标志），则带宽限制将单独应用于每个流。 您还可以向带宽说明符添加“/”和数字。 这称为“突发模式”。 它将发送给定数量的数据包而不会暂停，即使暂时超出了指定的带宽限制。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3time&amp;quot;&amp;gt;
+**-t**, --time ***n***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+传输时间（以秒为单位）。 iPerf 通常通过在 time 秒内重复发送 len 个字节的数组来工作。 默认值为 10 秒。 另请参见 -l、-k 和 -n 选项。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3num&amp;quot;&amp;gt;
+**-n**, --num ***n[KM]***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+要传输的缓冲区数量。 通常，iPerf 发送 10 秒。 -n 选项会覆盖此设置并发送 len 个字节的数组 num 次，无论需要多长时间。 另请参见 -l、-k 和 -t 选项。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3blockcount&amp;quot;&amp;gt;
+**-k**, --blockcount ***n[KM]***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+要传输的块（数据包）的数量。 （而不是 -t 或 -n）另请参阅 -t、-l 和 -n 选项。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3len&amp;quot;&amp;gt;
+**-l**, --length ***n[KM]***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+要读取或写入的缓冲区的长度。 iPerf 的工作原理是多次写入 len 个字节的数组。 TCP 默认为 128 KB，UDP 默认为 8 KB。 另请参见 -n、-k 和 -t 选项。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3parallel&amp;quot;&amp;gt;
+**-P**, --parallel ***n***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+与服务器建立的同时连接数。 默认值为 1。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3reverse&amp;quot;&amp;gt;
+**-R**, --reverse
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+以反向模式运行（服务器发送，客户端接收）。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3window&amp;quot;&amp;gt;
+**-w**, --window ***n[KM]***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+将套接字缓冲区大小设置为指定值。 对于 TCP，这设置 TCP 窗口大小。 （这会被发送到服务器并在该端使用）
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3mss&amp;quot;&amp;gt;
+**-M**, --set-mss ***n***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+尝试设置 TCP 最大分段大小 (MSS)。 MSS 通常是 TCP/IP 标头的 MTU - 40 字节。 对于以太网，MSS 为 1460 字节（1500 字节 MTU）。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3nodelay&amp;quot;&amp;gt;
+**-N**, --no-delay
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+设置 TCP 无延迟选项，禁用 Nagle 算法。 通常，只有交互式应用程序（如 telnet）才禁用此功能。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3version4&amp;quot;&amp;gt;
+**-4**, --version4
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+仅使用 IPv4。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3version6&amp;quot;&amp;gt;
+**-6**, --version4
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+仅使用 IPv6。
+&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td id=&amp;quot;3tos&amp;quot;&amp;gt;
+**-S**, --tos ***n***
+&amp;lt;/td&amp;gt;
+&amp;lt;td&amp;gt;
+传出数据包的服务类型。 （许多路由器忽略 TOS 字段。）您可以指定带有“0x”前缀的十六进制值、带有“0”前缀的八进制值或十进制值。 例如，十六进制“0x10”= 八进制“020”= 十进制“16”。 RFC 1349 中指定的 TOS 编号为：&amp;lt;/p&amp;gt;
+&amp;lt;pre&amp;gt;    IPTOS_LOWDELAY     minimize delay        0x10
+&lt;/code>&lt;/pre>
+&lt;p>    IPTOS_THROUGHPUT   maximize throughput   0x08
+    IPTOS_RELIABILITY  maximize reliability  0x04
+    IPTOS_LOWCOST      minimize cost         0x02&lt;/pre>&lt;/p>
+&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3flowlabel">
+**-L**, --flowlabel ***n***
+&lt;/td>
+&lt;td>
+设置 IPv6 流标签（目前仅在 Linux 上支持）。
+&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3zerocopy">
+**-Z**, --zerocopy
+&lt;/td>
+&lt;td>
+使用“零复制”方法发送数据，例如 sendfile(2)，而不是通常的 write(2)。 这会使用更少的 CPU。
+&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3omit">
+**-O**, --omit ***n***
+&lt;/td>
+&lt;td>
+省略测试的前 n 秒，以跳过 TCP TCP 慢启动期。
+&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3title">
+**-T, --title *str***
+&lt;/td>
+&lt;td>
+使用此字符串作为每个输出行的前缀。
+&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td id="3congestion">
+**-C**, --linux-congestion ***algo***
+&lt;/td>
+&lt;td>
+设置拥塞控制算法（Linux 仅适用于 iPerf 3.0，Linux 和 FreeBSD 适用于 iPerf 3.1）。
+&lt;/td>
+&lt;/tr>
+&lt;/table>
+&lt;p>
+以上就是服务端和客户端的所有参数说明。
+&lt;/p>
+&lt;p>
+&lt;/p></description></item></channel></rss>

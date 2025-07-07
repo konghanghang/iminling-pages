@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ant on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/ant/</link><description>Recent content in Ant on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 16 Dec 2023 03:00:20 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/ant/index.xml" rel="self" type="application/rss+xml"/><item><title>升级Intellij IDEA 2023.3后找回Ant构建工具</title><link>https://www.iminling.com/2023/intellij-idea2023-find-ant-tool/</link><pubDate>Sat, 16 Dec 2023 03:00:20 +0000</pubDate><guid>https://www.iminling.com/2023/intellij-idea2023-find-ant-tool/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=MklMSXFFczNLSWQ5Zkl4N1RrVGo4NkxlOXJXRTZ6L1B2cndwZEJ2ai9OMnRkV21kdVdzcTZsek1qK1ZKMFJINHVWenoyNjg9" alt="Featured image of post 升级Intellij IDEA 2023.3后找回Ant构建工具" />&lt;p>公司有一个项目使用的是Ant来进行打包构建的，没升级IDEA前还可以在工具栏找到Ant功能来进行构建，升级2023.3版本后，Ant就找不到了，经过一番折腾，终于找回了Ant。再次提醒各位，升级还是需要谨慎呀，旧的又不是不能用，哈哈。废话不多说，下边给出具体的解决方法。&lt;/p>
+&lt;h2 id="20233以前版本">2023.3以前版本
+&lt;/h2>&lt;p>在2023.3版本以前，如果在工具栏找不到Ant，可以在IDEA的菜单中把Ant给添加到工具栏，如下图：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dzZLUEtFY05OQ1Bpc21TMlhaOG5RVEZ1d3VuS1JydGJQMmkrK2xzSXdGTDh4Ti90ODUrODRZMDlKTVg5VnUzOHFMU0tzSjQ9"
+loading="lazy"
+alt="view菜单"
+>
+view菜单 tool windows - Ant就可以找到Ant工具。&lt;/p>
+&lt;h2 id="20233版本">2023.3版本
+&lt;/h2>&lt;p>升级到2023.3版本后，在view菜单 tool windows中找不到Ant选项了，但是多了一个 AI Assistant 的功能，在IDEA中找Ant相关的配置也是无果。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=K2hxVHlXVmEvOFVNSnQydSt6d1dRS3gwNG16Z0JHeDdtZ3pWVHJZRW16OTlpYVlvMWdNcjJ1RkpkaEs5c1RsWHhpejBqcVU9"
+loading="lazy"
+alt="view无ant"
+>&lt;/p>
+&lt;p>最后在IDEA的官方日志中找到了原因，官方地址：&lt;a class="link" href="https://www.jetbrains.com/zh-cn/idea/whatsnew/" target="_blank" rel="noopener"
+>IntelliJ IDEA 2023.3 最新变化&lt;/a>。其实上图里也有说明，只是升级后并没有仔细阅读，而是后来网上找到了中文的升级说明：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=L255bWZmaFZCL1pDSnlDWXR4c1VDeXdySWdDZDk0dXlLcnhTcWFFeGM4aEJ1V3JhL1NOTEpwNElZQk8rWUtlRzVJOVJRWE09"
+loading="lazy"
+alt="2023.3中文升级说明"
+>&lt;/p>
+&lt;p>在新版本中Ant要去到市场下载了。&lt;/p>
+&lt;h2 id="下载ant插件">下载Ant插件
+&lt;/h2>&lt;p>在plugin中搜索Ant，就可以看到一个jetbrains提供的Ant插件，进行下载，然后就可以在view - tool windows中找到Ant插件了。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=THpqL1FOb1dVbEVPRm9VK3JYTnhlUTc4eDIvU010QnB3YXRtN2JzNTRnTXdPL0YvTFNaV3ZOOGZ4RkxSTmFMSURYdHppMHc9"
+loading="lazy"
+alt="jetbrain Ant插件"
+>&lt;/p>
+&lt;p>安装后立马就可以找到，也不需要重启IDEA，经过上述过程就成功的找回了Ant插件，可以愉快的使用Ant来编译打包项目了。&lt;/p>
+&lt;p>IDEA如何使用开源项目申请可以参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2023/apply-jetbrains-open-source-development-license/" >开源项目申请JetBrains Open Source Development License&lt;/a>。&lt;/p></description></item></channel></rss>

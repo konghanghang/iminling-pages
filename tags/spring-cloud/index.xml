@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Spring Cloud on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/spring-cloud/</link><description>Recent content in Spring Cloud on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 24 Dec 2023 09:02:19 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/spring-cloud/index.xml" rel="self" type="application/rss+xml"/><item><title>多网卡环境下Spring Cloud微服务注册特定网卡Ip到注册中心(Nacos)</title><link>https://www.iminling.com/2023/spring-cloud-use-true-ip-register-nacos/</link><pubDate>Sun, 24 Dec 2023 09:02:19 +0000</pubDate><guid>https://www.iminling.com/2023/spring-cloud-use-true-ip-register-nacos/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=SmJabnJsdTlXbDExYlljU3RzemUyTVRlcHFScHFZRUJYSTR1c1BoYkhrZHE3L2RpK05qbkpLQlprcTFPY2QvY3lJaVB3Y3M9" alt="Featured image of post 多网卡环境下Spring Cloud微服务注册特定网卡Ip到注册中心(Nacos)" />&lt;p>在本地开发或者在线上环境的时候，本地开发机器和线上都有可能有多张网卡：物理网卡或者虚拟网卡，如果只有一张网卡，那么 Spring Cloud微服务也不会有注册错ip的情况，一旦有多张网卡，问题就会暴露出来，不同的网卡网络段肯定是不同的，那么ip之间也不可能互通，就会出现虽然服务注册到了注册中心，但是却无法访问到这个已注册的服务。&lt;/p>
+&lt;h2 id="遇到问题过程">遇到问题过程
+&lt;/h2>&lt;p>我遇到这个问题主要是在自己的本地电脑上，我电脑上有两个网卡的地址不是同一个段上的，如下：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=V2lNL21wUUtIM01ERjREd1ZwamsvclRoWmtZSEppVU00TWVUU2F0N05sRjg5cHVxYWZtRnh4OVpDVlQ0TWhhanFGTGRIYkk9"
+loading="lazy"
+>&lt;/p>
+&lt;p>有一个192.168.6.6和另一个192.168.64.1的，在我启动我的本地的Cloud服务的时候，Nacos中默认注册的是192.168.6.6的地址：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=bHB5bzZ6MUI1ZU4zekJIaUx6Sjd5eWh1Ukx4NHFHZ1RscEhMMG5PRTZkOFc1ZVZVN3dGR0FlYlczV21odUgwYVNzeXIyRjQ9"
+loading="lazy"
+alt="注册详情"
+>&lt;/p>
+&lt;p>经过查询后在boostrap.yaml配置文件中进行修改：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">spring:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> cloud:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inetutils:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> preferredNetworks:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - 192.168.64
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过配置后，再次启动项目，再看注册中心中注册的地址如下：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dmpWa2R5N3J1NmFaZjg1MEI0am5VVlVpQzBhOW5UenZJbm9OSHJxNFhNeWlvZG9kWWVUTDFwc20yWktpb3VycHJaZHlpdm89"
+loading="lazy"
+alt="注册详情"
+>&lt;/p>
+&lt;p>已经是想要的结果了。&lt;/p>
+&lt;h2 id="问题深入">问题深入
+&lt;/h2>&lt;p>在spring官方文档可以查询到，有几种方式可以配置，地址：&lt;a class="link" href="https://docs.spring.io/spring-cloud-commons/reference/spring-cloud-commons/common-abstractions.html" title="common-abstractions"
+target="_blank" rel="noopener"
+>common-abstractions&lt;/a>。&lt;/p>
+&lt;p>可以使用忽略特定的网络接口：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">spring:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> cloud:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inetutils:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ignoredInterfaces:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - docker0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - veth.*
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上忽略了docker的网络接口以及veth相关的网络接口。&lt;/p>
+&lt;p>另一种就是我上边提到的&lt;code>preferredNetworks&lt;/code>&lt;/p>
+&lt;p>配置首选网络，偏向与使用哪个ip地址。&lt;/p>
+&lt;p>官网还提到可以强制只使用站点本地地址，如下例所示：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">spring:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> cloud:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inetutils:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> useOnlySiteLocalInterfaces: true
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>具体详见官网的文档。&lt;/p></description></item></channel></rss>

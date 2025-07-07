@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Frps on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/frps/</link><description>Recent content in Frps on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 09 Apr 2023 06:23:58 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/frps/index.xml" rel="self" type="application/rss+xml"/><item><title>openwrt系统frps配置使用</title><link>https://www.iminling.com/2023/openwrt-frps-configuration/</link><pubDate>Sun, 09 Apr 2023 06:23:58 +0000</pubDate><guid>https://www.iminling.com/2023/openwrt-frps-configuration/</guid><description>&lt;p>宽带给了公网ip，所以想在自己家搭建一个frp的服务端，这样子就可以当做一台服务器，来进行内网穿透使用了。&lt;/p>
+&lt;h2 id="frps配置">frps配置
+&lt;/h2>&lt;p>我家里是使用的r2s刷的openwrt系统，所以可以在r2s中进行frps的搭建，找到对应的菜单：&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/1681048330252.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;p>端口绑定默认7000，直接使用就可以了，我们这里主要是使用http和https服务，所以填写对应的http和https绑定端口就可以了，可以和端口绑定设置成同一个端口。&lt;/p>
+&lt;h2 id="子域名设置">子域名设置
+&lt;/h2>&lt;p>在高级选项中我们可以设置一个子域名，这样子我们就可以使用改域名的子域名来进行访问不同的内网穿透服务。对应的子域名下也有一行提示：&lt;/p>
+&lt;blockquote>
+&lt;p>如果subdomain_host不为空，可以在frpc配置文件中设置类型为http(s)的subdomain；subdomain为test，路由将使用test.frps.com&lt;/p>&lt;/blockquote>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/489b5400b50f60b56447af44a18341ec.png"
+loading="lazy"
+>&lt;/p>
+&lt;h2 id="管理面板设置">管理面板设置
+&lt;/h2>&lt;p>我们可以在管理面板查看到当前已经连接的客户端，以及每个客户端的流量使用情况，所以还是有必要进行一下设置。&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/a3b4a82854f5665e9121f057d71f80b9.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>面板绑定端口7500，那么我们就可以使用openwrt的管理ip:7500来登录到frps的管理界面。&lt;/p>
+&lt;h2 id="端口转发配置">端口转发配置
+&lt;/h2>&lt;h3 id="管理界面端口配置">管理界面端口配置
+&lt;/h3>&lt;p>我们在家里的时候可以使用内网ip:7500来访问，但是不在家的时候就没办法了。不慌，因为我有公网ip，那么我就可以通过端口转发，使用的域名+特定端口来访问到内网的7500端口。通过网络防火墙进行端口转发配置。&lt;/p>
+&lt;p>配置管理界面的端口转发，通过&lt;code>域名:7500&lt;/code>访问到内网openwrt系统的7500端口。&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/81b1d5e9cd4cfd2ad84557fa31f8a401.png"
+loading="lazy"
+>&lt;/p>
+&lt;h3 id="绑定端口配置">绑定端口配置
+&lt;/h3>&lt;p>我们的frps绑定的端口是7000，所以需要把7000端口也暴露出去客户端才能正常连接注册上来，同样需要在端口转发中进行配置。&lt;/p>
+&lt;p>通过&lt;code>域名:7000&lt;/code>访问到内网openwrt系统的7000端口。&lt;/p>
+&lt;blockquote>
+&lt;p>参考上边的管理界面的端口转发配置。&lt;/p>&lt;/blockquote>
+&lt;p>到这里我们的frps服务端就搭建好了，接下来我们来配置客户端进行连接。&lt;/p>
+&lt;h2 id="客户端连接">客户端连接
+&lt;/h2>&lt;p>我们主要先在需要内网穿透的机器上安装frp的客户端，我这里是一个路由器刷的openwrt系统，所以安装frpc就可以了：&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/9c8e8a6e6d4ea5bfcf8d82a288aba913.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>服务器：其实就是我们frps服务端的ip，因为我使用的是宽带的动态ip，所以ip是会变的，我不能直接使用ip，但是我在家里的openwrt中配置了DDNS，那么我就可以使用ddns的域名来作为服务器，填入ddns中的域名。&lt;/p>
+&lt;p>端口：7000，和frps的绑定端口一致。&lt;/p>
+&lt;p>令牌：和frps中的令牌一致。&lt;/p>
+&lt;p>http和https穿透服务端口：7000，和服务端一致。&lt;/p>
+&lt;p>经过上边的配置我们就可以和服务端连上了，但是我们还没办法通过公网来访问我们其他需要穿透的服务，我们还需要建一条规则。在下方frp setting页面的下方点击添加，新建一个服务：&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/36e2c4682ea0816f2a20b91d2c9af36d.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>开启状态：开启。&lt;/p>
+&lt;p>frp协议类型：选择http就可以了。&lt;/p>
+&lt;p>域名类型：我们在frps服务端配置的时候使用的是子域名形式，所以这里也需要填子域名。&lt;/p>
+&lt;p>子域名：我们需要使用的访问域名。&lt;/p>
+&lt;p>内网主机地址：我们需要访问的是openwrt的管理界面，所以选择openwrt的地址就可以了。&lt;/p>
+&lt;p>内网主机端口：我们访问的是管理界面，默认80端口。&lt;/p>
+&lt;p>服务备注名：自定义的一个名称。&lt;/p>
+&lt;p>其他的默认就可以了。然后点击保存并应用。完成后如下图：&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/ca5ce0494c7c0868dd10460616318694.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>如上图我添加的子域名是gzax6,那么我还需要去添加一条解析才能使用gzax6.frps.com:7000来访问我的ax6这个路由器的管理界面。&lt;/p>
+&lt;p>我们添加一条CNAME的记录，因为ip地址是一直在变化的，我们唯一不变的就是ddns使用的域名，我们解析一条CNAME记录到我们ddns使用的域名，这样子就可以正确的解析到我的openwrt里的frps服务端了。&lt;/p>
+&lt;h2 id="总结">总结
+&lt;/h2>&lt;p>经过上述步骤，我们就可以使用域名:7000端口来在外网访问我们内网的路由器管理界面了。&lt;/p></description></item></channel></rss>

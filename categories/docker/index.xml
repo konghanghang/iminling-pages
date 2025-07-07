@@ -1,0 +1,1519 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 记录点滴 - 分享</title><link>https://www.iminling.com/categories/docker/</link><description>Recent content in Docker on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Mon, 05 Feb 2024 13:12:33 +0000</lastBuildDate><atom:link href="https://www.iminling.com/categories/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>docker配置fail2ban拦截nginx非法请求ip</title><link>https://www.iminling.com/2024/docker-install-fail2ban-interception-nginx-ip/</link><pubDate>Mon, 05 Feb 2024 13:12:33 +0000</pubDate><guid>https://www.iminling.com/2024/docker-install-fail2ban-interception-nginx-ip/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=S2lnNFVkM3BpS1h5b1RvRlF3V0tocVFuZ3YrTHQ3YWhJQXp6YnNJdUZlenRpSTZOdmF2b0M0MTJpR2VoaVU1eG1PNTZ6Z1E9" alt="Featured image of post docker配置fail2ban拦截nginx非法请求ip" />&lt;p>前边写过一篇通过fail2ban来拦截ssh暴力破解：&lt;a class="link" href="https://www.iminling.com/2024/docker-install-fail2ban-protect-ssh/" >docker安装fail2ban并配置防止ssh登录爆破&lt;/a>，fail2ban能做到的远不止这些，如果你有一个属于自己的网站，那么一定会遇到有无数不知明ip来访问你网站的敏感路径，总是想着要来获取你网站的一些有用信息。今天我们就来使用fail2ban去拦截那些非法访问的ip地址。&lt;/p>
+&lt;h2 id="环境与目录情况">环境与目录情况
+&lt;/h2>&lt;p>fail2ban如上篇：中的安装方式，是使用docker来安装的
+nginx也是使用docker来安装的，并使用的是桥接网络。
+然后再来看一下配置的目录：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban$ tree
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── data
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── filter.d
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   │   └── nginx-cc.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   └── jail.d
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── nginx-cc.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── sshd.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── docker-compose.yaml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── .env
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── logs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上，需要创建两个文件，一个是针对非法访问的日志的过滤规则，另一个是针对非法访问的ip的监狱规则。我这里暂定这个监狱的名称就叫做：&lt;code>nginx-cc&lt;/code>,&lt;code>filter.d&lt;/code>和&lt;code>jail.d&lt;/code>中的配置文件名称一致。&lt;/p>
+&lt;h2 id="过滤配置">过滤配置
+&lt;/h2>&lt;p>先来看一下过滤规则的配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">[Definition]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">failregex = ^&amp;lt;HOST&amp;gt; .* &amp;#34;(GET|POST|HEAD).*HTTP.*&amp;#34; (404|503) .*$
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ignoreregex =.*(robots.txt|favicon.ico|jpg|png)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>failregex&lt;/code>配置的就是针对错误访问日志进行过滤的正则表达试，以ip开头，并把ip使用&lt;code>&amp;lt;HOST&amp;gt;&lt;/code>代替。这里是针对访问状态是404和503的请求。
+&lt;code>ignoreregex&lt;/code>配置了针对什么样的路径日志进行忽略。&lt;/p>
+&lt;p>以上是nginx默认日志的访问日志匹配的正则，如果你修改了自己的nginx的访问日志输出格式，则需要按自己的日志输出格式来编写失败请求的正则表达式。&lt;/p>
+&lt;h2 id="监狱配置">监狱配置
+&lt;/h2>&lt;p>直接先看一下监狱的具体配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cc&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">enabled&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">filter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">nginx&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">chain&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">DOCKER&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">USER&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#action = iptables-multiport[name=nginx-cc, port=&amp;#34;http,https&amp;#34;, protocol=tcp]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">http&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">https&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">logpath&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">maxretry&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bantime&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">86400&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">findtime&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3600&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ignoreip&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mf">192.168&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">0.1&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">24&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>下边详细说明一下各参数：
+&lt;code>filter&lt;/code>对应的就是上边的过滤规则中的名称
+&lt;code>chain&lt;/code>为&lt;code>DOCKER-USER&lt;/code>,因为nginx是使用docker安装的，所以需要把iptables的规则添加到&lt;code>DOCKER-USER&lt;/code>中，&lt;code>DOCKER-USER&lt;/code>中的规则在Docker自动创建的任何规则之前加载，拥有更高的优先级。
+&lt;code>port&lt;/code>满足添加是禁止的端口
+&lt;code>logpath&lt;/code>读取的日志路径
+&lt;code>findtime&lt;/code>日志文件中分析错误连接数的时间。以秒计算&lt;/p>
+&lt;h2 id="启动配置">启动配置
+&lt;/h2>&lt;p>因为以前已经配置过sshd的监狱，并且fail2ban也是正常运行的，此时只需要对配置进行重新加载就可以了，可以使用以下命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~/&lt;/span>&lt;span class="n">images&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fail2ban&lt;/span>&lt;span class="o">$&lt;/span> &lt;span class="n">docker&lt;/span> &lt;span class="n">exec&lt;/span> &lt;span class="n">fail2ban&lt;/span> &lt;span class="n">fail2ban&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">client&lt;/span> &lt;span class="n">reload&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">OK&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>再来查看当前生效的监狱有哪些：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban# docker exec fail2ban fail2ban-client status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">|- Number of jail: 2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">`- Jail list: nginx-cc, sshd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到&lt;code>nginx-cc&lt;/code>监狱已经生效了，再来看一下这个监狱的详细情况：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~/&lt;/span>&lt;span class="n">images&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fail2ban&lt;/span>&lt;span class="c1"># docker exec fail2ban fail2ban-client status nginx-cc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Status&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">jail&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">nginx&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|-&lt;/span> &lt;span class="n">Filter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="o">|-&lt;/span> &lt;span class="n">Currently&lt;/span> &lt;span class="n">failed&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="o">|-&lt;/span> &lt;span class="n">Total&lt;/span> &lt;span class="n">failed&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">134&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="ne">File&lt;/span> &lt;span class="n">list&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="n">Actions&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|-&lt;/span> &lt;span class="n">Currently&lt;/span> &lt;span class="n">banned&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|-&lt;/span> &lt;span class="n">Total&lt;/span> &lt;span class="n">banned&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">21&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="n">Banned&lt;/span> &lt;span class="ne">IP&lt;/span> &lt;span class="n">list&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到鉴于的详细信息，此时不出意外就可以拦截到那些异常情况了。&lt;/p>
+&lt;h2 id="遇到的问题">遇到的问题
+&lt;/h2>&lt;p>不出意外，肯定会出意外。我在debian11的机器上安装，请求404的url会被记录到&lt;code>Total failed&lt;/code>里，并且请求失败的ip也会出现在&lt;code>Banned Ip list&lt;/code>里，但是被ban后竟然还可以访问，此时通过查看&lt;code>fail2ban&lt;/code>容器发现竟然添加iptables规则的时候出现了异常。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Zk9mSUhyREttOTBtYU45dXlrNEZwclE1NW9NTVpkeGt4WG5tQU5mdndsQkxLYVhuRFNUbHBLR3ZjTGZmbWE4a3RmWTNzUk09"
+loading="lazy"
+alt="fail2ban add fail"
+>&lt;/p>
+&lt;p>如上图，出现&lt;code>iptables: No chain/target/match by that name&lt;/code> 错误，导致iptables规则添加失败，通过&lt;code>iptables -nvL&lt;/code>的确也看不添加的被禁的ip。在网上找了好久不知道是什么原因，后来发现官方的github仓库的说明里就有关于这个的说明&lt;a class="link" href="https://github.com/crazy-max/docker-fail2ban?tab=readme-ov-file#use-iptables-tooling-without-nftables-backend" target="_blank" rel="noopener"
+>crazy-max/docker-fail2ban&lt;/a>：&lt;/p>
+&lt;blockquote>
+&lt;p>If your system&amp;rsquo;s &lt;code>iptables&lt;/code> tooling uses the nftables backend, this will throw the error &lt;code>stderr: 'iptables: No chain/target/match by that name.'&lt;/code>. You need to switch the &lt;code>iptables&lt;/code> tooling to &amp;rsquo;legacy&amp;rsquo; mode to avoid these problems. This is the case on at least Debian 10 (Buster), Ubuntu 19.04, Fedora 29 and newer releases of these distributions by default. RHEL 8 does not support switching to legacy mode, and is therefore currently incompatible with this image.&lt;/p>&lt;/blockquote>
+&lt;p>原来是因为iptable的模式问题，默认debian11使用的&lt;code>nf_tables&lt;/code>模式,按照官方的提示需要切换为&lt;code>legacy&lt;/code>模式，如何查看自己的iptables是哪种模式呢？可以使用&lt;code>iptables --version&lt;/code>来查看，如下就使用的是&lt;code>nf_tables&lt;/code>模式。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~# iptables --version
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">iptables v1.8.7 (nf_tables)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>那如何修改成&lt;code>legacy&lt;/code>模式呢？官方也给了解决方案：&lt;/p>
+&lt;p>On Ubuntu or Debian：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ update-alternatives --set iptables /usr/sbin/iptables-legacy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ update-alternatives --set arptables /usr/sbin/arptables-legacy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ update-alternatives --set ebtables /usr/sbin/ebtables-legacy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>On Fedora:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ update-alternatives --set iptables /usr/sbin/iptables-legacy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我的系统是debian，所以按照上边的四条来执行，后边两条并没有执行成功，提示没有开启，那就不管了。执行完后可以再使用上边的version命令查看模式是否已经改过来了:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban# iptables --version
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">iptables v1.8.7 (legacy)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:service networking restart
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到，已经切换成功了，并且重启了&lt;code>networking&lt;/code>服务。此时再去看禁止ip发现还是不行，仍然可以访问，&lt;strong>官方建议重启&lt;/strong>，我以为重启&lt;code>networking&lt;/code>就可以了，但是并不行，最后只好&lt;strong>对服务器进行了重启&lt;/strong>，最终终于生效，成功的对异常访问ip进行了禁止。&lt;/p>
+&lt;p>以上就是折腾过程，希望可以帮助到大家。&lt;/p></description></item><item><title>debian系统使用docker快速安装promutheus</title><link>https://www.iminling.com/2023/debian-use-docker-install-promutheus/</link><pubDate>Sun, 26 Nov 2023 00:00:00 +0000</pubDate><guid>https://www.iminling.com/2023/debian-use-docker-install-promutheus/</guid><description>&lt;p>&lt;a class="link" href="https://prometheus.io/" target="_blank" rel="noopener"
+>Prometheus&lt;/a>是一套开源的监控&amp;amp;报警&amp;amp;时间序列数据库的组合,起始是由SoundCloud公司开发的。它的功能强大，被广泛使用。今天这边文章就简单介绍一下如何使用docker快速的搭建一个prometheus的服务，其他相关的知识在后续的文章里再详细分享。先把服务跑起来。&lt;/p>
+&lt;p>如果还没有安装docker的同学可以参考的我另一篇文章来快速的安装docker环境：&lt;a class="link" href="https://www.iminling.com/2023/linux-install-docker/" >docker安装&lt;/a>。&lt;/p>
+&lt;h2 id="docker-compose文件准备">docker-compose文件准备
+&lt;/h2>&lt;p>我习惯直接使用docker-compose来安装所有服务，我的所有服务都使用同一个网络，实现服务的互通，下边贴出我的配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">networks&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">mynet&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">external&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">prometheus&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">prom/prometheus:v2.46.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">restart&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">unless-stopped&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">container_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">prometheus&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./config/prometheus.yml:/etc/prometheus/prometheus.yml&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">/data/prometheus/data:/prometheus&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">command&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="s1">&amp;#39;--config.file=/etc/prometheus/prometheus.yml&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="s1">&amp;#39;--storage.tsdb.path=/prometheus&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="s1">&amp;#39;--web.console.libraries=/etc/prometheus/console_libraries&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="s1">&amp;#39;--web.console.templates=/etc/prometheus/consoles&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="s1">&amp;#39;--web.enable-lifecycle&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">networks&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">mynet&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="m">9090&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">9090&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">environment&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">TZ=Asia/Shanghai&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">user&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;0&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上是我的docker-compose文件，下边我们介绍一下个项的意义&lt;/p>
+&lt;h3 id="networks">networks
+&lt;/h3>&lt;p>网络，我指定了一个已经创建好的桥接网络：mynet，这个大家可以指定自己的网络，或者删除这个networks，让docker为该compose创建一个网络。&lt;/p>
+&lt;h3 id="services">services
+&lt;/h3>&lt;p>服务，就是我们要创建的prometheus服务了，指定了镜像，重启策略，启动命令，网络，端口以及时区等信息。&lt;/p>
+&lt;h2 id="目录结构">目录结构
+&lt;/h2>&lt;p>上边是docker-compose的配置信息，里边指定了prometheus启动的配置文件地址，我们准备一个最简单的配置文件，prometheus自己拉取自己的监控信息：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">global&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">scrape_interval&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">1m&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">scrape_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;prometheus&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">scrape_interval&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">1m&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;localhost:9090&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>具体的配置信息以后再讲，这里的global设置了整个拉取间隔为1分钟，并添加了一个拉取配置，任务名叫：prometheus，目标是localhost:9090，就是安装的prometheus自己。&lt;/p>
+&lt;p>整个的目录结构如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">prometheus
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── README.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── config
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ └── prometheus.yml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── docker-compose.yaml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="启动服务">启动服务
+&lt;/h2>&lt;p>在根目录使用命令来启动prometheus：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker compose up -d
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>启动后可以使用docker ps 来查看服务是否启动成功，如下启动成功：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@WIKI-HK-A1:~# docker ps
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">9b24b2c868ad prom/prometheus:v2.46.0 &lt;span class="s2">&amp;#34;/bin/prometheus --c…&amp;#34;&lt;/span> &lt;span class="m">3&lt;/span> hours ago Up &lt;span class="m">34&lt;/span> minutes 0.0.0.0:9090-&amp;gt;9090/tcp, :::9090-&amp;gt;9090/tcp prometheus
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="访问服务">访问服务
+&lt;/h2>&lt;p>prometheus启动占用的是9090端口，我们可以使用自己服务器的ip:9090来访问：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=clZkV3BZeklFSTNzRmJERkN1d0t2K0JSN0trQVRicUVlckpYVUlDYy9taC9TOVJHMmNtamxCNnBORUlwUTFFU0JFODFyMGc9"
+loading="lazy"
+>&lt;/p>
+&lt;p>访问后如上，我们可以在staus-targets中查看我们添加的那个任务：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Q1AvdXgyWU5aZjRFY3dqeEt5OWlBUkhoclVPbWdQQm9URVAvSERHTGw1b1FkZ0ZWKzN2dnRPZ1cwK0lqTVpVTVlKWGk1b2c9"
+loading="lazy"
+>&lt;/p>
+&lt;p>以上就是简单的安装prometheus的过程，希望可以帮到大家。&lt;/p></description></item><item><title>docker网络模式简介</title><link>https://www.iminling.com/2023/introduction-to-docker-network-mode/</link><pubDate>Mon, 07 Aug 2023 21:29:16 +0000</pubDate><guid>https://www.iminling.com/2023/introduction-to-docker-network-mode/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=alYxQXJQb1dGYk9kMFhXVUtHR2NKNElMWkFmL2JGekd5a09YNmNzbWJBSERqeWR2OUFTTXo1a25MZGRPS2JlKytwUFgvQWs9" alt="Featured image of post docker网络模式简介" />&lt;p>日常开发中都有使用到docker，一直对docker的网络不是很清楚，所以花了点时间了解一下docker的网络，这里对了解的知识进行一下总结。&lt;/p>
+&lt;p>当我们安装好docker后，docker默认给我们创建了3个网络，如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ docker network ls
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">NETWORK ID NAME DRIVER SCOPE
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cde83331f977 bridge bridge &lt;span class="nb">local&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0e504852d7be host host &lt;span class="nb">local&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cdc83d5d9388 none null &lt;span class="nb">local&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>分别是bridge,host和none。下边我们就来看一下这三种网络的区别。&lt;/p>
+&lt;h2 id="bridge网络">bridge网络
+&lt;/h2>&lt;p>桥接网络也是docker的默认网络，当我们安装好docker后，docker会在宿主机创建一个网卡&lt;code>docker0&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 127.0.0.1/8 scope host lo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 ::1/128 scope host
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc mq state UP group default qlen 1000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/ether 52:54:00:ee:63:60 brd ff:ff:ff:ff:ff:ff
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 10.0.20.3/22 brd 10.0.23.255 scope global eth0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 fe80::5054:ff::6360/64 scope link
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">3: docker0: &amp;lt;NO-CARRIER,BROADCAST,MULTICAST,UP&amp;gt; mtu 1500 qdisc noqueue state DOWN group default
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/ether 02:42:0c:be:59:f7 brd ff:ff:ff:ff:ff:ff
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 fe80::42:cff:febe:59f7/64 scope link
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上，docker0网络就是docker默认的网络，他的网关是&lt;code>172.17.0.1&lt;/code>,我们可以先查看一下这个bridge网络的情况(已去除多余属性)：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ docker inspect bridge
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;bridge&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;cde83331f977b86b4eaa67fe05ea18e493691fd0d3fc5edc51dec4e62a512d37&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Created&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;2022-08-25T20:37:27.17350164+08:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Scope&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;local&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;bridge&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;EnableIPv6&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;IPAM&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Options&amp;#34;&lt;/span>: null,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Config&amp;#34;&lt;/span>: &lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Subnet&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;172.17.0.0/16&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Gateway&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;172.17.0.1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Containers&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>subnet和docker0是一样的，containers那里暂时也是没有容器，当我们启动一个容器来使用默认的bridge网络的时候，这里边就会有对应的容器了。&lt;/p>
+&lt;p>我们来启动一个nginx容器，然后再来查看一下这个网络：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ docker run -d --name nginx-test nginx:1.22.0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">4ee2915a41fa9ed6e2591f852789f5762343e3de5bdabe718896778305df3569
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ docker inspect bridge
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;bridge&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;cde83331f977b86b4eaa67fe05ea18e493691fd0d3fc5edc51dec4e62a512d37&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Created&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;2022-08-25T20:37:27.17350164+08:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Scope&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;local&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;bridge&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;EnableIPv6&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;IPAM&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Options&amp;#34;&lt;/span>: null,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Config&amp;#34;&lt;/span>: &lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Subnet&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;172.17.0.0/16&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Gateway&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;172.17.0.1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Containers&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;4ee2915a41fa9ed6e2591f852789f5762343e3de5bdabe718896778305df3569&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;nginx-test&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;EndpointID&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;f518fa3072bbabc3de35577e5dc99570e8e3604e23a19911473b83fe90a85d73&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;MacAddress&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;02:42:ac:11:00:02&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;IPv4Address&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;172.17.0.2/16&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;IPv6Address&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>containers中已经有刚才创建的nginx的容器了。如果该容器想要和外界进行交互就需要暴露端口出来，然后外界才能和他进行网络通信，否则就只能从容器内部访问到外部，而无法从外部访问到容器内部。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ docker ps
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">4ee2915a41fa nginx:1.22.0 &lt;span class="s2">&amp;#34;/docker-entrypoint.…&amp;#34;&lt;/span> &lt;span class="m">2&lt;/span> minutes ago Up &lt;span class="m">2&lt;/span> minutes 80/tcp nginx-test
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我们刚才的容器，内部会暴露80端口，如果我们需要和外部的端口映射，需要在启动容器的时候加上-v参数来映射端口，这里就不再演示了。&lt;/p>
+&lt;p>在默认bridge网络下的容器是无法相互通过容器名称进行通信的，因为没有进行name的主机解析，如果需要让多个容器通过name进行访问，就需要我们创建自己的bridge网络了。创建命令如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker network create --driver bridge --subnet 192.168.0.0/16 --gateway 192.168.0.1 mynet
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边命令创建了一个mynet的桥接网络，然后在创建容器的时候使用这个网络，不同的容器间就可以使用容器名进行网络访问，创建容器命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ docker run -d --network mynet --name nginx-test nginx:1.22.0
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>通过&amp;ndash;network指定容器工作的网络。&lt;/p>
+&lt;h2 id="host网络">host网络
+&lt;/h2>&lt;p>host顾名思义就是和宿主机共用同一个网络，容器没有和宿主机很好的隔离，容器占用的端口就是宿主机的端口，被容器占用的端口宿主机里的程序就没办法使用，容器里可以直接访问宿主机的其他应用程序服务，无需经过其他特殊的设置。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ docker inspect host
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;host&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;0e504852d7be83b42232d744a36504266c52cca3f1647eaeaa9d090117826924&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Created&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;2022-05-20T13:41:40.594740985+08:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Scope&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;local&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;host&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;EnableIPv6&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;IPAM&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Options&amp;#34;&lt;/span>: null,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Config&amp;#34;&lt;/span>: &lt;span class="o">[]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Internal&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Attachable&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Ingress&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;ConfigFrom&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Network&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;ConfigOnly&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Containers&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Options&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Labels&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我们使用host模式创建的容器也不会显示在containers里边。&lt;/p>
+&lt;h2 id="none网络">none网络
+&lt;/h2>&lt;p>在这种模式下，docker容器没有任何网络设置，无法访问宿主机网络，宿主机也没办法访问容器的网络，做到了很好的隔离，开发中也很少用到。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ docker inspect none
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;none&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;cdc83d5d9388583dcee94758821adcd70f57825cbb05f2bcab726d484e9e9fdb&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Created&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;2022-05-20T13:41:40.580477496+08:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Scope&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;local&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;null&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;EnableIPv6&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;IPAM&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Options&amp;#34;&lt;/span>: null,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Config&amp;#34;&lt;/span>: &lt;span class="o">[]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Internal&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Attachable&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Ingress&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;ConfigFrom&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Network&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;ConfigOnly&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Containers&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Options&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Labels&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我们正常使用的话，还是bridge网络用的多一些，因为各服务都是需要相互调用的，要做到网络互通。以上就是对docker三种模式的一些总结。&lt;/p></description></item><item><title>docker部署certbot申请Let’s Encrypt证书</title><link>https://www.iminling.com/2023/docker-use-certbot-apply-lets-encrypt/</link><pubDate>Sun, 30 Jul 2023 00:21:32 +0000</pubDate><guid>https://www.iminling.com/2023/docker-use-certbot-apply-lets-encrypt/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=UVQ4dnZwSDJWNWNTTFNwWXo3QUxlM2wvcFhCdGEyU1diN0lUbGVKZ0gxQXExdFFJV2FIazdvVEorM0Vsak5xWFNDQ1FVNVU9" alt="Featured image of post docker部署certbot申请Let’s Encrypt证书" />&lt;p>最近想给域名申请一个免费的证书，经过查询找到了Let&amp;rsquo;s Encrypt，并且可以使用certbot来申请，因为一直在使用docker,所以就想着看是否可以使用docker来进行证书的申请，于是就开启了此次的折腾之路：使用docker部署certbot申请Let&amp;rsquo;s Encrypt证书。&lt;/p>
+&lt;h2 id="安装certbot">安装certbot
+&lt;/h2>&lt;p>certbot的安装方式有很多种，官方也有一些系统的安装文档，可以根据官方的安装文档来直接安装到对应的操作系统上：&lt;a class="link" href="https://certbot.eff.org/instructions" target="_blank" rel="noopener"
+>installation&lt;/a>，非常详细。官方推荐的方式是通过&lt;code>snap&lt;/code>的形式来安装，另外还有&lt;code>docker&lt;/code>、&lt;code>pip&lt;/code>、&lt;code>第三放发行版本&lt;/code>以及&lt;code>certbot-auto(官方已经标示为过期)&lt;/code>。&lt;/p>
+&lt;h2 id="申请形式">申请形式
+&lt;/h2>&lt;p>申请证书的形式也有很多:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://eff-certbot.readthedocs.io/en/stable/using.html#apache" target="_blank" rel="noopener"
+>apache&lt;/a>{#id9.reference.internal}&lt;/li>
+&lt;li>&lt;a class="link" href="https://eff-certbot.readthedocs.io/en/stable/using.html#webroot" target="_blank" rel="noopener"
+>Webroot&lt;/a>{#id10.reference.internal}&lt;/li>
+&lt;li>&lt;a class="link" href="https://eff-certbot.readthedocs.io/en/stable/using.html#nginx" target="_blank" rel="noopener"
+>Nginx&lt;/a>{#id11.reference.internal}&lt;/li>
+&lt;li>&lt;a class="link" href="https://eff-certbot.readthedocs.io/en/stable/using.html#standalone" target="_blank" rel="noopener"
+>Standalone&lt;/a>{#id12.reference.internal}&lt;/li>
+&lt;li>&lt;a class="link" href="https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins" target="_blank" rel="noopener"
+>DNS Plugins&lt;/a>{#id13.reference.internal}&lt;/li>
+&lt;li>&lt;a class="link" href="https://eff-certbot.readthedocs.io/en/stable/using.html#manual" target="_blank" rel="noopener"
+>Manual&lt;/a>{#id14.reference.internal}&lt;/li>
+&lt;li>&lt;a class="link" href="https://eff-certbot.readthedocs.io/en/stable/using.html#combining-plugins" target="_blank" rel="noopener"
+>Combining plugins&lt;/a>{#id15.reference.internal}&lt;/li>
+&lt;li>&lt;a class="link" href="https://eff-certbot.readthedocs.io/en/stable/using.html#third-party-plugins" target="_blank" rel="noopener"
+>Third-party plugins&lt;/a>{#id16.reference.internal}&lt;/li>
+&lt;/ul>
+&lt;p>其中一些方式要配合开启80和443端口来实现，还需要进行域名解析，我这里就选择使用&lt;code>DNS Plugins&lt;/code>的形式来进行申请，因为域名在cloudflare，所以就使用&lt;code>certbot-dns-cloudflare&lt;/code>插件来进行申请，文档地址：&lt;a class="link" href="https://certbot-dns-cloudflare.readthedocs.io/en/stable/" target="_blank" rel="noopener"
+>Welcome to certbot-dns-cloudflare’s documentation!&lt;/a>。&lt;/p>
+&lt;h2 id="申请准备">申请准备
+&lt;/h2>&lt;p>docker文件的目录如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">├── certs //存放证书
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ ├── cloudflare.ini //配置文件
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── logs //日志
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── docker-compose.yml //docker-compse文件
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── .env //环境变量信息
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="certs">certs
+&lt;/h3>&lt;p>目录是映射到docker容器中的，存放证书文件。&lt;/p>
+&lt;h3 id="cloudflareini">cloudflare.ini
+&lt;/h3>&lt;p>该要存放cloudflare的api token,这里使用的是自己创建的token，配置文件内容如下：&lt;/p>
+&lt;pre class="core-next-code-pre">&lt;code>dns_cloudflare_api_token = your_cloudflare_api_key&lt;/code>&lt;/pre>
+&lt;p>具体的生成方式看下图：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=bXFYU3d3Tll0N0VuR3NRbURGdVlKeGVWK2NXZzlzMW51ejZqSHRuUjFOVEJYZVpqSzdiMWtpOCswWXF4WUlBRzFnbXg1ZG89"
+loading="lazy"
+>&lt;/p>
+&lt;p>选择创建令牌：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=T2lrU0Nic2NsQWg4UTk4czJuWm5rZVJKeTRjcTI0K0RPVEFUdzlqOWJVY1R5dGE3bFVlbk9KMmFZc1lYRlQweGVmYngxL0E9"
+loading="lazy"
+>&lt;/p>
+&lt;p>区域中选择DNS给一个编辑权限，然后就是区域字段选择自己的域名，我这里是给每个域名单独的token，所以需要选择一个域名，可以根据自己需求选择。&lt;/p>
+&lt;h3 id="logs">logs
+&lt;/h3>&lt;p>logs中是存在certbot执行日志的地方。&lt;/p>
+&lt;h3 id="docker-composeyaml">docker-compose.yaml
+&lt;/h3>&lt;p>docker-compose.yaml文件内容如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;3&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">certbot&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">certbot/dns-cloudflare:v2.4.0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">container_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">certbot&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">env_file&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">.env&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./certs:/etc/letsencrypt&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./logs:/var/log/letsencrypt&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./conf/cloudflare.ini:/secrets/cloudflare.ini&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># dry run&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># command: certonly --dns-cloudflare --agree-tos --non-interactive --dns-cloudflare-credentials /secrets/cloudflare.ini --email ${CERTBOT_EMAIL} --dns-cloudflare-propagation-seconds 20 -d ${CERTBOT_DOMAIN} --dry-run&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># issue --force-renewal&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">command&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">certonly --dns-cloudflare --agree-tos --non-interactive --dns-cloudflare-credentials /secrets/cloudflare.ini --email ${CERTBOT_EMAIL} --dns-cloudflare-propagation-seconds 20 -d ${CERTBOT_DOMAIN}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># renew&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># command: renew --dns-cloudflare --no-self-upgrade --agree-tos --non-interactive --dns-cloudflare-credentials /secrets/cloudflare.ini --dns-cloudflare-propagation-seconds 20&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用.env配置文件，然后把certbot中的/etc/letsencrypt目录映射到容器外部的certs目录，另外就是日志以及cloudflare的配置文件。&lt;/p>
+&lt;p>执行的命令有三个，dry-run是测试申请功能是否正常，如果正常则使用issue的命令进行正常申请，因为申请的证书只有三个月的有效期，所以需要进行续期，续期使用renew的命令。&lt;/p>
+&lt;p>&amp;ndash;agree-tos 同意tos(term of service)&lt;/p>
+&lt;p>&amp;ndash;non-interactive 非交互式的&lt;/p>
+&lt;p>&amp;ndash;dns-cloudflare-credentials 指定cloudflare的token文件位置&lt;/p>
+&lt;p>&amp;ndash;eamil 邮箱&lt;/p>
+&lt;p>&amp;ndash;dns-cloudfalre-propagation-seconds 等待时间&lt;/p>
+&lt;p>-d 指定需要申请证书的域名，如果有多个域名则指定多个-d参数。如果需要申请泛域名证书，则使用*.xxx.com，生成的证书会在xxx.com目录下。&lt;/p>
+&lt;h3 id="env">.env
+&lt;/h3>&lt;p>env文件是一些配置信息，如上边的docker-compose.yaml文件中有两个动态的参数，一个是邮箱，另一个是申请证书的域名，我们就是在.env文件中指定的，内容如下：&lt;/p>
+&lt;pre class="core-next-code-pre">&lt;code>CERTBOT_DOMAIN=your_domain_name
+CERTBOT_EMAIL=your_email&lt;/code>&lt;/pre>
+&lt;p>指定邮箱和域名就可以了。&lt;/p>
+&lt;h2 id="申请"> 申请
+&lt;/h2>&lt;p>经过上边的文件准备，接下来就可以开始申请了，使用docker compose up 来进行申请。申请后的证书就在certs目录下。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">├── 1.txt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── accounts
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── archive
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── live
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── renewal
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── renewal-hooks
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── ssl
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>证书文件在live下。然后我们就可以在nginx中使用我们申请的证书文件了。&lt;/p>
+&lt;h2 id="续期">续期
+&lt;/h2>&lt;p>证书三个月的有效期，在快要过期的时候需要进行续期，续期则使用docker-compose.yaml文件中的续期命令就可以了。大家也可以做一个corn定时任务来进行定期续期。&lt;/p>
+&lt;p>最后祝大家申请顺利。&lt;/p></description></item><item><title>docker容器配置ipv6</title><link>https://www.iminling.com/2023/docker-container-configuration-ipv6/</link><pubDate>Sat, 15 Jul 2023 21:34:56 +0000</pubDate><guid>https://www.iminling.com/2023/docker-container-configuration-ipv6/</guid><description>&lt;p>在默认情况下，docker默认只是配置了ipv4地址，并没有ipv6地址，需要我们手动的去进行ipv6地址配置。下面就介绍一下容器支持ipv6的一种方式。&lt;/p>
+&lt;h2 id="docker启用ipv6">docker启用ipv6
+&lt;/h2>&lt;p>具体的方式我们先参考docker的官方文档：&lt;a class="link" href="https://docs.docker.com/config/daemon/ipv6/" target="_blank" rel="noopener"
+>&lt;span class="md-plain">Enable IPv6 support&lt;/span>&lt;/a>,启用docker对ipv6的支持。需要修改daemon.json文件，具体位置为/etc/docker/目录下，如果没有则自己创建daemon.json,添加以下内容：&lt;/p>
+&lt;p>{
+&amp;ldquo;experimental&amp;rdquo;: true,
+&amp;ldquo;ip6tables&amp;rdquo;: true
+}&lt;/p>
+&lt;p>然后对docker进行重启。&lt;code>systemctl restart docker&lt;/code>&lt;/p>
+&lt;h2 id="创建网络">创建网络
+&lt;/h2>&lt;p>我安装docker后都会自己创建一个桥接网络已方便启动的各个容器之间的网络通信。创建网络的命令如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker network create --driver bridge --subnet 192.168.0.0/16 --gateway 192.168.0.1 mynet
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上创建了一个名字为&lt;code>mynet&lt;/code>的网络，可以使用docker inspect来查看这个网络：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@us-la:~# docker inspect mynet
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;mynet&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;914c2a3a0a6ae0bdc0b8d51ba4782b6d232e6c978f2b0596fc4b7938d6c72ddd&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Created&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;2022-08-21T09:19:48.858428501Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Scope&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;local&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;bridge&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;EnableIPv6&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;IPAM&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Options&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Config&amp;#34;&lt;/span>: &lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Subnet&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;192.168.0.0/16&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Gateway&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;192.168.0.1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Internal&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Attachable&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Ingress&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;ConfigFrom&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Network&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;ConfigOnly&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Containers&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;edfd85b3884679256388f3c13afcd1774ac282a34de2438191bdad824a68f765&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;nginx&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;EndpointID&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;eafe61ed19613cfd2a7f56ee1737987d907a26210f0de557499fe4e6c1171e9c&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;MacAddress&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;02:42:c0:a8:00:02&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;IPv4Address&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;192.168.0.2/16&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;IPv6Address&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Options&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Labels&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这个网络只支持ipv4，我们可以ping一下v6看看：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@us-la:~# docker run --rm -it --net mynet busybox ping -6 -c4 ipv6-test.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PING ipv6-test.com &lt;span class="o">(&lt;/span>2001:41d0:701:1100::29c8&lt;span class="o">)&lt;/span>: &lt;span class="m">56&lt;/span> data bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ping: sendto: Cannot assign requested address
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果我们需要支持ipv6，需要创建一个ipv6网络。&lt;/p>
+&lt;h3 id="创建ipv6网络">创建ipv6网络
+&lt;/h3>&lt;p>用以下命令来创建一个ipv6网络：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker network create --ipv6 --subnet=&amp;#34;2001:db8:1::/64&amp;#34; --subnet=&amp;#34;192.168.0.0/24&amp;#34; mynet
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">9db7d457fd11f8c7c4256a1f4b2e00085d537f34e15dd0b0636bc00d4aa6d234
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>再次检查 网络：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@WIKIHOST-221108EU1RTF:~/images# docker network ls
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">NETWORK ID NAME DRIVER SCOPE
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">9a75cccf2d9a bridge bridge &lt;span class="nb">local&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">5677c5bdadce host host &lt;span class="nb">local&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">9db7d457fd11 mynet bridge &lt;span class="nb">local&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">86ce569ad194 none null &lt;span class="nb">local&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@1RTF:~/images# docker inspect mynet
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Name&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;mynet&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Id&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;9db7d457fd11f8c7c4256a1f4b2e00085d537f34e15dd0b0636bc00d4aa6d234&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Created&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;2023-07-12T09:48:08.273299482-04:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Scope&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;local&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;bridge&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;EnableIPv6&amp;#34;&lt;/span>: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;IPAM&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Driver&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;default&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Options&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Config&amp;#34;&lt;/span>: &lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Subnet&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;192.168.0.0/24&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Subnet&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;2001:db8:1::/64&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Internal&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Attachable&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Ingress&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;ConfigFrom&amp;#34;&lt;/span>: &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Network&amp;#34;&lt;/span>: &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;ConfigOnly&amp;#34;&lt;/span>: false,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Containers&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Options&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Labels&amp;#34;&lt;/span>: &lt;span class="o">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>多了一个ipv6的子网。&lt;/p>
+&lt;h2 id="容器支持ipv6">容器支持ipv6
+&lt;/h2>&lt;h3 id="docker-run">docker run
+&lt;/h3>&lt;p>使用docker run命令运行容器的时候只需要加上&amp;ndash;net 就可以使用我们创建的网络了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@U1RTF:~# docker run --rm -it --net mynet busybox ping -6 -c4 ipv6-test.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PING ipv6-test.com &lt;span class="o">(&lt;/span>2001:41d0:701:1100::29c8&lt;span class="o">)&lt;/span>: &lt;span class="m">56&lt;/span> data bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">64&lt;/span> bytes from 2001:41d0:701:1100::29c8: &lt;span class="nv">seq&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">0&lt;/span> &lt;span class="nv">ttl&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">45&lt;/span> &lt;span class="nv">time&lt;/span>&lt;span class="o">=&lt;/span>249.606 ms
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">64&lt;/span> bytes from 2001:41d0:701:1100::29c8: &lt;span class="nv">seq&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">1&lt;/span> &lt;span class="nv">ttl&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">45&lt;/span> &lt;span class="nv">time&lt;/span>&lt;span class="o">=&lt;/span>249.622 ms
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">64&lt;/span> bytes from 2001:41d0:701:1100::29c8: &lt;span class="nv">seq&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">2&lt;/span> &lt;span class="nv">ttl&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">45&lt;/span> &lt;span class="nv">time&lt;/span>&lt;span class="o">=&lt;/span>249.691 ms
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>通过上边命令可以发现已经支持了ipv6了。&lt;/p>
+&lt;h3 id="docker-compose">docker compose
+&lt;/h3>&lt;p>编写docker-compose.yaml文件 ，使用刚才创建的网络。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;3&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">networks&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">mynet&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">external&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">xray&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">teddysun/xray&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">restart&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">unless-stopped&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">container_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">xray&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">environment&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 自定义host&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">XRAY_HOST=${XRAY_HOST}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="m">13100&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">13100&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">networks&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">mynet&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./log:/var/log/xray&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./conf/config.json:/etc/xray/config.json&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>运行上边的xray后再执行ping v6，也是可以正常ping通的。&lt;/p>
+&lt;p>至次，我们已经可以给docker容器分配ipv6地址了，以上就是折腾过程，记录一下。&lt;/p></description></item><item><title>linux服务器快速安装docker和docker-compose</title><link>https://www.iminling.com/2023/linux-install-docker/</link><pubDate>Fri, 09 Jun 2023 21:49:42 +0000</pubDate><guid>https://www.iminling.com/2023/linux-install-docker/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=dnp6YVlCOXUzcXZ3NHRyMlZGVEZDYUY3c3h6eW9ET21TY3YrWWwrZTZBcllvQU1ZQkIxWXlaQnRpRVR5cml3VDVIRUJUTFk9" alt="Featured image of post linux服务器快速安装docker和docker-compose" />&lt;p>记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。&lt;/p>
+&lt;h2 id="ubuntu安装">ubuntu安装
+&lt;/h2>&lt;h3 id="卸载旧版">卸载旧版
+&lt;/h3>&lt;p>执行下边的命令&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo apt-get remove docker docker-engine docker.io containerd runc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading package lists... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Building dependency tree
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading state information... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">E: Unable to locate package docker-engine
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行上边的命令清除以前的安装。&lt;/p>
+&lt;h3 id="设置源">设置源
+&lt;/h3>&lt;p>执行以下命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo apt-get update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo apt-get install &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> ca-certificates &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> curl &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> gnupg &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> lsb-release
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 添加docker官方GPG key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="执行">执行
+&lt;/h1>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ &lt;span class="nb">echo&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> &lt;span class="s2">&amp;#34;deb [arch=&lt;/span>&lt;span class="k">$(&lt;/span>dpkg --print-architecture&lt;span class="k">)&lt;/span>&lt;span class="s2"> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> &lt;/span>&lt;span class="k">$(&lt;/span>. /etc/os-release &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">)&lt;/span>&lt;span class="s2"> stable&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> sudo tee /etc/apt/sources.list.d/docker.list &lt;span class="p">&amp;amp;&lt;/span>gt&lt;span class="p">;&lt;/span> /dev/null
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>设置安装源。&lt;/p>
+&lt;h3 id="安装">安装
+&lt;/h3>&lt;p>先更新刚才安装的源，然后就可以执行安装了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 更新&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 安装&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边的安装是安装最新版本，如果想安装特定版本则需要先查看有哪些可以安装的版本：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ apt-cache madison docker-ce
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> docker-ce &lt;span class="p">|&lt;/span> 5:20.10.16~3-0~ubuntu-focal &lt;span class="p">|&lt;/span> https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> docker-ce &lt;span class="p">|&lt;/span> 5:20.10.15~3-0~ubuntu-focal &lt;span class="p">|&lt;/span> https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> docker-ce &lt;span class="p">|&lt;/span> 5:20.10.14~3-0~ubuntu-focal &lt;span class="p">|&lt;/span> https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> docker-ce &lt;span class="p">|&lt;/span> 5:20.10.13~3-0~ubuntu-focal &lt;span class="p">|&lt;/span> https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>找到版本后执行以下命令来进行安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 版本是上个命令输出的第个列5:20.10.16~3-0~ubuntu-focal&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>安装后就可以使用了。&lt;/p>
+&lt;p> &lt;/p>
+&lt;h3 id="不使用sudo">不使用sudo
+&lt;/h3>&lt;p>ubuntu的系统如果使用的不是root安装，每次运行命令都是需要使用sudo,相对来说是比较麻烦的，如果不想使用sudo，可以使用下面的命令来解决：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo groupadd docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>sudo&lt;span class="o">]&lt;/span> password &lt;span class="k">for&lt;/span> root:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">groupadd: group &lt;span class="s1">&amp;#39;docker&amp;#39;&lt;/span> already exists
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo gpasswd -a &lt;span class="si">${&lt;/span>&lt;span class="nv">USER&lt;/span>&lt;span class="si">}&lt;/span> docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Adding user ubuntu to group docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ newgrp - docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这样子使用起来就方便了很多。&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="debain安装">debain安装
+&lt;/h2>&lt;p>前两步和ubuntu基本一样，删除旧版，然后设置源。&lt;/p>
+&lt;h3 id="删除旧版以及更新apt">删除旧版以及更新apt
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 删除旧版&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ &lt;span class="c1"># apt-get remove docker docker-engine docker.io containerd runc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 更新apt包索引&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ &lt;span class="c1"># apt-get update&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="添加gpg">添加gpg
+&lt;/h3>&lt;p>执行以下命令添加gpg&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@s9707 ~ &lt;span class="c1"># mkdir -p /etc/apt/keyrings &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ &lt;span class="c1"># curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果在添加gpg的时候报错：&lt;code>gpg: command not found&lt;/code>&lt;/p>
+&lt;p>则可以先安装gpg：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@s9707:~# apt-get install gnupg gnupg2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p> &lt;/p>
+&lt;h3 id="设置仓库">设置仓库
+&lt;/h3>&lt;p>通过以下命令添加仓库&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@s9707:~# &lt;span class="nb">echo&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> &lt;span class="s2">&amp;#34;deb [arch=&lt;/span>&lt;span class="k">$(&lt;/span>dpkg --print-architecture&lt;span class="k">)&lt;/span>&lt;span class="s2"> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> &lt;/span>&lt;span class="k">$(&lt;/span>. /etc/os-release &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">)&lt;/span>&lt;span class="s2"> stable&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> tee /etc/apt/sources.list.d/docker.list &lt;span class="p">&amp;amp;&lt;/span>gt&lt;span class="p">;&lt;/span> /dev/null
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后再次更新apt包索引：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@s9707 ~ &lt;span class="c1"># apt-get update&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="安装docker">安装docker
+&lt;/h3>&lt;p>接下来就是安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>整个安装过程也不是很麻烦，跟着官方的步骤走就可以了，这里记录一下自己的安装过程，方便以后快速安装。&lt;/p>
+&lt;p> &lt;/p>
+&lt;p> &lt;/p>
+&lt;p> &lt;/p></description></item><item><title>linux服务器快速安装docker和docker-compose</title><link>https://www.iminling.com/2023/linux-install-docker/</link><pubDate>Fri, 09 Jun 2023 21:49:42 +0000</pubDate><guid>https://www.iminling.com/2023/linux-install-docker/</guid><description>&lt;p>记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。&lt;/p>
+&lt;h2 id="ubuntu安装">ubuntu安装
+&lt;/h2>&lt;h3 id="卸载旧版">卸载旧版
+&lt;/h3>&lt;p>执行下边的命令&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="nx">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">ubuntu&lt;/span>&lt;span class="p">:~&lt;/span>&lt;span class="err">$&lt;/span> &lt;span class="nx">sudo&lt;/span> &lt;span class="nx">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">get&lt;/span> &lt;span class="nx">remove&lt;/span> &lt;span class="nx">docker&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">engine&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">io&lt;/span> &lt;span class="nx">containerd&lt;/span> &lt;span class="nx">runc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Building&lt;/span> &lt;span class="nx">dependency&lt;/span> &lt;span class="nx">tree&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="nx">state&lt;/span> &lt;span class="nx">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">E&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">Unable&lt;/span> &lt;span class="nx">to&lt;/span> &lt;span class="nx">locate&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">engine&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行上边的命令清除以前的安装。&lt;/p>
+&lt;h3 id="设置源">设置源
+&lt;/h3>&lt;p>执行以下命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">sudo&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">update&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">sudo&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">install&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ca&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">certificates&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">curl&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">gnupg&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lsb&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">release&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 添加docker官方GPG key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">curl&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">fsSL&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">gpg&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">o&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">keyrings&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">asc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 执行&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">echo&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu &lt;/span>&lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>&lt;span class="s2"> $(. /etc/os-release &amp;amp;&amp;amp; echo &amp;#34;&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;) stable&amp;#34;&lt;/span> &lt;span class="o">|&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sudo&lt;/span> &lt;span class="n">tee&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">dev&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">null&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>设置安装源。&lt;/p>
+&lt;h3 id="安装">安装
+&lt;/h3>&lt;p>先更新刚才安装的源，然后就可以执行安装了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 更新
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 安装
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边的安装是安装最新版本，如果想安装特定版本则需要先查看有哪些可以安装的版本：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cache&lt;/span> &lt;span class="n">madison&lt;/span> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">16&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">15&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">14&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">13&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>找到版本后执行以下命令来进行安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 版本是上个命令输出的第个列5:20.10.16~3-0~ubuntu-focal
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce=&amp;lt;VERSION_STRING&amp;gt; docker-ce-cli=&amp;lt;VERSION_STRING&amp;gt; containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>安装后就可以使用了。&lt;/p>
+&lt;h3 id="不使用sudo">不使用sudo
+&lt;/h3>&lt;p>ubuntu的系统如果使用的不是root安装，每次运行命令都是需要使用sudo,相对来说是比较麻烦的，如果不想使用sudo，可以使用下面的命令来解决：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo groupadd docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[sudo] password for root:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">groupadd: group &amp;#39;docker&amp;#39; already exists
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo gpasswd -a ${USER} docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Adding user ubuntu to group docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ newgrp - docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这样子使用起来就方便了很多。&lt;/p>
+&lt;h2 id="debain安装">debain安装
+&lt;/h2>&lt;p>前两步和ubuntu基本一样，删除旧版，然后设置源。&lt;/p>
+&lt;h3 id="删除旧版以及更新apt">删除旧版以及更新apt
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 删除旧版
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get remove docker docker-engine docker.io containerd runc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 更新apt包索引
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="添加gpg">添加gpg
+&lt;/h3>&lt;p>执行以下命令添加gpg&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="c1"># mkdir -p /etc/apt/keyrings&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="c1"># curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果在添加gpg的时候报错：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">gpg: command not found
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>则可以先安装gpg：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@s9707:~# apt-get install gnupg gnupg2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="设置仓库">设置仓库
+&lt;/h3>&lt;p>通过以下命令添加仓库&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="c1"># echo \&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian &lt;/span>&lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>&lt;span class="s2"> $(. /etc/os-release &amp;amp;&amp;amp; echo &amp;#34;&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;) stable&amp;#34;&lt;/span> &lt;span class="o">|&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tee&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">dev&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">null&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后再次更新apt包索引：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="安装docker">安装docker
+&lt;/h3>&lt;p>接下来就是安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>整个安装过程也不是很麻烦，跟着官方的步骤走就可以了，这里记录一下自己的安装过程，方便以后快速安装。&lt;/p></description></item></channel></rss>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AES on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/aes/</link><description>Recent content in AES on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 29 Jun 2024 03:36:33 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/aes/index.xml" rel="self" type="application/rss+xml"/><item><title>PHP实现AES-128-ECB并以PKCS5Padding填充方式加解密</title><link>https://www.iminling.com/2024/php-aes-128-ecb-pkcs5padding/</link><pubDate>Sat, 29 Jun 2024 03:36:33 +0000</pubDate><guid>https://www.iminling.com/2024/php-aes-128-ecb-pkcs5padding/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=VDg3MjhNTkpJUzVSWUEyNGY0UHZCQkRvbXEwYXlpWVB5Q2ZuS3ZnTGUwTkxDVW1yTGd2L1N4cU5kVmZzQjIrcFQycG5UZXM9" alt="Featured image of post PHP实现AES-128-ECB并以PKCS5Padding填充方式加解密" />&lt;p>工作中提供给外部调用的api需要进行请求的内容进行加密，加密使用的AES/ECB/PKCS5Padding这种加密方式，公司开发使用的是Java，但是对接企业有使用Java，Go或者php进行开发的，客户会要求提供一下demo，Java语言还好搞，本身就是Java开发的，直接提供就好了，但是php和Go由于公司没有使用者，在客户来询问的时候就没有demo可以提供到，于是自己就研究了一下PHP的AES加密，并提供了一个demo。下边介绍一下具体的实现。&lt;/p>
+&lt;p>本文主要讲由Java转到PHP的实现，具体AES算法是怎么实现的不在本文的讨论范围，如果还不知道AES是什么自行搜索。&lt;/p>
+&lt;h2 id="java实现">Java实现
+&lt;/h2>&lt;p>在这里有必要先说明一下Java的实现，因为只有知道Java是怎么实现的，才能在其他语言里去实现。先上代码吧：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">class&lt;/span> &lt;span class="nc">AesUtils&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">private&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">final&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">TRANSFORMATION&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;AES/ECB/PKCS5Padding&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">private&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">final&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">ALGORITHM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;AES&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">encrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">try&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Key&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">secretKeySpec&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">secretKeySpec&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Cipher&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">cipher&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Cipher&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">getInstance&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">TRANSFORMATION&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="c1">// 创建密码器&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">cipher&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Cipher&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">ENCRYPT_MODE&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">secretKeySpec&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="c1">// 初始化&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">byte&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">result&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">cipher&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">doFinal&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">getBytes&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">StandardCharsets&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">UTF_8&lt;/span>&lt;span class="p">));&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">return&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Base64&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">getEncoder&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="na">encodeToString&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">result&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">catch&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Exception&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">decrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">try&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Key&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">keySpec&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">secretKeySpec&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Cipher&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">cipher&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Cipher&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">getInstance&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">TRANSFORMATION&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">cipher&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Cipher&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">DECRYPT_MODE&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">keySpec&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">byte&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">result&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">cipher&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">doFinal&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Base64&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">getDecoder&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="na">decode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="p">));&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">return&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">result&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">StandardCharsets&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">UTF_8&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">catch&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Exception&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">private&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Key&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">secretKeySpec&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">throws&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">EncryptException&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">KeyGenerator&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">generator&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">KeyGenerator&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">getInstance&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ALGORITHM&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">SecureRandom&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">secureRandom&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">SecureRandom&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">getInstance&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;SHA1PRNG&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">secureRandom&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">setSeed&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">getBytes&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">StandardCharsets&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">UTF_8&lt;/span>&lt;span class="p">));&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">generator&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">128&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">secureRandom&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">SecretKey&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">secretKey&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">generator&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">generateKey&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">byte&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">enCodeFormat&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">secretKey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">getEncoded&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">return&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">SecretKeySpec&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">enCodeFormat&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">ALGORITHM&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>完整代码如上，整个代码也比较清晰，获取key然后对内容进行加解密。&lt;/p>
+&lt;p>&lt;strong>但是问题就出现在key获取上&lt;/strong>，根据用户提供的key再使用RNG(Random Number Generator)算法：&lt;code>SHA1PRNG&lt;/code>获取128位的key：&lt;code>generator.init(128, secureRandom);&lt;/code>，由次可知完整的AES加密算法应该是AES-128-ECB并使用PKCS5Padding方式进行填充。&lt;/p>
+&lt;h2 id="php实现">PHP实现
+&lt;/h2>&lt;p>通过阅读Java的代码发现完整算法是AES-128-ECB并使用PKCS5Padding方式进行填充，获取key的时候使用&lt;code>SHA1PRNG&lt;/code>，但是PHP并没有这种方式，于是就去询问GPT，查看网上各种资料，最终找到了解决办法，PHP的完整代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;?&lt;/span>&lt;span class="nx">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$plainText&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">isset&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$_GET&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="nv">$_GET&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;Hello, World!&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">isset&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$_GET&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;key&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="nv">$_GET&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;key&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;this_is_a_very_long_key_that_needs_to_be_shortened_or_hashed&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">function&lt;/span> &lt;span class="nf">encrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$plainText&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">substr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">openssl_digest&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">openssl_digest&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;sha1&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">true&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="s1">&amp;#39;sha1&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">true&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">16&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// openssl_encrypt 加密不同Mcrypt，对秘钥长度要求，超出16加密结果不变
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nv">$data&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">openssl_encrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$plainText&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;AES-128-ECB&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">OPENSSL_RAW_DATA&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">//$data = strtolower(bin2hex($data));
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="nx">base64_encode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$data&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">function&lt;/span> &lt;span class="nf">decrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$cipherText&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">substr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">openssl_digest&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">openssl_digest&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;sha1&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">true&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="s1">&amp;#39;sha1&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">true&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">16&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$decrypted&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">openssl_decrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">base64_decode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$cipherText&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="s1">&amp;#39;AES-128-ECB&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">OPENSSL_RAW_DATA&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="nv">$decrypted&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 示例用法
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nv">$encrypted&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">encrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$plainText&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$key&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">echo&lt;/span> &lt;span class="s2">&amp;#34;加密结果: &amp;#34;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nv">$encrypted&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$decrypted&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">decrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$encrypted&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$key&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">echo&lt;/span> &lt;span class="s2">&amp;#34;解密结果: &amp;#34;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nv">$decrypted&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">?&amp;gt;&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上，在php中是对Key进行两次sha1并对结果进行截取16位。&lt;/p>
+&lt;p>在PHP中，openssl_encrypt和openssl_decrypt函数会自动处理PKCS#5/PKCS#7填充（padding），不需要手动实现填充。参数中指明OPENSSL_RAW_DATA就可以了。&lt;/p>
+&lt;p>以上就是在PHP中实现Java中SHA1PRNG生成key并以AES-128-ECB加密且以PKCS#5方式进行填充的实现。记录一下。&lt;/p></description></item></channel></rss>

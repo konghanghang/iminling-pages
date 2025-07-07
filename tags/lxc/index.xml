@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Lxc on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/lxc/</link><description>Recent content in Lxc on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Wed, 27 Mar 2024 15:28:11 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/lxc/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox VE(PVE)8.0使用CT模板创建LXC版docker服务</title><link>https://www.iminling.com/2024/pve-use-ct-template-install-lxc-docker/</link><pubDate>Wed, 27 Mar 2024 15:28:11 +0000</pubDate><guid>https://www.iminling.com/2024/pve-use-ct-template-install-lxc-docker/</guid><description>&lt;p>前边已经分享了&lt;a class="link" href="https://www.iminling.com/2024/03/23/459.html" title="畅网J4125安装Proxmox VE(PVE)8.0"
+target="_blank" rel="noopener"
+>pve的安装&lt;/a>，pve下&lt;a class="link" href="https://www.iminling.com/2024/03/24/480.html" title="Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"
+target="_blank" rel="noopener"
+>安装爱快(ikuai)&lt;/a>以及pve下&lt;a class="link" href="https://www.iminling.com/2024/03/24/506.html" title="Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式"
+target="_blank" rel="noopener"
+>安装openwrt&lt;/a>实现旁路由，还想要弄一个docker来跑一些其他的服务，docker的安装有两种方式，一种是装一个linux的虚拟机，然后在里边来跑docker,另一种就是今天要介绍的使用CT模板来创建LXC容器跑docker。&lt;/p>
+&lt;h2 id="ct模板下载">CT模板下载
+&lt;/h2>&lt;p>我这里使用的是debain12来当作模板，可以在pve里下载该模板。&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/7E92FF62DB65F518A96602F5399B44F8.png"
+loading="lazy"
+alt="pve ct debain"
+>&lt;/p>
+&lt;h2 id="创建ct">创建CT
+&lt;/h2>&lt;h3 id="常规">常规
+&lt;/h3>&lt;p>点击&lt;code>创建CT&lt;/code>,这里的主机名随便给一个，因为我这里是要专门来运行docker,所以我这里填：docker, 密码是这个容器的登录密码，一定要牢记。&lt;strong>另外要把无特权的容器取消勾选&lt;/strong>。&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/A59C08C68890457E48A611F260EE0AAB.png"
+loading="lazy"
+alt="pve ct docker common"
+>&lt;/p>
+&lt;h3 id="模板">模板
+&lt;/h3>&lt;p>模板选择下载的debian模板&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/64903720B307C55D2EDE57D31A257AEC.png"
+loading="lazy"
+alt="pve ct docker template"
+>&lt;/p>
+&lt;h3 id="磁盘">磁盘
+&lt;/h3>&lt;p>磁盘大小根据自己的实际需要给&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/BE6319C63E45A2E647B33499D7EE94D6.png"
+loading="lazy"
+alt="pve ct docker disk"
+>&lt;/p>
+&lt;h3 id="cpu">CPU
+&lt;/h3>&lt;p>cpu把j4125的4核都给过去&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/EA0406A5D024B0A4FB377E63F01993B7.png"
+loading="lazy"
+alt="pve ct docker cpu"
+>&lt;/p>
+&lt;h3 id="内存">内存
+&lt;/h3>&lt;p>我这里先给2GB，后续根据需求再添加&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/90DC6043C619243EBE3F0AB48A9015AD.png"
+loading="lazy"
+alt="pve ct docker ram"
+>&lt;/p>
+&lt;h3 id="网络">网络
+&lt;/h3>&lt;p>我这里手动指定了ip，可以使用dhcp自动分配ip&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/91E1F0C50CC80365DAD6B7A22C1EB17F.png"
+loading="lazy"
+alt="pve ct docker network"
+>&lt;/p>
+&lt;h3 id="dns">DNS
+&lt;/h3>&lt;p>dns默认&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/DB074575B8092E3523636E4BBDE443B0.png"
+loading="lazy"
+alt="pve ct docker dns"
+>&lt;/p>
+&lt;h3 id="确认">确认
+&lt;/h3>&lt;p>刚才设置的一些信息的预览&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/214E2A31E399F754F2DB04C2A57BFBED.png"
+loading="lazy"
+alt="pve ct docker confirm"
+>&lt;/p>
+&lt;p>创建完成后先不要开机，还需要一些其他的一些配置。&lt;/p>
+&lt;h3 id="功能">功能
+&lt;/h3>&lt;p>在功能里勾选NFS等选项&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/AAE848B3187FBB8E0F1A8F2DF763C112.png"
+loading="lazy"
+alt="pve ct docker function"
+>&lt;/p>
+&lt;h3 id="lxc配置文件">LXC配置文件
+&lt;/h3>&lt;p>还需要进入pve的shell,对刚创建的LXC容器的配置文件进行修改，位置：/etc/pve/lxc,此时里边应该只有1个配置文件，文件名对应创建的lxc容器在pve里的id。我的是102.conf&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>需要在后边再添加几行：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">lxc.apparmor.profile: unconfined # 表示容器内的进程将不受任何 AppArmor 限制
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: cgroup:rw
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: proc:rw
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: sys:rw
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.cap.drop: # 用于指定容器内进程的能力限制，允许进程执行一些特定的操作，例如修改系统时间、挂载文件系统等
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.cgroup.devices.allow: a
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>完整的配置如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@pve:/etc/pve/lxc# cat 102.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">arch: amd64
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cores: 4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">features: fuse=1,mount=nfs;cifs,nesting=1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">hostname: docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">memory: 4096
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net0: name=eth0,bridge=vmbr0,firewall=1,gw=192.168.1.253,hwaddr=BA:64:EF:29:04:A6,ip=192.168.1.22/24,type=veth
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ostype: debian
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">rootfs: local-lvm:vm-102-disk-0,size=30G
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">swap: 512
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.apparmor.profile: unconfined
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: cgroup:rw
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: proc:rw
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: sys:rw
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.cap.drop:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.cgroup.devices.allow: a
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>配置完成后就可以正常启动该容器了。&lt;/p>
+&lt;h2 id="更换源">更换源
+&lt;/h2>&lt;p>源文件路径：&lt;code>/etc/apt/sources.list&lt;/code>,替换为下边的内容。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@docker:/etc/apt# cat sources.list
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://mirrors.ustc.edu.cn/debian bookworm main contrib
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://mirrors.ustc.edu.cn/debian bookworm-updates main contrib
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://mirrors.ustc.edu.cn/debian-security bookworm-security main contrib
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>查看是否替换成功，执行命令apt update:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="c1"># apt update&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Hit&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">1&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">mirrors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ustc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">edu&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cn&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">debian&lt;/span> &lt;span class="n">bookworm&lt;/span> &lt;span class="n">InRelease&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Get&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">2&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">mirrors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ustc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">edu&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cn&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">debian&lt;/span> &lt;span class="n">bookworm&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">updates&lt;/span> &lt;span class="n">InRelease&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mf">55.4&lt;/span> &lt;span class="n">kB&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Get&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">3&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">mirrors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ustc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">edu&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cn&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">debian&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">security&lt;/span> &lt;span class="n">bookworm&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">security&lt;/span> &lt;span class="n">InRelease&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mf">48.0&lt;/span> &lt;span class="n">kB&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Get&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">4&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">mirrors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ustc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">edu&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cn&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">debian&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">security&lt;/span> &lt;span class="n">bookworm&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">security&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">main&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">148&lt;/span> &lt;span class="n">kB&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Hit&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">5&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">debian&lt;/span> &lt;span class="n">bookworm&lt;/span> &lt;span class="n">InRelease&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Fetched&lt;/span> &lt;span class="mi">251&lt;/span> &lt;span class="n">kB&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="n">s&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">228&lt;/span> &lt;span class="n">kB&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Reading&lt;/span> &lt;span class="n">package&lt;/span> &lt;span class="n">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="n">Done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Building&lt;/span> &lt;span class="n">dependency&lt;/span> &lt;span class="n">tree&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="n">Done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Reading&lt;/span> &lt;span class="n">state&lt;/span> &lt;span class="n">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="n">Done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="mi">51&lt;/span> &lt;span class="n">packages&lt;/span> &lt;span class="n">can&lt;/span> &lt;span class="n">be&lt;/span> &lt;span class="n">upgraded&lt;/span>&lt;span class="o">.&lt;/span> &lt;span class="n">Run&lt;/span> &lt;span class="s1">&amp;#39;apt list --upgradable&amp;#39;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">see&lt;/span> &lt;span class="n">them&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可见已经替换成功。&lt;/p>
+&lt;h2 id="ssh登录">SSH登录
+&lt;/h2>&lt;p>默认情况下只能通过pve的控制台进行登录，无法在其他地方进行登录。&lt;/p>
+&lt;p>修改sshd的配置文件，文件路径：/etc/ssh/sshd_config,添加下边的内容：允许root登录，开启key登录：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PermitRootLogin yes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PubkeyAuthentication yes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">AuthorizedKeysFile .ssh/authorized_keys
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果只想使用key登录，禁止密码登录可以再添加一行：&lt;code>PasswordAuthentication no&lt;/code> 。根据自己需求添加。&lt;/p>
+&lt;h2 id="时区设置">时区设置
+&lt;/h2>&lt;p>默认情况下是0时区：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@docker:~# date
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sun Mar 24 07:04:09 UTC 2024
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@docker:~# date -R
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sun, 24 Mar 2024 07:04:11 +0000
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>修改为北京时间：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@docker:~# timedatectl set-timezone Asia/Shanghai
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@docker:~# timedatectl
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Local time: Sun 2024-03-24 15:06:22 CST
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Universal time: Sun 2024-03-24 07:06:22 UTC
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> RTC time: n/a
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Time zone: Asia/Shanghai (CST, +0800)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">System clock synchronized: yes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> NTP service: inactive
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> RTC in local TZ: no
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到已成功设置为北京时间了。&lt;/p>
+&lt;p>整个LXC容器已设置完成。&lt;/p></description></item></channel></rss>

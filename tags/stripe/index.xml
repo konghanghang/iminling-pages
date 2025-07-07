@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Stripe on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/stripe/</link><description>Recent content in Stripe on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Mon, 25 Mar 2024 05:35:52 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/stripe/index.xml" rel="self" type="application/rss+xml"/><item><title>使用ITIN注册美区stripe进行收款</title><link>https://www.iminling.com/2024/itin-register-stripe/</link><pubDate>Mon, 25 Mar 2024 05:35:52 +0000</pubDate><guid>https://www.iminling.com/2024/itin-register-stripe/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=UC9DejIvQjdPSGFkV2JMSGptSlBBOVhWS2dYR0Vpd0c5aHN1RSs4dE1BWko2bWNUcklXMDROejVFQXJCSkRQTklpcE0wVjA9" alt="Featured image of post 使用ITIN注册美区stripe进行收款" />&lt;p>很久以前就拿到了ITIN，在这期间使用ITIN也成功的申请到了&lt;a class="link" href="https://www.iminling.com/2023/itin-apply-capital-one-credit-card/" >Capital One(C1)的信用卡&lt;/a> 和 &lt;a class="link" href="https://www.iminling.com/2023/itin-apply-american-express-credit-card/" >American Express(AE)的信用卡&lt;/a>，今天就来分享一下使用ITIN申请美区的Stripe的经历。&lt;/p>
+&lt;h2 id="注册">注册
+&lt;/h2>&lt;p>stripe的注册很简单，只需要邮箱就可以注册成功，地址：&lt;a class="link" href="https://stripe.com/zh-us" target="_blank" rel="noopener"
+>stripe官网&lt;/a>。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Q0M5M1M0THNKQjJWaE9aUEljSFdwMlpuNkdqNWZ2c09KTG9GVjVXZmI2Wmxpb0ZUTEN4dm1EMlhOWFBVL0lvRjVDNUFNSEE9"
+loading="lazy"
+alt="stripe register"
+>&lt;/p>
+&lt;p>验证完毕登录到stripe后就被要求需要激活支付账户。&lt;/p>
+&lt;h2 id="账户激活">账户激活
+&lt;/h2>&lt;p>如下图，要求激活账户。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=VEh5NHBpdngzelgrNXFaWWFGSjR4VUp5ekxxVGxqMUgyVlZpQ2sxUGxQNTh5alNRdTBrMXRCLzcyaHZVM1JtZ1JQbitReWs9"
+loading="lazy"
+alt="stripe"
+>&lt;/p>
+&lt;p>点击激活支付功能&lt;/p>
+&lt;h3 id="商家类型">商家类型
+&lt;/h3>&lt;p>地区美国，类型个人。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Wmw1WjFLZEs1ZVlybnFObDFodzFSdkdTTjVMbS9GNDRFTS9Zcm9uQVZoTlZpcUlBcXZ1SXZSUkJreEpLYlVEUytEdFhnR009"
+loading="lazy"
+alt="stripe type"
+>&lt;/p>
+&lt;h3 id="个人详情">个人详情
+&lt;/h3>&lt;p>法定名称就是自己的姓名，第一行名，第二行姓。&lt;/p>
+&lt;p>家庭地址我这里填写的申请ITIN时的地址。&lt;/p>
+&lt;p>电话号码填写的是GV号&lt;/p>
+&lt;p>社会保障码后四位：填写ITIN后四位&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UGxmOWlJcFZ0cGJ6YzVZNmJ0ZTBOTS9CUDJTRlY2MFZHcjNTUGZTSGRKSEVLUzJHbWhJZDhPMFB3cmtTZVlFblpCYmpJV2c9"
+loading="lazy"
+alt="stripe details"
+>&lt;/p>
+&lt;h3 id="商家详情">商家详情
+&lt;/h3>&lt;p>纳税人识别码：填ITIN&lt;/p>
+&lt;p>商家地址：和上边个人详情的一样&lt;/p>
+&lt;p>网站：自己的网站&lt;/p>
+&lt;p>产品描述：介绍一下为何收款，我这里填的是英文的。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=M0lQWHJkY0dqZ2d6dVpIWHJkMzc1UXM5Zk5ESGVZdThLenAzaFNLQUtsdnhVakI0cnc2OVVoMlVEeUFuUVpWOU92ZVFHck09"
+loading="lazy"
+alt="stripe merchant info"
+>&lt;/p>
+&lt;h3 id="公开详情">公开详情
+&lt;/h3>&lt;p>添加一些描述以及客服地址等信息&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=QWl6U0tHT3FwNnJ2TTBvWDRYT3pHV1ZudnVsUm92MURqOUVlOTgwQ1ZGQ3gwdVI2NnVjYlJVM1RGdzJ6OXorVXpDZ21JZE09"
+loading="lazy"
+alt="stripe info"
+>&lt;/p>
+&lt;h3 id="银行详情">银行详情
+&lt;/h3>&lt;p>我这里使用的是revolut的美元账户。&lt;/p>
+&lt;p>路径号码：ACH号码&lt;/p>
+&lt;p>账户：银行账号&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UC9DejIvQjdPSGFkV2JMSGptSlBBenZaV0M3M01CL3lYWlpGcUl6WUNnSWJUM2huYjFncUVlbGY2azExdzRxdFc0NHQ1dTA9"
+loading="lazy"
+alt="stripe card"
+>&lt;/p>
+&lt;h3 id="两步验证">两步验证
+&lt;/h3>&lt;p>出于安全，添加2FA&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=cVRSZXo4eTRHMTZoY1lTNVNRNCtwRjN3em41Zm54ZGVETEllTi82OXhWZnprUHhQZnpPdjc3Y0o1YXU3a1NaTVNNOVMxZTA9"
+loading="lazy"
+alt="stripe 2fa"
+>&lt;/p>
+&lt;h3 id="税款计算">税款计算
+&lt;/h3>&lt;p>默认&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UkZtVXMvTUxMSzZCNURpVHdqUlozZkFQUStVMEtoYzN6bnZYZGRqeDZxTFg2SmZQYjJkVVhiVWs4Mkdyd0lldVNkUmJOZWs9"
+loading="lazy"
+alt="stripe tax"
+>&lt;/p>
+&lt;h3 id="捐款">捐款
+&lt;/h3>&lt;p>拒绝白嫖&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dEQwUjhJRGZCaUl6a041eDJ4bnc2SEp6Qm9qWVlTSjNSYmpoQzFtZk8zSDYwTFZhbWJGVmxDa1BhUDNWbExqK0FWbUxwWkU9"
+loading="lazy"
+alt="stripe climate"
+>&lt;/p>
+&lt;h3 id="摘要">摘要
+&lt;/h3>&lt;p>摘要信息&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=bUl6UGdiL01WRmxOZ1FEcFh6SWlDTWs3RTBVM0dhOENlTnh4RXVRdjkzcmNUeHo2a0VjL0hJVUZsUHVwTmpIajU5dHllYVU9"
+loading="lazy"
+alt="stripe summary"
+>&lt;/p>
+&lt;p>提交等代审核就可以了。&lt;/p>
+&lt;h2 id="设置账户">设置账户
+&lt;/h2>&lt;p>进入stripe的首页，提示账户已激活。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RTFFcVZPNVBMZU40Q1BlakF3Qno3S2orbU5HQ2NiQXZaL09ycjJDU0YxeUxDditwNlA2dHVHUWI0L3k0d3FyTU5ENkJlR1k9"
+loading="lazy"
+alt="stripe index"
+>&lt;/p>
+&lt;p>但是当我们去创建收款的时候，发现还是不能使用。&lt;img src="https://images.iminling.com/app/hide.php?key=ak5wbDdWWFYwSnhIMWNrUzAzS2xDa0o0UVpOM0lkYjJ3VjN1VExGelhEVUlGY0JWQnFaZVdwOWxCQ2pXWDljSjA5cFk4ZlE9"
+loading="lazy"
+alt="stripe bill"
+>&lt;/p>
+&lt;p>点击添加信息，发现还需要再次输入ITIN，提交。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Mi95a2ExYkd6NnMwaWVjOTdVU3hyUVUvOG4wVklYQk03b3dUb2I2V09vZWVVRkVKOHVndDNnU0VvdjBHOFJEVHgwTWxQTzg9"
+loading="lazy"
+alt="stripe itin"
+>&lt;/p>
+&lt;h3 id="手机号验证">手机号验证
+&lt;/h3>&lt;p>账户详情处进行手机号验证&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=VTIzWE0vOGordnlaejFiWGN5cHJDNEE5dW96OXhLNmxQSnphZDJURm02T2Z3RVlXWCt0T2s0bjAwY2JLZ25iamwyRmk5TUE9"
+loading="lazy"
+alt="stripe phoen verify"
+>&lt;/p>
+&lt;p>经过这些处理后基本已经可以正常使用了。&lt;/p>
+&lt;p>可以在账户状态看是否还需要补充什么信息，如下图就说明完全不需要补充资料了。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=WmpUNmFhUG5rZkdWdUltNXY2ZGNNTUhrT1duZHpWUEQ1WUZQdlJoS05obXhZdUZwNVJ1ZXhxZi9pMmhjSzVaSHJwUTY3Zmc9"
+loading="lazy"
+alt="stripe"
+>&lt;/p>
+&lt;p>账号注册完毕，可以开心收款了。&lt;/p></description></item></channel></rss>

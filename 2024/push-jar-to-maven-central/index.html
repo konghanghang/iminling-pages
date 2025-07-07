@@ -1,0 +1,587 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="自己有一个项目想要在任何机器上都能引用到，最简单的办法就是在所要使用的机器上把项目下载下来，然后install到本地仓库，但是如何直接通过引用坐标就能引用到呢？答案就是发布到maven的中央仓库，这样子无论你在什么机器上，只要能上网输入gav三个坐标就可以引入了。这篇文章就介绍一下自己项目打成jar包并发布到maven中央仓库的完整过程。"><title>发布个人项目的jar包文件到maven中央仓库</title><link rel=canonical href=https://www.iminling.com/2024/push-jar-to-maven-central/><link rel=stylesheet href=/scss/style.min.3d6a5ee04e8710bed041e927cc6e05e92f4112a233dbc27f5e305653fa21c8fe.css><meta property='og:title' content="发布个人项目的jar包文件到maven中央仓库"><meta property='og:description' content="自己有一个项目想要在任何机器上都能引用到，最简单的办法就是在所要使用的机器上把项目下载下来，然后install到本地仓库，但是如何直接通过引用坐标就能引用到呢？答案就是发布到maven的中央仓库，这样子无论你在什么机器上，只要能上网输入gav三个坐标就可以引入了。这篇文章就介绍一下自己项目打成jar包并发布到maven中央仓库的完整过程。"><meta property='og:url' content='https://www.iminling.com/2024/push-jar-to-maven-central/'><meta property='og:site_name' content='记录点滴 - 分享'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='jar'><meta property='article:tag' content='java'><meta property='article:tag' content='maven'><meta property='article:published_time' content='2024-05-08T14:33:57+00:00'><meta property='article:modified_time' content='2024-05-08T14:33:57+00:00'><meta property='og:image' content='https://images.iminling.com/app/hide.php?key=VmhUVjAvWExidzB3U04rbmdWZjJwRG54MDgvZkZYZjZjdFYxNXNXbHlXVlU1MmRGVVJmeFpEV0FFeXBQbkdHbXpVMDA5TW89'><meta name=twitter:title content="发布个人项目的jar包文件到maven中央仓库"><meta name=twitter:description content="自己有一个项目想要在任何机器上都能引用到，最简单的办法就是在所要使用的机器上把项目下载下来，然后install到本地仓库，但是如何直接通过引用坐标就能引用到呢？答案就是发布到maven的中央仓库，这样子无论你在什么机器上，只要能上网输入gav三个坐标就可以引入了。这篇文章就介绍一下自己项目打成jar包并发布到maven中央仓库的完整过程。"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content='https://images.iminling.com/app/hide.php?key=VmhUVjAvWExidzB3U04rbmdWZjJwRG54MDgvZkZYZjZjdFYxNXNXbHlXVlU1MmRGVVJmeFpEV0FFeXBQbkdHbXpVMDA5TW89'></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu_b22a428fdb3aa6b9.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>记录点滴 - 分享</a></h1><h2 class=site-description>记录点滴，分享生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>主页</span></a></li><li><a href=/%E5%85%B3%E4%BA%8E/><svg class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>关于</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#账号注册>账号注册</a></li><li><a href=#item-2>sonatype工单</a><ol><li><a href=#新建工单>新建工单</a></li><li><a href=#添加txt记录>添加TXT记录</a></li></ol></li><li><a href=#发布准备>发布准备</a><ol><li><a href=#gpg安装>gpg安装</a></li><li><a href=#生成key>生成key</a></li><li><a href=#key操作>key操作</a></li><li><a href=#distribution-管理>Distribution 管理</a></li><li><a href=#认证配置>认证配置</a></li><li><a href=#javadoc和源代码配置>javadoc和源代码配置</a></li><li><a href=#gpg签名配置>gpg签名配置</a></li><li><a href=#nexus-staging-maven插件用于部署和发布>Nexus Staging Maven插件，用于部署和发布</a></li></ol></li><li><a href=#发布>发布</a><ol><li><a href=#快照版本>快照版本</a></li><li><a href=#release版本>release版本</a></li><li><a href=#遇到的问题>遇到的问题</a></li><li><a href=#同步中央仓库>同步中央仓库</a></li></ol></li><li><a href=#版本引用>版本引用</a><ol><li><a href=#release>release</a></li><li><a href=#快照版本-1>快照版本</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/2024/push-jar-to-maven-central/><img src="https://images.iminling.com/app/hide.php?key=VmhUVjAvWExidzB3U04rbmdWZjJwRG54MDgvZkZYZjZjdFYxNXNXbHlXVlU1MmRGVVJmeFpEV0FFeXBQbkdHbXpVMDA5TW89" loading=lazy alt="Featured image of post 发布个人项目的jar包文件到maven中央仓库"></a></div><div class=article-details><header class=article-category><a href=/categories/maven/>Maven</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/2024/push-jar-to-maven-central/>发布个人项目的jar包文件到maven中央仓库</a></h2><h3 class=article-subtitle>自己有一个项目想要在任何机器上都能引用到，最简单的办法就是在所要使用的机器上把项目下载下来，然后install到本地仓库，但是如何直接通过引用坐标就能引用到呢？答案就是发布到maven的中央仓库，这样子无论你在什么机器上，只要能上网输入gav三个坐标就可以引入了。这篇文章就介绍一下自己项目打成jar包并发布到maven中央仓库的完整过程。</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>May 08, 2024</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>8 minute read</time></div></footer></div></header><section class=article-content><p>自己有一个项目想要在任何机器上都能引用到，最简单的办法就是在所要使用的机器上把项目下载下来，然后install到本地仓库，但是如何直接通过引用坐标就能引用到呢？答案就是发布到maven的中央仓库，这样子无论你在什么机器上，只要能上网输入gav三个坐标就可以引入了。这篇文章就介绍一下自己项目打成jar包并发布到maven中央仓库的完整过程。mac安装maven可以参考我的另一篇文章：<a class=link href=https://www.iminling.com/2023/mac-use-homebrew-install-maven/>Mac使用Homebrew安装maven环境</a>。</p><h2 id=账号注册>账号注册</h2><p>首先我们要先注册sonatype账号，访问地址<a href=https://issues.sonatype.org/secure/Signup!default.jspa target=_blank rel="nofollow noopener">sonatype</a>输入必须的内容就可以成功注册一个账号,不过对密码就有一些特殊的安全要求，正确注册就可以了。</p><h2 id=item-2>sonatype工单</h2><h3 id=新建工单>新建工单</h3><p>点击新建按钮，项目选择<code>open</code>的那个，问题类型选择<code>new project</code>，概要，描述随便写就ok了</p><p><img src="https://images.iminling.com/app/hide.php?key=bGVlVUNlOWJaenRqanBmM1dySVdLcVdGdVF0aTh2V3RXMjFHYW8xckpSdmFYTVRVakJ4eEZXYWFlNTBMZjk3bHZGdXcvTEU9" loading=lazy alt=sonatype工单></p><p>摘要根据自己需要填写，我这里填写的是项目的名称。</p><p>group id就是maven坐标的名称，一般是域名反转过来。例如我的域名是iminling.com,则这里填写com.imining.</p><p>project URL则是github的仓库地址，或者其他代码仓库的地址。</p><p>SCM url就是在project URL后边加上<code>.git</code></p><p>其他的默认就可以了，创建。新建完成后如下图：</p><p><img src="https://images.iminling.com/app/hide.php?key=T3FlMFIyb0ZZRHRLQ0ZsRHdUK2ZwMzIrYnRNWTRQL1hOWGJhWGNSSXBwaTZmbzZmU1pyM3VzWUNZd1VueHhlWmQzRWVzUUE9" loading=lazy alt=工单></p><h3 id=添加txt记录>添加TXT记录</h3><p>如上边的图所示，它为了验证你是域名的所有者，会让你去解析一条txt记录。两种方案选一种就可以了，我这里选择的是添加一条txt的记录，如下图所示，我这里是不清楚规则，提交了两个工单，所以添加了两条记录，最后其中一个工单被认为是重复提交，已关闭。其中记录值填写你的工单地址，下图中框住的部分，主机记录就是<code>jira tiket</code>.</p><p><img src="https://images.iminling.com/app/hide.php?key=SVRrd1BlcWx2bFE0OUhNRlpJTURjdmZJMTBzTitnM1o2a2ExSUlrL0FhODNZb25qdkxhTnIzRVI3Z1l0a29XT0FyT1VUU0U9" loading=lazy alt="sonatype txt"></p><p>这里txt解析的值来源就是你的问题url，如下：</p><p><img src="https://images.iminling.com/app/hide.php?key=STFZMHNLcERrUndGWnprckwxc0RjVmFqM0lndWFmQjZFNU13QnNhcE5QbzE5RWtUanBJTm9UNHNUaHpqTDVRNitkZHlZOXM9" loading=lazy alt="txt record"></p><p>解析完后就可以再等待审核了，我的大概是凌晨3点进行的审核，通过以后会有邮件通知，工单下边也有评论,此时我们就可以准备发布我们的jar包了。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>com.iminling has been prepared, now user<span class=o>(</span>s<span class=o>)</span> yslaoo can:
+</span></span><span class=line><span class=cl>Publish snapshot and release artifacts to https://oss.sonatype.org
+</span></span><span class=line><span class=cl>Have a look at this section of our official guide <span class=k>for</span> deployment instructions:
+</span></span><span class=line><span class=cl>https://central.sonatype.org/pages/ossrh-guide.html#deployment
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Please comment on this ticket when you<span class=err>&#39;</span>ve released your first component<span class=o>(</span>s<span class=o>)</span>, so we can activate the sync to Maven Central.
+</span></span><span class=line><span class=cl>Depending on your build configuration, this might happen automatically. If not, you can follow the steps in this section of our guide:
+</span></span><span class=line><span class=cl>https://central.sonatype.org/pages/releasing-the-deployment.html
+</span></span></code></pre></td></tr></table></div></div><h2 id=发布准备>发布准备</h2><h3 id=gpg安装>gpg安装</h3><p>mac可以使用用brew进行安装 <code>brew install gpg</code>就可以了。</p><p>windows安装了git客户端就自带了这个功能。</p><p>检查自己的gpg的版本，有些是gpg，有些则需要输入gpg2.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 或者使用gpg2 --version 就看自己的电脑上哪个命令可以运行</span>
+</span></span><span class=line><span class=cl>$ gpg --version
+</span></span><span class=line><span class=cl>gpg <span class=o>(</span>GnuPG<span class=o>)</span> 2.2.13-unknown
+</span></span><span class=line><span class=cl>libgcrypt 1.8.4
+</span></span><span class=line><span class=cl>Copyright <span class=o>(</span>C<span class=o>)</span> <span class=m>2019</span> Free Software Foundation, Inc.
+</span></span><span class=line><span class=cl>License GPLv3+: GNU GPL version <span class=m>3</span> or later &lt;https://gnu.org/licenses/gpl.html&gt;
+</span></span><span class=line><span class=cl>This is free software: you are free to change and redistribute it.
+</span></span><span class=line><span class=cl>There is NO WARRANTY, to the extent permitted by law.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Home: /c/Users
+</span></span><span class=line><span class=cl>Supported algorithms:
+</span></span><span class=line><span class=cl>Pubkey: RSA, ELG, DSA, ECDH, ECDSA, EDDSA
+</span></span><span class=line><span class=cl>Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+</span></span><span class=line><span class=cl>        CAMELLIA128, CAMELLIA192, CAMELLIA256
+</span></span><span class=line><span class=cl>Hash: SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+</span></span><span class=line><span class=cl>Compression: Uncompressed, ZIP, ZLIB, BZIP2
+</span></span></code></pre></td></tr></table></div></div><h3 id=生成key>生成key</h3><p>不论是mac还是windows都是使用命令<code>gpg --gen-key</code>来生成。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ gpg --gen-key
+</span></span><span class=line><span class=cl>gpg <span class=o>(</span>GnuPG<span class=o>)</span> 2.2.27<span class=p>;</span> Copyright <span class=o>(</span>C<span class=o>)</span> <span class=m>2021</span> Free Software Foundation, Inc.
+</span></span><span class=line><span class=cl>This is free software: you are free to change and redistribute it.
+</span></span><span class=line><span class=cl>There is NO WARRANTY, to the extent permitted by law.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>注意：使用 “gpg --full-generate-key” 以获得一个功能完整的密钥产生对话框。
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>GnuPG 需要构建用户标识以辨认您的密钥。
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>真实姓名： yslaoo
+</span></span><span class=line><span class=cl>电子邮件地址： ysl@test.com
+</span></span><span class=line><span class=cl>您选定了此用户标识：
+</span></span><span class=line><span class=cl>    “ysl &lt;ysl@test.com&gt;”
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>更改姓名（N）、注释（C）、电子邮件地址（E）或确定（O）/退出（Q）？ O
+</span></span><span class=line><span class=cl>我们需要生成大量的随机字节。在质数生成期间做些其他操作（敲打键盘
+</span></span><span class=line><span class=cl>、移动鼠标、读写硬盘之类的）将会是一个不错的主意；这会让随机数
+</span></span><span class=line><span class=cl>发生器有更好的机会获得足够的熵。
+</span></span><span class=line><span class=cl>我们需要生成大量的随机字节。在质数生成期间做些其他操作（敲打键盘
+</span></span><span class=line><span class=cl>、移动鼠标、读写硬盘之类的）将会是一个不错的主意；这会让随机数
+</span></span><span class=line><span class=cl>发生器有更好的机会获得足够的熵。
+</span></span><span class=line><span class=cl>gpg: /Users/aaa/.gnupg/trustdb.gpg：建立了信任度数据库
+</span></span><span class=line><span class=cl>gpg: 密钥 84040E735F931A32 被标记为绝对信任
+</span></span><span class=line><span class=cl>gpg: 目录‘/Users/aaa/.gnupg/openpgp-revocs.d’已创建
+</span></span><span class=line><span class=cl>gpg: 吊销证书已被存储为‘/Users/aaa/.gnupg/openpgp-revocs.d/DD1E1B8213D07DA46FC3F2B684040E735F931A32.rev’
+</span></span><span class=line><span class=cl>公钥和私钥已经生成并被签名。
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>pub   rsa3072 2021-02-20 <span class=o>[</span>SC<span class=o>]</span> <span class=o>[</span>有效至：2023-02-20<span class=o>]</span>
+</span></span><span class=line><span class=cl>      DD1E1B8213A07DA46FC3F2B684040E735F931A32
+</span></span><span class=line><span class=cl>uid                      yslao &lt;yslao@outlook.com&gt;
+</span></span><span class=line><span class=cl>sub   rsa3072 2021-02-20 <span class=o>[</span>E<span class=o>]</span> <span class=o>[</span>有效至：2023-02-20<span class=o>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>期间会让输入密码，<strong>牢记密码</strong>，后边会使用。</p><h3 id=key操作>key操作</h3><p>生成key后需要发布key到公有服务器。</p><p>先查看key：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ gpg --list-keys
+</span></span><span class=line><span class=cl>gpg: checking the trustdb
+</span></span><span class=line><span class=cl>gpg: marginals needed: <span class=m>3</span>  completes needed: <span class=m>1</span>  trust model: pgp
+</span></span><span class=line><span class=cl>gpg: depth: <span class=m>0</span>  valid:   <span class=m>1</span>  signed:   <span class=m>0</span>  trust: 0-, 0q, 0n, 0m, 0f, 1u
+</span></span><span class=line><span class=cl>gpg: next trustdb check due at 2023-02-20
+</span></span><span class=line><span class=cl>/c/Users/aaa/.gnupg/pubring.kbx
+</span></span><span class=line><span class=cl>---------------------------------
+</span></span><span class=line><span class=cl>pub   rsa2048 2021-02-20 <span class=o>[</span>SC<span class=o>]</span> <span class=o>[</span>expires: 2023-02-20<span class=o>]</span>
+</span></span><span class=line><span class=cl>      C87B0403E54CD05D431E5C1A7204BFB944405DA7
+</span></span><span class=line><span class=cl>uid           <span class=o>[</span>ultimate<span class=o>]</span> ysl &lt;ysl@test.com&gt;
+</span></span><span class=line><span class=cl>sub   rsa2048 2021-02-20 <span class=o>[</span>E<span class=o>]</span> <span class=o>[</span>expires: 2023-02-20<span class=o>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>然后发布：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 命令格式：gpg --keyserver [key的服务器](这个有很多，随便找一个就行了) --send-keys [key] key就是查看key操作中pub对应的那串字符串</span>
+</span></span><span class=line><span class=cl>$ gpg --keyserver hkp://keyserver.ubuntu.com:11371 --send-keys C87B0403E54CD05D431E5C1A7204BFB944405DA7
+</span></span><span class=line><span class=cl>gpg: sending key 7204BFB944405DA7 to hkp://keyserver.ubuntu.com:11371
+</span></span></code></pre></td></tr></table></div></div><h3 id=distribution-管理>Distribution 管理</h3><p>修改pom.xml, 添加以下代码</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-xml data-lang=xml><span class=line><span class=cl><span class=c>&lt;!--父级是project--&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;distributionManagement&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;snapshotRepository&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;id&gt;</span>ossrh<span class=nt>&lt;/id&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;url&gt;</span>https://oss.sonatype.org/content/repositories/snapshots<span class=nt>&lt;/url&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/snapshotRepository&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;repository&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;id&gt;</span>ossrh<span class=nt>&lt;/id&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;url&gt;</span>https://oss.sonatype.org/service/local/staging/deploy/maven2/<span class=nt>&lt;/url&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/repository&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/distributionManagement&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nt>&lt;build&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;plugins&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;plugin&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;groupId&gt;</span>org.sonatype.plugins<span class=nt>&lt;/groupId&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;artifactId&gt;</span>nexus-staging-maven-plugin<span class=nt>&lt;/artifactId&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;version&gt;</span>1.6.7<span class=nt>&lt;/version&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;extensions&gt;</span>true<span class=nt>&lt;/extensions&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;configuration&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;serverId&gt;</span>ossrh<span class=nt>&lt;/serverId&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;nexusUrl&gt;</span>https://oss.sonatype.org/<span class=nt>&lt;/nexusUrl&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;autoReleaseAfterClose&gt;</span>true<span class=nt>&lt;/autoReleaseAfterClose&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;/configuration&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/plugin&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;/plugins&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/build&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=认证配置>认证配置</h3><p>在<code>setting.xml</code>中添加认证信息,此处的id要和<code>pom</code>文件中的<code>distributionManagement</code>下<code>snapshotRepository</code>和<code>repository</code>的id保持一致.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-xml data-lang=xml><span class=line><span class=cl><span class=nt>&lt;settings&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;servers&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;server&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;id&gt;</span>ossrh<span class=nt>&lt;/id&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=c>&lt;!-- username就是注册sonatype时的username --&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;username&gt;</span>your-jira-id<span class=nt>&lt;/username&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=c>&lt;!-- password就是注册sonatype时的password --&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;password&gt;</span>your-jira-pwd<span class=nt>&lt;/password&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/server&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;/servers&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/settings&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=javadoc和源代码配置>javadoc和源代码配置</h3><p>在pom.xml中添加配置如下</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-xml data-lang=xml><span class=line><span class=cl><span class=nt>&lt;build&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;plugins&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;plugin&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;groupId&gt;</span>org.apache.maven.plugins<span class=nt>&lt;/groupId&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;artifactId&gt;</span>maven-source-plugin<span class=nt>&lt;/artifactId&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;version&gt;</span>2.2.1<span class=nt>&lt;/version&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;executions&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;execution&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&lt;id&gt;</span>attach-sources<span class=nt>&lt;/id&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&lt;goals&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=nt>&lt;goal&gt;</span>jar-no-fork<span class=nt>&lt;/goal&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&lt;/goals&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;/execution&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;/executions&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/plugin&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;plugin&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;groupId&gt;</span>org.apache.maven.plugins<span class=nt>&lt;/groupId&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;artifactId&gt;</span>maven-javadoc-plugin<span class=nt>&lt;/artifactId&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;version&gt;</span>2.9.1<span class=nt>&lt;/version&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;executions&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;execution&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&lt;id&gt;</span>attach-javadocs<span class=nt>&lt;/id&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&lt;goals&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=nt>&lt;goal&gt;</span>jar<span class=nt>&lt;/goal&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&lt;/goals&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;/execution&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;/executions&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/plugin&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;/plugins&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/build&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=gpg签名配置>gpg签名配置</h3><p>在pom中添加gpg插件</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>&lt;plugin&gt;
+</span></span><span class=line><span class=cl>    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+</span></span><span class=line><span class=cl>    &lt;artifactId&gt;maven-gpg-plugin&lt;/artifactId&gt;
+</span></span><span class=line><span class=cl>    &lt;version&gt;1.5&lt;/version&gt;
+</span></span><span class=line><span class=cl>    &lt;executions&gt;
+</span></span><span class=line><span class=cl>        &lt;execution&gt;
+</span></span><span class=line><span class=cl>            &lt;id&gt;sign-artifacts&lt;/id&gt;
+</span></span><span class=line><span class=cl>            &lt;phase&gt;verify&lt;/phase&gt;
+</span></span><span class=line><span class=cl>            &lt;goals&gt;
+</span></span><span class=line><span class=cl>                &lt;goal&gt;sign&lt;/goal&gt;
+</span></span><span class=line><span class=cl>            &lt;/goals&gt;
+</span></span><span class=line><span class=cl>        &lt;/execution&gt;
+</span></span><span class=line><span class=cl>    &lt;/executions&gt;
+</span></span><span class=line><span class=cl>&lt;/plugin&gt;
+</span></span></code></pre></td></tr></table></div></div><p>在setting.xml中添加gpg profile配置,<code>gpg.executable</code>属性要根据自己的电脑环境进行添加.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-xml data-lang=xml><span class=line><span class=cl><span class=nt>&lt;settings&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;profiles&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;profile&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;id&gt;</span>ossrh<span class=nt>&lt;/id&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;activation&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;activeByDefault&gt;</span>true<span class=nt>&lt;/activeByDefault&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;/activation&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;properties&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=c>&lt;!--这里根据实际情况填写gpg或gpg2,看自己的环境能使用哪个命令--&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;gpg.executable&gt;</span>gpg2<span class=nt>&lt;/gpg.executable&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=c>&lt;!--passphrase就是我们在gpg安装生成key的时候设置的--&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;gpg.passphrase&gt;</span>the_pass_phrase<span class=nt>&lt;/gpg.passphrase&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&lt;/properties&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/profile&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;/profiles&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/settings&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=nexus-staging-maven插件用于部署和发布>Nexus Staging Maven插件，用于部署和发布</h3><p>在pom.xml中添加以下内容</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-xml data-lang=xml><span class=line><span class=cl><span class=nt>&lt;plugin&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;groupId&gt;</span>org.sonatype.plugins<span class=nt>&lt;/groupId&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;artifactId&gt;</span>nexus-staging-maven-plugin<span class=nt>&lt;/artifactId&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;version&gt;</span>1.6.7<span class=nt>&lt;/version&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;extensions&gt;</span>true<span class=nt>&lt;/extensions&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;configuration&gt;</span>
+</span></span><span class=line><span class=cl>     <span class=nt>&lt;serverId&gt;</span>ossrh<span class=nt>&lt;/serverId&gt;</span>
+</span></span><span class=line><span class=cl>     <span class=nt>&lt;nexusUrl&gt;</span>https://oss.sonatype.org/<span class=nt>&lt;/nexusUrl&gt;</span>
+</span></span><span class=line><span class=cl>     <span class=nt>&lt;autoReleaseAfterClose&gt;</span>true<span class=nt>&lt;/autoReleaseAfterClose&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&lt;/configuration&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/plugin&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><p>经过上边操作，准备工作已完毕，下边就可以开始发布jar包了。</p><h2 id=发布>发布</h2><p>所有的发布操作确保gpg命令是可以用的,在windows下进行发布一定要注意是在<code>git bash</code>客户端中进行,以确保gpg可以使用.以及发布过程中可能会让你再次输入gpg的密码，这里需要注意一下。</p><h3 id=快照版本>快照版本</h3><p>项目的版本如果是以<code>-SNAPSHOT</code>结尾的,就会发布到快照仓库,如下:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>D:<span class=se>\p</span>roject<span class=se>\i</span>dea<span class=se>\b</span>ase-iminling-parent&gt;mvn clean deploy
+</span></span><span class=line><span class=cl>INFO<span class=o>]</span> Scanning <span class=k>for</span> projects...
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span> Some problems were encountered <span class=k>while</span> building the effective model <span class=k>for</span> com.iminling:base-iminling-parent:pom:1.0.0-SNAPSHOT
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span> <span class=s1>&#39;build.pluginManagement.plugins.plugin.(groupId:artifactId)&#39;</span> must be unique but found duplicate declaration of plugin org.sonatype.plugins:nexus-staging-
+</span></span><span class=line><span class=cl>maven-plugin @ line 326, column <span class=m>25</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span> It is highly recommended to fix these problems because they threaten the stability of your build.
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span> For this reason, future Maven versions might no longer support building such malformed projects.
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> -----------------&lt; com.iminling:base-iminling-parent &gt;------------------
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Building base-iminling-parent 1.0.0-SNAPSHOT
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> --------------------------------<span class=o>[</span> pom <span class=o>]</span>---------------------------------
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> --- maven-clean-plugin:2.5:clean <span class=o>(</span>default-clean<span class=o>)</span> @ base-iminling-parent ---
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> --- maven-install-plugin:2.4:install <span class=o>(</span>default-install<span class=o>)</span> @ base-iminling-parent ---
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Installing D:<span class=se>\p</span>roject<span class=se>\i</span>dea<span class=se>\b</span>ase-iminling-parent<span class=se>\p</span>om.xml to D:<span class=se>\m</span>aven-repository<span class=se>\c</span>om<span class=se>\i</span>minling<span class=se>\b</span>ase-iminling-parent<span class=se>\1</span>.0.0-SNAPSHOT<span class=se>\b</span>ase-iminling-parent-1.0.0-S
+</span></span><span class=line><span class=cl>NAPSHOT.pom
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> --- maven-deploy-plugin:2.7:deploy <span class=o>(</span>default-deploy<span class=o>)</span> @ base-iminling-parent ---
+</span></span><span class=line><span class=cl>Downloading from ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/1.0.0-SNAPSHOT/maven-metadata.xml
+</span></span><span class=line><span class=cl>Uploading to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/1.0.0-SNAPSHOT/base-iminling-parent-1.0.0-20210220.03
+</span></span><span class=line><span class=cl>4207-1.pom
+</span></span><span class=line><span class=cl>Uploaded to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/1.0.0-SNAPSHOT/base-iminling-parent-1.0.0-20210220.034
+</span></span><span class=line><span class=cl>207-1.pom <span class=o>(</span><span class=m>14</span> kB at 4.8 kB/s<span class=o>)</span>
+</span></span><span class=line><span class=cl>Downloading from ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/maven-metadata.xml
+</span></span><span class=line><span class=cl>Uploading to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/1.0.0-SNAPSHOT/maven-metadata.xml
+</span></span><span class=line><span class=cl>Uploaded to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/1.0.0-SNAPSHOT/maven-metadata.xml <span class=o>(</span><span class=m>609</span> B at <span class=m>263</span> B/s<span class=o>)</span>
+</span></span><span class=line><span class=cl>Uploading to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/maven-metadata.xml
+</span></span><span class=line><span class=cl>Uploaded to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/maven-metadata.xml <span class=o>(</span><span class=m>292</span> B at <span class=m>54</span> B/s<span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> ------------------------------------------------------------------------
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> BUILD SUCCESS
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> ------------------------------------------------------------------------
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Total time: 15.105 s
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Finished at: 2021-05-20T11:42:18+08:00
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> ------------------------------------------------------------------------
+</span></span></code></pre></td></tr></table></div></div><h3 id=release版本>release版本</h3><p>项目的版本不是以<code>-SNAPSHOT</code>结尾的,就会发布到release仓库,如下:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>D:<span class=se>\p</span>roject<span class=se>\i</span>dea<span class=se>\b</span>ase-iminling-parent&gt;mvn clean deploy
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Scanning <span class=k>for</span> projects...
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span> Some problems were encountered <span class=k>while</span> building the effective model <span class=k>for</span> com.iminling:base-iminling-parent:pom:1.0.0
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span> <span class=s1>&#39;build.pluginManagement.plugins.plugin.(groupId:artifactId)&#39;</span> must be unique but found duplicate declaration of plugin org.sonatype.plugins:nexus-staging-
+</span></span><span class=line><span class=cl>maven-plugin @ line 326, column <span class=m>25</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span> It is highly recommended to fix these problems because they threaten the stability of your build.
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span> For this reason, future Maven versions might no longer support building such malformed projects.
+</span></span><span class=line><span class=cl><span class=o>[</span>WARNING<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> -----------------&lt; com.iminling:base-iminling-parent &gt;------------------
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Building base-iminling-parent 1.0.0
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> --------------------------------<span class=o>[</span> pom <span class=o>]</span>---------------------------------
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> --- maven-clean-plugin:2.5:clean <span class=o>(</span>default-clean<span class=o>)</span> @ base-iminling-parent ---
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> --- maven-install-plugin:2.4:install <span class=o>(</span>default-install<span class=o>)</span> @ base-iminling-parent ---
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Installing D:<span class=se>\p</span>roject<span class=se>\i</span>dea<span class=se>\b</span>ase-iminling-parent<span class=se>\p</span>om.xml to D:<span class=se>\m</span>aven-repository<span class=se>\c</span>om<span class=se>\i</span>minling<span class=se>\b</span>ase-iminling-parent<span class=se>\1</span>.0.0<span class=se>\b</span>ase-iminling-parent-1.0.0.pom
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> --- maven-deploy-plugin:2.7:deploy <span class=o>(</span>default-deploy<span class=o>)</span> @ base-iminling-parent ---
+</span></span><span class=line><span class=cl>Uploading to ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/com/iminling/base-iminling-parent/1.0.0/base-iminling-parent-1.0.0.pom
+</span></span><span class=line><span class=cl>Uploaded to ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/com/iminling/base-iminling-parent/1.0.0/base-iminling-parent-1.0.0.pom <span class=o>(</span><span class=m>14</span> kB at <span class=m>59</span>
+</span></span><span class=line><span class=cl><span class=m>7</span> B/s<span class=o>)</span>
+</span></span><span class=line><span class=cl>Downloading from ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/com/iminling/base-iminling-parent/maven-metadata.xml
+</span></span><span class=line><span class=cl>Uploading to ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/com/iminling/base-iminling-parent/maven-metadata.xml
+</span></span><span class=line><span class=cl>Uploaded to ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/com/iminling/base-iminling-parent/maven-metadata.xml <span class=o>(</span><span class=m>312</span> B at <span class=m>51</span> B/s<span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> ------------------------------------------------------------------------
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> BUILD SUCCESS
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> ------------------------------------------------------------------------
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Total time: 32.049 s
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Finished at: 2021-02-20T14:11:23+08:00
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> ------------------------------------------------------------------------
+</span></span></code></pre></td></tr></table></div></div><h3 id=遇到的问题>遇到的问题</h3><p>在mac上进行发布的时候遇到下边问题：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> --- maven-gpg-plugin:1.5:sign <span class=o>(</span>sign-artifacts<span class=o>)</span> @ base-iminling-parent ---
+</span></span><span class=line><span class=cl>gpg: 签名时失败： Inappropriate ioctl <span class=k>for</span> device
+</span></span><span class=line><span class=cl>gpg: signing failed: Inappropriate ioctl <span class=k>for</span> device
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> ------------------------------------------------------------------------
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> BUILD FAILURE
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> ------------------------------------------------------------------------
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Total time: 17.069 s
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> Finished at: 2021-02-21T09:36:03+08:00
+</span></span><span class=line><span class=cl><span class=o>[</span>INFO<span class=o>]</span> ------------------------------------------------------------------------
+</span></span></code></pre></td></tr></table></div></div><p>上网查询后，原因是 gpg 在当前终端无法弹出密码输入页面。</p><p>解决办法很简单在终端执行<code>export GPG_TTY=$(tty)</code> 。重新执行，发现会弹出一个密码输入界面。</p><h3 id=同步中央仓库>同步中央仓库</h3><p>发布后我们还需要在sonatype中问题下方进行评论,来激活同步到maven中心仓库.</p><p><img src="https://images.iminling.com/app/hide.php?key=alYxQXJQb1dGYk9kMFhXVUtHR2NKL3cwd3JOZXhIZGlaODJMK2tvK2tRTGlGWnZQYVVXa1dva0lFTHptKy9ZaHA3QWtLVjA9" loading=lazy alt="sync maven centrl"></p><p>后续的release就可以同步到maven仓库了。</p><h2 id=版本引用>版本引用</h2><h3 id=release>release</h3><p>正常使用gav三个坐标来引入就可以了。可能刚发布的并没有同步到所有的仓库，需要等待同步，例如可以去阿里仓库里搜索几遍，让它去同步。</p><h3 id=快照版本-1>快照版本</h3><p>快照版本需要引入仓库地址：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-xml data-lang=xml><span class=line><span class=cl><span class=c>&lt;!--定义snapshots库的地址--&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;repositories&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;repository&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;id&gt;</span>sonatype-snapshots<span class=nt>&lt;/id&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;name&gt;</span>sonatype-snapshots<span class=nt>&lt;/name&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;url&gt;</span>https://oss.sonatype.org/content/repositories/snapshots/<span class=nt>&lt;/url&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;snapshots&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=nt>&lt;enabled&gt;</span>true<span class=nt>&lt;/enabled&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;/snapshots&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/repository&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/repositories&gt;</span>
+</span></span><span class=line><span class=cl><span class=c>&lt;!--经测试,不要下边的应该也是可以的,留着做不时之需--&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;pluginRepositories&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;pluginRepository&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;id&gt;</span>sonatype-snapshots<span class=nt>&lt;/id&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;name&gt;</span>sonatype-snapshots<span class=nt>&lt;/name&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;url&gt;</span>https://oss.sonatype.org/content/repositories/snapshots/<span class=nt>&lt;/url&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;snapshots&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=nt>&lt;enabled&gt;</span>true<span class=nt>&lt;/enabled&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&lt;/snapshots&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;/pluginRepository&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/pluginRepositories&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><p>上边就是通过maven发布jar包到maven中央仓库的的过程，希望可以帮助到大家。</p></section><footer class=article-footer><section class=article-tags><a href=/tags/jar/>Jar</a>
+<a href=/tags/java/>Java</a>
+<a href=/tags/maven/>Maven</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class=article-lastmod><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>Last updated on May 08, 2024 14:33 UTC</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Related content</h2><div class=related-content><div class="flex article-list--tile"><article class=has-image><a href=/2024/gradle-kts-push-jar-to-maven-central/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=YmduQTFleVVSNGloQzkvRXJvK2dtcjNiZEtrUjRMSEdYRFVzeitxNXUrNzVPeFpRQ2pBVzBlU2I4dGtPRWUxeWFZNWJQdzg9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=YmduQTFleVVSNGloQzkvRXJvK2dtcjNiZEtrUjRMSEdYRFVzeitxNXUrNzVPeFpRQ2pBVzBlU2I4dGtPRWUxeWFZNWJQdzg9"></div><div class=article-details><h2 class=article-title>使用gradle kts脚本发布个人项目的jar包文件到maven中央仓库</h2></div></a></article><article><a href=/2023/mac-use-homebrew-install-maven/><div class=article-details><h2 class=article-title>Mac使用Homebrew安装maven环境</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//hugo-theme-stack.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2025 iminling.com</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.30.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

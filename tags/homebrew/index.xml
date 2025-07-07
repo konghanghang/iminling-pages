@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Homebrew on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/homebrew/</link><description>Recent content in Homebrew on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Fri, 27 Oct 2023 05:24:40 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/homebrew/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac使用Homebrew安装Gradle环境</title><link>https://www.iminling.com/2023/mac-use-homebrew-install-gradle/</link><pubDate>Fri, 27 Oct 2023 05:24:40 +0000</pubDate><guid>https://www.iminling.com/2023/mac-use-homebrew-install-gradle/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/3F5D90BA94A32843C781364B437AB148.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2023/10/02/265.html" title="Mac更换源更快速的安装Homebrew"
+target="_blank" rel="noopener"
+>Mac更换源更快速的安装Homebrew&lt;/a>，有了Homebrew后一切安装都变的很简单了。&lt;/p>
+&lt;h2 id="安装">安装
+&lt;/h2>&lt;p>首先是来搜索一下gradle:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">k@MacBook-Pro ~ % brew search gradle
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">==&amp;gt; Formulae
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gradle gradle-profiler gradle@7 grails
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gradle-completion gradle@6 grace glade
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">==&amp;gt; Casks
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">grads qlgradle
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上有几个版本的gradle:6,7以及没有加版本号的代表最新的。我这里安装gradle@7的版本：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">k&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">MacBook&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">brew&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">ghcr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">io&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">v2&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">core&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">gradle&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">manifests&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">######################################################################### 100.0%&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Fetching&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">ghcr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">io&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">v2&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">core&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">gradle&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">blobs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sha256&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">cc0def9cb&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">######################################################################### 100.0%&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Pouring&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">3.&lt;/span>&lt;span class="n">all&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bottle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tar&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">gz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Caveats&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">keg&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">only&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">which&lt;/span> &lt;span class="n">means&lt;/span> &lt;span class="n">it&lt;/span> &lt;span class="n">was&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">symlinked&lt;/span> &lt;span class="n">into&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">because&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">an&lt;/span> &lt;span class="n">alternate&lt;/span> &lt;span class="n">version&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">another&lt;/span> &lt;span class="n">formula&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">If&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">need&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">have&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span> &lt;span class="n">first&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">your&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">run&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">echo&lt;/span> &lt;span class="s1">&amp;#39;export PATH=&amp;#34;/usr/local/opt/gradle@7/bin:$PATH&amp;#34;&amp;#39;&lt;/span> &lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="o">~/.&lt;/span>&lt;span class="n">zshrc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Summary&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">🍺&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Cellar&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">11&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">535&lt;/span> &lt;span class="n">files&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">272.3&lt;/span>&lt;span class="n">MB&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Running&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="n">brew&lt;/span> &lt;span class="n">cleanup&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="err">`&lt;/span>&lt;span class="o">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Disable&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">behaviour&lt;/span> &lt;span class="n">by&lt;/span> &lt;span class="n">setting&lt;/span> &lt;span class="n">HOMEBREW_NO_INSTALL_CLEANUP&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Hide&lt;/span> &lt;span class="n">these&lt;/span> &lt;span class="n">hints&lt;/span> &lt;span class="n">with&lt;/span> &lt;span class="n">HOMEBREW_NO_ENV_HINTS&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">see&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="n">man&lt;/span> &lt;span class="n">brew&lt;/span>&lt;span class="err">`&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过上边就已经安装好了gradle,可以看到默认安装的是7.6.3版本的gradle,安装目录是/usr/local/Cellar/gradle@7/7.6.3,接下来我们就需要配置一下maven的环境变量。&lt;/p>
+&lt;h2 id="添加环境变量">添加环境变量
+&lt;/h2>&lt;p>上边安装完输出的信息中有提示可以直接把上边提示的命令在终端执行就可以添加环境变量到.zshrc文件中：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">echo&lt;/span> &lt;span class="s1">&amp;#39;export PATH=&amp;#34;/usr/local/opt/gradle@7/bin:$PATH&amp;#34;&amp;#39;&lt;/span> &lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="o">~/.&lt;/span>&lt;span class="n">zshrc&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>或者直接编辑.zshrc文件，在文件末尾添加：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;/usr/local/opt/gradle@7/bin:$PATH&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后就是刷新变量信息：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">source .zshrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后就可以通过命令来查看gradle的版本信息：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">k&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">MacBook&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">gradle&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Welcome&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">Gradle&lt;/span> &lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">!&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Here&lt;/span> &lt;span class="n">are&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">highlights&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">release&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">Added&lt;/span> &lt;span class="n">support&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">Java&lt;/span> &lt;span class="mf">19.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">Introduced&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="n">rerun&lt;/span>&lt;span class="err">`&lt;/span> &lt;span class="n">flag&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">individual&lt;/span> &lt;span class="n">task&lt;/span> &lt;span class="n">rerun&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">Improved&lt;/span> &lt;span class="n">dependency&lt;/span> &lt;span class="n">block&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">test&lt;/span> &lt;span class="n">suites&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">be&lt;/span> &lt;span class="n">strongly&lt;/span> &lt;span class="n">typed&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">Added&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="n">pluggable&lt;/span> &lt;span class="n">system&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">Java&lt;/span> &lt;span class="n">toolchains&lt;/span> &lt;span class="n">provisioning&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">For&lt;/span> &lt;span class="n">more&lt;/span> &lt;span class="n">details&lt;/span> &lt;span class="n">see&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">docs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">gradle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">org&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">release&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">notes&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">html&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">------------------------------------------------------------&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Gradle&lt;/span> &lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">------------------------------------------------------------&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Build&lt;/span> &lt;span class="n">time&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">2023&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">04&lt;/span> &lt;span class="mi">15&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">59&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">47&lt;/span> &lt;span class="n">UTC&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Revision&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1694251&lt;/span>&lt;span class="n">d59e0d4752d547e1fd5b5020b798a7e71&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Kotlin&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mf">1.7&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Groovy&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mf">3.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">13&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Ant&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Apache&lt;/span> &lt;span class="n">Ant&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">TM&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">version&lt;/span> &lt;span class="mf">1.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">11&lt;/span> &lt;span class="n">compiled&lt;/span> &lt;span class="n">on&lt;/span> &lt;span class="n">July&lt;/span> &lt;span class="mi">10&lt;/span> &lt;span class="mi">2021&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">JVM&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mf">17.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">9&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">Homebrew&lt;/span> &lt;span class="mf">17.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">9&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="ne">OS&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Mac&lt;/span> &lt;span class="ne">OS&lt;/span> &lt;span class="n">X&lt;/span> &lt;span class="mf">14.1&lt;/span> &lt;span class="n">x86_64&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上，Gradle就安装成功。也可以参考官网的安装步骤进行手工下载安装：&lt;a class="link" href="https://gradle.org/install/" target="_blank" rel="noopener"
+>Installing manually&lt;/a>。&lt;/p></description></item><item><title>Mac使用Homebrew安装maven环境</title><link>https://www.iminling.com/2023/mac-use-homebrew-install-maven/</link><pubDate>Fri, 27 Oct 2023 04:01:20 +0000</pubDate><guid>https://www.iminling.com/2023/mac-use-homebrew-install-maven/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/C57B82469E62154EDED97C0E6200B82F.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2023/10/02/265.html" title="Mac更换源更快速的安装Homebrew"
+target="_blank" rel="noopener"
+>Mac更换源更快速的安装Homebrew&lt;/a>，有了Homebrew后一切安装都变的很简单了。&lt;/p>
+&lt;h2 id="安装">安装
+&lt;/h2>&lt;p>首先是来搜索一下maven:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">k@MacBook-Pro ~ % brew search maven
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">==&amp;gt; Formulae
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">maven maven-completion maven-shell
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">==&amp;gt; Casks
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">marvel marvin mauve mavensmate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上，第一个就是我们需要安装的maven,通过安装命令进行安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">k&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">MacBook&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">brew&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="n">maven&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">formulae&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">brew&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sh&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">api&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">formula&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">jws&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">json&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">##O#- #&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">formulae&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">brew&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sh&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">api&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">cask&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">jws&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">json&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">##O#- #&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">ghcr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">io&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">v2&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">core&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">maven&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">manifests&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">3.9&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">######################################################################### 100.0%&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Fetching&lt;/span> &lt;span class="n">dependencies&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">maven&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">openjdk&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">ghcr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">io&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">v2&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">core&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">manifests&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">21.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">######################################################################### 100.0%&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Fetching&lt;/span> &lt;span class="n">openjdk&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">ghcr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">io&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">v2&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">core&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">blobs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sha256&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">ab5d32ae29&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">######################################################################### 100.0%&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Fetching&lt;/span> &lt;span class="n">maven&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">ghcr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">io&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">v2&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">core&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">maven&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">blobs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sha256&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="n">c0cb2c2df11&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">######################################################################### 100.0%&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Installing&lt;/span> &lt;span class="n">dependencies&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">maven&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">openjdk&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Installing&lt;/span> &lt;span class="n">maven&lt;/span> &lt;span class="n">dependency&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">openjdk&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">ghcr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">io&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">v2&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">core&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">manifests&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">21.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Already&lt;/span> &lt;span class="n">downloaded&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">Users&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">k&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Library&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Caches&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">downloads&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">bb8a78296beb0d39c64166622e2df1a553bdf78572bac0ce95765a7007a46b8a&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mf">21.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">1.&lt;/span>&lt;span class="n">bottle_manifest&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">json&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Pouring&lt;/span> &lt;span class="n">openjdk&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="mf">21.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">1.&lt;/span>&lt;span class="n">sonoma&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bottle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tar&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">gz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">🍺&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Cellar&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">21.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">600&lt;/span> &lt;span class="n">files&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">331.4&lt;/span>&lt;span class="n">MB&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Installing&lt;/span> &lt;span class="n">maven&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Pouring&lt;/span> &lt;span class="n">maven&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="mf">3.9&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">5.&lt;/span>&lt;span class="n">sonoma&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bottle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tar&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">gz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">🍺&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Cellar&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">maven&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">3.9&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">92&lt;/span> &lt;span class="n">files&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">10.4&lt;/span>&lt;span class="n">MB&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Running&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="n">brew&lt;/span> &lt;span class="n">cleanup&lt;/span> &lt;span class="n">maven&lt;/span>&lt;span class="err">`&lt;/span>&lt;span class="o">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Disable&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">behaviour&lt;/span> &lt;span class="n">by&lt;/span> &lt;span class="n">setting&lt;/span> &lt;span class="n">HOMEBREW_NO_INSTALL_CLEANUP&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Hide&lt;/span> &lt;span class="n">these&lt;/span> &lt;span class="n">hints&lt;/span> &lt;span class="n">with&lt;/span> &lt;span class="n">HOMEBREW_NO_ENV_HINTS&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">see&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="n">man&lt;/span> &lt;span class="n">brew&lt;/span>&lt;span class="err">`&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过上边就已经安装好了maven,可以看到默认安装的是3.9.5版本的maven,安装目录是/usr/local/Cellar/maven/3.9.5,接下来我们就需要配置一下maven的环境变量。&lt;/p>
+&lt;h2 id="添加环境变量">添加环境变量
+&lt;/h2>&lt;p>编辑~/.zshrc文件,在文件末尾添加环境变量信息：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># maven&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="o">=/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Cellar&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">maven&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">3.9&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">bin&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">PATH&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>添加完环境变量信息后，我们还需要让环境变量生效，可以使用source：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">source .zshrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后就可以通过命令来查看maven的版本信息：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">k@MacBook-Pro ~ % mvn -v
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Apache Maven 3.9.5 (57804ffe001d7215b5e7bcb531cf83df38f93546)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Maven home: /usr/local/Cellar/maven/3.9.5/libexec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Java version: 17.0.9, vendor: Homebrew, runtime: /usr/local/Cellar/openjdk@17/17.0.9/libexec/openjdk.jdk/Contents/Home
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Default locale: en_CN, platform encoding: UTF-8
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">OS name: &amp;#34;mac os x&amp;#34;, version: &amp;#34;14.1&amp;#34;, arch: &amp;#34;x86_64&amp;#34;, family: &amp;#34;mac&amp;#34;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>至此maven就安装完成了，我这里使用的是brew来进行安装，除了这个方法，还可以直接去maven官网进行下载maven的压缩包，然后进行解压，再进行环境变量的配置就可以了。maven官网的下载地址：&lt;a class="link" href="https://maven.apache.org/download.cgi" target="_blank" rel="noopener"
+>Maven - Download&lt;/a>，这里默认下载的是最新版本，如果想下载历史的版本可以去到历史库下载，具体地址：&lt;a class="link" href="https://maven.apache.org/docs/history.html" target="_blank" rel="noopener"
+>Maven Releases History&lt;/a>。&lt;/p></description></item><item><title>Mac更换源更快速的安装Homebrew</title><link>https://www.iminling.com/2023/mac-change-source-install-homebrew/</link><pubDate>Mon, 02 Oct 2023 00:00:00 +0000</pubDate><guid>https://www.iminling.com/2023/mac-change-source-install-homebrew/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/ac50dc06f009fe58bbe7cf4cde2e26eb.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;p>&lt;a class="link" href="https://brew.sh/" target="_blank" rel="noopener"
+>Homebrew&lt;/a>是一款Mac OS平台下的软件包管理工具，拥有安装、卸载、更新、查看、搜索等很多实用的功能。简单的一条指令，就可以实现包管理，而不用你关心各种依赖和文件路径的情况，十分方便快捷。但是安装却是需要去github去拉仓库然后进行安装，github在国内的访问速度堪忧，所以会导致整个安装过程很长，甚至安装失败，这里我记录一下我替换源进行安装的过程，希望可以帮助大家。&lt;/p>
+&lt;h2 id="安装准备">安装准备
+&lt;/h2>&lt;p>&lt;a class="link" href="https://brew.sh/" target="_blank" rel="noopener"
+>Homebrew&lt;/a>的官网提供了一键安装的脚本，脚本的实际指向是github仓库中的&lt;a class="link" href="https://github.com/Homebrew/install" target="_blank" rel="noopener"
+>install&lt;/a>仓库，查看安装脚本&lt;code>install.sh&lt;/code>,可以发现安装的过程会优先读环境变量中的git仓库地址，如果没有则使用脚本中默认的github中的仓库地址，所以我们可以把要使用的源设置好环境变量，在install.sh脚本安装的时候直接使用我们设置好的源来加快安装速度：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">HOMEBREW_BREW_DEFAULT_GIT_REMOTE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://github.com/Homebrew/brew&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">HOMEBREW_CORE_DEFAULT_GIT_REMOTE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://github.com/Homebrew/homebrew-core&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Use remote URLs of Homebrew repositories from environment if set.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">HOMEBREW_BREW_GIT_REMOTE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;${HOMEBREW_BREW_GIT_REMOTE:-&amp;#34;&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">HOMEBREW_BREW_DEFAULT_GIT_REMOTE&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="s2">&amp;#34;}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">HOMEBREW_CORE_GIT_REMOTE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;${HOMEBREW_CORE_GIT_REMOTE:-&amp;#34;&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">HOMEBREW_CORE_DEFAULT_GIT_REMOTE&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="s2">&amp;#34;}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># The URLs with and without the &amp;#39;.git&amp;#39; suffix are the same Git remote. Do not prompt.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="p">[[&lt;/span> &lt;span class="s2">&amp;#34;${HOMEBREW_BREW_GIT_REMOTE}&amp;#34;&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;${HOMEBREW_BREW_DEFAULT_GIT_REMOTE}.git&amp;#34;&lt;/span> &lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">HOMEBREW_BREW_GIT_REMOTE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;${HOMEBREW_BREW_DEFAULT_GIT_REMOTE}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="p">[[&lt;/span> &lt;span class="s2">&amp;#34;${HOMEBREW_CORE_GIT_REMOTE}&amp;#34;&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;${HOMEBREW_CORE_DEFAULT_GIT_REMOTE}.git&amp;#34;&lt;/span> &lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">HOMEBREW_CORE_GIT_REMOTE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;${HOMEBREW_CORE_DEFAULT_GIT_REMOTE}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">HOMEBREW_&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">BREW&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">CORE&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="n">_GIT_REMOTE&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>所以我们需要设置两个环境变量&lt;code>HOMEBREW_BREW_GIT_REMOTE&lt;/code>和&lt;code>HOMEBREW_CORE_GIT_REMOTE&lt;/code>&lt;/p>
+&lt;p>，我这里使用的是中科大的源来进行安装，具体可以参考中科的的介绍页面：&lt;a class="link" href="https://mirrors.ustc.edu.cn/help/brew.git.html" target="_blank" rel="noopener"
+>Homebrew 源使用帮助&lt;/a>。两个变量的设置脚本如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">HOMEBREW_BREW_GIT_REMOTE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://mirrors.ustc.edu.cn/brew.git&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">HOMEBREW_CORE_GIT_REMOTE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://mirrors.ustc.edu.cn/homebrew-core.git&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这样就完成了源的替换，不要关闭执行上边export命令的窗口，下一步在同一个窗口执行安装脚本。&lt;/p>
+&lt;h2 id="安装">安装
+&lt;/h2>&lt;p>执行官网的一键安装脚本：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">/bin/bash -c &amp;#34;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&amp;#34;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>由于替换了中科大的源，安装上不会很慢，等待程序执行完成就可以了。&lt;/p>
+&lt;p>安装完成后把brew添加到环境变量，编辑.bash_profile文件，添加下边一行代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="o">=/&lt;/span>&lt;span class="n">opt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">bin&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">PATH&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>保存后刷新环境，使配置的变量生效：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">source .bash_profile
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后就可以正常使用brew来安装和管理应用了。&lt;/p>
+&lt;h2 id="使用">使用
+&lt;/h2>&lt;p>下边列举一些常用的brew的使用命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">brew search ** //查找某个软件包
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew list //列出已经安装的软件的包
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew install ** //安装某个软件包,默认安装的是稳定版本
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew uninstall **//卸载某个软件的包
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew upgrade ** //更新某个软件包
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew info ** //查看指定软件包的说明
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew cache clean //清理缓存
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上就是homebrew简单快速的安装过程。&lt;/p></description></item></channel></rss>

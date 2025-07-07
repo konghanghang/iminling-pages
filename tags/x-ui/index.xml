@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>X-Ui on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/x-ui/</link><description>Recent content in X-Ui on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 26 Mar 2023 01:39:01 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/x-ui/index.xml" rel="self" type="application/rss+xml"/><item><title>x-ui安装配置使用</title><link>https://www.iminling.com/2023/x-ui-configuration-and-use/</link><pubDate>Sun, 26 Mar 2023 01:39:01 +0000</pubDate><guid>https://www.iminling.com/2023/x-ui-configuration-and-use/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=dmRweU41MERsbjlVeVBxMUJOMzZSN0VyRE15VzhId1FsY3JiWHBtL1FKWXEyUzczTXMzemFCc2twSDMvOWU0dEFyNGpqOFU9" alt="Featured image of post x-ui安装配置使用" />&lt;p>今天我们主要来介绍一下x-ui的安装使用。&lt;/p>
+&lt;p>x-ui在原地址是：&lt;a class="link" href="https://github.com/vaxilu/x-ui" target="_blank" rel="noopener"
+>x-ui&lt;/a>&lt;/p>
+&lt;p>&lt;del>但是由于原仓库太久没更新，我们今天使用的是改版的&lt;a href="https://github.com/FranzKafkaYu/x-ui">FranzKafkaYu/x-ui&lt;/a>,支持单个端口多用户，还能分别统计流量，比原版较完善。&lt;/del>&lt;/p>
+&lt;p>本文使用改版&lt;a class="link" href="https://github.com/MHSanaei/3x-ui" title="MHSanaei/3x-ui"
+target="_blank" rel="noopener"
+>MHSanaei/3x-ui&lt;/a>进行配置。&lt;/p>
+&lt;h2 id="安装">安装
+&lt;/h2>&lt;p>使用github仓库中的一键安装脚本很容易就可以安装完成安装：&lt;/p>
+&lt;pre class="corepress-code-pre">bash &lt;(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)&lt;/pre>
+&lt;p>安装完成如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Saving to: ‘/usr/local/x-ui-linux-amd64.tar.gz’
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/usr/local/x-ui-linux- 100%[=========================&amp;gt;] 27.95M 124MB/s in 0.2s
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2023-03-26 08:10:51 (124 MB/s) - ‘/usr/local/x-ui-linux-amd64.tar.gz’ saved [29309974/29309974]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui/x-ui.sh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui/bin/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui/bin/README.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui/bin/LICENSE
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui/bin/geosite.dat
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui/bin/geoip.dat
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui/bin/xray-linux-amd64
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui/x-ui
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui/x-ui.service
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">--2023-03-26 08:10:52-- https://raw.githubusercontent.com/FranzKafkaYu/x-ui/main/x-ui.sh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 185.199.109.133, 185.199.110.133, 185.199.108.133, ...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|185.199.109.133|:443... connected.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">HTTP request sent, awaiting response... 200 OK
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Length: 25694 (25K) [text/plain]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Saving to: ‘/usr/bin/x-ui’
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/usr/bin/x-ui 100%[=========================&amp;gt;] 25.09K --.-KB/s in 0.001s
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2023-03-26 08:10:52 (34.8 MB/s) - ‘/usr/bin/x-ui’ saved [25694/25694]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">出于安全考虑，安装/更新完成后需要强制修改端口与账户密码
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">确认是否继续,如选择n则跳过本次端口与账户密码设定[y/n]:y
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">请设置您的账户名:admin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">您的账户名将设定为:admin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">请设置您的账户密码:admin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">您的账户密码将设定为:admin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">请设置面板访问端口:8080
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">您的面板访问端口将设定为:8080
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">确认设定,设定中
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">set username and password success
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">账户密码设定完成
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">set port 11000 success面板端口设定完成
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created symlink /etc/systemd/system/multi-user.target.wants/x-ui.service → /etc/systemd/system/x-ui.service.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-ui v0.3.4.1 安装完成，面板已启动
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>安装完成后我们就可以进行登录了，使用我们vps的ip地址加上安装的时候设置的端口就可以正常登录了。&lt;/p>
+&lt;h2 id="配置域名访问">配置域名访问
+&lt;/h2>&lt;p>使用ip加端口的形式多少有点不怎么方便，我们可以配置nginx来进行反向代理，使用域名来访问我们的x-ui的界面。&lt;/p>
+&lt;h3 id="x-ui配置">x-ui配置
+&lt;/h3>&lt;p>第一次需要使用ip+端口的形式进行登录，登录x-ui后我们进入&lt;code>面板设置&lt;/code>-&lt;code>面板url根路径配置&lt;/code>，默认是&lt;code>/&lt;/code>,我们将它改为我们想要使用的路径，我这里改为&lt;code>/ui&lt;/code>.&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=M0ZsZ1d2SjlQNkhZMGJTN0luR3cycXlYTEVraDVhSjN2STUramYvUDhXUG9GTlN5ZllxMjlENFBueFJMVm1SNjFiOVp6UjQ9"
+loading="lazy"
+alt="xui配置"
+>&lt;/p>
+&lt;h3 id="nginx配置">nginx配置
+&lt;/h3>&lt;p>配置nginx的配置文件，添加以下转发配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listen&lt;/span> &lt;span class="mi">80&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_name&lt;/span> &lt;span class="n">_&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">#access_log /var/log/nginx/host.access.log main;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">location&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">ui&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">proxy_set_header&lt;/span> &lt;span class="n">X&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Real&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="ne">IP&lt;/span> &lt;span class="o">$&lt;/span>&lt;span class="n">remote_addr&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">proxy_set_header&lt;/span> &lt;span class="n">Host&lt;/span> &lt;span class="o">$&lt;/span>&lt;span class="n">host&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">proxy_set_header&lt;/span> &lt;span class="n">X&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Forwarded&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">For&lt;/span> &lt;span class="o">$&lt;/span>&lt;span class="n">proxy_add_x_forwarded_for&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">proxy_ignore_client_abort&lt;/span> &lt;span class="n">on&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">proxy_pass&lt;/span> &lt;span class="n">http&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="mf">172.17&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">0.1&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">8080&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果不限制域名server_name配置为&lt;code>_&lt;/code>就可以了，如果要限制域名，则配置为对应的域名。&lt;/p>
+&lt;p>就可以通过域名直接进行访问了。&lt;/p>
+&lt;h2 id="节点添加">节点添加
+&lt;/h2>&lt;p>现在最常用的节点还是vless节点，下边就添加一个vless节点来使用：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RHVjMFo5ZUNNUWE5S0ZYRjMyODJkZDU1QlQzQ0wrbzhkaXVwa3FNSHFkYkRXaUh0RDMzeEdSNzdXTERvYk1vaEdqZ1hObnM9"
+loading="lazy"
+alt="vless"
+>&lt;/p>
+&lt;p>用户就使用xui自己生成的用户信息就可以了。&lt;/p>
+&lt;p>flow需要改成xtls-rprx-vision,&lt;/p>
+&lt;p>安全选项使用Reality，然后下边的都可以自动生成，&lt;/p>
+&lt;p>serverNames可以使用xui自己生成的，也可以使用我们自己找的。&lt;/p>
+&lt;p>然后就是保存，去相关的客户端里按照我们的配置进行填写，然后就可以正常上网了。&lt;/p>
+&lt;p>这里演示一下openwrt中的配置：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RjdVZk1laDdiQThEOUZPVi9xR0R4Zk5MVXp5dENaNzFxM3U5Zmdpb3oyQmdSMWl6bnVYa3hmZXZkYlc3b2NNZFR5UzVTMUk9"
+loading="lazy"
+alt="openwrt-vless"
+>&lt;/p>
+&lt;p>基本就是对着xui里的进行抄就行了，地址就是自己的vps地址，端口在xui的截图里没有截取到，按自己添加的端口进行填写就行了。然后就可以愉快的上网了。&lt;/p></description></item></channel></rss>

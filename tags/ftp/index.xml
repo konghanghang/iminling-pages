@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ftp on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/ftp/</link><description>Recent content in Ftp on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Thu, 01 Jun 2023 17:21:12 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/ftp/index.xml" rel="self" type="application/rss+xml"/><item><title>java连接ftp部署在k8s中无法读取文件</title><link>https://www.iminling.com/2023/java-ftp-cannot-read-file-in-k8s/</link><pubDate>Thu, 01 Jun 2023 17:21:12 +0000</pubDate><guid>https://www.iminling.com/2023/java-ftp-cannot-read-file-in-k8s/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=cStKcGRtRXppeGVqL01GdXRLaVRCbDlEN2JJSjZTaHBoL210b1ZaUW1xdDRSVU9ObzdzSGM4c3BqVHh1ZTNKc25nbEdvVk09" alt="Featured image of post java连接ftp部署在k8s中无法读取文件" />&lt;h2 id="起因">起因
+&lt;/h2>&lt;p>最近工作中需要使用到ftp工具，就在网上找了一个java编写的ftp工具类，功能也是挺齐全的，我在本地测试的时候对文件的下载和上传都是没有问题，正常使用。等到功能开发完成后，部署到k8s就出现了无法读取ftp服务器的文件的情况，起初以为是ftp服务器的问题，就又重新搭建了新的ftp服务器还是同样的问题。中间也想过是不是工具类的功能，就在网上查询了好久，大家基本都是用的&lt;code>commons-net&lt;/code>这个包，具体的maven依赖如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;dependency&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>commons-net&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>commons-net&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;version&amp;gt;&lt;/span>3.6&lt;span class="nt">&amp;lt;/version&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/dependency&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以为网上找的工具有问题，后来就引用了&lt;code>hutool&lt;/code>工具类中的方法，还是同样的问题，百思不得其解的时候，看到hutool工具类那里有一个标题：&lt;code>主动模式和被动模式&lt;/code>。起初我也没注意这个，毕竟是一堆的理论。实在是被这个问题虐的体无完肤的时候，我看了一下这个概念，恍然大悟，不就是因为这个原因吗？下面我们来解释一下这两个模式&lt;/p>
+&lt;h2 id="port和pasv">PORT和PASV
+&lt;/h2>&lt;p>在解释具体的概念前，我们先来说明一下主动和被动它针对的对象是谁，其实主动和被动都是针对&lt;code>ftp服务器&lt;/code>来说的。下面我们来说明一下两个模式&lt;/p>
+&lt;p>和&lt;/p>
+&lt;h3 id="port主动模式">PORT（主动模式）
+&lt;/h3>&lt;p>FTP客户端连接到FTP服务器的21端口，发送用户名和密码登录，登录成功后要list列表或者读取数据时&lt;/p>
+&lt;p>_&lt;strong>客户端&lt;/strong>_随机开放一个端口（1024以上），发送 PORT命令到FTP服务器，告诉服务器客户端采用主动模式并开放端口；&lt;/p>
+&lt;p>FTP服务器收到PORT主动模式命令和端口号后，通过服务器的20端口和客户端开放的端口连接，发送数据。&lt;/p>
+&lt;blockquote>
+&lt;p>此模式是ftp服务器主动连接客户端的一个端口，并提供文件上传和下载服务，所以客户端需要开发端口的权限出来，防火墙进行放行，这样子ftp服务器才能连接到_&lt;strong>客户端&lt;/strong>_进行文件处理。&lt;/p>&lt;/blockquote>
+&lt;h3 id="pasv被动模式">PASV（被动模式）
+&lt;/h3>&lt;p>FTP客户端连接到FTP服务器的21端口，发送用户名和密码登录，登录成功后要list列表或者读取数据时，&lt;/p>
+&lt;p>客户端发送PASV命令到FTP服务器， 服务器在本地随机开放一个端口（1024以上），然后把开放的端口告诉客户端，&lt;/p>
+&lt;p>客户端再连接到服务器开放的端口进行数据传输。&lt;/p>
+&lt;blockquote>
+&lt;p>此模式是客户端主动去连ftp服务端的端口，然后再进行文件的上传和下载，和我们正常思维逻辑是一样的，此时就需要ftp服务端开放具体的端口出来，并在防火墙中进行放行，客户端才能连接上去进行文件处理。&lt;/p>&lt;/blockquote>
+&lt;h2 id="问题原因">问题原因
+&lt;/h2>&lt;p>这里来说明一下我遇到的问题的原因，因为我是网上找的客户端，我起初也并不清楚它使用的是主动模式还是被动模式，就直接发布到k8s中进行使用，从遇到的情况来看，应该默认使用的是&lt;code>主动模式&lt;/code>:由ftp服务器主动连接客户端的高位端口，来实现文件的上传和下载。但是因为我的服务是放在k8s中，容器的端口都是需要写命令暴露出来的，而我们系统的容器都是默认只暴露了8080端口来进行服务的访问。&lt;/p>
+&lt;p>所以在使用主动模式的时候，ftp服务器想通过高位端口来连接到客户端是没有办法成功的，所以在获取文件的时候就什么也拿不到。&lt;/p>
+&lt;h2 id="解决办法">解决办法
+&lt;/h2>&lt;p>我们知道了具体什么问题那就好解决了，解决办法也就是指定当前ftp客户端是使用主动模式还是被动模式。&lt;/p>
+&lt;p>因为我们的服务都是部署在k8s中的，所以我选择使用被动模式来进行文件处理，这样子k8s中的容器就不需要做什么处理。而ftp服务器则需要对高位端口进行放行，以便客户端可以连接上来进行服务的上传和下载。&lt;/p>
+&lt;p>代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="n">FTPClient&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">ftpClient&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">FTPClient&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">ftpClient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">connect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">port&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">ftpClient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">enterLocalActiveMode&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">//主动模式&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">// ftpClient.enterLocalPassiveMode(); 被动模式&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">ftpClient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">setControlEncoding&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;UTF-8&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">ftpClient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">changeWorkingDirectory&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item></channel></rss>

@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Fdisk on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/fdisk/</link><description>Recent content in Fdisk on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Wed, 04 Dec 2024 15:04:19 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/fdisk/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux管理磁盘分区-挂载新的磁盘到系统</title><link>https://www.iminling.com/2024/linux-mount-new-disk/</link><pubDate>Wed, 04 Dec 2024 15:04:19 +0000</pubDate><guid>https://www.iminling.com/2024/linux-mount-new-disk/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/12/06E75D7C2E1274607D0E030129712389.jpg"
+loading="lazy"
+alt="disk"
+>&lt;/p>
+&lt;p>最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。&lt;/p>
+&lt;h2 id="3t盘挂载">3T盘挂载
+&lt;/h2>&lt;h3 id="磁盘查看">磁盘查看
+&lt;/h3>&lt;p>先使用fdisk查看磁盘&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk -l
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sda: 20 GiB, 21474836480 bytes, 41943040 sectors
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disklabel type: gpt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk identifier: 0DA7595A-DE2A-1042-8C4F-3C883C4D7BA6
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Device Start End Sectors Size Type
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 262144 41943006 41680863 19.9G Linux filesystem
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda14 2048 8191 6144 3M BIOS boot
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 8192 262143 253952 124M EFI System
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition table entries are not in disk order.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 2.93 TiB, 3221225472000 bytes, 6291456000 sectors
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到&lt;code>/dev/sdb&lt;/code>有一个2.93TB的硬盘，下边来对这个磁盘进行分区并添加。&lt;/p>
+&lt;h3 id="磁盘分区">磁盘分区
+&lt;/h3>&lt;p>传统的MBR（主引导记录）分区表只能支持最多2TB的磁盘，而我这个盘是3T的，需要使用GPT，这个格式支持超过2TB的磁盘，Linux支持GPT（GUID分区表）格式。对于大于2T的硬盘使用&lt;code>parted&lt;/code>命令来进行处理。&lt;/p>
+&lt;p>首先要确认是否已安装&lt;code>parted&lt;/code>,如果没有安装使用一下命令进行安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="nx">host&lt;/span>&lt;span class="p">:~&lt;/span>&lt;span class="err">#&lt;/span> &lt;span class="nx">apt&lt;/span> &lt;span class="nx">install&lt;/span> &lt;span class="nx">parted&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Building&lt;/span> &lt;span class="nx">dependency&lt;/span> &lt;span class="nx">tree&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="nx">state&lt;/span> &lt;span class="nx">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后执行&lt;code>parted /dev/sdb&lt;/code>对&lt;code>/dev/sdb&lt;/code>这个盘进行处理，输入命令后会进入命令模式，需要经过几个步骤&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>mklabel gpt&lt;/code> ，&lt;span class="hljs-comment">创建GPT分区表&lt;/span>&lt;/li>
+&lt;li>&lt;code>mkpart primary ext4 0% 100%&lt;/code> &lt;span class="hljs-comment">，创建一个新分区，使用100%的磁盘空间&lt;/span>&lt;/li>
+&lt;li>&lt;code>print&lt;/code> ，显示设置的分区(可选操作)&lt;/li>
+&lt;li>&lt;code>quit&lt;/code> ，退出&lt;/li>
+&lt;/ol>
+&lt;p>完整的操作命令如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# parted /dev/sdb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">GNU Parted 3.5
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Using /dev/sdb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to GNU Parted! Type &amp;#39;help&amp;#39; to view a list of commands.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mklabel gpt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mkpart primary ext4 0% 100%
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) print
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Model: QEMU QEMU HARDDISK (scsi)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 3221GB
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512B/512B
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition Table: gpt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk Flags:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Number Start End Size File system Name Flags
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 1 1049kB 3221GB 3221GB ext4 primary
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) quit
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Information: You may need to update /etc/fstab.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>分区完成。&lt;/p>
+&lt;h3 id="磁盘格式化">磁盘格式化
+&lt;/h3>&lt;p>创建分区后，需要格式化为文件系统。我这里使用&lt;code>ext4&lt;/code>格式，因为我只分了一个盘，所以这里是sdb1,如果有多个盘，需要分别对每个进行格式化：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# mkfs.ext4 /dev/sdb1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mke2fs 1.47.0 (5-Feb-2023)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Discarding device blocks: done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Creating filesystem with 786431488 4k blocks and 196608000 inodes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem UUID: f2275364-6fa6-4ae0-a214-5bd98552f5b1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Superblock backups stored on blocks:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 102400000, 214990848, 512000000, 550731776, 644972544
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Allocating group tables: done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Writing inode tables: done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Creating journal (262144 blocks): done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Writing superblocks and filesystem accounting information: done
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过上边就已经对刚分的那个盘进行了格式化。&lt;/p>
+&lt;h3 id="磁盘挂载">磁盘挂载
+&lt;/h3>&lt;p>接下来就是对这个盘进行挂载，我这里挂载到/data目录下，需要先创建/data这个目录，然后通过&lt;code>mount /dev/sdb1 /data&lt;/code>命令，把/dev/sdb1挂载到/data目录：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# mkdir /data
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@host:~# df -h
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem Size Used Avail Use% Mounted on
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 979M 0 979M 0% /dev
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 732K 198M 1% /run
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 20G 2.1G 17G 12% /
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 990M 0 990M 0% /dev/shm
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M 0 5.0M 0% /run/lock
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 124M 12M 113M 10% /boot/efi
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 0 198M 0% /run/user/0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@host:~# mount /dev/sdb1 /data
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@host:~# df -h
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem Size Used Avail Use% Mounted on
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 979M 0 979M 0% /dev
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 732K 198M 1% /run
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 20G 2.1G 17G 12% /
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 990M 0 990M 0% /dev/shm
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M 0 5.0M 0% /run/lock
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 124M 12M 113M 10% /boot/efi
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 0 198M 0% /run/user/0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sdb1 2.9T 28K 2.8T 1% /data
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以通过命令df -h查看磁盘挂载情况，如上是已经成功挂载了。&lt;/p>
+&lt;h3 id="磁盘开机自动挂载">磁盘开机自动挂载
+&lt;/h3>&lt;p>经过上面的挂载后，如果系统重启，那么挂载就会失效，所以如果你希望磁盘在系统重启时自动挂载，可以编辑&lt;code>/etc/fstab&lt;/code>文件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host-c:~# vim /etc/fstab
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sdb1 /data ext4 defaults 0 2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上添加一行&lt;code>/dev/sdb1 /data ext4 defaults 0 2&lt;/code>就可以重启后自动实现挂载。&lt;/p>
+&lt;h2 id="1t盘挂载">1T盘挂载
+&lt;/h2>&lt;p>在3t盘挂载的教程中可以看出整个挂载过程分为：&lt;code>磁盘查看-磁盘分区-磁盘格式化-磁盘挂载-磁盘开机自动挂载&lt;/code>共5个步骤，处理1T盘过程基本一致，只是在&lt;code>磁盘分区&lt;/code>的时候有两种选择，第一种就还是使用到parted命令，另一种是使用fdisk命令。&lt;/p>
+&lt;p>先来查看磁盘的分布&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk -l
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 1000 GiB, 1073741824000 bytes, 2097152000 sectors
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sda: 20 GiB, 21474836480 bytes, 41943040 sectors
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disklabel type: gpt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk identifier: 0DA7595A-DE2A-1042-8C4F-3C883C4D7BA6
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Device Start End Sectors Size Type
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 262144 41943006 41680863 19.9G Linux filesystem
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda14 2048 8191 6144 3M BIOS boot
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 8192 262143 253952 124M EFI System
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition table entries are not in disk order.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到有一个&lt;code>/dev/sdb: 1000 GiB&lt;/code>的磁盘。&lt;/p>
+&lt;h3 id="fdisk命令">fdisk命令
+&lt;/h3>&lt;p>先来介绍一下fdisk命令，输入/dev/sdb开始进行分区，默认是创建MBR分区，下边每个&lt;code>Command (m for help)&lt;/code>都是需要进行输入的地方。首先是输入&lt;code>o&lt;/code>,创建一个MBR分区，然后是输入&lt;code>n&lt;/code>来创建分区，&lt;code>partition type&lt;/code>选择主分区&lt;code>p&lt;/code>，分区号码我这里只需要一个分区，所以输入1，然后就是&lt;code>first sector&lt;/code>和&lt;code>last sector&lt;/code>默认直接回车就是整个盘。最后输入&lt;code>w&lt;/code>来写入修改，就完成了分区。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk /dev/sdb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to fdisk (util-linux 2.38.1).
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Changes will remain in memory only, until you decide to write them.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Be careful before using the write command.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Device does not contain a recognized partition table.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new DOS (MBR) disklabel with disk identifier 0x17afed0e.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command (m for help): o
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new DOS (MBR) disklabel with disk identifier 0xa7272020.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command (m for help): n
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition type
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> p primary (0 primary, 0 extended, 4 free)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> e extended (container for logical partitions)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Select (default p): p
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition number (1-4, default 1): 1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">First sector (2048-2097151999, default 2048):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-2097151999, default 2097151999):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new partition 1 of type &amp;#39;Linux&amp;#39; and of size 1000 GiB.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command (m for help): w
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The partition table has been altered.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Calling ioctl() to re-read partition table.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Syncing disks.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后就是对新建的分区进行格式化和挂载了。和3T盘操作一样。&lt;/p>
+&lt;h3 id="parted命令">parted命令
+&lt;/h3>&lt;p>parted不仅可以处理大于2T的，小于2T的也是可以处理的，下边就来看看具体怎么处理。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# parted /dev/sdb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">GNU Parted 3.5
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Using /dev/sdb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to GNU Parted! Type &amp;#39;help&amp;#39; to view a list of commands.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mklabel msdos
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mkpart primary ext4 0% 100%
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) quit
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Information: You may need to update /etc/fstab.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>唯一的区别就是mklable命令，原来是gpt（GPT分区），现在改成msdos（MBR分区），其他命令都一样。分区完成后进行格式化，挂载等一系列操作。&lt;/p>
+&lt;p>以上就是针对小于2T以及大于2T的盘的挂载教程，希望可以帮到大家。&lt;/p></description></item></channel></rss>

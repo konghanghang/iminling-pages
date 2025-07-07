@@ -1,0 +1,637 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="netflix在中国大陆是无法直接观看的，当我们买了一个vps搭建节点代理后正常情况是可以观看的，但是奈飞因为版权原因，有些vps机器IPv4并不能完整的看奈飞的所有内容，本文讲述如何使用双栈机器的IPv6来解锁。"><title>xray分流使用IPV6解锁netflix</title><link rel=canonical href=https://www.iminling.com/2023/xray-use-ipv6-unlock-netflix/><link rel=stylesheet href=/scss/style.min.3d6a5ee04e8710bed041e927cc6e05e92f4112a233dbc27f5e305653fa21c8fe.css><meta property='og:title' content="xray分流使用IPV6解锁netflix"><meta property='og:description' content="netflix在中国大陆是无法直接观看的，当我们买了一个vps搭建节点代理后正常情况是可以观看的，但是奈飞因为版权原因，有些vps机器IPv4并不能完整的看奈飞的所有内容，本文讲述如何使用双栈机器的IPv6来解锁。"><meta property='og:url' content='https://www.iminling.com/2023/xray-use-ipv6-unlock-netflix/'><meta property='og:site_name' content='记录点滴 - 分享'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='IPV6'><meta property='article:tag' content='netflix'><meta property='article:tag' content='xray'><meta property='article:published_time' content='2023-08-13T15:13:49+00:00'><meta property='article:modified_time' content='2023-08-13T15:13:49+00:00'><meta property='og:image' content='https://images.iminling.com/app/hide.php?key=a3J1MHlDOU5KWjlodHdVUnJyQm5EckxmcmwvMmVoVjRqdHNheGcveTM3ZUlqTWRjb0IyUCtZM0x6cUFzbFFQb2MvS1QrLzQ9'><meta name=twitter:title content="xray分流使用IPV6解锁netflix"><meta name=twitter:description content="netflix在中国大陆是无法直接观看的，当我们买了一个vps搭建节点代理后正常情况是可以观看的，但是奈飞因为版权原因，有些vps机器IPv4并不能完整的看奈飞的所有内容，本文讲述如何使用双栈机器的IPv6来解锁。"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content='https://images.iminling.com/app/hide.php?key=a3J1MHlDOU5KWjlodHdVUnJyQm5EckxmcmwvMmVoVjRqdHNheGcveTM3ZUlqTWRjb0IyUCtZM0x6cUFzbFFQb2MvS1QrLzQ9'></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu_b22a428fdb3aa6b9.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>记录点滴 - 分享</a></h1><h2 class=site-description>记录点滴，分享生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>主页</span></a></li><li><a href=/%E5%85%B3%E4%BA%8E/><svg class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>关于</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#xray安装>xray安装</a></li><li><a href=#配置节点>配置节点</a></li><li><a href=#配置奈飞ipv6出站>配置奈飞ipv6出站</a></li><li><a href=#完整配置>完整配置</a></li><li><a href=#xui网页配置另一种方法>xui网页配置(另一种方法)</a><ol><li><a href=#出站配置>出站配置</a></li><li><a href=#路由规则配置>路由规则配置</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/2023/xray-use-ipv6-unlock-netflix/><img src="https://images.iminling.com/app/hide.php?key=a3J1MHlDOU5KWjlodHdVUnJyQm5EckxmcmwvMmVoVjRqdHNheGcveTM3ZUlqTWRjb0IyUCtZM0x6cUFzbFFQb2MvS1QrLzQ9" loading=lazy alt="Featured image of post xray分流使用IPV6解锁netflix"></a></div><div class=article-details><header class=article-category><a href=/categories/xray/>Xray</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/2023/xray-use-ipv6-unlock-netflix/>xray分流使用IPV6解锁netflix</a></h2><h3 class=article-subtitle>netflix在中国大陆是无法直接观看的，当我们买了一个vps搭建节点代理后正常情况是可以观看的，但是奈飞因为版权原因，有些vps机器IPv4并不能完整的看奈飞的所有内容，本文讲述如何使用双栈机器的IPv6来解锁。</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Aug 13, 2023</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>7 minute read</time></div></footer></div></header><section class=article-content><p><img src=/wp-content/uploads/2023/08/e7653336f56a5b7486a4bfe7c4dbcfff.jpg loading=lazy></p><p>netflix中文名又叫网飞或者奈飞，在中国大陆是无法直接观看的，当我们买了一个vps搭建节点代理后正常情况是可以观看的，但是奈飞因为版权原因，有些vps机器并不能完整的看奈飞的所有内容，这时就引出了另一个概念：奈飞解锁。一台vps观看奈飞可以分为三种情况：</p><ol><li>无法观看，ip比较黑，直接连奈飞的官网都无法打开</li><li>只能观看奈飞的自制剧，因为是奈飞的自制剧，就没有所谓的严格版权，都可以看。大部分vps都是这种情况</li><li>可以观看奈飞非自制剧。可以观看奈飞购买的其他的版权剧。</li></ol><p>上面我们了解到了奈飞的一些限制，所以网上就有很多解锁教程，通过warp，dns等来解锁。本文的前提是你的vps的ipv6是解锁奈飞的非自制剧的。</p><p>我手上的这台vps就是这种情况，ipv4只能观看自制剧，ipv6可以观看奈飞非自制剧，关于查看自己的vps是否解锁，可以通过以下脚本来验证：<code>bash &lt;(curl -L -s check.unlock.media)</code></p><p>我的机器解锁情况如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>** 正在测试IPv4解锁情况
+</span></span><span class=line><span class=cl>--------------------------------
+</span></span><span class=line><span class=cl><span class=o>============[</span> Multination <span class=o>]============</span>
+</span></span><span class=line><span class=cl> Dazn:                                  No
+</span></span><span class=line><span class=cl> HotStar:                               No
+</span></span><span class=line><span class=cl> Disney+:                               Yes <span class=o>(</span>Region: GB<span class=o>)</span>
+</span></span><span class=line><span class=cl> Netflix:                               Originals Only
+</span></span><span class=line><span class=cl> YouTube Premium:                       Yes
+</span></span><span class=line><span class=cl> Amazon Prime Video:                    Yes <span class=o>(</span>Region: HK<span class=o>)</span>
+</span></span><span class=line><span class=cl> TVBAnywhere+:                          No
+</span></span><span class=line><span class=cl> iQyi Oversea Region:                   HK
+</span></span><span class=line><span class=cl> Viu.com:                               Yes <span class=o>(</span>Region: HK<span class=o>)</span>
+</span></span><span class=line><span class=cl> YouTube CDN:                           Hong Kong
+</span></span><span class=line><span class=cl> Netflix Preferred CDN:                 Hong Kong
+</span></span><span class=line><span class=cl> Spotify Registration:                  No
+</span></span><span class=line><span class=cl> Steam Currency:                        HKD
+</span></span><span class=line><span class=cl> ChatGPT:                               <span class=nv>Yes</span>
+</span></span><span class=line><span class=cl><span class=o>=======================================</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> ** 正在测试IPv6解锁情况
+</span></span><span class=line><span class=cl>--------------------------------
+</span></span><span class=line><span class=cl><span class=o>============[</span> Multination <span class=o>]============</span>
+</span></span><span class=line><span class=cl> Dazn:                                  Failed <span class=o>(</span>Network Connection<span class=o>)</span>
+</span></span><span class=line><span class=cl> HotStar:                               No
+</span></span><span class=line><span class=cl> Disney+:                               No
+</span></span><span class=line><span class=cl> Netflix:                               Yes <span class=o>(</span>Region: HK<span class=o>)</span>
+</span></span><span class=line><span class=cl> YouTube Premium:                       No  <span class=o>(</span>Region: CN<span class=o>)</span>
+</span></span><span class=line><span class=cl> Amazon Prime Video:                    Unsupported
+</span></span><span class=line><span class=cl> TVBAnywhere+:                          Failed <span class=o>(</span>Network Connection<span class=o>)</span>
+</span></span><span class=line><span class=cl> iQyi Oversea Region:                   Failed
+</span></span><span class=line><span class=cl> Viu.com:                               Failed
+</span></span><span class=line><span class=cl> YouTube CDN:                           Hong Kong
+</span></span><span class=line><span class=cl> Netflix Preferred CDN:                 Hong Kong
+</span></span><span class=line><span class=cl> Spotify Registration:                  No
+</span></span><span class=line><span class=cl> Steam Currency:                        Failed <span class=o>(</span>Network Connection<span class=o>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> ChatGPT:                               <span class=nv>Yes</span>
+</span></span><span class=line><span class=cl><span class=o>=======================================</span>
+</span></span><span class=line><span class=cl>本次测试已结束，感谢使用此脚本
+</span></span></code></pre></td></tr></table></div></div><p>可以看到ipv4的结果是<code>Originals Only</code>就是所谓的只能观看自制剧，ipv6就是完整的解锁香港的奈飞的。</p><p>下面我们将使用xray来进行分流，使观看奈飞的时候走ipv6，观看奈飞的非自制剧。</p><h2 id=xray安装>xray安装</h2><p>xray可以使用官方的安装脚本，也可以参考我的xui安装教程：<a class=link href=https://www.iminling.com/2023/03/26/54.html title=x-ui安装配置使用 target=_blank rel=noopener>x-ui安装配置使用</a>,具体的安装这里就不再详细讲了。</p><h2 id=配置节点>配置节点</h2><p>先建一个入站节点，即我们需要连接到这台vps所使用的节点，可以通过xui来配置，节点类型根据自己的情况配置(vless,vmess,ss等都可以，比较稳的还是vless)，可以参考我的教程来搭建vless节点：<a class=link href=https://www.iminling.com/2023/07/31/191.html title=xray搭建reality和网站共用443端口启用网站SSL target=_blank rel=noopener>xray搭建reality和网站共用443端口启用网站SSL</a>，我这里为了简单直接搭建一个ss的节点，下边直接贴出xray的具体配置：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;routing&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;domainStrategy&#34;</span><span class=p>:</span> <span class=s2>&#34;IPIfNonMatch&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;rules&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;field&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;inboundTag&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;api&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>],</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;outboundTag&#34;</span><span class=p>:</span> <span class=s2>&#34;api&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;field&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;outboundTag&#34;</span><span class=p>:</span> <span class=s2>&#34;blocked&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;bittorrent&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;dns&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;inbounds&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;listen&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;port&#34;</span><span class=p>:</span> <span class=mi>24567</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;shadowsocks&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;method&#34;</span><span class=p>:</span> <span class=s2>&#34;aes-256-gcm&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;password&#34;</span><span class=p>:</span> <span class=s2>&#34;WqOQzCxMwdfeegegOK36n&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;network&#34;</span><span class=p>:</span> <span class=s2>&#34;tcp,udp&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;streamSettings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;network&#34;</span><span class=p>:</span> <span class=s2>&#34;tcp&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;security&#34;</span><span class=p>:</span> <span class=s2>&#34;none&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;tcpSettings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;header&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;none&#34;</span>
+</span></span><span class=line><span class=cl>          <span class=p>},</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;acceptProxyProtocol&#34;</span><span class=p>:</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;inbound-13103&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;sniffing&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;enabled&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;destOverride&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;http&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;tls&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;quic&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;outbounds&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;freedom&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;blocked&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;blackhole&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;stats&#34;</span><span class=p>:</span> <span class=p>{},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;reverse&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;fakeDns&#34;</span><span class=p>:</span> <span class=kc>null</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>如上就是一个ss的完整配置，直接运行xray核心就可以访问了。上边的配置所有的网络都还是使用的ipv4来进行代理访问的。</p><h2 id=配置奈飞ipv6出站>配置奈飞ipv6出站</h2><p>这里我们就需要使用到xray的分流策略，需要在routing配置中进行分流配置，然后在outbounds中配置具体的策略。关于分流参考官方的教程：<a class=link href=https://xtls.github.io/config/routing.html#ruleobject target=_blank rel=noopener>ruleObject</a>,ruleObject的规则如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;domainMatcher&#34;</span><span class=p>:</span> <span class=s2>&#34;hybrid&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;field&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;domain&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;baidu.com&#34;</span><span class=p>,</span> <span class=s2>&#34;qq.com&#34;</span><span class=p>,</span> <span class=s2>&#34;geosite:cn&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;ip&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;0.0.0.0/8&#34;</span><span class=p>,</span> <span class=s2>&#34;10.0.0.0/8&#34;</span><span class=p>,</span> <span class=s2>&#34;fc00::/7&#34;</span><span class=p>,</span> <span class=s2>&#34;fe80::/10&#34;</span><span class=p>,</span> <span class=s2>&#34;geoip:cn&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;port&#34;</span><span class=p>:</span> <span class=s2>&#34;53,443,1000-2000&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;sourcePort&#34;</span><span class=p>:</span> <span class=s2>&#34;53,443,1000-2000&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;network&#34;</span><span class=p>:</span> <span class=s2>&#34;tcp&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;source&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;10.0.0.1&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;user&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;love@xray.com&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;inboundTag&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;tag-vmess&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;http&#34;</span><span class=p>,</span> <span class=s2>&#34;tls&#34;</span><span class=p>,</span> <span class=s2>&#34;bittorrent&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;attrs&#34;</span><span class=p>:</span> <span class=p>{</span> <span class=nt>&#34;:method&#34;</span><span class=p>:</span> <span class=s2>&#34;GET&#34;</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;outboundTag&#34;</span><span class=p>:</span> <span class=s2>&#34;direct&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;balancerTag&#34;</span><span class=p>:</span> <span class=s2>&#34;balancer&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里边的属性，如果配置多个则是要多个同时匹配中才能生效，下边我贴出配置奈飞的配置：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>   <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;field&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>   <span class=nt>&#34;outboundTag&#34;</span><span class=p>:</span> <span class=s2>&#34;netflix-tag&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>   <span class=nt>&#34;domain&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>     <span class=s2>&#34;geosite:netflix&#34;</span>
+</span></span><span class=line><span class=cl>   <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>我这里使用domain来配置所有netflix的网址，然后使用outboundTag来指定如果匹配中netflix的网址，应该使用netflix-tag来进行出站访问，这个netflix-tag名称是可以自定义的，但是它需要和接下来讲的outbonds中的属性匹配，outbouds的配置可以参考xray官方文档：<a class=link href=https://xtls.github.io/config/outbound.html#outboundobject target=_blank rel=noopener>outboudsObject</a>,outboudsObject的规则如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;outbounds&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;sendThrough&#34;</span><span class=p>:</span> <span class=s2>&#34;0.0.0.0&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;协议名称&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;标识&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;streamSettings&#34;</span><span class=p>:</span> <span class=p>{},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;proxySettings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;another-outbound-tag&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;mux&#34;</span><span class=p>:</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>下边我贴出具体的配置：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;netflix-tag&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;freedom&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;domainStrategy&#34;</span><span class=p>:</span> <span class=s2>&#34;UseIPv6&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>tag和routing下的ruleobject中的tag对应，经过上边的两个配置就可以使奈飞通过ipv6出站了。</p><h2 id=完整配置>完整配置</h2><p>完整的xray配置config.json如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;routing&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;domainStrategy&#34;</span><span class=p>:</span> <span class=s2>&#34;IPIfNonMatch&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;rules&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;field&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;inboundTag&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;api&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>],</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;outboundTag&#34;</span><span class=p>:</span> <span class=s2>&#34;api&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;field&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;outboundTag&#34;</span><span class=p>:</span> <span class=s2>&#34;netflix-tag&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;domain&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;geosite:netflix&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;field&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;outboundTag&#34;</span><span class=p>:</span> <span class=s2>&#34;blocked&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;bittorrent&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;dns&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;inbounds&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;listen&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;port&#34;</span><span class=p>:</span> <span class=mi>13103</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;shadowsocks&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;method&#34;</span><span class=p>:</span> <span class=s2>&#34;aes-256-gcm&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;password&#34;</span><span class=p>:</span> <span class=s2>&#34;WqOQzCxMwdfeegegOK36n&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;network&#34;</span><span class=p>:</span> <span class=s2>&#34;tcp,udp&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;streamSettings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;network&#34;</span><span class=p>:</span> <span class=s2>&#34;tcp&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;security&#34;</span><span class=p>:</span> <span class=s2>&#34;none&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;tcpSettings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;header&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;none&#34;</span>
+</span></span><span class=line><span class=cl>          <span class=p>},</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;acceptProxyProtocol&#34;</span><span class=p>:</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;inbound-13103&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;sniffing&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;enabled&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;destOverride&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;http&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;tls&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;quic&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;outbounds&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;freedom&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;netflix-tag&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;freedom&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;domainStrategy&#34;</span><span class=p>:</span> <span class=s2>&#34;UseIPv6&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;blocked&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;blackhole&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;stats&#34;</span><span class=p>:</span> <span class=p>{},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;reverse&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;fakeDns&#34;</span><span class=p>:</span> <span class=kc>null</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>下边也给出在x-ui中的配置，具体配置位置是登录x-ui后左侧菜单：面板设置，然后点击到xray配置，然后把下边的配置粘贴到配置模板中就可以了：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;api&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;services&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>      <span class=s2>&#34;HandlerService&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=s2>&#34;LoggerService&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=s2>&#34;StatsService&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;api&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;inbounds&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;listen&#34;</span><span class=p>:</span> <span class=s2>&#34;127.0.0.1&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;port&#34;</span><span class=p>:</span> <span class=mi>62789</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;dokodemo-door&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;address&#34;</span><span class=p>:</span> <span class=s2>&#34;127.0.0.1&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;api&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;outbounds&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;freedom&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;netflix-tag&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;freedom&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;domainStrategy&#34;</span><span class=p>:</span> <span class=s2>&#34;UseIPv6&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;protocol&#34;</span><span class=p>:</span> <span class=s2>&#34;blackhole&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;settings&#34;</span><span class=p>:</span> <span class=p>{},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;tag&#34;</span><span class=p>:</span> <span class=s2>&#34;blocked&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;policy&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;levels&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;0&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;handshake&#34;</span><span class=p>:</span> <span class=mi>10</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;connIdle&#34;</span><span class=p>:</span> <span class=mi>100</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;uplinkOnly&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;downlinkOnly&#34;</span><span class=p>:</span> <span class=mi>3</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;statsUserUplink&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;statsUserDownlink&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;bufferSize&#34;</span><span class=p>:</span> <span class=mi>10240</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;system&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;statsInboundDownlink&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;statsInboundUplink&#34;</span><span class=p>:</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;routing&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;rules&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;inboundTag&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;api&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>],</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;outboundTag&#34;</span><span class=p>:</span> <span class=s2>&#34;api&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;field&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;field&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;outboundTag&#34;</span><span class=p>:</span> <span class=s2>&#34;netflix-tag&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;domain&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;geosite:netflix&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;stats&#34;</span><span class=p>:</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>经过上边的配置，正确的创建节点，就可以愉快的通过ipv4入站，然后通过ipv6出站去访问netflix网站了，享受解锁的快乐。当然上边的配置只是netflix才走ipv6出站，其他的网站还是通过ipv4来出站，如果想要让其他什么网站也通过ipv6出站，就需要在routing中配置ruleObject来达到目的。</p><h2 id=xui网页配置另一种方法>xui网页配置(另一种方法)</h2><p>上边介绍的是纯手工的去对配置文件进行编辑的方式，最近xui更新后，这些配置可以在网页端进行图形化的操作，大大降低了对新手的难度，下边来看一下如何在xui网页端来对netflix由IPv6处站做配置。如果对xui还不知道如何使用的同学可以参考我的文章来安装配置xui：<a class=link href=https://www.iminling.com/2023/03/26/54.html title=x-ui安装配置使用 target=_blank rel=noopener>x-ui安装配置使用</a>.</p><h3 id=出站配置>出站配置</h3><p>登录xui网站，菜单栏有一个xray设置一级菜单：</p><p><img src="https://images.iminling.com/app/hide.php?key=ck9VVTR3MU1XblNqWS9Vam1BSVdMZTNZcEFjdjVjNUoyTEtNSFMyMzFKZ1NONG1obTRKbFNDaGU5Q1BRZUxycERHdmlOWVE9" loading=lazy alt=xui-xray配置></p><p>点开xray设置后看到有四个tab页：基本模板、路由规则、出站和高级模板部件。在上边纯手工配置xray的时候也提到过，需要有一个outboud和一个routing，在xui的网页上其实就对应出站(outbond)以及路由规则(routing)。所以在网页端配置这两个就可以了，先来配置出站，添加一个freedom类型的节点：</p><p>协议：freedom</p><p>标签：全局唯一(英文)，等下要在路由规则那里进行选择</p><p>strategy：选择使用IPv6</p><p>然后点击保存就创建好了一个出站规则了，此时出站规则并没有任何路由规则引用到它，所以并不会有任何作用，接下来就需要在路由规则中进行引用，使特定网站使用IPv6进行出站访问。</p><p><img src="https://images.iminling.com/app/hide.php?key=V3RQYk90ZTBwK1FmNVJ0RkUvVmxscW50MC9CRWQyQXRkWWRwRnZIbGp4Y3F5RVBaZFlzT0tzTzNQdWgrb2VZRE5YeTd0Wkk9" loading=lazy alt="freedom out"></p><h3 id=路由规则配置>路由规则配置</h3><p>如下图，添加一个路由规则，Outbound Tag就是刚才添加的出站配置的标签，是唯一的，因为是要设置netflix使用IPv6，所以Domain那项配置就把netflix的域名规则写进去，这里的配置是 <strong>且</strong> 的关系，所以如果需要更灵活的配置可以自己添加。例如我只想某个用户在访问netflix的时候使用IPv6出站，那么就可以在User里把这个用户的信息配置进去，具体用户是什么，是我们在添加节点的时候每个节点都要求填一个邮箱，邮箱即用户。</p><p><img src="https://images.iminling.com/app/hide.php?key=QmxaTVd0eG5XWElDRVBqY1haUlR3MTNvNUNHS0pXUE1WRFdqcmg2REVNOE9Scm1oT1k3bmtpVlA0R0g4RlhsakdYZGNGb2M9" loading=lazy alt=xui-routing></p><p>配置好后就可以重启一下xray，规则就生效了。</p><p>好了本文的教程就到这里，祝大家都可以成功的搭建成功。</p></section><footer class=article-footer><section class=article-tags><a href=/tags/ipv6/>IPV6</a>
+<a href=/tags/netflix/>Netflix</a>
+<a href=/tags/xray/>Xray</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class=article-lastmod><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>Last updated on Aug 13, 2023 15:13 UTC</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Related content</h2><div class=related-content><div class="flex article-list--tile"><article class=has-image><a href=/2023/both-xray-reality-website-use-443/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=TUVLUjRhOHdSS21VVjh4dDdmbElGUVhHZHRFRlR3c3h1R2F2Qi8wOEg0V3V6cGZReGx5NUs1Z3FQYjRhVXdCdm14WWVma2c9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=TUVLUjRhOHdSS21VVjh4dDdmbElGUVhHZHRFRlR3c3h1R2F2Qi8wOEg0V3V6cGZReGx5NUs1Z3FQYjRhVXdCdm14WWVma2c9"></div><div class=article-details><h2 class=article-title>xray搭建reality和网站共用443端口启用网站SSL</h2></div></a></article><article class=has-image><a href=/2023/x-ui-configuration-and-use/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=dmRweU41MERsbjlVeVBxMUJOMzZSN0VyRE15VzhId1FsY3JiWHBtL1FKWXEyUzczTXMzemFCc2twSDMvOWU0dEFyNGpqOFU9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=dmRweU41MERsbjlVeVBxMUJOMzZSN0VyRE15VzhId1FsY3JiWHBtL1FKWXEyUzczTXMzemFCc2twSDMvOWU0dEFyNGpqOFU9"></div><div class=article-details><h2 class=article-title>x-ui安装配置使用</h2></div></a></article><article class=has-image><a href=/2023/xray-configutaion-reality/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=TUVLUjRhOHdSS21VVjh4dDdmbElGUVhHZHRFRlR3c3h1R2F2Qi8wOEg0V3V6cGZReGx5NUs1Z3FQYjRhVXdCdm14WWVma2c9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=TUVLUjRhOHdSS21VVjh4dDdmbElGUVhHZHRFRlR3c3h1R2F2Qi8wOEg0V3V6cGZReGx5NUs1Z3FQYjRhVXdCdm14WWVma2c9"></div><div class=article-details><h2 class=article-title>xray配置使用reality</h2></div></a></article><article class=has-image><a href=/2023/jiguang-pannel-install-and-migrate/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=VE8yR2psZGRDY05xQlZsRmlJUzB5cTVjcERqTGZnTVNjNHFiU2g5SjJvazNMbUxNRjcrTFd3Si9PdDhTd3ViTGJBRHErTzg9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=VE8yR2psZGRDY05xQlZsRmlJUzB5cTVjcERqTGZnTVNjNHFiU2g5SjJvazNMbUxNRjcrTFd3Si9PdDhTd3ViTGJBRHErTzg9"></div><div class=article-details><h2 class=article-title>极光面板安装及迁移</h2></div></a></article><article class=has-image><a href=/2023/sing-box-for-ios-configuration-xray-reality/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=MWZYT1hrOWxrOW0xcmZhcEF6WUNnUGo2ZWJEb0E0dFlvZnJtYU9ydnZZRERsRkZGcElubXpMaVUwZ0ZWVDVqdldVL1J4KzQ9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=MWZYT1hrOWxrOW0xcmZhcEF6WUNnUGo2ZWJEb0E0dFlvZnJtYU9ydnZZRERsRkZGcElubXpMaVUwZ0ZWVDVqdldVL1J4KzQ9"></div><div class=article-details><h2 class=article-title>sing-box for ios 配置xray reality</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//hugo-theme-stack.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2025 iminling.com</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.30.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

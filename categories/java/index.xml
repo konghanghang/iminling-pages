@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Java on 记录点滴 - 分享</title><link>https://www.iminling.com/categories/java/</link><description>Recent content in Java on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Tue, 03 Oct 2023 02:55:28 +0000</lastBuildDate><atom:link href="https://www.iminling.com/categories/java/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac快速安装jdk17环境</title><link>https://www.iminling.com/2023/mac-install-jdk17/</link><pubDate>Tue, 03 Oct 2023 02:55:28 +0000</pubDate><guid>https://www.iminling.com/2023/mac-install-jdk17/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/openjdk.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;p>对于java开发者来说jdk是再熟悉不过的了，在java圈还流行这样一句话：你发任你发，我用java8。jdk8是2013年发布的，是一个LTS版本，而在17年发布了jdk9之后，jdk的发布周期变化的更快了，很多开发者直呼学不动了。截止目前已经发布到jdk21了，关于jdk版本的发布可以参考wikipedia的&lt;a class="link" href="https://zh.wikipedia.org/wiki/Java%E7%89%88%E6%9C%AC%E6%AD%B7%E5%8F%B2" target="_blank" rel="noopener"
+>Java历史版本&lt;/a>来了解详细。我们今天要安装的是jdk17。&lt;/p>
+&lt;p>这么多jdk版本我们应该选择哪个来使用呢？我们先来看看jdk的版本收费情况：&lt;/p>
+&lt;ul>
+&lt;li>JDK8以前版本，目前免费。&lt;/li>
+&lt;li>JDK8，免费版本至8u202，从8u211开始商用收费。&lt;/li>
+&lt;li>JDK9、JDK10 未收费。&lt;/li>
+&lt;li>JDK11，免费版本版本至11.0.2，从11.0.3开始商用收费。&lt;/li>
+&lt;li>JDK12、JDK13、JDK14、JDK15、JDK16，全版本商用收费。&lt;/li>
+&lt;li>JDK17开始，免费到2024 年 9 月，后续是否收费不明。&lt;/li>
+&lt;/ul>
+&lt;p>作为企业，很大一部分都是不想付费的，所以这也是为什么很多企业使用jdk8的8u202版本，并且不愿意升级的原因。而且jdk8是一个LTS版本，支持到2030年。而下一个LTS版本是jdk11，而jdk11又是收费的，很大一部分企业都不愿意使用，所以直到jdk17出来后，jdk又开始不收费了，而且jdk17是一个LTS版本，所以如果企业想要升级jdk，那么jdk17是一个很好的选择，oracel会支持jdk17到2029年。&lt;/p>
+&lt;p>为了体验jdk17以及为以后切换jdk17做准备，所以就需要我们来安装jdk17的开发环境。&lt;/p>
+&lt;p>mac可以选择安装Homebrew来快速安装jdk17，关于Homebrew的安装可以参考历史文章：&lt;a class="link" href="https://www.iminling.com/2023/10/02/265.html" title="Mac更换源更快速的安装Homebrew"
+target="_blank" rel="noopener"
+>Mac更换源更快速的安装Homebrew&lt;/a>，这里就不再多说了，下边我们使用Homebrew来安装jdk。&lt;/p>
+&lt;h2 id="安装">安装
+&lt;/h2>&lt;p>先搜索jdk版本：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># ko @ MacMini in ~ [10:32:25]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ brew search jdk
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">==&amp;gt; Formulae
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">openjdk openjdk@17 ✔ jd cdk
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">openjdk@11 openjdk@8 mdk
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到有几个jdk的版本可以安装，我们需要的是17，接下来就是安装了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># ko @ MacMini in ~ [11:28:24]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">$&lt;/span> &lt;span class="n">brew&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">For&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">system&lt;/span> &lt;span class="n">Java&lt;/span> &lt;span class="n">wrappers&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">find&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">JDK&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">symlink&lt;/span> &lt;span class="n">it&lt;/span> &lt;span class="n">with&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sudo&lt;/span> &lt;span class="n">ln&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">sfn&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">opt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">opt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">libexec&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">jdk&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">Library&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Java&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">JavaVirtualMachines&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mf">17.j&lt;/span>&lt;span class="n">dk&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">keg&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">only&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">which&lt;/span> &lt;span class="n">means&lt;/span> &lt;span class="n">it&lt;/span> &lt;span class="n">was&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">symlinked&lt;/span> &lt;span class="n">into&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">opt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">because&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">an&lt;/span> &lt;span class="n">alternate&lt;/span> &lt;span class="n">version&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">another&lt;/span> &lt;span class="n">formula&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">If&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">need&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">have&lt;/span> &lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span> &lt;span class="n">first&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">your&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">run&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">echo&lt;/span> &lt;span class="s1">&amp;#39;export PATH=&amp;#34;/opt/homebrew/opt/openjdk@17/bin:$PATH&amp;#34;&amp;#39;&lt;/span> &lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="o">~/.&lt;/span>&lt;span class="n">zshrc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">For&lt;/span> &lt;span class="n">compilers&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">find&lt;/span> &lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">may&lt;/span> &lt;span class="n">need&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">set&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">export&lt;/span> &lt;span class="n">CPPFLAGS&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;-I/opt/homebrew/opt/openjdk@17/include&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过上边的命令后，jdk17就已经安装好了。&lt;/p>
+&lt;h2 id="环境变量设置">环境变量设置
+&lt;/h2>&lt;p>根据安装最后的提示我们需要先新建一个软链接：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># konghang @ MacMini in ~ [10:37:47]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ sudo ln -sfn /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Password:
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>接下来是添加环境变量，我使用的是.base_profile，使用vim编辑后添加以下内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># JDK&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#export JAVA_HOME=&amp;#34;/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">JAVA_HOME&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;/Library/Java/JavaVirtualMachines/openjdk-17.jdk/Contents/Home&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="o">=$&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">JAVA_HOME&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">bin&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">PATH&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后刷新变量，然后查看jdk版本看是否成功：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># ko @ MacMini in ~ [10:43:55]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ source .bash_profile
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># ko @ MacMini in ~ [10:43:59]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ java -version
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">openjdk version &amp;#34;17.0.8.1&amp;#34; 2023-08-24
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">OpenJDK Runtime Environment Homebrew (build 17.0.8.1+0)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">OpenJDK 64-Bit Server VM Homebrew (build 17.0.8.1+0, mixed mode, sharing)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>看到当前的环境下使用的是jdk17了，截止到这里jdk17就已经安装成功了。接下来就可以使用jdk来进行开发和研究了。&lt;/p></description></item><item><title>java连接ftp部署在k8s中无法读取文件</title><link>https://www.iminling.com/2023/java-ftp-cannot-read-file-in-k8s/</link><pubDate>Thu, 01 Jun 2023 17:21:12 +0000</pubDate><guid>https://www.iminling.com/2023/java-ftp-cannot-read-file-in-k8s/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=cStKcGRtRXppeGVqL01GdXRLaVRCbDlEN2JJSjZTaHBoL210b1ZaUW1xdDRSVU9ObzdzSGM4c3BqVHh1ZTNKc25nbEdvVk09" alt="Featured image of post java连接ftp部署在k8s中无法读取文件" />&lt;h2 id="起因">起因
+&lt;/h2>&lt;p>最近工作中需要使用到ftp工具，就在网上找了一个java编写的ftp工具类，功能也是挺齐全的，我在本地测试的时候对文件的下载和上传都是没有问题，正常使用。等到功能开发完成后，部署到k8s就出现了无法读取ftp服务器的文件的情况，起初以为是ftp服务器的问题，就又重新搭建了新的ftp服务器还是同样的问题。中间也想过是不是工具类的功能，就在网上查询了好久，大家基本都是用的&lt;code>commons-net&lt;/code>这个包，具体的maven依赖如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;dependency&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>commons-net&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>commons-net&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;version&amp;gt;&lt;/span>3.6&lt;span class="nt">&amp;lt;/version&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/dependency&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以为网上找的工具有问题，后来就引用了&lt;code>hutool&lt;/code>工具类中的方法，还是同样的问题，百思不得其解的时候，看到hutool工具类那里有一个标题：&lt;code>主动模式和被动模式&lt;/code>。起初我也没注意这个，毕竟是一堆的理论。实在是被这个问题虐的体无完肤的时候，我看了一下这个概念，恍然大悟，不就是因为这个原因吗？下面我们来解释一下这两个模式&lt;/p>
+&lt;h2 id="port和pasv">PORT和PASV
+&lt;/h2>&lt;p>在解释具体的概念前，我们先来说明一下主动和被动它针对的对象是谁，其实主动和被动都是针对&lt;code>ftp服务器&lt;/code>来说的。下面我们来说明一下两个模式&lt;/p>
+&lt;p>和&lt;/p>
+&lt;h3 id="port主动模式">PORT（主动模式）
+&lt;/h3>&lt;p>FTP客户端连接到FTP服务器的21端口，发送用户名和密码登录，登录成功后要list列表或者读取数据时&lt;/p>
+&lt;p>_&lt;strong>客户端&lt;/strong>_随机开放一个端口（1024以上），发送 PORT命令到FTP服务器，告诉服务器客户端采用主动模式并开放端口；&lt;/p>
+&lt;p>FTP服务器收到PORT主动模式命令和端口号后，通过服务器的20端口和客户端开放的端口连接，发送数据。&lt;/p>
+&lt;blockquote>
+&lt;p>此模式是ftp服务器主动连接客户端的一个端口，并提供文件上传和下载服务，所以客户端需要开发端口的权限出来，防火墙进行放行，这样子ftp服务器才能连接到_&lt;strong>客户端&lt;/strong>_进行文件处理。&lt;/p>&lt;/blockquote>
+&lt;h3 id="pasv被动模式">PASV（被动模式）
+&lt;/h3>&lt;p>FTP客户端连接到FTP服务器的21端口，发送用户名和密码登录，登录成功后要list列表或者读取数据时，&lt;/p>
+&lt;p>客户端发送PASV命令到FTP服务器， 服务器在本地随机开放一个端口（1024以上），然后把开放的端口告诉客户端，&lt;/p>
+&lt;p>客户端再连接到服务器开放的端口进行数据传输。&lt;/p>
+&lt;blockquote>
+&lt;p>此模式是客户端主动去连ftp服务端的端口，然后再进行文件的上传和下载，和我们正常思维逻辑是一样的，此时就需要ftp服务端开放具体的端口出来，并在防火墙中进行放行，客户端才能连接上去进行文件处理。&lt;/p>&lt;/blockquote>
+&lt;h2 id="问题原因">问题原因
+&lt;/h2>&lt;p>这里来说明一下我遇到的问题的原因，因为我是网上找的客户端，我起初也并不清楚它使用的是主动模式还是被动模式，就直接发布到k8s中进行使用，从遇到的情况来看，应该默认使用的是&lt;code>主动模式&lt;/code>:由ftp服务器主动连接客户端的高位端口，来实现文件的上传和下载。但是因为我的服务是放在k8s中，容器的端口都是需要写命令暴露出来的，而我们系统的容器都是默认只暴露了8080端口来进行服务的访问。&lt;/p>
+&lt;p>所以在使用主动模式的时候，ftp服务器想通过高位端口来连接到客户端是没有办法成功的，所以在获取文件的时候就什么也拿不到。&lt;/p>
+&lt;h2 id="解决办法">解决办法
+&lt;/h2>&lt;p>我们知道了具体什么问题那就好解决了，解决办法也就是指定当前ftp客户端是使用主动模式还是被动模式。&lt;/p>
+&lt;p>因为我们的服务都是部署在k8s中的，所以我选择使用被动模式来进行文件处理，这样子k8s中的容器就不需要做什么处理。而ftp服务器则需要对高位端口进行放行，以便客户端可以连接上来进行服务的上传和下载。&lt;/p>
+&lt;p>代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="n">FTPClient&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">ftpClient&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">FTPClient&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">ftpClient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">connect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">port&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">ftpClient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">enterLocalActiveMode&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">//主动模式&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">// ftpClient.enterLocalPassiveMode(); 被动模式&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">ftpClient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">setControlEncoding&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;UTF-8&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">ftpClient&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">changeWorkingDirectory&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>开源项目申请JetBrains Open Source Development License</title><link>https://www.iminling.com/2023/apply-jetbrains-open-source-development-license/</link><pubDate>Sat, 20 May 2023 04:18:39 +0000</pubDate><guid>https://www.iminling.com/2023/apply-jetbrains-open-source-development-license/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=a3ZmSmVFVjBZbzZDQkpDKzNPQ0hCQ1p3VFpIYVVWU0tUSk54LzZVbjY3R0t1VXVzRThlcDdGOGFXYmtzREE3NW1rY3duQzg9" alt="Featured image of post 开源项目申请JetBrains Open Source Development License" />&lt;p>开发需要使用idea，以前使用的是破解版，使用起来没什么区别，后边觉得破解实在是麻烦，就转正购买了正式版，随意升级的感觉还是很美好的，哈哈。等到第二年快要续费的时候才了解到可以使用开源项目来申请idea全家桶的License，于是就开始了折腾之路。&lt;/p>
+&lt;h2 id="申请准备">申请准备
+&lt;/h2>&lt;p>想要申请免费的License还是需要准备一些事情的：&lt;/p>
+&lt;blockquote>
+&lt;h3 id="满足以下条件的开源项目">满足以下条件的开源项目：
+&lt;/h3>&lt;ul class="js-check-list">
+&lt;li class="wt-text-1 check-item wt-offset-top-24">
+了解&lt;a class="wt-link wt-link_external" href="https://opensource.org/docs/osd">开源&lt;/a>定义。
+&lt;/li>
+&lt;li>
+正在积极开发，例如，在过去 3 个月内定期提交新代码。
+&lt;/li>
+&lt;li>
+不提供开源软件的付费版本，也不提供与开源项目相关的任何商业服务（例如付费支持、咨询等）。
+&lt;/li>
+&lt;li>
+未获得商业公司或组织（NGO、教育、研究或政府组织）的资助。
+&lt;/li>
+&lt;li>
+不为他们的核心项目开发者支付工资。
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="支持条款">支持条款：
+&lt;/h3>&lt;ul>
+&lt;li>许可证仅提供给项目负责人和核心项目提交者。&lt;/li>
+&lt;li>许可证有效期为一年，之后如果您的项目仍符合支持计划要求，也可以续订。&lt;/li>
+&lt;li>您只能将免费许可证用于开发非商业开源项目。&lt;/li>
+&lt;li>您不能与任何第三方共享免费许可证。&lt;/li>
+&lt;/ul>&lt;/blockquote>
+&lt;p>github的邮箱要设置成公开的，&lt;code>keep my email addresses private&lt;/code>去掉勾选：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=TCtiV1lEVVFLVU9nQ3V6UXl5TFM3RFRaTzI1V2ExOGJscVA2ZGFwbTROek80Q2hnMzk4WVVmQjFsajhxUXNSOC92b0FRd0U9"
+loading="lazy"
+>&lt;/p>
+&lt;p>然后就可以开始申请了。&lt;/p>
+&lt;h2 id="申请">申请
+&lt;/h2>&lt;p>申请地址：&lt;a href="https://www.jetbrains.com/shop/eform/opensource" target="_blank" rel="noopener">Request for Open Source Development License&lt;/a>，里边共有三大项需要填写&lt;/p>
+&lt;h3 id="新用户还是老用户">新用户还是老用户
+&lt;/h3>&lt;p>如果是第一次申请，那么肯定是新用户，选择 **No, we are a new customer.**如果是后续通道到期续的话，那就是第二个选项了&lt;/p>
+&lt;h3 id="项目信息">项目信息
+&lt;/h3>&lt;p>填写自己项目的一些信息：项目名称，项目网站地址(如果没有项目网站地址可以和仓库地址填写同一个地址)，仓库地址，License地址(仓库中的开源协议文件)，以及一些项目的信息，如实填写就可以了。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=b2wwN1dtSFZBaSs5SSsra2libVlGSThNK0hLeTJYUmRHSTVUR2hKRytaaVhldGRjdW4yVDNwTWtJUWVZQkhvSFBvN1EvNzg9"
+loading="lazy"
+>&lt;/p>
+&lt;h3 id="关于我们自己">关于我们自己
+&lt;/h3>&lt;p>主要就是邮箱，github个人主页，以及姓名，填写完成后再勾选一些协议信息就可以提交了。整个过程还是很快的。提交后就会收到邮件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hello xxx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you for your OSS development license request.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">We will evaluate your project, and we’ll notify you of our decision by email. Please note that it could take up to one week to have your project reviewed.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you have any questions, please contact us atJetBrains Community Support.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Kind regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains Community Support Team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>提示已经收到了我们的申请，需要一个星期来审核我们的申请。接下来就是耐心等待了。&lt;/p>
+&lt;h2 id="审核结果">审核结果
+&lt;/h2>&lt;p>大概四五天就会出审核结果，审核不通过就是下边的邮件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hello xxx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you for contacting us.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I’ve checked if your open source project is still actively and regularly developed - it is one of the main requirements ofJetBrains Open Source Support Program. According to the project&amp;#39;s repository, it has not been actively developed, so I’m afraid that we cannot provide free licenses for your project at this point.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Please feel free to contact us again atopensource@jetbrains.comonce you resume active work on your project.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you have any additional questions, I will be glad to help.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Paige Rothmaller
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains Americas
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Phone: 609-714-7883
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Fax: 866-838-6784
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果审核通过则是下边的邮件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Dear xxx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Congratulations, your request to JetBrains for Open Source development license(s) has been approved! The license certificate is attached to this message.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Main facts about your license(s):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">They are valid for one year. You will receive an automatic email reminder shortly before the license expiration date.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">They should be used for developing your non-commercial open source projects only.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you’ve received more than one license, please share them only with active contributors to your project.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">To redeem your license(s), please click the link below:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Take me to my license(s)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you find that JetBrains software has been useful for your project, please consider mentioning JetBrains support on your project’s homepage. Feel free to use theJetBrains logoand a link to our website such ashttps://jb.gg/OpenSourceSupport.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you have any questions, please get in touch with us atopensource@jetbrains.com. We’ll be glad to help.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Kind regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains Community Support Team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="续期">续期
+&lt;/h2>&lt;p>免费的license需要一年一续的，在到期前会有邮件通知我们来进行续期：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hi xxx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Your JetBrains All Products Pack license(s) will expire in two weeks, on June 3, 2023.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">We hope that our products have been useful in the development of your open source project. If your project is still in active development, please consider applying for renewal.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Don’t hesitate to contact us if you have any questions or issues regarding our support program – we&amp;#39;ll be glad to help. We would also appreciate any feedback on your experience with JetBrains products.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Kind regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains Community Support Team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我们可以直接点击邮件里的&lt;code>applying for renewal&lt;/code>来续期我们的license。&lt;/p>
+&lt;p>填写的信息和第一次申请基本一样，只是在第一项新老用户选择的时候选择老用户，然后填写第一次申请通过的license ID就可以了。&lt;/p>
+&lt;p>提交申请后还是会有邮件通知：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hello xx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">We&amp;#39;re writing to you in regards to your OSS development license request.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">We&amp;#39;ve run an automated check of your GitHub repository to see if your open source project meets the requirements of our Open Source Support Program. Unfortunately, the check failed because the project has not been actively developed recently. We need to see regular code commits submitted for the past 3 months or more. Readme.md and other non-code commits do not count.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you continue working on your project for a few more months, you&amp;#39;re welcome to re-apply for support.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you believe that your application has been evaluated incorrectly, please email us back at opensource@jetbrains.com. We’ll be glad to look into your case and see how we can help you.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Community Support team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>由于我的项目最近三个月没有提交过记录，很快就收到了拒绝的邮件，所以如果想续期，续期前的三个月最好提交一下commit：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hello xxx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you for your OSS development license request. We will evaluate your project, and we’ll notify you of our decision by email.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Please allow up to 2 weeks for your application to be processed, as we&amp;#39;re currently experiencing a high volume of requests. We appreciate your patience.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you need assistance with an urgent license renewal request, please contact us at opensource@jetbrains.com.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Kind regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains Community Support Team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="后续">后续
+&lt;/h3>&lt;p>终于等到了3个月，2023-07-01日马上又提交了申请，这次终于过了检查，有开始了漫长的等待。07-07凌晨收到了一封邮件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">Dear&lt;/span> &lt;span class="n">xx&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Thanks&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">your&lt;/span> &lt;span class="n">interest&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">our&lt;/span> &lt;span class="n">Open&lt;/span> &lt;span class="n">Source&lt;/span> &lt;span class="n">Program&lt;/span>&lt;span class="o">!&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Could&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">please&lt;/span> &lt;span class="n">provide&lt;/span> &lt;span class="n">more&lt;/span> &lt;span class="n">details&lt;/span> &lt;span class="n">about&lt;/span> &lt;span class="n">your&lt;/span> &lt;span class="ne">OS&lt;/span> &lt;span class="n">project&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">its&lt;/span> &lt;span class="n">functionality&lt;/span>&lt;span class="err">?&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">What&lt;/span> &lt;span class="n">tools&lt;/span> &lt;span class="n">are&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">interested&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">how&lt;/span> &lt;span class="n">are&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">going&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">use&lt;/span> &lt;span class="n">them&lt;/span>&lt;span class="err">?&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Thanks&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">I&lt;/span> &lt;span class="n">look&lt;/span> &lt;span class="n">forward&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">your&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">!&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Kind&lt;/span> &lt;span class="n">Regards&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">xx&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Community&lt;/span> &lt;span class="n">Support&lt;/span> &lt;span class="n">Team&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">JetBrains&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">www&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">jetbrains&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">The&lt;/span> &lt;span class="n">Drive&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">Develop&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>早上就赶紧回复邮件，介绍了一下项目情况，以及对哪些工具感兴趣，当天晚上就收到了通过的邮件，比初次申请的时候稍微麻烦了一点：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hi xx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you for providing such detailed information.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">We’ve extended your free All Products Pack license for another year. Please check your inbox for the new license certificate.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you have any questions, please feel free to contact me. Have a nice day!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Kind Regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">xx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Community Support Team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>最后祝大家都可以成功的申请下来。&lt;/p></description></item></channel></rss>

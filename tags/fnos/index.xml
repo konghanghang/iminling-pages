@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FnOS on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/fnos/</link><description>Recent content in FnOS on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 09 Feb 2025 03:15:47 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/fnos/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox VE(PVE)8.0安装飞牛私有云fnOS – NAS</title><link>https://www.iminling.com/2025/install-fnos-nas/</link><pubDate>Sun, 09 Feb 2025 03:15:47 +0000</pubDate><guid>https://www.iminling.com/2025/install-fnos-nas/</guid><description>&lt;p>&lt;a class="link" href="https://www.fnnas.com" target="_blank" rel="noopener"
+>飞牛nas&lt;/a>系统出来也有段时间了，一个很不错的nas系统，在以前的文章中也介绍过&lt;a class="link" href="https://www.iminling.com/2024/pve-install-nas" title="Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘"
+target="_blank" rel="noopener"
+>群晖nas系统的安装&lt;/a>，今天就来一次尝鲜，安装一下fnOS，看一下群晖的系统和飞牛的系统有什么区别。接下来就开始安装折腾之路 - 飞牛私有云fnOS nas安装。&lt;/p>
+&lt;h2 id="pve配置">PVE配置
+&lt;/h2>&lt;p>首先要先去&lt;a class="link" href="https://www.fnnas.com/download" target="_blank" rel="noopener"
+>飞牛官网&lt;/a>把官方镜像ISO文件给下载下来，上传到pve中，这个还有不清楚的可以参考&lt;a class="link" href="https://www.iminling.com/2024/pve-install-ikuai" title="Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"
+target="_blank" rel="noopener"
+>Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡&lt;/a>中对爱快ISO文件上传的步骤。&lt;/p>
+&lt;h3 id="常规">常规
+&lt;/h3>&lt;p>修改为自己想要的vmid 以及 名称，我这里名称填了103，可以修改自己喜欢的，比如&lt;code>飞牛NAS&lt;/code>等。其他默认。&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/08/37837647596f9bb193eb5478ce1cde0f.webp"
+loading="lazy"
+alt="fnos common"
+>][5]&lt;/p>
+&lt;h3 id="操作系统">操作系统
+&lt;/h3>&lt;p>操作系统选择在飞牛官网下载的iso文件。其他的默认&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/08/e4de0f82014a774996efa5f6568c0acf.webp"
+loading="lazy"
+alt="fnos os"
+>][6]&lt;/p>
+&lt;h3 id="系统">系统
+&lt;/h3>&lt;p>机型这里选择q35，其他不变。&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/08/ffa5be3d705f4d6fae78b707bf0cc037.webp"
+loading="lazy"
+alt="fnos system"
+>][7]&lt;/p>
+&lt;h3 id="磁盘">磁盘
+&lt;/h3>&lt;p>这里没有截图到，实际是和安装群群一样，把磁盘删除了，什么都不留。如果只是想体验则可以根据实际情况来分配硬盘大小。&lt;/p>
+&lt;p>我这里是要把一个硬盘直通给飞牛的，所以我这里就把硬盘都给删除了 。&lt;/p>
+&lt;p>如果只是用来体验，则可以给一个30G的磁盘。&lt;/p>
+&lt;h3 id="cpu">cpu
+&lt;/h3>&lt;p>cpu核心根据自己的情况来，我的J4125只有4个核心，所以全给了。类别选host。&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/08/e0272ce01b4a02382119f02e9df93e3e.webp"
+loading="lazy"
+alt="fnos cpu"
+>][8]&lt;/p>
+&lt;h3 id="内存配置">内存配置
+&lt;/h3>&lt;p>内存根据自己的需求来给，建议2G以上，我这里给4G.&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/08/c2ec1daba8630f17c9a006afa1a9d040.webp"
+loading="lazy"
+alt="fnos ram"
+>][9]&lt;/p>
+&lt;h3 id="网络">网络
+&lt;/h3>&lt;p>网络我这里直接默认，使用pve的网桥&lt;code>vmbr0&lt;/code>就可以了。&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/08/42a35339b69c2328ebeff937053706d2.webp"
+loading="lazy"
+alt="fnos network"
+>][10]&lt;/p>
+&lt;h3 id="确认">确认
+&lt;/h3>&lt;p>都设置完成后对已设置的信息进行确认，基本不会有什么问题，完成。&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/08/c2f60e6ebc7d2de5314c6312dd7b1f52.webp"
+loading="lazy"
+alt="fnos confirm"
+>][11]&lt;/p>
+&lt;h3 id="硬盘直通">硬盘直通
+&lt;/h3>&lt;p>经过上边设置后，需要再给nas系统一个磁盘，可以参考我在&lt;a class="link" href="https://www.iminling.com/2024/pve-install-nas" title="Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘"
+target="_blank" rel="noopener"
+>Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘&lt;/a>时的直通操作，基本是一样的。&lt;/p>
+&lt;p>硬盘直通后，要看一下启动顺序，需要先从我们上传的iso镜像启动，如果没有问题就可以启动了。&lt;/p>
+&lt;h2 id="fnos安装">FnOS安装
+&lt;/h2>&lt;p>经过上边的步骤，已经创建好了一个虚拟机。接下来就是对系统进行配置启动了。点击控制台查看启动。默认图形安装。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/366271dd2ffa0ef1821b8e3b86440a6c.webp"
+loading="lazy"
+alt="fnos boot"
+>&lt;/p>
+&lt;p>选择安装位置，本文这里是选择直通的硬盘：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/e5ee329267cbe5bd4aae8fe6a258267a.webp"
+loading="lazy"
+alt="fnos disk select"
+>&lt;/p>
+&lt;p>下一步选择系统分区大小,官方默认给的是64G，这里直接按官方建议来：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/226fe70c13e5ab86147589ed6746b766.webp"
+loading="lazy"
+alt="fnos system disk"
+>&lt;/p>
+&lt;p>接下来就是安装了，等待安装成功就可以了。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/cf81cf188faa745ddfe2c241b150d05e.webp"
+loading="lazy"
+alt="fnos setup complete"
+>&lt;/p>
+&lt;p>下一步就会出现重启了，重启后控制台会显示一下内容：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/a09fdf42f173d00e8a376c07e7bb4305.webp"
+loading="lazy"
+alt="fnos login"
+>&lt;/p>
+&lt;p>会告诉登录的ip和端口，这里是&lt;code>http://192.168.1.47:5666&lt;/code>,等下来浏览器直接输入这个地址来进行访问。&lt;/p>
+&lt;h2 id="初始化fnos">初始化FnOS
+&lt;/h2>&lt;h3 id="系统设置">系统设置
+&lt;/h3>&lt;p>接下来对fnos进行初始化，访问上边的地址：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/d3c94bd7539929c05abffe55a8295ea2.webp"
+loading="lazy"
+alt="fnos setup"
+>&lt;/p>
+&lt;p>初次进入后需要设置设备名称以及管理员信息。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/e6061080b1049a0751792f173238d904.webp"
+loading="lazy"
+alt="fnos setting"
+>&lt;/p>
+&lt;h3 id="存储空间创建">存储空间创建
+&lt;/h3>&lt;p>设置后会进入系统，因为是第一次进入系统，系统会提示创建存储空间：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/b312decdfb16d2338ac395e0f5485d23.webp"
+loading="lazy"
+alt="fnos disk"
+>&lt;/p>
+&lt;p>点击立即创建，选择磁盘以及数据保护默认，我这里直接使用默认basic方式。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/63391e0b3418e5fbf3be4f6819c88b68.webp"
+loading="lazy"
+alt="fnos disk select "
+>&lt;/p>
+&lt;p>下一步设置存储空间可以使用的用户以及可以使用的大小，我这里只有自己使用，容量不限制：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/e10b83abed66f0285f19eb6dfb5f1a25.webp"
+loading="lazy"
+alt="fnos create disk"
+>&lt;/p>
+&lt;p>下一步创建确认：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/b02e6bce0be8396b9d261a020abc8d5d.webp"
+loading="lazy"
+alt="fnos create confirm"
+>&lt;/p>
+&lt;p>对磁盘进行格式化：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/d75627947bc95dadc91e27fe57914980.webp"
+loading="lazy"
+alt="fnos format disk"
+>&lt;/p>
+&lt;p>格式化完就创建成功了：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/4488f9a7b2b8f817f1f48ef411064ae2.webp"
+loading="lazy"
+alt="fnos disk created"
+>&lt;/p>
+&lt;p>查看创建的存储空间：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/i/2025/01/08/cd7395e330ccc57ac0fe7fc80a122fe6.webp"
+loading="lazy"
+alt="fnos disk"
+>&lt;/p>
+&lt;h3 id="fnos文件系统">FnOS文件系统
+&lt;/h3>&lt;p>上边就已经完全安装好了飞牛NSA，飞牛的磁盘存储位置和群晖还是有一点不一样的，我们可以通过ssh登录进系统进行查看他的磁盘信息。&lt;/p>
+&lt;p>ssh登录信息为访问网页版的用户名和密码。使用访问网页的ip和22端口+用户名和密码来进行登录。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">aa@FnOS:/$ df -h
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem Size Used Avail Use% Mounted on
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 1.9G 0 1.9G 0% /dev
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 394M 7.7M 386M 2% /run
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda2 63G 9.1G 51G 16% /
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 2.0G 1.4M 2.0G 1% /dev/shm
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M 0 5.0M 0% /run/lock
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">trimafs 1.8T 1.7T 58G 97% /fs
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/mapper/trim_f9cc7969_89e3_4c0b_9857_bcec3a1144d7-0 1.8T 1.7T 58G 97% /vol1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 394M 0 394M 0% /run/user/1000
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到飞牛的系统是放在&lt;code>/&lt;/code>目录下的，63G, 而我直通的硬盘有两个目录&lt;code>/fs&lt;/code>和&lt;code>/vol1&lt;/code>。&lt;/p>
+&lt;div data-page-id="SPIRdFXeFoo8mBxUJMgu3LHGsIe" data-lark-html-role="root" data-docx-has-block-data="false">
+&lt;div class="ace-line ace-line old-record-id-YajHdl9ZxoJsJIxpfL0uECmrsrb">
+在我的文件自己创建的目录在/fs目录下：
+&lt;/div>
+&lt;div>
+```
+aa@FnOS:/fs/1000/ftp$ ls
+docker download
+```
+&lt;p>
+直接使用应用商店安装的qb下载目录可以在qb的设置里看到，实际是在&lt;code>/vol1&lt;/code>下。&lt;/div>
+&lt;div>
+```
+aa@FnOS:/var/apps/qBittorrent/shares$ ls -alh
+total 8.0K
+drwxr-xr-x 2 root root 4.0K Jan 7 23:05 .
+drwxr-xr-x 6 root root 4.0K Jan 7 23:05 ..
+lrwxrwxrwx 1 root root 27 Jan 7 23:05 qBittorrent -> /vol1/@appshare/qBittorrent
+```
+&lt;p>
+其他的目录信息大家根据情况再去研究。
+&lt;/p>
+&lt;/div>
+&lt;h3>
+qb下载
+&lt;/h3>
+&lt;div>
+默认qb只能访问安装后设置里配置的目录，如果想要改变qb下载的目录，则需要去&lt;code>系统设置-应用&lt;/code>找到qb，添加一下允许它访问的文件目录。
+&lt;/div>&lt;/div>
+&lt;p>
+&lt;/p>
+&lt;p>
+下边是完整后的桌面预览图
+&lt;/p>
+&lt;p>
+![fnos complete](https://images.iminling.com/i/2025/01/08/3b89be1091025e546acd4224064abb0a.webp)
+&lt;/p></description></item></channel></rss>

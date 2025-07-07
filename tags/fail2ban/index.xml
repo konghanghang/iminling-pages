@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Fail2ban on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/fail2ban/</link><description>Recent content in Fail2ban on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Mon, 05 Feb 2024 13:12:33 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/fail2ban/index.xml" rel="self" type="application/rss+xml"/><item><title>docker配置fail2ban拦截nginx非法请求ip</title><link>https://www.iminling.com/2024/docker-install-fail2ban-interception-nginx-ip/</link><pubDate>Mon, 05 Feb 2024 13:12:33 +0000</pubDate><guid>https://www.iminling.com/2024/docker-install-fail2ban-interception-nginx-ip/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=S2lnNFVkM3BpS1h5b1RvRlF3V0tocVFuZ3YrTHQ3YWhJQXp6YnNJdUZlenRpSTZOdmF2b0M0MTJpR2VoaVU1eG1PNTZ6Z1E9" alt="Featured image of post docker配置fail2ban拦截nginx非法请求ip" />&lt;p>前边写过一篇通过fail2ban来拦截ssh暴力破解：&lt;a class="link" href="https://www.iminling.com/2024/docker-install-fail2ban-protect-ssh/" >docker安装fail2ban并配置防止ssh登录爆破&lt;/a>，fail2ban能做到的远不止这些，如果你有一个属于自己的网站，那么一定会遇到有无数不知明ip来访问你网站的敏感路径，总是想着要来获取你网站的一些有用信息。今天我们就来使用fail2ban去拦截那些非法访问的ip地址。&lt;/p>
+&lt;h2 id="环境与目录情况">环境与目录情况
+&lt;/h2>&lt;p>fail2ban如上篇：中的安装方式，是使用docker来安装的
+nginx也是使用docker来安装的，并使用的是桥接网络。
+然后再来看一下配置的目录：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban$ tree
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── data
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── filter.d
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   │   └── nginx-cc.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   └── jail.d
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── nginx-cc.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── sshd.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── docker-compose.yaml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── .env
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── logs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上，需要创建两个文件，一个是针对非法访问的日志的过滤规则，另一个是针对非法访问的ip的监狱规则。我这里暂定这个监狱的名称就叫做：&lt;code>nginx-cc&lt;/code>,&lt;code>filter.d&lt;/code>和&lt;code>jail.d&lt;/code>中的配置文件名称一致。&lt;/p>
+&lt;h2 id="过滤配置">过滤配置
+&lt;/h2>&lt;p>先来看一下过滤规则的配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">[Definition]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">failregex = ^&amp;lt;HOST&amp;gt; .* &amp;#34;(GET|POST|HEAD).*HTTP.*&amp;#34; (404|503) .*$
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ignoreregex =.*(robots.txt|favicon.ico|jpg|png)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>failregex&lt;/code>配置的就是针对错误访问日志进行过滤的正则表达试，以ip开头，并把ip使用&lt;code>&amp;lt;HOST&amp;gt;&lt;/code>代替。这里是针对访问状态是404和503的请求。
+&lt;code>ignoreregex&lt;/code>配置了针对什么样的路径日志进行忽略。&lt;/p>
+&lt;p>以上是nginx默认日志的访问日志匹配的正则，如果你修改了自己的nginx的访问日志输出格式，则需要按自己的日志输出格式来编写失败请求的正则表达式。&lt;/p>
+&lt;h2 id="监狱配置">监狱配置
+&lt;/h2>&lt;p>直接先看一下监狱的具体配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cc&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">enabled&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">filter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">nginx&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">chain&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">DOCKER&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">USER&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#action = iptables-multiport[name=nginx-cc, port=&amp;#34;http,https&amp;#34;, protocol=tcp]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">http&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">https&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">logpath&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">maxretry&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bantime&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">86400&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">findtime&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3600&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ignoreip&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mf">192.168&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">0.1&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">24&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>下边详细说明一下各参数：
+&lt;code>filter&lt;/code>对应的就是上边的过滤规则中的名称
+&lt;code>chain&lt;/code>为&lt;code>DOCKER-USER&lt;/code>,因为nginx是使用docker安装的，所以需要把iptables的规则添加到&lt;code>DOCKER-USER&lt;/code>中，&lt;code>DOCKER-USER&lt;/code>中的规则在Docker自动创建的任何规则之前加载，拥有更高的优先级。
+&lt;code>port&lt;/code>满足添加是禁止的端口
+&lt;code>logpath&lt;/code>读取的日志路径
+&lt;code>findtime&lt;/code>日志文件中分析错误连接数的时间。以秒计算&lt;/p>
+&lt;h2 id="启动配置">启动配置
+&lt;/h2>&lt;p>因为以前已经配置过sshd的监狱，并且fail2ban也是正常运行的，此时只需要对配置进行重新加载就可以了，可以使用以下命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~/&lt;/span>&lt;span class="n">images&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fail2ban&lt;/span>&lt;span class="o">$&lt;/span> &lt;span class="n">docker&lt;/span> &lt;span class="n">exec&lt;/span> &lt;span class="n">fail2ban&lt;/span> &lt;span class="n">fail2ban&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">client&lt;/span> &lt;span class="n">reload&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">OK&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>再来查看当前生效的监狱有哪些：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban# docker exec fail2ban fail2ban-client status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">|- Number of jail: 2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">`- Jail list: nginx-cc, sshd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到&lt;code>nginx-cc&lt;/code>监狱已经生效了，再来看一下这个监狱的详细情况：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~/&lt;/span>&lt;span class="n">images&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fail2ban&lt;/span>&lt;span class="c1"># docker exec fail2ban fail2ban-client status nginx-cc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Status&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">jail&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">nginx&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|-&lt;/span> &lt;span class="n">Filter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="o">|-&lt;/span> &lt;span class="n">Currently&lt;/span> &lt;span class="n">failed&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="o">|-&lt;/span> &lt;span class="n">Total&lt;/span> &lt;span class="n">failed&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">134&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="ne">File&lt;/span> &lt;span class="n">list&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="n">Actions&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|-&lt;/span> &lt;span class="n">Currently&lt;/span> &lt;span class="n">banned&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|-&lt;/span> &lt;span class="n">Total&lt;/span> &lt;span class="n">banned&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">21&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="n">Banned&lt;/span> &lt;span class="ne">IP&lt;/span> &lt;span class="n">list&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到鉴于的详细信息，此时不出意外就可以拦截到那些异常情况了。&lt;/p>
+&lt;h2 id="遇到的问题">遇到的问题
+&lt;/h2>&lt;p>不出意外，肯定会出意外。我在debian11的机器上安装，请求404的url会被记录到&lt;code>Total failed&lt;/code>里，并且请求失败的ip也会出现在&lt;code>Banned Ip list&lt;/code>里，但是被ban后竟然还可以访问，此时通过查看&lt;code>fail2ban&lt;/code>容器发现竟然添加iptables规则的时候出现了异常。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Zk9mSUhyREttOTBtYU45dXlrNEZwclE1NW9NTVpkeGt4WG5tQU5mdndsQkxLYVhuRFNUbHBLR3ZjTGZmbWE4a3RmWTNzUk09"
+loading="lazy"
+alt="fail2ban add fail"
+>&lt;/p>
+&lt;p>如上图，出现&lt;code>iptables: No chain/target/match by that name&lt;/code> 错误，导致iptables规则添加失败，通过&lt;code>iptables -nvL&lt;/code>的确也看不添加的被禁的ip。在网上找了好久不知道是什么原因，后来发现官方的github仓库的说明里就有关于这个的说明&lt;a class="link" href="https://github.com/crazy-max/docker-fail2ban?tab=readme-ov-file#use-iptables-tooling-without-nftables-backend" target="_blank" rel="noopener"
+>crazy-max/docker-fail2ban&lt;/a>：&lt;/p>
+&lt;blockquote>
+&lt;p>If your system&amp;rsquo;s &lt;code>iptables&lt;/code> tooling uses the nftables backend, this will throw the error &lt;code>stderr: 'iptables: No chain/target/match by that name.'&lt;/code>. You need to switch the &lt;code>iptables&lt;/code> tooling to &amp;rsquo;legacy&amp;rsquo; mode to avoid these problems. This is the case on at least Debian 10 (Buster), Ubuntu 19.04, Fedora 29 and newer releases of these distributions by default. RHEL 8 does not support switching to legacy mode, and is therefore currently incompatible with this image.&lt;/p>&lt;/blockquote>
+&lt;p>原来是因为iptable的模式问题，默认debian11使用的&lt;code>nf_tables&lt;/code>模式,按照官方的提示需要切换为&lt;code>legacy&lt;/code>模式，如何查看自己的iptables是哪种模式呢？可以使用&lt;code>iptables --version&lt;/code>来查看，如下就使用的是&lt;code>nf_tables&lt;/code>模式。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~# iptables --version
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">iptables v1.8.7 (nf_tables)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>那如何修改成&lt;code>legacy&lt;/code>模式呢？官方也给了解决方案：&lt;/p>
+&lt;p>On Ubuntu or Debian：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ update-alternatives --set iptables /usr/sbin/iptables-legacy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ update-alternatives --set arptables /usr/sbin/arptables-legacy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ update-alternatives --set ebtables /usr/sbin/ebtables-legacy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>On Fedora:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ update-alternatives --set iptables /usr/sbin/iptables-legacy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我的系统是debian，所以按照上边的四条来执行，后边两条并没有执行成功，提示没有开启，那就不管了。执行完后可以再使用上边的version命令查看模式是否已经改过来了:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban# iptables --version
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">iptables v1.8.7 (legacy)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:service networking restart
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到，已经切换成功了，并且重启了&lt;code>networking&lt;/code>服务。此时再去看禁止ip发现还是不行，仍然可以访问，&lt;strong>官方建议重启&lt;/strong>，我以为重启&lt;code>networking&lt;/code>就可以了，但是并不行，最后只好&lt;strong>对服务器进行了重启&lt;/strong>，最终终于生效，成功的对异常访问ip进行了禁止。&lt;/p>
+&lt;p>以上就是折腾过程，希望可以帮助到大家。&lt;/p></description></item><item><title>docker安装fail2ban并配置防止ssh登录爆破</title><link>https://www.iminling.com/2024/docker-install-fail2ban-protect-ssh/</link><pubDate>Sat, 03 Feb 2024 14:52:53 +0000</pubDate><guid>https://www.iminling.com/2024/docker-install-fail2ban-protect-ssh/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=SVBwbXRUTnkxdENoNlUzQ0w1QjVKd2xKc3pVK3BWZjlZNk1aeEtRT1BmcXpEcGlaa1h2c3ZhMnVGZlRXV2sweE1TcDhYTVU9" alt="Featured image of post docker安装fail2ban并配置防止ssh登录爆破" />&lt;p>平时也没有怎么关注过ssh的日志，而且服务器的ssh登录端口也是默认的22，只是密码设置的相对来说复杂了点，后边听说有人会进行密码爆破，于是就查看了一下ssh的日志，日志路径是/var/log/auth.log，一看整个人都呆了，登录错误的日志不停的刷，都不带停的。如果密码设置的简单点，估计早就被人给试出来了。在网上查询到可以使用fail2ban来进行防御，把经常访问出错的ip加入到iptables中，禁止掉它的访问，于是就开干了，开始摸索fail2ban如何安装使用。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Feb 3 15:04:36 localhost sshd[3030796]: pam_unix(sshd:auth): check pass; user unknown
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Feb 3 15:04:36 localhost sshd[3030796]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=170.64.155.113
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Feb 3 15:04:37 localhost sshd[3030785]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=104.250.50.16 user=root
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Feb 3 15:04:38 localhost sshd[3030796]: Failed password for invalid user es from 170.64.155.113 port 56728 ssh2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Feb 3 15:04:39 localhost sshd[3030796]: Connection closed by invalid user es 170.64.155.113 port 56728 [preauth]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Feb 3 15:04:39 localhost sshd[3030785]: Failed password for root from 104.250.50.16 port 57284 ssh2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="安装fail2ban">安装fail2ban
+&lt;/h2>&lt;p>我这里使用docker进行安装fail2ban,使用的docker镜像地址：&lt;a class="link" href="https://github.com/crazy-max/docker-fail2ban" target="_blank" rel="noopener"
+>crazy-max/docker-fail2ban&lt;/a>,目录如下所示：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban$ tree
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── data
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   └── jail.d
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   └── sshd.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── docker-compose.yaml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── .env
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── logs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="docker-composeyaml文件">docker-compose.yaml文件
+&lt;/h3>&lt;p>先看一下docker-compose.yaml的内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">version&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;3&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">services&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">fail2ban&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">image&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">crazymax&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fail2ban&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">latest&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">container_name&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">fail2ban&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">restart&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">unless&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">stopped&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">network_mode&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;host&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cap_add&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">NET_ADMIN&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">NET_RAW&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">env_file&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">.&lt;/span>&lt;span class="n">env&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">volumes&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">./&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">data&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">./&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># sshd 日志映射&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sshd&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">ro&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">logging&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">driver&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;json-file&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">options&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">max&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;5m&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">max&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">file&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;10&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这里说明两点，首先是网络模式使用的是&lt;code>host&lt;/code>模式，第二，因为我们是要检测暴力破解sshd登录的，所以我们需要读取ssh登录的日志，日志文件路径是&lt;code>/var/log/auth.log&lt;/code>,所以在卷挂载那里就把ssh日志的目录进行挂载。&lt;/p>
+&lt;h3 id="配置监狱拦截">配置监狱拦截
+&lt;/h3>&lt;p>&lt;code>fail2ban&lt;/code>中是需要定义监狱(jail)来对访问者进行过滤，每个监狱(jail)可以对应我们的一个服务或者服务的某一个维度，比如我们要对ssh的登录这个场景进行监控，那我们就可以定义一个名称为&lt;code>sshd.conf&lt;/code>的监狱配置，这里也是参考github上的示例：&lt;a class="link" href="https://github.com/crazy-max/docker-fail2ban/blob/master/examples/jails/sshd/jail.d/sshd.conf" target="_blank" rel="noopener"
+>sshd.conf&lt;/a>,内容如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="n">sshd&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">enabled&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">chain&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">INPUT&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># port = ssh&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">22&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">filter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">sshd&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">mode&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">aggressive&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">logpath&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sshd&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">auth&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">maxretry&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bantime&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">86400&lt;/span> &lt;span class="c1"># 禁止一天，单位秒&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>logpath&lt;/code>的配置，因为在docker-compose.yaml中对ssh日志的目录进行了挂载配置，这里根据自己的需要进行修改&lt;code>maxretry&lt;/code>也修改为3次，严格一点&lt;/p>
+&lt;h2 id="启动拦截">启动拦截
+&lt;/h2>&lt;p>首先启动容器：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban$ docker compose up -d
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[+] Running 4/4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ⠿ fail2ban Pulled 36.8s
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ⠿ 7264a8db6415 Pull complete 8.6s
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ⠿ 81330df9fd42 Pull complete 9.4s
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ⠿ 39280c79d189 Pull complete 9.5s
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[+] Running 1/1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ⠿ Container fail2ban Started 0.6s
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>查看当前fail2ban的状态，如下，可以看到有一个监狱：&lt;code>sshd&lt;/code>正在生效中:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban$ docker exec fail2ban fail2ban-client status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">|- Number of jail: 1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">`- Jail list: sshd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后再来查看一下sshd监狱的状态，可以看到总共出现了53次错误登录，当前已经拦截了6个ip，信息很详细：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~/&lt;/span>&lt;span class="n">images&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">fail2ban&lt;/span>&lt;span class="o">$&lt;/span> &lt;span class="n">docker&lt;/span> &lt;span class="n">exec&lt;/span> &lt;span class="n">fail2ban&lt;/span> &lt;span class="n">fail2ban&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">client&lt;/span> &lt;span class="n">status&lt;/span> &lt;span class="n">sshd&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Status&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">jail&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">sshd&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|-&lt;/span> &lt;span class="n">Filter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="o">|-&lt;/span> &lt;span class="n">Currently&lt;/span> &lt;span class="n">failed&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">6&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="o">|-&lt;/span> &lt;span class="n">Total&lt;/span> &lt;span class="n">failed&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">53&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">|&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="ne">File&lt;/span> &lt;span class="n">list&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">logs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sshd&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">auth&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="n">Actions&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|-&lt;/span> &lt;span class="n">Currently&lt;/span> &lt;span class="n">banned&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">6&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|-&lt;/span> &lt;span class="n">Total&lt;/span> &lt;span class="n">banned&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">6&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">`&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="n">Banned&lt;/span> &lt;span class="ne">IP&lt;/span> &lt;span class="n">list&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mf">112.213&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">110.8&lt;/span> &lt;span class="mf">196.189&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">21.247&lt;/span> &lt;span class="mf">104.250&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">50.16&lt;/span> &lt;span class="mf">175.144&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">208.9&lt;/span> &lt;span class="mf">183.56&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">193.178&lt;/span> &lt;span class="mf">141.98&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">11.90&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>被ban的ip会添加到iptables中，并且fail2ban会主动为每个监狱创建一个Chain,Chain的名称为&lt;code>f2b-监狱名&lt;/code>，可以通过命令来查看iptables中添加的规则:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~/images/fail2ban$ sudo iptables -nvL f2b-sshd
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Chain f2b-sshd (1 references)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> pkts bytes target prot opt in out source destination
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0 0 REJECT all -- * * 183.56.193.178 0.0.0.0/0 reject-with icmp-port-unreachable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 3 156 REJECT all -- * * 175.144.208.9 0.0.0.0/0 reject-with icmp-port-unreachable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 1 60 REJECT all -- * * 104.250.50.16 0.0.0.0/0 reject-with icmp-port-unreachable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 3 180 REJECT all -- * * 196.189.21.247 0.0.0.0/0 reject-with icmp-port-unreachable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0 0 REJECT all -- * * 112.213.110.8 0.0.0.0/0 reject-with icmp-port-unreachable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 354 24037 RETURN all -- * * 0.0.0.0/0 0.0.0.0/0
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到很多ip已经被ban了，这是我才刚启动1分钟不到，就这么多ip被ban了，可见坏人真多，老是想着爆破我的服务器。&lt;/p>
+&lt;h2 id="fail2ban的使用">fail2ban的使用
+&lt;/h2>&lt;p>使用&lt;code>docker exec &amp;lt;容器名称&amp;gt; fail2ban-client&lt;/code>命令来操作fail2ban。&lt;/p>
+&lt;h3 id="查看状态">查看状态
+&lt;/h3>&lt;p>一个是查看当前总状态：启用了什么监狱，另一个是查看某个监狱的状态，上边已经展示过了，这里就不再详细说了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 查看状态
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker exec fail2ban fail2ban-client status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 查看指定监狱状态
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker exec fail2ban fail2ban-client status sshd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="主动屏蔽ip">主动屏蔽ip
+&lt;/h3>&lt;p>我们也可以主动的屏蔽某个ip的访问，通过下边命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 指定监狱屏蔽IP（&amp;lt;JAIL&amp;gt;为监狱名）
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker exec fail2ban fail2ban-client set &amp;lt;JAIL&amp;gt; banip &amp;lt;IP&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 示例：docker exec fail2ban fail2ban-client set sshd banip 1.1.1.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ docker exec fail2ban fail2ban-client set sshd banip 183.56.193.179
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后再通过查看监狱状态命令查看&lt;code>Banned Ip List&lt;/code>中是否已经有了这个ip来判断是否成功。&lt;/p>
+&lt;h3 id="主动解除已屏蔽ip">主动解除已屏蔽ip
+&lt;/h3>&lt;p>有主动的去屏蔽某个ip，如果设置错误就需要主动把设置错误的取消掉，可以通过下边的命令来进行取消：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 指定监狱解封IP（&amp;lt;JAIL&amp;gt;为监狱名）
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker exec fail2ban fail2ban-client set &amp;lt;JAIL&amp;gt; upbanip &amp;lt;IP&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 示例：docker exec fail2ban fail2ban-client set sshd upbanip 1.1.1.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ docker exec fail2ban fail2ban-client set sshd unbanip 183.56.193.179
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后再通过查看监狱状态的命令查看ip是否已经被取消掉。&lt;/p>
+&lt;p>以上就是通过安装fail2ban来对暴力破解ssh密码进行拦截，另外也可以通过修改ssh的端口来进行简单的拦截，通常默认的ssh端口是22，如果换了端口他们想要找到这个ssh端口也是要花费一些时间的，再就是可以通过禁用密码只使用key来登录，会更安全一些，这个可以参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2024/modify-ssh-port-and-use-publick-key-login/" >修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>。希望可以帮到大家。&lt;/p></description></item></channel></rss>

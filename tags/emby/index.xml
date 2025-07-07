@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Emby on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/emby/</link><description>Recent content in Emby on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 04 Jan 2025 09:48:58 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/emby/index.xml" rel="self" type="application/rss+xml"/><item><title>私人影院之emby安装配置以及通过embyExternalUrl实现302播放</title><link>https://www.iminling.com/2025/emby-install-and-configuration/</link><pubDate>Sat, 04 Jan 2025 09:48:58 +0000</pubDate><guid>https://www.iminling.com/2025/emby-install-and-configuration/</guid><description>&lt;p>前两篇文章先讲了如何&lt;a class="link" href="https://www.iminling.com/2024/build-alist-server" title="私人影院之搭建自己的alist服务端并添加常见网盘"
+target="_blank" rel="noopener"
+>安装alist并添加常见网盘&lt;/a>，以及如何&lt;a class="link" href="https://www.iminling.com/2024/install-rclone-and-configuration" title="私人影院之rclone安装以及通过WebDav配置alist"
+target="_blank" rel="noopener"
+>把alist通过rclone挂载在本地硬盘&lt;/a>实现像本地文件一样进行浏览，本篇文章咱们继续，介绍如何安装emby并对媒体进行添加进emby.&lt;/p>
+&lt;h2 id="emby安装">emby安装
+&lt;/h2>&lt;p>要安装&lt;code>emby&lt;/code>首先要面临的就是&lt;code>emby&lt;/code>版本选择问题，&lt;code>emby&lt;/code>本身是一个收费软件，但是也有大佬们的破解版本，我这里选择&lt;code>amilys/embyserver&lt;/code> 这个版本，可以去&lt;a class="link" href="https://hub.docker.com/r/amilys/embyserver" target="_blank" rel="noopener"
+>docker hub官方地址&lt;/a>查看。确认镜像后，下边给出我的&lt;code>docker-compose.yaml&lt;/code>配置文件:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">networks:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> mynet:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> external: true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">services:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> emby:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> image: amilys/embyserver
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> container_name: emby
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> restart: unless-stopped
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> volumes:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - ./config:/config
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - /data/movies:/data/movies:rslave
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ports:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - 8096:8096
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> extra_hosts:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - host.docker.internal:host-gateway
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> networks:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - mynet
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>network不再多说了，自己创建的一个桥接网络。&lt;/p>
+&lt;p>端口暴露&lt;code>8096&lt;/code>出去，&lt;/p>
+&lt;p>&lt;code>emby&lt;/code>的配置文件在&lt;code>/config&lt;/code>目录，把它挂载到本地方便后续进行修改。&lt;/p>
+&lt;p>另外一个挂载路径就是本地的&lt;code>/data/movies&lt;/code>挂载到容器的&lt;code>/data/movies&lt;/code>目录。本地的&lt;code>/data/movies&lt;/code>其实就是&lt;a class="link" href="https://www.iminling.com/2024/install-rclone-and-configuration" title="私人影院之rclone安装以及通过WebDav配置alist"
+target="_blank" rel="noopener"
+>上篇文章通过rclone处理的alist中所有的文件&lt;/a>。这里建议设置为一样的路径，方便后续在302播放的时候替换，不会遇到那么多麻烦。&lt;/p>
+&lt;p>整体目录如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@docker:~/emby# tree -L 2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── config
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── docker-compose.yaml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后就是启动容器&lt;code>docker compose up -d&lt;/code>进行&lt;code>emby&lt;/code>的配置了。&lt;/p>
+&lt;h2 id="emby初始化">emby初始化
+&lt;/h2>&lt;p>启动容器后，可以通过&lt;code>ip:8096&lt;/code>来访问刚启动的容器。下边来进行&lt;code>emby&lt;/code>的一些初始化配置，首先是进行语言配置，选择&lt;code>chinese simplified&lt;/code>(简体中文)，下一步&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/343bcb276a9239cfbfe2632f98431869.webp"
+loading="lazy"
+alt="welcome to emby"
+>][4]&lt;/p>
+&lt;p>设置完语言后就会提示创建用户,根据自己的需求创建用户以及设置用户名和密码。然后继续下一步&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/e34079b58c84d358b0b10600010bf47d.webp"
+loading="lazy"
+alt="emby create first user"
+>][5]&lt;/p>
+&lt;p>之后就会让添加一个媒体库，这里可以先不添加，直接下一步，等完全配置好了之后再去配置媒体库相关的东西&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/2850a779022a9f2d21557087d95c4918.webp"
+loading="lazy"
+alt="emby setup media libraries"
+>][6]&lt;/p>
+&lt;p>接下来是设置媒体库的偏好语言和地区，根据自己需求英文或者中文&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/5e7ca76938cf51d75aea26d7ede69d5d.webp"
+loading="lazy"
+alt="emby preferred metadata language"
+>][7]&lt;/p>
+&lt;p>下边是配置远程访问，开启就好了&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/75dd4f38f84ba4fcf93236952cc6db3c.webp"
+loading="lazy"
+alt="emby configure remote access"
+>][8]&lt;/p>
+&lt;p>下边是使用条例，接收继续下一步&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/b8b47310ae3e310e234c62e76082063a.webp"
+loading="lazy"
+alt="emby terms of use"
+>][9]&lt;/p>
+&lt;p>终于完成了,点击finish跳转。&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/482385e097fb3168905c196ccbd5de0d.webp"
+loading="lazy"
+alt="emby set done"
+>][10]&lt;/p>
+&lt;p>经过上边设置，emby就算是初始化好了，接下来就可以进行媒体库添加了。&lt;/p>
+&lt;h2 id="媒体库">媒体库
+&lt;/h2>&lt;p>进入到emby后台，找到媒体库菜单，就可以在这里进行添加媒体库了。&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/d2d55907036a51dcfebbfcb5bf16e67d.webp"
+loading="lazy"
+alt="emby 媒体库"
+>][11]&lt;/p>
+&lt;p>添加媒体库时需要整理好分类,是电影、电视节目还是其他，方便emby正确刮削。&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/26e630de1ab04c0f135433a22a44b09d.webp"
+loading="lazy"
+alt="emby add lib"
+>][12]&lt;/p>
+&lt;p>根据情况配置上边的选项，配置好后emby就会开始进行刮削，完整后就可以在emby首页看到添加的目录下的所有电影了。截止到现在emby已经可以正确的播放视频了，但是此时播放网盘的内容是会经过搭建alist那台机器，等于是那台机器把媒体内容下载下来，然后送给我们的播放器进行播放，如果alist部署在本地播放倒是什么没什么，反正都要下载下来。如果alist部署在其他vps上，流量消耗是一个比较大的问题。如果是部署在家里但是需要在家庭以外的地方播放，这时候流量也会经过家里然后才到你在外边的设备，播放速度就取决于你的家庭宽带的上行了，一般上行所以都不会太大，所以我们需要配置302重定向，让播放设备直接和网盘进行交互，而alist服务器只是负责给你列出目录树，供我们浏览使用。下边就来讲一下如何进行302播放。&lt;/p>
+&lt;h2 id="embyexternalurl实现302播放">embyExternalUrl实现302播放
+&lt;/h2>&lt;p>本文主要介绍使用&lt;a class="link" href="https://github.com/bpking1/embyExternalUrl" target="_blank" rel="noopener"
+>embyExternalUrl&lt;/a>工具进行302播放。有大佬做了整合，弄了一个docker镜像：&lt;a class="link" href="https://github.com/thsrite/MediaLinker" target="_blank" rel="noopener"
+>MediaLinker&lt;/a>，降低了操作的复杂度，并且支持ssl证书，可以根据需求进行配置。docker compose文件内容如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">services:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> medialinker:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> container_name: medialinker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> image: thsrite/medialinker:latest
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> restart: unless-stopped
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> volumes:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - ./data/:/opt/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> environment:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - AUTO_UPDATE=true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - SERVER=emby
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - NGINX_PORT=8091
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> network_mode: host
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>具体环境信息可以看大佬的介绍，我这里使用emby且也不需要SSL，如上是最简单的配置了。启动后，在data目录下会有一个constant.js文件，我们需要改变其中emby、alist的一些配置，需要配置的地方如下图：&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/6ccb5a1219098a3aaad0ec5b57963782.webp"
+loading="lazy"
+alt="embyExternalUrl setting"
+>][15]&lt;/p>
+&lt;p>根据上图可以看到有7项信息需要填写，主要分为两个大项，一个是emby的配置，一个是alist的配置。下边来详细说一下每个参数的配置。&lt;/p>
+&lt;h3 id="emby配置">emby配置
+&lt;/h3>&lt;p>emby需要三个参数，embyhost这个简单，就是我们打开emby的地址，安装的机器ip和docker-compose文件中的端口就可以了。&lt;/p>
+&lt;p>embyApiKey需要在emby的后台去获取，路径如下，新建一个api密钥，然后填进去就可以了。&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/5c528a2719806da84c7a86ab030b801d.webp"
+loading="lazy"
+alt="emby api key"
+>][16]&lt;/p>
+&lt;p>mediaMountPath文件中介绍的也比较清楚：&lt;/p>
+&lt;blockquote>
+&lt;p>// 挂载工具 rclone/CD2 多出来的挂载目录, 例如将 od,gd 挂载到 /mnt 目录下: /mnt/onedrive /mnt/gd ,那么这里就填写 /mnt
+// 通常配置一个远程挂载根路径就够了,默认非此路径开头文件将转给原始 emby 处理
+// 如果没有挂载,全部使用 strm 文件,此项填[&amp;quot;&amp;quot;],必须要是数组&lt;/p>&lt;/blockquote>
+&lt;p>我们在上边安装alis和emby的时候，两个内部路径都是&lt;code>/data/movies&lt;/code>，那么这个数组中就填&lt;code>/data/movies&lt;/code>.&lt;/p>
+&lt;p>emby的配置就完成了。&lt;/p>
+&lt;h3 id="alist配置">alist配置
+&lt;/h3>&lt;p>host也比较简单，我们怎么访问alist的就怎么写，一般是ip:5244.&lt;/p>
+&lt;p>alist-token的获取路径如下：&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/76f65a9b6c5bd8cf02ba0266985968c3.webp"
+loading="lazy"
+alt="alist api key"
+>][17]&lt;/p>
+&lt;p>然后是否启用了sign，这个在往alist配置每个网盘的时候，我这边都是有开启的，所以这个参数我需要设置为true.&lt;/p>
+&lt;p>签名有效期，按照他提供的路径也很容易找到，默认是0，我这里也把他改成12，两边同步。&lt;/p>
+&lt;p>然后保存&lt;code>constant.js&lt;/code>文件，此时需要再对&lt;code>medialinker&lt;/code>容器进行一次重启，如果不重启，mediaMountPath不生效。&lt;/p>
+&lt;p>如何判断是否成功了呢？可以查看medialinker的日志，&lt;code>docker compose logs -tf&lt;/code> 来查看。如下我在第一次没有重启的情况去播放视频，看到有以下日志，找的还是默认的/mnt路径，并且可以看到我的服务器流量在疯狂的跑下行流量，说明是通过服务器下载后转给我的。&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/fe642d056ec75e3408f5fd37bce9cb12.webp"
+loading="lazy"
+alt="emby 302 error"
+>][18]&lt;/p>
+&lt;p>经过对容器进行重启后，再次去播放视频，可以看到以下日志，读取到了我配置的/data/movies.&lt;/p>
+&lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/04/3aa7c6fb04522303a5beb093a11f7eab.webp"
+loading="lazy"
+alt="emby 302 success"
+>][19]&lt;/p>
+&lt;p>经过以上就可以愉快的302直接播放云盘中的视频了。希望可以帮到大家。&lt;/p></description></item><item><title>私人影院之rclone安装以及通过WebDav配置alist</title><link>https://www.iminling.com/2024/install-rclone-and-configuration/</link><pubDate>Sun, 13 Oct 2024 02:04:10 +0000</pubDate><guid>https://www.iminling.com/2024/install-rclone-and-configuration/</guid><description>&lt;p>上一篇文章介绍了对&lt;a class="link" href="https://www.iminling.com/2024/build-alist-server" title="私人影院之搭建自己的alist服务端并添加常见网盘"
+target="_blank" rel="noopener"
+>alist的安装&lt;/a>，本篇文章则来介绍一下rclone把alist里挂载的网盘再套娃挂载到本地磁盘，为后续emby直接读取本地的挂载文件做准备。那么接下来就开始折腾rclone.&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/10/FE27085E1D15A96BA8B9CD0E182FA3C9.png"
+loading="lazy"
+alt="rclone "
+>&lt;/p>
+&lt;h2 id="配置文件">配置文件
+&lt;/h2>&lt;p>本文使用docker compose来进行安装，可以&lt;a class="link" href="https://hub.docker.com/r/rclone/rclone" target="_blank" rel="noopener"
+>docker-hub&lt;/a>找到rclone的官方镜像地址，安装可以参考rclone的官方&lt;a class="link" href="https://rclone.org/install/#docker" target="_blank" rel="noopener"
+>安装教程&lt;/a>。&lt;/p>
+&lt;p>先要把rclone的配置文件给配置好，我这里只配置alist，所以直接给出配置文件内容方便大家快速使用:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">[alist]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">type = webdav
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">url = http://alist:5244/dav
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">vendor = other
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">user = admin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pass = x9WN7skj6o7_fqjd4F
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上配置，&lt;/p>
+&lt;p>[]中的名称自己定义一个，&lt;/p>
+&lt;p>type固定为webdav，&lt;/p>
+&lt;p>url为alist的webdav的url，url地址在&lt;a class="link" href="https://alist.nn.ci/zh/guide/webdav.html" target="_blank" rel="noopener"
+>alist的文档&lt;/a>中也有说明，就是自己alist的ip+端口然后拼上/dav就可以了。&lt;/p>
+&lt;p>vendor值为other&lt;/p>
+&lt;p>user为自己的alist的用户名&lt;/p>
+&lt;p>pass为自己的alist的用户名密码，但是密码需要进行加密才行，所以可以使用下边的命令来生成自己密码的密文，&lt;/p>
+&lt;p>生成加密密码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker run --rm -it \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> rclone/rclone \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> obscure [替换为具体的密码]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行命令后就会生成一个你密码的密文，然后替换在配置文件中就可以了。&lt;/p>
+&lt;p>经过上边处理配置文件就处理好了，可以命名为&lt;code>rclone.conf&lt;/code>，rclone的默认配置文件名就是这个，如果名字改动了，则需要在下边docker-compose配置文件的挂载时特殊配置。方便下边docker-compose文件使用。&lt;/p>
+&lt;h2 id="docker-compose">docker compose
+&lt;/h2>&lt;p>老规矩，所有的应用程序都使用docker compose安装，下边是docker-compose.yaml的完整配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">networks:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> mynet:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> external: true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">services:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> rclone:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> image: rclone/rclone:latest
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> container_name: rclone
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> restart: always
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> cap_add:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - SYS_ADMIN
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> devices:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - /dev/fuse
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> security_opt:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - apparmor:unconfined
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> volumes:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - ./config:/config/rclone
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - /data/movies:/data:shared
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - /tmp:/tmp
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> command: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;mount alist:/ /data --cache-dir /tmp --allow-other --vfs-cache-mode writes --allow-non-empty&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> networks:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - mynet
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>network网络配置我这里就不讲了，是我自己创建的一个桥接网络。&lt;/p>
+&lt;p>这里主要说一下&lt;code>volumes&lt;/code>和&lt;code>command,&lt;/code> 其中&lt;code>cap_add&lt;/code>，&lt;code>devices&lt;/code>和&lt;code>security_opt&lt;/code>有兴趣的同学可以自己去研究他的含义，这里直接按照我给的配置文件就行了。&lt;/p>
+&lt;p>volumes中&lt;code>/tmp&lt;/code>，临时文件存放在目录，在&lt;code>command&lt;/code>中指出了&lt;code>cache-dir&lt;/code>的位置，然后挂载到宿住机的/tmp.&lt;/p>
+&lt;p>rclone的配置在容器的&lt;code>/config/rclone&lt;/code>目录下，我挂载到本地的config目录，把上边咱们生成的配置文件放在里边。&lt;/p>
+&lt;p>&lt;code>/data/movies:/data&lt;/code>则是目录的配置，先是在&lt;code>command&lt;/code>中把咱们的远程alist中的/目录&lt;code>(alist:/)&lt;/code>和rclone容器中的&lt;code>/data&lt;/code>目录关联在一起，然后再通过volumes把容器中的&lt;code>/data&lt;/code>挂载在宿主机的&lt;code>/data/movies&lt;/code>下。通过这个目录挂载，咱们就可以在宿主机下&lt;code>/data/movies&lt;/code>中浏览alist中所有挂载的文件信息，为后边&lt;code>emby&lt;/code>添加影视库做准备。&lt;/p>
+&lt;h2 id="容器启动">容器启动
+&lt;/h2>&lt;p>上边的配置信息完成后，文件放到对应的目录下，我这边的目录结构如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@docker:~/rclone# tree
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── config
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ └── rclone.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── docker-compose.yaml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后在rclone目录下执行&lt;code>docker compose up -d&lt;/code>启动容器就可以了。&lt;/p>
+&lt;p>如果配置没问题应该就可以在宿主机&lt;code>/data/movies&lt;/code>目录下看到alist中的网盘和所有文件了。&lt;/p>
+&lt;p>以上就是折腾rclone和alist的过程，把alist挂载到本地，想本地目录文件一样来进行浏览，方便后续emby进行影视库的添加。&lt;/p></description></item></channel></rss>

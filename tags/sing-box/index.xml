@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Sing-Box on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/sing-box/</link><description>Recent content in Sing-Box on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Thu, 18 May 2023 16:52:19 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/sing-box/index.xml" rel="self" type="application/rss+xml"/><item><title>sing-box for ios 配置xray reality</title><link>https://www.iminling.com/2023/sing-box-for-ios-configuration-xray-reality/</link><pubDate>Thu, 18 May 2023 16:52:19 +0000</pubDate><guid>https://www.iminling.com/2023/sing-box-for-ios-configuration-xray-reality/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=MWZYT1hrOWxrOW0xcmZhcEF6WUNnUGo2ZWJEb0E0dFlvZnJtYU9ydnZZRERsRkZGcElubXpMaVUwZ0ZWVDVqdldVL1J4KzQ9" alt="Featured image of post sing-box for ios 配置xray reality" />&lt;p>在ios端虽然有很多可以用来代理的软件，但是大多知名的软件都没法完整的支持reality, 小火箭(shadowrocket)是支持最好的一个软件了，支持到了xray1.7.5的版本，可以来配置rprx-vision,截止写这篇文章的时候还没有支持reality。其他的圈X(Quantumult X)、Loon以及Stash都还没有完整的支持vision,所以在ios上使用代理软件还是有一些尴尬的。好在还有两个软件是支持reality的。而且还都是免费软件，一个是sing-box for ios(SFI)，另一个就mate for iso(MFI)。现在都还在内测的阶段，今天我们就主要介绍SFI在ios上的安装和使用。&lt;/p>
+&lt;h2 id="安装">安装
+&lt;/h2>&lt;p>先安装&lt;code>TestFlight&lt;/code>才可以安装使用。直接在苹果应用商店搜索搜索就可以了。安装完&lt;code>TestFlight&lt;/code>后就可以使用官方的邀请连接加入内测了：&lt;a class="link" href="https://sing-box.sagernet.org/installation/clients/sfi/" target="_blank" rel="noopener"
+>SFI官方安装地址&lt;/a>。&lt;/p>
+&lt;p>&lt;code>TestFlight&lt;/code>安装后的界面：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UkZtVXMvTUxMSzZCNURpVHdqUlozWDJFbjFuUUhFa0w5dllmMHBVTnNwVlFJeHpiUDdBVDRnWDQzb2RyQXVwWUdvMUYrQTQ9"
+loading="lazy"
+>&lt;/p>
+&lt;p>软件：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=NFRJU0prRWxiVXQ0eTgxNmFrS3dlZ2lDWXFWZkFEb3pPci9jWXo1ZnNaQ2ZWbjUwNUJva0lrZjFXZzJiNmo4U01IZUNJanc9"
+loading="lazy"
+>&lt;/p>
+&lt;h2 id="使用">使用
+&lt;/h2>&lt;h3 id="界面">界面
+&lt;/h3>&lt;p>下面我们先看一下软件打开后的界面：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Q0ExYW9jN0hlN1FhZU1WQnFobCt3aHQ4YTFVS2RsRUxEUnBQR3o2S1dQQTlTSHJqYVdaa3hpQjQ3U1hHNkNvSEI4c25OV289"
+loading="lazy"
+>&lt;/p>
+&lt;p>初次打开的时候，Dashboard界面会有所不同，会提示安装一个配置文件，根据提示安装就可以了。&lt;/p>
+&lt;h3 id="新建配置">新建配置
+&lt;/h3>&lt;p>配置文件是在&lt;code>Profiles&lt;/code>菜单下新建的，点击&lt;code>New Profile&lt;/code>就可以了，有三个参数需要填写：Name,Type和(File,Path或URL)。&lt;/p>
+&lt;p>Name随便起一个名字就可以了，Type可以选择local(本地),icloud以及Remote。&lt;/p>
+&lt;p>我们可以先在本地创建一个新的配置文件。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=bUl6UGdiL01WRmxOZ1FEcFh6SWlDTW9pdTMvb3ZQd0I3MGNvMGhYVEtLRGFXWDYvU0themswMEVtNzNWU3ptRWxQN3RIajQ9"
+loading="lazy"
+>&lt;/p>
+&lt;p>具体的配置文件如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt"> 10
+&lt;/span>&lt;span class="lnt"> 11
+&lt;/span>&lt;span class="lnt"> 12
+&lt;/span>&lt;span class="lnt"> 13
+&lt;/span>&lt;span class="lnt"> 14
+&lt;/span>&lt;span class="lnt"> 15
+&lt;/span>&lt;span class="lnt"> 16
+&lt;/span>&lt;span class="lnt"> 17
+&lt;/span>&lt;span class="lnt"> 18
+&lt;/span>&lt;span class="lnt"> 19
+&lt;/span>&lt;span class="lnt"> 20
+&lt;/span>&lt;span class="lnt"> 21
+&lt;/span>&lt;span class="lnt"> 22
+&lt;/span>&lt;span class="lnt"> 23
+&lt;/span>&lt;span class="lnt"> 24
+&lt;/span>&lt;span class="lnt"> 25
+&lt;/span>&lt;span class="lnt"> 26
+&lt;/span>&lt;span class="lnt"> 27
+&lt;/span>&lt;span class="lnt"> 28
+&lt;/span>&lt;span class="lnt"> 29
+&lt;/span>&lt;span class="lnt"> 30
+&lt;/span>&lt;span class="lnt"> 31
+&lt;/span>&lt;span class="lnt"> 32
+&lt;/span>&lt;span class="lnt"> 33
+&lt;/span>&lt;span class="lnt"> 34
+&lt;/span>&lt;span class="lnt"> 35
+&lt;/span>&lt;span class="lnt"> 36
+&lt;/span>&lt;span class="lnt"> 37
+&lt;/span>&lt;span class="lnt"> 38
+&lt;/span>&lt;span class="lnt"> 39
+&lt;/span>&lt;span class="lnt"> 40
+&lt;/span>&lt;span class="lnt"> 41
+&lt;/span>&lt;span class="lnt"> 42
+&lt;/span>&lt;span class="lnt"> 43
+&lt;/span>&lt;span class="lnt"> 44
+&lt;/span>&lt;span class="lnt"> 45
+&lt;/span>&lt;span class="lnt"> 46
+&lt;/span>&lt;span class="lnt"> 47
+&lt;/span>&lt;span class="lnt"> 48
+&lt;/span>&lt;span class="lnt"> 49
+&lt;/span>&lt;span class="lnt"> 50
+&lt;/span>&lt;span class="lnt"> 51
+&lt;/span>&lt;span class="lnt"> 52
+&lt;/span>&lt;span class="lnt"> 53
+&lt;/span>&lt;span class="lnt"> 54
+&lt;/span>&lt;span class="lnt"> 55
+&lt;/span>&lt;span class="lnt"> 56
+&lt;/span>&lt;span class="lnt"> 57
+&lt;/span>&lt;span class="lnt"> 58
+&lt;/span>&lt;span class="lnt"> 59
+&lt;/span>&lt;span class="lnt"> 60
+&lt;/span>&lt;span class="lnt"> 61
+&lt;/span>&lt;span class="lnt"> 62
+&lt;/span>&lt;span class="lnt"> 63
+&lt;/span>&lt;span class="lnt"> 64
+&lt;/span>&lt;span class="lnt"> 65
+&lt;/span>&lt;span class="lnt"> 66
+&lt;/span>&lt;span class="lnt"> 67
+&lt;/span>&lt;span class="lnt"> 68
+&lt;/span>&lt;span class="lnt"> 69
+&lt;/span>&lt;span class="lnt"> 70
+&lt;/span>&lt;span class="lnt"> 71
+&lt;/span>&lt;span class="lnt"> 72
+&lt;/span>&lt;span class="lnt"> 73
+&lt;/span>&lt;span class="lnt"> 74
+&lt;/span>&lt;span class="lnt"> 75
+&lt;/span>&lt;span class="lnt"> 76
+&lt;/span>&lt;span class="lnt"> 77
+&lt;/span>&lt;span class="lnt"> 78
+&lt;/span>&lt;span class="lnt"> 79
+&lt;/span>&lt;span class="lnt"> 80
+&lt;/span>&lt;span class="lnt"> 81
+&lt;/span>&lt;span class="lnt"> 82
+&lt;/span>&lt;span class="lnt"> 83
+&lt;/span>&lt;span class="lnt"> 84
+&lt;/span>&lt;span class="lnt"> 85
+&lt;/span>&lt;span class="lnt"> 86
+&lt;/span>&lt;span class="lnt"> 87
+&lt;/span>&lt;span class="lnt"> 88
+&lt;/span>&lt;span class="lnt"> 89
+&lt;/span>&lt;span class="lnt"> 90
+&lt;/span>&lt;span class="lnt"> 91
+&lt;/span>&lt;span class="lnt"> 92
+&lt;/span>&lt;span class="lnt"> 93
+&lt;/span>&lt;span class="lnt"> 94
+&lt;/span>&lt;span class="lnt"> 95
+&lt;/span>&lt;span class="lnt"> 96
+&lt;/span>&lt;span class="lnt"> 97
+&lt;/span>&lt;span class="lnt"> 98
+&lt;/span>&lt;span class="lnt"> 99
+&lt;/span>&lt;span class="lnt">100
+&lt;/span>&lt;span class="lnt">101
+&lt;/span>&lt;span class="lnt">102
+&lt;/span>&lt;span class="lnt">103
+&lt;/span>&lt;span class="lnt">104
+&lt;/span>&lt;span class="lnt">105
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;log&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;level&amp;#34;: &amp;#34;info&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;timestamp&amp;#34;: true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;dns&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;servers&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;tag&amp;#34;: &amp;#34;cloudflare&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;address&amp;#34;: &amp;#34;https://1.1.1.1/dns-query&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;tag&amp;#34;: &amp;#34;dnspod&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;address&amp;#34;: &amp;#34;https://1.12.12.12/dns-query&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;detour&amp;#34;: &amp;#34;direct&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;tag&amp;#34;: &amp;#34;block&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;address&amp;#34;: &amp;#34;rcode://success&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;rules&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;geosite&amp;#34;: &amp;#34;cn&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;server&amp;#34;: &amp;#34;dnspod&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;geosite&amp;#34;: &amp;#34;category-ads-all&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;server&amp;#34;: &amp;#34;block&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;disable_cache&amp;#34;: true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;inbounds&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;type&amp;#34;: &amp;#34;tun&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;tag&amp;#34;: &amp;#34;tun-in&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;interface_name&amp;#34;: &amp;#34;utun&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;inet4_address&amp;#34;: &amp;#34;172.19.0.1/30&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;auto_route&amp;#34;: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;strict_route&amp;#34;: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;stack&amp;#34;: &amp;#34;gvisor&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;sniff&amp;#34;: true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;outbounds&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;tag&amp;#34;: &amp;#34;bwg&amp;#34;, # tag和下边route中的要一致
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;type&amp;#34;: &amp;#34;vless&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;server&amp;#34;: &amp;#34;自己的IP&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;server_port&amp;#34;: 自己的端口,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;uuid&amp;#34;: &amp;#34;自己的UUID&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;flow&amp;#34;: &amp;#34;xtls-rprx-vision&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;network&amp;#34;: &amp;#34;tcp&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;packet_encoding&amp;#34;: &amp;#34;xudp&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;tls&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;enabled&amp;#34;: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;server_name&amp;#34;: &amp;#34;www.microsoft.com&amp;#34;, # 根据需要改成自己的
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;utls&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;enabled&amp;#34;: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;fingerprint&amp;#34;: &amp;#34;chrome&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;reality&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;enabled&amp;#34;: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;public_key&amp;#34;: &amp;#34;自己的Public_key&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;short_id&amp;#34;: &amp;#34;自己的short_id&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;type&amp;#34;: &amp;#34;direct&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;tag&amp;#34;: &amp;#34;direct&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;type&amp;#34;: &amp;#34;block&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;tag&amp;#34;: &amp;#34;block&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;type&amp;#34;: &amp;#34;dns&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;tag&amp;#34;: &amp;#34;dns&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;route&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;rules&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;protocol&amp;#34;: &amp;#34;dns&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;outbound&amp;#34;: &amp;#34;dns&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;geosite&amp;#34;: &amp;#34;cn&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;geoip&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;cn&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;private&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;outbound&amp;#34;: &amp;#34;direct&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;geosite&amp;#34;: &amp;#34;category-ads-all&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;outbound&amp;#34;: &amp;#34;block&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;auto_detect_interface&amp;#34;: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;final&amp;#34;: &amp;#34;bwg&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>将上边的相关配置改成自己的添加成功就可以了。&lt;/p>
+&lt;h2 id="使用-1">使用
+&lt;/h2>&lt;p>通过上边的准备，现在已经可以开始使用了，在DashBoard界面，启动就可以了。也可以在Logs查看当前的连接情况，以及分流情况。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=V0lZV1htWGtXZGtldnE4eW03b0pSVi9LNExEUVh5WlozM2tLUzlOMEFOekhab0JEb1gwb1UxZC9iYkJjd1R5K1lMbzlPb1E9"
+loading="lazy"
+>&lt;/p>
+&lt;h2 id="总结">总结
+&lt;/h2>&lt;p>以上就是reality的简单配置，sing-box支持多种协议，具体的可以参考：&lt;a class="link" href="https://sing-box.sagernet.org/" target="_blank" rel="noopener"
+>官方文档&lt;/a>。&lt;/p></description></item></channel></rss>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>天翼网盘 on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/%E5%A4%A9%E7%BF%BC%E7%BD%91%E7%9B%98/</link><description>Recent content in 天翼网盘 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 21 Sep 2024 09:56:03 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/%E5%A4%A9%E7%BF%BC%E7%BD%91%E7%9B%98/index.xml" rel="self" type="application/rss+xml"/><item><title>私人影院之搭建自己的alist服务端并添加常见网盘</title><link>https://www.iminling.com/2024/build-alist-server/</link><pubDate>Sat, 21 Sep 2024 09:56:03 +0000</pubDate><guid>https://www.iminling.com/2024/build-alist-server/</guid><description>&lt;p>前段时间写了一篇如何&lt;a class="link" href="https://www.iminling.com/2024/how-to-build-xiaoya-alist-and-use" title="搭建属于自己的影视小站：小雅Alist安装及使用"
+target="_blank" rel="noopener"
+>搭建小雅alist&lt;/a>的文章，使用小雅的媒体库来进行观影，但是这种有一个问题就是小雅的库更新的不是很快，而且如果我想在电视上观看比较麻烦，就算搭配emby,也无法避免资源更新慢的问题。所以就想着使用自己的网盘配合自己搭建的alist服务端，来进行资源快速入库，方便自己快速观看。那么接下来就详细说明一下自己的搭建过程。&lt;/p>
+&lt;h2 id="alist服务端">alist服务端
+&lt;/h2>&lt;p>我这里使用&lt;code>docker compose&lt;/code>来搭建&lt;code>alist server&lt;/code>,alist提供了两个版本的镜像，一个是普通的版本，一个是带aria2下载的版本，根据自己的需求进行安装，安装文档参考&lt;a class="link" href="https://alist.nn.ci/zh/guide/install/docker.html" target="_blank" rel="noopener"
+>官方文档&lt;/a>。&lt;/p>
+&lt;p>我的docker-compose.yaml如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">networks:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> mynet:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> external: true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">services:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> alist:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> image: xhofe/alist-aria2:latest
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> container_name: alist
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> restart: unless-stopped
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> volumes:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - ./data:/opt/alist/data
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> networks:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - mynet
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ports:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - 15244:5244
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> extra_hosts:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - host.docker.internal:host-gateway
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> environment:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - PUID=0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - PGID=0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - UMASK=022
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - TZ=Asia/Shanghai
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我的目录分配如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── data
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── docker-compose.yaml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>整体配置是比较简单的，我使用了自己的网络&lt;code>mynet&lt;/code>，而不是让docker自建一个网络，方便后续容器之间的项目访问。&lt;/p>
+&lt;p>按照上边配置好后直接&lt;code>docker compose up -d&lt;/code>运行起来容器。之后通过访问ip:15244(我这里映射到主机的15244端口了)，默认admin用户和密码，进行登录并修改密码。容器启动成功，alist的服务端搭建就算完成了。&lt;/p>
+&lt;h2 id="网盘添加">网盘添加
+&lt;/h2>&lt;p>我这里主要添加三种类型，天翼云盘，115网盘，本地smb，下边就看一下每种网盘是需要怎么来添加。&lt;/p>
+&lt;h3 id="天翼云盘">天翼云盘
+&lt;/h3>&lt;p>我家里使用的是电信的宽带，送了天翼网盘的会员，个人和家庭分别是4TB，整体也不算少。&lt;/p>
+&lt;p>进入到alist的管理界面&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/12346FDFD92375CFACA05F8AE99636F2.png"
+loading="lazy"
+alt="alist disk"
+>&lt;/p>
+&lt;p>点击存储-添加,然后选择&lt;code>天翼云盘客户端&lt;/code>(官方建议的类型)。然后就可以看到很多选项需要填写，具体的填写操作步骤参考&lt;a class="link" href="https://alist.nn.ci/zh/guide/drivers/189.html" target="_blank" rel="noopener"
+>官方文档&lt;/a>。&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/643C95E88930EA3944C1185A24EBB379.png"
+loading="lazy"
+alt="alist add 189"
+>&lt;/p>
+&lt;p>挂载路径是最终显示在alist主页的名称，需要唯一。&lt;/p>
+&lt;p>缓存过期时间根据自己的需求来定义，比如我添加了一个文件想要快一点能刷新出来，那么我就定义短一点(比如1分钟)，这个根据自己需求来定。&lt;/p>
+&lt;p>WebDAV策略建议都使用302重定向，这样子在通过WebDAV访问alist服务端的内容的时候，实际上会重定向到网盘内真实的路径，等于直接访问网盘。&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/35D3FFFECD6E46B2E2B13B4C3082C901.png"
+loading="lazy"
+alt="alist add 189"
+>&lt;/p>
+&lt;p>启用签名选项如果后续是需要配合emby实现302播放，&lt;strong>一定要打开，一定要打开，一定要打开&lt;/strong>。&lt;/p>
+&lt;p>用户名就是天翼云盘登录的手机号。&lt;/p>
+&lt;p>密码是天翼云盘登录的密码。&lt;/p>
+&lt;p>根文件的id根据自己需求，如果只是想把网盘内的某一个目录添加到alist中，那就按照&lt;a class="link" href="https://alist.nn.ci/zh/guide/drivers/189.html" target="_blank" rel="noopener"
+>官方文档&lt;/a>里的方法找到对应的文件夹id。&lt;/p>
+&lt;p>类型有&lt;code>家庭云&lt;/code>和&lt;code>个人云&lt;/code>，&lt;code>family id&lt;/code>在是选择&lt;code>家庭云&lt;/code>的时候需要填写，官网里都有介绍。我这里就是&lt;code>家庭云&lt;/code>。&lt;/p>
+&lt;p>基本上述搞定就可以添加成功了。&lt;/p>
+&lt;h3 id="115网盘">115网盘
+&lt;/h3>&lt;p>基本和天翼云盘添加流程差不多，驱动类型选择&lt;code>115网盘&lt;/code>,挂载路径、缓存过期时间、WebDAV策略、启用签名四个选项和天翼云盘意向逻辑，进行处理就行了。有不明白的可以参考&lt;a class="link" href="https://alist.nn.ci/zh/guide/drivers/115.html" target="_blank" rel="noopener"
+>官方文档&lt;/a>。&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/3D235946E3F03628AFC314D9E2018E98.png"
+loading="lazy"
+alt="alist add 115"
+>&lt;/p>
+&lt;p>cookie和Qrcode二选一，&lt;a class="link" href="https://alist.nn.ci/zh/guide/drivers/115.html#_1-qrcode-%E6%89%AB%E7%A0%81%E6%96%B9%E5%BC%8F%E7%99%BB%E5%BD%95" target="_blank" rel="noopener"
+>官方文档&lt;/a>也有详细的介绍，包括根文件夹ID，都有详细的介绍，参考文档就可以了。感觉Qrcode会简单一点。我是直接使用的抓包软件抓的应用的cookie。这里有一个事项需要注意一下，如果使用了手机端软件，后续在网页登录的时候最好选择用手机扫码登录，要不然可能会把手机应用端挤掉导致cookie失效。&lt;/p>
+&lt;h3 id="smb添加">SMB添加
+&lt;/h3>&lt;p>有些文件没有放在网盘，而是放在自己本地或者放在本地nas中，比如我上篇文档也介绍了&lt;a class="link" href="https://www.iminling.com/2024/pve-install-nas" title="Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘"
+target="_blank" rel="noopener"
+>如何安装黑群晖&lt;/a>，这样子想要在alist中把nas中的资源添加进去，就需要使用到SMB一些了，nas中是有开启这个功能的。&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/6BFD9B721FB31AFA57FF87D6CF084938.png"
+loading="lazy"
+alt="alist add smb nas"
+>&lt;/p>
+&lt;p>添加驱动类型选择&lt;code>SMB&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/08EBBBA8CC68A83179643B66EBDB09EE.png"
+loading="lazy"
+alt="alist add smb nas"
+>&lt;/p>
+&lt;p>smb是本地文件，启用签名就可以不用开了。地址、用户名、密码和分享名称(smb中的目录)根据自己的需求填写就可以了。&lt;/p>
+&lt;h2 id="总结">总结
+&lt;/h2>&lt;p>我这里介绍了三种网盘的添加方式，其他的网盘也都大同小异，比如添加阿里云盘等。那么搭建alist服务端并添加网盘，就介绍到这里。希望可以帮到大家。&lt;/p>
+&lt;p>接下来还会介绍利用rclone挂载alist，然后让emby来使用并实现302播放。&lt;/p></description></item></channel></rss>

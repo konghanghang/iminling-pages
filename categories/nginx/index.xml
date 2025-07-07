@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nginx on 记录点滴 - 分享</title><link>https://www.iminling.com/categories/nginx/</link><description>Recent content in Nginx on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Wed, 04 Oct 2023 15:04:07 +0000</lastBuildDate><atom:link href="https://www.iminling.com/categories/nginx/index.xml" rel="self" type="application/rss+xml"/><item><title>自定义Nginx日志属性并设置日志以JSON输出</title><link>https://www.iminling.com/2023/custom-nginx-log-output-json/</link><pubDate>Wed, 04 Oct 2023 15:04:07 +0000</pubDate><guid>https://www.iminling.com/2023/custom-nginx-log-output-json/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=eEZmbmFBSW14MCtoRHpiR0RHeW52cHZqTmNJRU1Zblg0cCtiYWo1Z3VSbHNiNUY2cHF0OHJKZHlpbGVCQUpGRVRMWmRwYXM9" alt="Featured image of post 自定义Nginx日志属性并设置日志以JSON输出" />&lt;p>日志在日常开发中是非常重要的东西，在出现错误后可以快速的进行排查，对Nginx而言同样也很重要，同Nginx的日志我们可以清晰的了解什么url被访问，是什么Ip访问过来等一些重要信息，所以无论是在开发中还是线上环境，都会开启日志。下边就来了解一下Nginx的日志。&lt;/p>
+&lt;h2 id="日志类型">日志类型
+&lt;/h2>&lt;p>在Nginx的配置文件中，日志相关的配置可以出现在_&lt;strong>http,server,location&lt;/strong>_中，通常我们会设置以下格式：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listen&lt;/span> &lt;span class="mi">443&lt;/span> &lt;span class="n">ssl&lt;/span> &lt;span class="n">http2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_name&lt;/span> &lt;span class="n">_&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">index&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">html&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">htm&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">root&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">www&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">html&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_tokens&lt;/span> &lt;span class="n">off&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">client_max_body_size&lt;/span> &lt;span class="mi">75&lt;/span>&lt;span class="n">M&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">access_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">error&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>设置了access和error两种类型的日志，日志的设置语法是：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">access_log path [format [buffer=size] [gzip[=level]] [flush=time] [if=condition]];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">access_log off;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以设置开启日志，也可以设置关闭日志。access_log中记录了所有的访问日志，error_log中则记录访问中的一些异常请求，方便在出现问题的时候进行错误排查。&lt;/p>
+&lt;p>另外也可以定义缓存区以及刷新时间等属性。&lt;/p>
+&lt;p>如果使用 gzip 参数，则缓冲数据将在写入文件之前被压缩。压缩级别可以设置在 1（最快，压缩程度较低）和 9（最慢，压缩效果最佳）之间。默认情况下，缓冲区大小等于64K字节，压缩级别设置为1。由于数据被压缩在原子块中，因此日志文件可以随时由“zcat”解压或读取。使用gzip有一个要求，那就是在构建Nginx必须使用 zlib 库构建。&lt;/p>
+&lt;p>以上只是设置了访问日志和错误日志的记录位置或者不记录日志，那么日志记录的格式是怎样的呢？&lt;/p>
+&lt;h2 id="日志格式">日志格式
+&lt;/h2>&lt;p>上边的配置没有指定具体的日志格式，那么Nginx有一个默认的日志记录格式：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">log_format combined &amp;#39;$remote_addr - $remote_user [$time_local] &amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;#34;$request&amp;#34; $status $body_bytes_sent &amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;#34;$http_referer&amp;#34; &amp;#34;$http_user_agent&amp;#34;&amp;#39;;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>它的名称叫combined,具体log_format的语法如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">log_format name [escape=default|json|none] string ...;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>每一个日志格式都有一个名称，然后在配置access_log的时候可以指定用哪种格式来进行记录日志。log_format只能定义在_&lt;strong>http&lt;/strong>_块中。查看在Nginx配置文件中的定义：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">http&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">log_format&lt;/span> &lt;span class="n">main&lt;/span> &lt;span class="s1">&amp;#39;$remote_addr - $remote_user [$time_local] &amp;#34;$request&amp;#34; &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;$status $body_bytes_sent &amp;#34;$http_referer&amp;#34; &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;$http_user_agent&amp;#34; &amp;#34;$http_x_forwarded_for&amp;#34;&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">access_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span> &lt;span class="n">main&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">error&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上在http块中定义了一个名称为main的日志格式，在server块中通过名称对该日志格式进行了引用，这样子日志的格式都会按找main中定义的一些属性来进行记录访问信息。&lt;/p>
+&lt;p>escape 参数（1.11.8）允许在变量中设置 json 或默认字符转义，默认情况下使用默认转义。 none 值 (1.13.10) 禁用转义。&lt;/p>
+&lt;p>对于默认转义，字符“&amp;quot;”、“\”以及其他值小于32（0.7.0）或大于126（1.1.6）的字符将被转义为“\xXX”。如果找不到变量值，将记录连字符（“-”）。&lt;/p>
+&lt;p>对于json转义，JSON字符串中不允许的所有字符都将被转义：字符“&amp;quot;”和“\”被转义为“\”和“\”，值小于32的字符被转义为“\n”， “\r”、“\t”、“\b”、“\f”或“\u00XX”。&lt;/p>
+&lt;p>但是这些属性究竟什么意思？Nginx有哪些属性可以使用呢？&lt;/p>
+&lt;h2 id="日志属性">日志属性
+&lt;/h2>&lt;p>日志属性可以包含公共变量以及仅在日志写入时存在的变量：&lt;/p>
+&lt;ul>
+&lt;li>$bytes_sent：发送到客户端的字节数&lt;/li>
+&lt;li>$connection：连接序列号&lt;/li>
+&lt;li>$connection_requests：当前通过连接发出的请求数 (1.1.18)&lt;/li>
+&lt;li>$msec：日志写入时的时间（以秒为单位，精度为毫秒）&lt;/li>
+&lt;li>$pipe：如果请求是通过管道传输的，则为“p”，“.”否则&lt;/li>
+&lt;li>$request_length：请求长度（包括请求行、请求头和请求正文）&lt;/li>
+&lt;li>$request_time：请求处理时间以秒为单位，精度为毫秒；从客户端读取第一个字节与将最后一个字节发送到客户端后写入日志之间经过的时间&lt;/li>
+&lt;li>$status：响应状态&lt;/li>
+&lt;li>$time_iso8601：ISO 8601 标准格式的当地时间&lt;/li>
+&lt;li>$time_local：通用日志格式中的本地时间&lt;/li>
+&lt;/ul>
+&lt;p>具体的参考：&lt;a class="link" href="http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format" target="_blank" rel="noopener"
+>Module ngx_http_log_module&lt;/a>&lt;/p>
+&lt;h2 id="设置json格式">设置JSON格式
+&lt;/h2>&lt;p>通过上边对日志格式和日志文件的一些了解，我们就可以非常容易的把日志的格式设置成JSON了，只需要定义一个log_format，把它的格式定义成一个json字符串，然后在打印日志的时候引用这个格式就可以实现了，下边是一个完成的定义文件:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">http&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">log_format&lt;/span> &lt;span class="n">json&lt;/span> &lt;span class="n">escape&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">json&lt;/span> &lt;span class="s1">&amp;#39;{&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;msec&amp;#34;: &amp;#34;$msec&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># request unixtime in seconds with a milliseconds resolution&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;connection&amp;#34;: &amp;#34;$connection&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># connection serial number&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;connection_requests&amp;#34;: &amp;#34;$connection_requests&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># number of requests made in connection&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;pid&amp;#34;: &amp;#34;$pid&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># process pid&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request_id&amp;#34;: &amp;#34;$request_id&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># the unique request id&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request_length&amp;#34;: &amp;#34;$request_length&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># request length (including headers and body)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;remote_addr&amp;#34;: &amp;#34;$remote_addr&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># client IP&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;remote_user&amp;#34;: &amp;#34;$remote_user&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># client HTTP username&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;remote_port&amp;#34;: &amp;#34;$remote_port&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># client port&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;time_local&amp;#34;: &amp;#34;$time_local&amp;#34;, &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;time_iso8601&amp;#34;: &amp;#34;$time_iso8601&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># local time in the ISO 8601 standard format&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request&amp;#34;: &amp;#34;$request&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># full path no arguments if the request&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request_uri&amp;#34;: &amp;#34;$request_uri&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># full path and arguments if the request&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;args&amp;#34;: &amp;#34;$args&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># args&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;status&amp;#34;: &amp;#34;$status&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># response status code&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;body_bytes_sent&amp;#34;: &amp;#34;$body_bytes_sent&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># the number of body bytes exclude headers sent to a client&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;bytes_sent&amp;#34;: &amp;#34;$bytes_sent&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># the number of bytes sent to a client&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;http_referer&amp;#34;: &amp;#34;$http_referer&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># HTTP referer&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;http_user_agent&amp;#34;: &amp;#34;$http_user_agent&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># user agent&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;http_x_forwarded_for&amp;#34;: &amp;#34;$http_x_forwarded_for&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># http_x_forwarded_for&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;http_host&amp;#34;: &amp;#34;$http_host&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># the request Host: header&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;server_name&amp;#34;: &amp;#34;$server_name&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># the name of the vhost serving the request&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request_time&amp;#34;: &amp;#34;$request_time&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># request processing time in seconds with msec resolution&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream&amp;#34;: &amp;#34;$upstream_addr&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># upstream backend server for proxied requests&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream_connect_time&amp;#34;: &amp;#34;$upstream_connect_time&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># upstream handshake time incl. TLS&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream_header_time&amp;#34;: &amp;#34;$upstream_header_time&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># time spent receiving upstream headers&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream_response_time&amp;#34;: &amp;#34;$upstream_response_time&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># time spend receiving upstream body&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream_response_length&amp;#34;: &amp;#34;$upstream_response_length&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># upstream response length&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;upstream_cache_status&amp;#34;: &amp;#34;$upstream_cache_status&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># cache HIT/MISS where applicable&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;ssl_protocol&amp;#34;: &amp;#34;$ssl_protocol&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># TLS protocol&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;ssl_cipher&amp;#34;: &amp;#34;$ssl_cipher&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># TLS cipher&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;scheme&amp;#34;: &amp;#34;$scheme&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># http or https&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;request_method&amp;#34;: &amp;#34;$request_method&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># request method&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;server_protocol&amp;#34;: &amp;#34;$server_protocol&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># request protocol, like HTTP/1.1 or HTTP/2.0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;pipe&amp;#34;: &amp;#34;$pipe&amp;#34;, &amp;#39;&lt;/span> &lt;span class="c1"># &amp;#34;p&amp;#34; if request was pipelined, &amp;#34;.&amp;#34; otherwise&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;gzip_ratio&amp;#34;: &amp;#34;$gzip_ratio&amp;#34;, &amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;#34;http_cf_ray&amp;#34;: &amp;#34;$http_cf_ray&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;}&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">server&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listen&lt;/span> &lt;span class="mi">443&lt;/span> &lt;span class="n">ssl&lt;/span> &lt;span class="n">http2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">server_name&lt;/span> &lt;span class="n">_&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">access_log&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">nginx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">access&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span> &lt;span class="n">json&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上定义了一个完成的json格式的输出形式，实际的请求输出是这样子的：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;msec&amp;#34;: &amp;#34;1696428300.136&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;connection&amp;#34;: &amp;#34;849615&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;connection_requests&amp;#34;: &amp;#34;1&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;pid&amp;#34;: &amp;#34;89&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request_id&amp;#34;: &amp;#34;f17e4e5dcda30462ac83b120f05fedab&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request_length&amp;#34;: &amp;#34;619&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;remote_addr&amp;#34;: &amp;#34;65.108.78.33&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;remote_user&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;remote_port&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;time_local&amp;#34;: &amp;#34;04/Oct/2023:22:05:00 +0800&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;time_iso8601&amp;#34;: &amp;#34;2023-10-04T22:05:00+08:00&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request&amp;#34;: &amp;#34;GET /category/%E4%BF%A1%E7%94%A8%E5%8D%A1 HTTP/1.1&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request_uri&amp;#34;: &amp;#34;/category/%E4%BF%A1%E7%94%A8%E5%8D%A1&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;args&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;status&amp;#34;: &amp;#34;200&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;body_bytes_sent&amp;#34;: &amp;#34;12354&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;bytes_sent&amp;#34;: &amp;#34;12987&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;http_referer&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;http_user_agent&amp;#34;: &amp;#34;Mozilla/5.0 (compatible; MJ12bot/v1.4.8; http://mj12bot.com/)&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;http_x_forwarded_for&amp;#34;: &amp;#34;65.108.78.33&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;http_host&amp;#34;: &amp;#34;www.iminling.com&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;server_name&amp;#34;: &amp;#34;www.iminling.com,iminling.com&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request_time&amp;#34;: &amp;#34;0.093&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream&amp;#34;: &amp;#34;192.168.0.3:9000&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream_connect_time&amp;#34;: &amp;#34;0.000&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream_header_time&amp;#34;: &amp;#34;0.092&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream_response_time&amp;#34;: &amp;#34;0.093&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream_response_length&amp;#34;: &amp;#34;49160&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;upstream_cache_status&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;ssl_protocol&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;ssl_cipher&amp;#34;: &amp;#34;&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;scheme&amp;#34;: &amp;#34;http&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;request_method&amp;#34;: &amp;#34;GET&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;server_protocol&amp;#34;: &amp;#34;HTTP/1.1&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;pipe&amp;#34;: &amp;#34;.&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;gzip_ratio&amp;#34;: &amp;#34;3.98&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;http_cf_ray&amp;#34;: &amp;#34;810dfa2978c4376f-HEL&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;geoip_country_code&amp;#34;: &amp;#34;FI&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;geoip_city&amp;#34;: &amp;#34;Helsinki&amp;#34; #这里的国家和城市需要开启新的功能，后续再详细说。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上就是对日志格式的说明以及如何实现以json格式输出日志。&lt;/p></description></item><item><title>nginx中location使用方法总结</title><link>https://www.iminling.com/2023/nginx-location-use-summary/</link><pubDate>Wed, 30 Aug 2023 14:57:18 +0000</pubDate><guid>https://www.iminling.com/2023/nginx-location-use-summary/</guid><description>&lt;p>在nignx中我们比较长使用的就是location，我们使用location来定位资源或者转发请求，使用不当经常就会遇到404错误，无法找到资源或者请求异常。下面我们来详细了解一下location的用法。&lt;/p>
+&lt;h2 id="语法">语法
+&lt;/h2>&lt;p>location的具体语法如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">location [ = | ~ | ~* | ^~ ] uri { ... }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">location @name { ... }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;span class="md-plain md-expand">语法规则很简单，一个&lt;/span>&lt;span class="md-pair-s" spellcheck="false">&lt;code>location&lt;/code>&lt;/span>&lt;span class="md-plain md-expand">关键字，后面跟着可选的修饰符，后面是要匹配的字符，花括号中是要执行的操作。&lt;/span>&lt;/p>
+&lt;h2 id="修饰符">修饰符
+&lt;/h2>&lt;p>在语法中可以看到location有四中修饰符，其实还有一种就是修饰符就是什么也没有，location后边直接跟uri，下边来详细了解一下各种修饰符的作用：&lt;/p>
+&lt;p>&lt;code>=&lt;/code> 表示精确匹配。只有请求的url路径与后面的字符串完全相等时，才会命中。&lt;/span>
+&lt;code>~&lt;/code> 表示该规则是使用正则定义的，区分大小写。&lt;/span>
+&lt;code>~*&lt;/code> 表示该规则是使用正则定义的，不区分大小写。&lt;/span>
+&lt;code>^~&lt;/code> 表示如果该符号后面的字符是最佳匹配，采用该规则，不再进行后续的查找。&lt;/span>
+&lt;code>无修饰符&lt;/code> 表示前缀匹配&lt;/p>
+&lt;p>&lt;code>=&lt;/code>、&lt;code>~&lt;/code>和&lt;code>^~&lt;/code>是非正则匹配，&lt;code>~&lt;/code>和&lt;code>~*&lt;/code>是正则匹配。&lt;/p>
+&lt;p>location匹配还有一个特点：**非正则匹配优先！**非正则&amp;gt;正则&lt;/p>
+&lt;h2 id="匹配过程">匹配过程
+&lt;/h2>&lt;p>总共5种修饰符，如果一个url请求过来可以匹配到多种，那nginx会如何选择呢？下边来看一下完整的匹配过程：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>用所有的前缀字符串去匹配URI(这里说的前缀字符串，是除&lt;del>和&lt;/del>*修饰的字符串外的所有字符串，包括=、^~及无修饰符三种都算是前缀字符串)；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果找到=号修饰的字符串与URI匹配(无论它在哪个位置)，则终止匹配过程，并进入该location内部执行具体操作；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果不找到=号修饰的字符串，则继续匹配普通前缀字符串(即用^~修饰的或无修饰符的字符串)；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在^~修饰的或无修饰符的字符串中如果有多个规则能匹配上URI，则会查看最长的那一个是否用^~修饰；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果最长的那个有用^~修饰，则终止匹配，这个用^~修饰的“最长”的匹配就是最终被选用的location，但是如果这个“最长”的匹配没有用^~修饰(说明它是无修饰符的)，则会暂时把它存储下来，但不会终止匹配，而是继续进行后面的正则匹配；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>开始正则匹配，匹配所有用&lt;del>或&lt;/del>*修饰的字符串&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>匹配到第一个正则表达式后终止匹配，使用对应的location；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果没有匹配到正则表达式，则使用之前存储的前缀字符串对应的location，至此，整个匹配过程结束。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="路径匹配">路径匹配
+&lt;/h2>&lt;p>使用location的时候，代码块里一般会使用&lt;code>root&lt;/code>或者&lt;code>alias&lt;/code>或者&lt;code>proxy_pass&lt;/code>下边详细说一下proxy_pass的用法。&lt;/p>
+&lt;h3 id="proxy_pass">proxy_pass
+&lt;/h3>&lt;p>Nginx的&lt;a class="link" href="http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass" target="_blank" rel="noopener"
+>官网&lt;/a>将proxy_pass分为两种类型：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>种是只包含IP和端口号的（连端口之后的/也没有，这里要特别注意），比如proxy_pass http://localhost:8080，这种方式称为不带URI方式；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>另一种是在端口号之后有其他路径的，包含了只有单个/的，如proxy_pass http://localhost:8080/，以及其他路径，比如proxy_pass http://localhost:8080/abc。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="不带uri方式相对路径">不带URI方式(相对路径)
+&lt;/h4>&lt;p>对于不带URI方式，Nginx将会保留location中路径部分，比如：&amp;lt;&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">location /api1/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">  proxy_pass http://localhost:8080;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在访问&lt;code>http://localhost/api1/xxx&lt;/code>时，会代理到`http://localhost:8080/api1/xxx&lt;/p>
+&lt;h4 id="带uri方式绝对路径">带URI方式(绝对路径)
+&lt;/h4>&lt;p>对于带URI方式，nginx将使用诸如alias的替换方式对URL进行替换，并且这种替换只是字面上的替换，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">location /api2/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">  proxy_pass http://localhost:8080/;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>当访问&lt;code>http://localhost/api2/xxx&lt;/code>时，&lt;code>http://localhost/api2/&lt;/code>（注意最后的/）被替换成了&lt;code>http://localhost:8080/&lt;/code>，然后再加上剩下的&lt;code>xxx&lt;/code>，于是变成了&lt;code>http://localhost:8080/xxx&lt;/code>。
+下面再给一些例子来帮助大家理解相对路径和绝对路径：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">server {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> listen 80;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> server_name localhost;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是相对路径，所以会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api1/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api1/xxx -&amp;gt; http://localhost:8080/api1/xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api2/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api2/xxx -&amp;gt; http://localhost:8080/xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是相对路径，所以会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api3 {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api3/xxx -&amp;gt; http://localhost:8080/api3/xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api4 {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api4/xxx -&amp;gt; http://localhost:8080//xxx，匹配到/api4/xxx,location中是/api4需去掉剩下/xxx，加上proxy_pass则是//xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api5/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/haha;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api5/xxx -&amp;gt; http://localhost:8080/hahaxxx，匹配到/api5/xxx, 去掉location中的/api5/剩下xxx，加上proxy_pass则是hahaxxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api6/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/haha/;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api6/xxx -&amp;gt; http://localhost:8080/haha/xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api7 {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/haha;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api7/xxx -&amp;gt; http://localhost:8080/haha/xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # proxy_pass中的域名是绝对路径，所以不会带上location中的路径
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> location /api8 {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:8080/haha/;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # http://localhost/api8/xxx -&amp;gt; http://localhost:8080/haha//xxx，匹配到/api8/xxx,去掉location中的/api8剩下/xxx,加上proxy_pass则是/haha//xxx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上就是nginx中location的使用方法，匹配规则，以及代码块中proxy_pass的使用方法，希望可以帮到大家。&lt;/p></description></item><item><title>nginx配置隐藏版本号提升安全</title><link>https://www.iminling.com/2023/nginx-hides-version-number/</link><pubDate>Sat, 05 Aug 2023 19:21:16 +0000</pubDate><guid>https://www.iminling.com/2023/nginx-hides-version-number/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=eEZmbmFBSW14MCtoRHpiR0RHeW52cHZqTmNJRU1Zblg0cCtiYWo1Z3VSbHNiNUY2cHF0OHJKZHlpbGVCQUpGRVRMWmRwYXM9" alt="Featured image of post nginx配置隐藏版本号提升安全" />&lt;div>
+Nginx (engine x) 是一个高性能的HTTP和反向代理web服务器  ，同时也提供了IMAP/POP3/SMTP服务，是个软件肯定都会多多少少有一些漏洞，所以我们需要隐藏nginx的版本号，让攻击者没那么容易很快的攻破我们的网站。
+&lt;/div>
+&lt;div>
+&lt;/div>
+&lt;div>
+nginx官方提供了关闭显示版本号的方法，其实也很简单，只需要添加&lt;code>server_tokens off&lt;/code>就可以了，server_tokens可以到http,server和location块中，我们找一个合适的位置添加进去就可以了。
+&lt;/div>
+&lt;h2 id="添加前">添加前
+&lt;/h2>&lt;div>
+没有添加之前请求网站信息如下：
+&lt;/div>
+```bash
+$ curl -I https://www.iminling.com
+HTTP/2 200
+server: nginx/2.24.2
+date: Sun, 06 Aug 2023 03:02:12 GMT
+content-type: text/html; charset=UTF-8
+x-powered-by: PHP
+link: &lt;https://www.iminling.com/wp-json/>; rel="https://api.w.org/"
+```
+&lt;p>如上，server中会把nginx的完整版本号信息展示出来。&lt;/p>
+&lt;h2 id="添加server_token">添加server_token
+&lt;/h2>&lt;p>我这里把server_token添加到server块中，如下：&lt;/p>
+&lt;pre>&lt;code>server {
+listen 8443 ssl http2;
+server_name www.iminling.com;
+index index.php index.html index.htm;
+root /var/www/html;
+server_tokens off; # 添加server_tokens屏蔽显示版本号
+include conf.d/ssl_params.conf;
+location / {
+try_files $uri $uri/ /index.php$is_args$args;
+}
+}
+&lt;/code>&lt;/pre>
+&lt;p>如上，在server中添加server_tokens为off，然后我们再去验证一下。&lt;/p>
+&lt;h2 id="添加后">添加后
+&lt;/h2>&lt;p>再来看一下请求网站的信息：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ curl -I https://www.iminling.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">HTTP/2 &lt;span class="m">200&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">server: nginx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">date: Sun, &lt;span class="m">06&lt;/span> Aug &lt;span class="m">2023&lt;/span> 03:02:31 GMT
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">content-type: text/html&lt;span class="p">;&lt;/span> &lt;span class="nv">charset&lt;/span>&lt;span class="o">=&lt;/span>UTF-8
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">x-powered-by: PHP
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">link: &amp;lt;https://www.iminling.com/wp-json/&amp;gt;&lt;span class="p">;&lt;/span> &lt;span class="nv">rel&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://api.w.org/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上，server里只显示了nginx。&lt;/p>
+&lt;p>经过上边的配置就可以隐藏nginx的版本号了。&lt;/p></description></item></channel></rss>

@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Debian on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/debian/</link><description>Recent content in Debian on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 03 Sep 2023 02:58:44 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/debian/index.xml" rel="self" type="application/rss+xml"/><item><title>linux双栈网络设置IPv4优先</title><link>https://www.iminling.com/2023/linux-use-ipv4-first/</link><pubDate>Sun, 03 Sep 2023 02:58:44 +0000</pubDate><guid>https://www.iminling.com/2023/linux-use-ipv4-first/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/09/IPv4-vs-IPv6.jpeg"
+loading="lazy"
+>&lt;/p>
+&lt;p>双协议栈技术就是指在一台设备上同时启用 IPv4 协议栈和 IPv6 协议栈，这样就可以同时使用 IPv4 和 IPv6 的网络。但是在默认情况下都会以IPv6网络优先，只有 IPv6 无法访问的时候才会尝试访问 IPv4，某些特定的应用和场景下，我们并不想要 IPv6 优先，这时候就需要修改一些配置文件让 IPv4 优先。&lt;/p>
+&lt;h2 id="查看网络优先级">查看网络优先级
+&lt;/h2>&lt;p>可以通过以下命令来查看当前的机器是以哪个网络优先的：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2000::97e4
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上返回了IPv6的地址，所以该机器默认就是通过IPv6来访问网站的，通过配置curl强制使用IPv4协议来进行访问：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">192.168.0.235
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>接下来就来修改配置使IPv4成功默认的出栈协议。&lt;/p>
+&lt;h2 id="修改etcgaiconf">修改/etc/gai.conf
+&lt;/h2>&lt;p>在 Debian、Ubuntu 等 Linux 系统下，有一个 &lt;code>/etc/gai.conf&lt;/code> 文件，用于系统的 &lt;code>getaddrinfo&lt;/code> 调用，默认情况下，它会使用 IPv6 优先，编辑gai.conf文件，会看到以下配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Add another rule to the RFC 3484 precedence table. See section 2.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># and 10.3 in RFC 3484. The default is:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::1/128 50
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/0 40
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence 2002::/16 30
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/96 20
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::ffff:0:0/96 10
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># For sites which prefer IPv4 connections change the last line to
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::ffff:0:0/96 100
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>里边有一行提示：&lt;code>For sites which prefer IPv4 connections change the last line to&lt;/code>，想要IPv4出栈，可以设置：&lt;code>precedence ::ffff:0:0/96 100&lt;/code>&lt;/p>
+&lt;p>，根据提示把该行前的注释去掉，如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Add another rule to the RFC 3484 precedence table. See section 2.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># and 10.3 in RFC 3484. The default is:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::1/128 50
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/0 40
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence 2002::/16 30
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/96 20
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::ffff:0:0/96 10
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># For sites which prefer IPv4 connections change the last line to
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">precedence ::ffff:0:0/96 100
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>修改后保存，然后再使用curl访问网站，不指定使用的IPv4还是IPv6，默认情况下就走了IPv4，如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">192.168.0.235
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>修改gai.conf后就默认走了IPv4协议了。&lt;/p>
+&lt;h2 id="禁用ipv6">禁用IPv6
+&lt;/h2>&lt;p>有一些极端情况下，我们可能需要禁止系统的 IPv6 功能，这时候就需要修改 &lt;code>/etc/sysctl.conf&lt;/code> 文件，首先找到你的网卡名称，默认是 &lt;code>eth0&lt;/code> ，可以通过以下命令查看自己的网卡名：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# ip address
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 127.0.0.1/8 scope host lo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 ::1/128 scope host
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc fq state UP group default qlen 1000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/ether 00:16:3c:6b:b7:c3 brd ff:ff:ff:ff:ff:ff
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> altname enp0s3
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> altname ens3
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 192.168.0.235/24 brd 192.168.0.255 scope global eth0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 2000::97e4/112 scope global
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 fe80::216:3cff:fe6b:b7c3/64 scope link
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我的网卡名就是eth0，然后修改&lt;code>/etc/sysctl.conf&lt;/code>，加入一下内容(将网卡名替换为自己的)：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.autoconf = 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.autoconf = 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.accept_ra = 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.accept_ra = 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.disable_ipv6 = 1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.disable_ipv6 = 1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.lo.disable_ipv6 = 1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.eth0.disable_ipv6 = 1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后使用 &lt;code>sysctl -p&lt;/code> 来重新加载配置文件，此时查看 &lt;code>ip a&lt;/code> 就可以发现 IPv6 已经被禁止了。&lt;/p>
+&lt;p>以上就是双栈网络的机器设置IPv4网络优先的方法，自己测试了Debian和Ubuntu都是可以实现的，希望可以帮到大家。&lt;/p></description></item><item><title>linux服务器快速安装docker和docker-compose</title><link>https://www.iminling.com/2023/linux-install-docker/</link><pubDate>Fri, 09 Jun 2023 21:49:42 +0000</pubDate><guid>https://www.iminling.com/2023/linux-install-docker/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=dnp6YVlCOXUzcXZ3NHRyMlZGVEZDYUY3c3h6eW9ET21TY3YrWWwrZTZBcllvQU1ZQkIxWXlaQnRpRVR5cml3VDVIRUJUTFk9" alt="Featured image of post linux服务器快速安装docker和docker-compose" />&lt;p>记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。&lt;/p>
+&lt;h2 id="ubuntu安装">ubuntu安装
+&lt;/h2>&lt;h3 id="卸载旧版">卸载旧版
+&lt;/h3>&lt;p>执行下边的命令&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo apt-get remove docker docker-engine docker.io containerd runc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading package lists... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Building dependency tree
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading state information... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">E: Unable to locate package docker-engine
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行上边的命令清除以前的安装。&lt;/p>
+&lt;h3 id="设置源">设置源
+&lt;/h3>&lt;p>执行以下命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo apt-get update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo apt-get install &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> ca-certificates &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> curl &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> gnupg &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> lsb-release
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 添加docker官方GPG key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="执行">执行
+&lt;/h1>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ &lt;span class="nb">echo&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> &lt;span class="s2">&amp;#34;deb [arch=&lt;/span>&lt;span class="k">$(&lt;/span>dpkg --print-architecture&lt;span class="k">)&lt;/span>&lt;span class="s2"> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> &lt;/span>&lt;span class="k">$(&lt;/span>. /etc/os-release &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">)&lt;/span>&lt;span class="s2"> stable&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> sudo tee /etc/apt/sources.list.d/docker.list &lt;span class="p">&amp;amp;&lt;/span>gt&lt;span class="p">;&lt;/span> /dev/null
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>设置安装源。&lt;/p>
+&lt;h3 id="安装">安装
+&lt;/h3>&lt;p>先更新刚才安装的源，然后就可以执行安装了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 更新&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 安装&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边的安装是安装最新版本，如果想安装特定版本则需要先查看有哪些可以安装的版本：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ apt-cache madison docker-ce
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> docker-ce &lt;span class="p">|&lt;/span> 5:20.10.16~3-0~ubuntu-focal &lt;span class="p">|&lt;/span> https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> docker-ce &lt;span class="p">|&lt;/span> 5:20.10.15~3-0~ubuntu-focal &lt;span class="p">|&lt;/span> https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> docker-ce &lt;span class="p">|&lt;/span> 5:20.10.14~3-0~ubuntu-focal &lt;span class="p">|&lt;/span> https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> docker-ce &lt;span class="p">|&lt;/span> 5:20.10.13~3-0~ubuntu-focal &lt;span class="p">|&lt;/span> https://download.docker.com/linux/ubuntu focal/stable amd64 Packages
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>找到版本后执行以下命令来进行安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 版本是上个命令输出的第个列5:20.10.16~3-0~ubuntu-focal&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>安装后就可以使用了。&lt;/p>
+&lt;p> &lt;/p>
+&lt;h3 id="不使用sudo">不使用sudo
+&lt;/h3>&lt;p>ubuntu的系统如果使用的不是root安装，每次运行命令都是需要使用sudo,相对来说是比较麻烦的，如果不想使用sudo，可以使用下面的命令来解决：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo groupadd docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>sudo&lt;span class="o">]&lt;/span> password &lt;span class="k">for&lt;/span> root:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">groupadd: group &lt;span class="s1">&amp;#39;docker&amp;#39;&lt;/span> already exists
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo gpasswd -a &lt;span class="si">${&lt;/span>&lt;span class="nv">USER&lt;/span>&lt;span class="si">}&lt;/span> docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Adding user ubuntu to group docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ newgrp - docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这样子使用起来就方便了很多。&lt;/p>
+&lt;p> &lt;/p>
+&lt;h2 id="debain安装">debain安装
+&lt;/h2>&lt;p>前两步和ubuntu基本一样，删除旧版，然后设置源。&lt;/p>
+&lt;h3 id="删除旧版以及更新apt">删除旧版以及更新apt
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 删除旧版&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ &lt;span class="c1"># apt-get remove docker docker-engine docker.io containerd runc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 更新apt包索引&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ &lt;span class="c1"># apt-get update&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="添加gpg">添加gpg
+&lt;/h3>&lt;p>执行以下命令添加gpg&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@s9707 ~ &lt;span class="c1"># mkdir -p /etc/apt/keyrings &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ &lt;span class="c1"># curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果在添加gpg的时候报错：&lt;code>gpg: command not found&lt;/code>&lt;/p>
+&lt;p>则可以先安装gpg：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@s9707:~# apt-get install gnupg gnupg2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p> &lt;/p>
+&lt;h3 id="设置仓库">设置仓库
+&lt;/h3>&lt;p>通过以下命令添加仓库&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@s9707:~# &lt;span class="nb">echo&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> &lt;span class="s2">&amp;#34;deb [arch=&lt;/span>&lt;span class="k">$(&lt;/span>dpkg --print-architecture&lt;span class="k">)&lt;/span>&lt;span class="s2"> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> &lt;/span>&lt;span class="k">$(&lt;/span>. /etc/os-release &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">)&lt;/span>&lt;span class="s2"> stable&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> tee /etc/apt/sources.list.d/docker.list &lt;span class="p">&amp;amp;&lt;/span>gt&lt;span class="p">;&lt;/span> /dev/null
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后再次更新apt包索引：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@s9707 ~ &lt;span class="c1"># apt-get update&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="安装docker">安装docker
+&lt;/h3>&lt;p>接下来就是安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>整个安装过程也不是很麻烦，跟着官方的步骤走就可以了，这里记录一下自己的安装过程，方便以后快速安装。&lt;/p>
+&lt;p> &lt;/p>
+&lt;p> &lt;/p>
+&lt;p> &lt;/p></description></item><item><title>linux服务器快速安装docker和docker-compose</title><link>https://www.iminling.com/2023/linux-install-docker/</link><pubDate>Fri, 09 Jun 2023 21:49:42 +0000</pubDate><guid>https://www.iminling.com/2023/linux-install-docker/</guid><description>&lt;p>记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。&lt;/p>
+&lt;h2 id="ubuntu安装">ubuntu安装
+&lt;/h2>&lt;h3 id="卸载旧版">卸载旧版
+&lt;/h3>&lt;p>执行下边的命令&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="nx">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">ubuntu&lt;/span>&lt;span class="p">:~&lt;/span>&lt;span class="err">$&lt;/span> &lt;span class="nx">sudo&lt;/span> &lt;span class="nx">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">get&lt;/span> &lt;span class="nx">remove&lt;/span> &lt;span class="nx">docker&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">engine&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">io&lt;/span> &lt;span class="nx">containerd&lt;/span> &lt;span class="nx">runc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Building&lt;/span> &lt;span class="nx">dependency&lt;/span> &lt;span class="nx">tree&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="nx">state&lt;/span> &lt;span class="nx">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">E&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">Unable&lt;/span> &lt;span class="nx">to&lt;/span> &lt;span class="nx">locate&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">engine&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行上边的命令清除以前的安装。&lt;/p>
+&lt;h3 id="设置源">设置源
+&lt;/h3>&lt;p>执行以下命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">sudo&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">update&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">sudo&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">install&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ca&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">certificates&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">curl&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">gnupg&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lsb&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">release&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 添加docker官方GPG key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">curl&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">fsSL&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">gpg&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">o&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">keyrings&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">asc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 执行&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">echo&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu &lt;/span>&lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>&lt;span class="s2"> $(. /etc/os-release &amp;amp;&amp;amp; echo &amp;#34;&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;) stable&amp;#34;&lt;/span> &lt;span class="o">|&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sudo&lt;/span> &lt;span class="n">tee&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">dev&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">null&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>设置安装源。&lt;/p>
+&lt;h3 id="安装">安装
+&lt;/h3>&lt;p>先更新刚才安装的源，然后就可以执行安装了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 更新
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 安装
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边的安装是安装最新版本，如果想安装特定版本则需要先查看有哪些可以安装的版本：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cache&lt;/span> &lt;span class="n">madison&lt;/span> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">16&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">15&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">14&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">13&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>找到版本后执行以下命令来进行安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 版本是上个命令输出的第个列5:20.10.16~3-0~ubuntu-focal
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce=&amp;lt;VERSION_STRING&amp;gt; docker-ce-cli=&amp;lt;VERSION_STRING&amp;gt; containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>安装后就可以使用了。&lt;/p>
+&lt;h3 id="不使用sudo">不使用sudo
+&lt;/h3>&lt;p>ubuntu的系统如果使用的不是root安装，每次运行命令都是需要使用sudo,相对来说是比较麻烦的，如果不想使用sudo，可以使用下面的命令来解决：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo groupadd docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[sudo] password for root:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">groupadd: group &amp;#39;docker&amp;#39; already exists
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo gpasswd -a ${USER} docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Adding user ubuntu to group docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ newgrp - docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这样子使用起来就方便了很多。&lt;/p>
+&lt;h2 id="debain安装">debain安装
+&lt;/h2>&lt;p>前两步和ubuntu基本一样，删除旧版，然后设置源。&lt;/p>
+&lt;h3 id="删除旧版以及更新apt">删除旧版以及更新apt
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 删除旧版
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get remove docker docker-engine docker.io containerd runc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 更新apt包索引
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="添加gpg">添加gpg
+&lt;/h3>&lt;p>执行以下命令添加gpg&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="c1"># mkdir -p /etc/apt/keyrings&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="c1"># curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果在添加gpg的时候报错：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">gpg: command not found
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>则可以先安装gpg：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@s9707:~# apt-get install gnupg gnupg2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="设置仓库">设置仓库
+&lt;/h3>&lt;p>通过以下命令添加仓库&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="c1"># echo \&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian &lt;/span>&lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>&lt;span class="s2"> $(. /etc/os-release &amp;amp;&amp;amp; echo &amp;#34;&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;) stable&amp;#34;&lt;/span> &lt;span class="o">|&lt;/span> \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tee&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">dev&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">null&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后再次更新apt包索引：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="安装docker">安装docker
+&lt;/h3>&lt;p>接下来就是安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>整个安装过程也不是很麻烦，跟着官方的步骤走就可以了，这里记录一下自己的安装过程，方便以后快速安装。&lt;/p></description></item></channel></rss>

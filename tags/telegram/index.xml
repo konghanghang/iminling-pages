@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Telegram on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/telegram/</link><description>Recent content in Telegram on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Fri, 29 Sep 2023 08:46:00 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/telegram/index.xml" rel="self" type="application/rss+xml"/><item><title>WordPress用户登录管理后台进行邮件或Telegram通知</title><link>https://www.iminling.com/2023/wordpress-login-use-mail-telegram-notice/</link><pubDate>Fri, 29 Sep 2023 08:46:00 +0000</pubDate><guid>https://www.iminling.com/2023/wordpress-login-use-mail-telegram-notice/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/09/5b936c4101fb2b204daf36d0c1457d48.jpeg"
+loading="lazy"
+>&lt;/p>
+&lt;p>前段遇到了一个大麻烦，我的网站主页发布了两篇非我自己写的文章，在登录了worpress后台后，发现的确是有两篇文章，随后赶紧删除了那两篇文章。经过排查发现是xmlrpc功能没有关闭导致的，所以就有了我的上篇文章：&lt;a class="link" href="https://www.iminling.com/2023/09/03/241.html" title="禁用xmlrpc.php防止wordpress被暴力破解"
+target="_blank" rel="noopener"
+>禁用xmlrpc.php防止wordpress被暴力破解&lt;/a>，事后及时关闭了该功能，然后就想着，既然要发布文章，是不是要登录我的管理后台，那么是否可以设置在用户登录wordpress管理后台的时候进行通知我呢，然后就去搜索了一下相关功能，果然还是有办法通知到我的。下边简单的分享一下该功能。&lt;/p>
+&lt;h2 id="邮件配置">邮件配置
+&lt;/h2>&lt;p>邮件的配置网上有很多教程，比如使用WP Mail SMTP插件，这里就跳过了。&lt;/p>
+&lt;h2 id="telegram配置">Telegram配置
+&lt;/h2>&lt;p>其实使用邮件配置就可以了，当有登录的时候就会通过邮件来通知我们。我这里并不想在自己的邮箱里留存太多的邮件，而且自己用Telegram比较多，就想着把通知发送Telegram会更好，我就安装了插件：WP Telegram。功能也很强，它能在要发邮件的时候劫持邮件内容到telegram:&lt;img src="https://www.iminling.com/wp-content/uploads/2023/09/aef44f2535eb8f68f09d56ddfc002c94.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>只需要在Telegram申请好机器人就可以了，插件中也有申请步骤。&lt;/p>
+&lt;h2 id="发送配置">发送配置
+&lt;/h2>&lt;p>编辑主题文件中的functions.php文件[外观-主题文件编辑器]，在文件末尾添加以下代码就可以实现了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">/*****************************************************
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 函数名称：wp_login_notify v1.0 by DH.huahua.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 函数作用：有登录wp后台就会email通知博主
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">******************************************************/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">function wp_login_notify()
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> date_default_timezone_set(&amp;#39;PRC&amp;#39;);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $admin_email = get_bloginfo (&amp;#39;admin_email&amp;#39;);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $to = $admin_email;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $subject = &amp;#39;你的博客空间登录提醒&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $message = &amp;#39;&amp;lt;p&amp;gt;你好！你的博客空间(&amp;#39; . get_option(&amp;#34;blogname&amp;#34;) . &amp;#39;)有登录！&amp;lt;/p&amp;gt;&amp;#39; .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;请确定是您自己的登录，以防别人攻击！登录信息如下：&amp;lt;/p&amp;gt;&amp;#39; .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录名：&amp;#39; . $_POST[&amp;#39;username&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录密码：&amp;#39; . $_POST[&amp;#39;password&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录时间：&amp;#39; . date(&amp;#34;Y-m-d H:i:s&amp;#34;) . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录IP：&amp;#39; . $_SERVER[&amp;#39;REMOTE_ADDR&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $wp_email = &amp;#39;no-reply@&amp;#39; . preg_replace(&amp;#39;#^www\.#&amp;#39;, &amp;#39;&amp;#39;, strtolower($_SERVER[&amp;#39;SERVER_NAME&amp;#39;]));
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $from = &amp;#34;From: \&amp;#34;&amp;#34; . get_option(&amp;#39;blogname&amp;#39;) . &amp;#34;\&amp;#34; &amp;lt;$wp_email&amp;gt;&amp;#34;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $headers = &amp;#34;$from\nContent-Type: text/html; charset=&amp;#34; . get_option(&amp;#39;blog_charset&amp;#39;) . &amp;#34;\n&amp;#34;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> wp_mail( $to, $subject, $message, $headers );
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">add_action(&amp;#39;wp_login&amp;#39;, &amp;#39;wp_login_notify&amp;#39;);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/*****************************************************
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 函数名称：wp_login_failed_notify v1.0 by DH.huahua.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 函数作用：有错误登录wp后台就会email通知博主
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">******************************************************/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">function wp_login_failed_notify()
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> date_default_timezone_set(&amp;#39;PRC&amp;#39;);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $admin_email = get_bloginfo (&amp;#39;admin_email&amp;#39;);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $to = $admin_email;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $subject = &amp;#39;你的博客空间登录错误警告&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $message = &amp;#39;&amp;lt;p&amp;gt;你好！你的博客空间(&amp;#39; . get_option(&amp;#34;blogname&amp;#34;) . &amp;#39;)有登录错误！&amp;lt;/p&amp;gt;&amp;#39; .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;请确定是您自己的登录失误，以防别人攻击！登录信息如下：&amp;lt;/p&amp;gt;&amp;#39; .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录名：&amp;#39; . $_POST[&amp;#39;username&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录密码：&amp;#39; . $_POST[&amp;#39;password&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录时间：&amp;#39; . date(&amp;#34;Y-m-d H:i:s&amp;#34;) . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录IP：&amp;#39; . $_SERVER[&amp;#39;REMOTE_ADDR&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $wp_email = &amp;#39;no-reply@&amp;#39; . preg_replace(&amp;#39;#^www\.#&amp;#39;, &amp;#39;&amp;#39;, strtolower($_SERVER[&amp;#39;SERVER_NAME&amp;#39;]));
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $from = &amp;#34;From: \&amp;#34;&amp;#34; . get_option(&amp;#39;blogname&amp;#39;) . &amp;#34;\&amp;#34; &amp;lt;$wp_email&amp;gt;&amp;#34;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $headers = &amp;#34;$from\nContent-Type: text/html; charset=&amp;#34; . get_option(&amp;#39;blog_charset&amp;#39;) . &amp;#34;\n&amp;#34;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> wp_mail( $to, $subject, $message, $headers );
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">add_action(&amp;#39;wp_login_failed&amp;#39;, &amp;#39;wp_login_failed_notify&amp;#39;);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>一个是登录成功的提醒，一个是登录失败的提醒，如果有人登录wordpress后台的时候就会在telegram的机器人中进行通知：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">🔔‌你的博客空间登录提醒🔔
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">你好！你的博客空间(分享)有登录！
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">请确定是您自己的登录，以防别人攻击！登录信息如下：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">登录名：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">登录密码：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">登录时间：2023-09-29 16:02:40
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">登录IP：24:4:2::
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过上边的配置，就可以在有人登录worpress后台的时候及时的通知我们，避免出现我上次遇到的情况，相对来说避免发生一些自己预想以外的事情。&lt;/p></description></item></channel></rss>

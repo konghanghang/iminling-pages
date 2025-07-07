@@ -1,0 +1,295 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。 3T盘挂载 磁盘查看 先使用fdisk查看磁盘 可以看到有一个2.93TB的硬盘，下边来对这个磁盘进行分区并添加。"><title>Linux管理磁盘分区-挂载新的磁盘到系统</title><link rel=canonical href=https://www.iminling.com/2024/linux-mount-new-disk/><link rel=stylesheet href=/scss/style.min.3d6a5ee04e8710bed041e927cc6e05e92f4112a233dbc27f5e305653fa21c8fe.css><meta property='og:title' content="Linux管理磁盘分区-挂载新的磁盘到系统"><meta property='og:description' content="最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。 3T盘挂载 磁盘查看 先使用fdisk查看磁盘 可以看到有一个2.93TB的硬盘，下边来对这个磁盘进行分区并添加。"><meta property='og:url' content='https://www.iminling.com/2024/linux-mount-new-disk/'><meta property='og:site_name' content='记录点滴 - 分享'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='fdisk'><meta property='article:tag' content='linux'><meta property='article:tag' content='parted'><meta property='article:published_time' content='2024-12-04T15:04:19+00:00'><meta property='article:modified_time' content='2024-12-04T15:04:19+00:00'><meta name=twitter:title content="Linux管理磁盘分区-挂载新的磁盘到系统"><meta name=twitter:description content="最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。 3T盘挂载 磁盘查看 先使用fdisk查看磁盘 可以看到有一个2.93TB的硬盘，下边来对这个磁盘进行分区并添加。"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu_b22a428fdb3aa6b9.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>记录点滴 - 分享</a></h1><h2 class=site-description>记录点滴，分享生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>主页</span></a></li><li><a href=/%E5%85%B3%E4%BA%8E/><svg class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>关于</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#3t盘挂载>3T盘挂载</a><ol><li><a href=#磁盘查看>磁盘查看</a></li><li><a href=#磁盘分区>磁盘分区</a></li><li><a href=#磁盘格式化>磁盘格式化</a></li><li><a href=#磁盘挂载>磁盘挂载</a></li><li><a href=#磁盘开机自动挂载>磁盘开机自动挂载</a></li></ol></li><li><a href=#1t盘挂载>1T盘挂载</a><ol><li><a href=#fdisk命令>fdisk命令</a></li><li><a href=#parted命令>parted命令</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/linux/>Linux</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/2024/linux-mount-new-disk/>Linux管理磁盘分区-挂载新的磁盘到系统</a></h2><h3 class=article-subtitle>最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。 3T盘挂载 磁盘查看 先使用fdisk查看磁盘 可以看到有一个2.93TB的硬盘，下边来对这个磁盘进行分区并添加。</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Dec 04, 2024</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>5 minute read</time></div></footer></div></header><section class=article-content><p><img src=/wp-content/uploads/2024/12/06E75D7C2E1274607D0E030129712389.jpg loading=lazy alt=disk></p><p>最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。</p><h2 id=3t盘挂载>3T盘挂载</h2><h3 id=磁盘查看>磁盘查看</h3><p>先使用fdisk查看磁盘</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>root@host:~# fdisk -l
+</span></span><span class=line><span class=cl>Disk /dev/sda: 20 GiB, 21474836480 bytes, 41943040 sectors
+</span></span><span class=line><span class=cl>Disk model: QEMU HARDDISK
+</span></span><span class=line><span class=cl>Units: sectors of 1 * 512 = 512 bytes
+</span></span><span class=line><span class=cl>Sector size (logical/physical): 512 bytes / 512 bytes
+</span></span><span class=line><span class=cl>I/O size (minimum/optimal): 512 bytes / 512 bytes
+</span></span><span class=line><span class=cl>Disklabel type: gpt
+</span></span><span class=line><span class=cl>Disk identifier: 0DA7595A-DE2A-1042-8C4F-3C883C4D7BA6
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Device      Start      End  Sectors  Size Type
+</span></span><span class=line><span class=cl>/dev/sda1  262144 41943006 41680863 19.9G Linux filesystem
+</span></span><span class=line><span class=cl>/dev/sda14   2048     8191     6144    3M BIOS boot
+</span></span><span class=line><span class=cl>/dev/sda15   8192   262143   253952  124M EFI System
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Partition table entries are not in disk order.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Disk /dev/sdb: 2.93 TiB, 3221225472000 bytes, 6291456000 sectors
+</span></span><span class=line><span class=cl>Disk model: QEMU HARDDISK
+</span></span><span class=line><span class=cl>Units: sectors of 1 * 512 = 512 bytes
+</span></span><span class=line><span class=cl>Sector size (logical/physical): 512 bytes / 512 bytes
+</span></span><span class=line><span class=cl>I/O size (minimum/optimal): 512 bytes / 512 bytes
+</span></span></code></pre></td></tr></table></div></div><p>可以看到<code>/dev/sdb</code>有一个2.93TB的硬盘，下边来对这个磁盘进行分区并添加。</p><h3 id=磁盘分区>磁盘分区</h3><p>传统的MBR（主引导记录）分区表只能支持最多2TB的磁盘，而我这个盘是3T的，需要使用GPT，这个格式支持超过2TB的磁盘，Linux支持GPT（GUID分区表）格式。对于大于2T的硬盘使用<code>parted</code>命令来进行处理。</p><p>首先要确认是否已安装<code>parted</code>,如果没有安装使用一下命令进行安装：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>root</span><span class=err>@</span><span class=nx>host</span><span class=p>:~</span><span class=err>#</span> <span class=nx>apt</span> <span class=nx>install</span> <span class=nx>parted</span>
+</span></span><span class=line><span class=cl><span class=nx>Reading</span> <span class=kn>package</span> <span class=nx>lists</span><span class=o>...</span> <span class=nx>Done</span>
+</span></span><span class=line><span class=cl><span class=nx>Building</span> <span class=nx>dependency</span> <span class=nx>tree</span><span class=o>...</span> <span class=nx>Done</span>
+</span></span><span class=line><span class=cl><span class=nx>Reading</span> <span class=nx>state</span> <span class=nx>information</span><span class=o>...</span> <span class=nx>Done</span>
+</span></span></code></pre></td></tr></table></div></div><p>然后执行<code>parted /dev/sdb</code>对<code>/dev/sdb</code>这个盘进行处理，输入命令后会进入命令模式，需要经过几个步骤</p><ol><li><code>mklabel gpt</code> ，<span class=hljs-comment>创建GPT分区表</span></li><li><code>mkpart primary ext4 0% 100%</code> <span class=hljs-comment>，创建一个新分区，使用100%的磁盘空间</span></li><li><code>print</code> ，显示设置的分区(可选操作)</li><li><code>quit</code> ，退出</li></ol><p>完整的操作命令如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>root@host:~# parted /dev/sdb
+</span></span><span class=line><span class=cl>GNU Parted 3.5
+</span></span><span class=line><span class=cl>Using /dev/sdb
+</span></span><span class=line><span class=cl>Welcome to GNU Parted! Type &#39;help&#39; to view a list of commands.
+</span></span><span class=line><span class=cl>(parted) mklabel gpt
+</span></span><span class=line><span class=cl>(parted) mkpart primary ext4 0% 100%
+</span></span><span class=line><span class=cl>(parted) print
+</span></span><span class=line><span class=cl>Model: QEMU QEMU HARDDISK (scsi)
+</span></span><span class=line><span class=cl>Disk /dev/sdb: 3221GB
+</span></span><span class=line><span class=cl>Sector size (logical/physical): 512B/512B
+</span></span><span class=line><span class=cl>Partition Table: gpt
+</span></span><span class=line><span class=cl>Disk Flags:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Number  Start   End     Size    File system  Name     Flags
+</span></span><span class=line><span class=cl> 1      1049kB  3221GB  3221GB  ext4         primary
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>(parted) quit
+</span></span><span class=line><span class=cl>Information: You may need to update /etc/fstab.
+</span></span></code></pre></td></tr></table></div></div><p>分区完成。</p><h3 id=磁盘格式化>磁盘格式化</h3><p>创建分区后，需要格式化为文件系统。我这里使用<code>ext4</code>格式，因为我只分了一个盘，所以这里是sdb1,如果有多个盘，需要分别对每个进行格式化：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>root@host:~# mkfs.ext4 /dev/sdb1
+</span></span><span class=line><span class=cl>mke2fs 1.47.0 (5-Feb-2023)
+</span></span><span class=line><span class=cl>Discarding device blocks: done
+</span></span><span class=line><span class=cl>Creating filesystem with 786431488 4k blocks and 196608000 inodes
+</span></span><span class=line><span class=cl>Filesystem UUID: f2275364-6fa6-4ae0-a214-5bd98552f5b1
+</span></span><span class=line><span class=cl>Superblock backups stored on blocks:
+</span></span><span class=line><span class=cl>        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+</span></span><span class=line><span class=cl>        4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
+</span></span><span class=line><span class=cl>        102400000, 214990848, 512000000, 550731776, 644972544
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Allocating group tables: done
+</span></span><span class=line><span class=cl>Writing inode tables: done
+</span></span><span class=line><span class=cl>Creating journal (262144 blocks): done
+</span></span><span class=line><span class=cl>Writing superblocks and filesystem accounting information: done
+</span></span></code></pre></td></tr></table></div></div><p>经过上边就已经对刚分的那个盘进行了格式化。</p><h3 id=磁盘挂载>磁盘挂载</h3><p>接下来就是对这个盘进行挂载，我这里挂载到/data目录下，需要先创建/data这个目录，然后通过<code>mount /dev/sdb1 /data</code>命令，把/dev/sdb1挂载到/data目录：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>root@host:~# mkdir /data
+</span></span><span class=line><span class=cl>root@host:~# df -h
+</span></span><span class=line><span class=cl>Filesystem      Size  Used Avail Use% Mounted on
+</span></span><span class=line><span class=cl>udev            979M     0  979M   0% /dev
+</span></span><span class=line><span class=cl>tmpfs           198M  732K  198M   1% /run
+</span></span><span class=line><span class=cl>/dev/sda1        20G  2.1G   17G  12% /
+</span></span><span class=line><span class=cl>tmpfs           990M     0  990M   0% /dev/shm
+</span></span><span class=line><span class=cl>tmpfs           5.0M     0  5.0M   0% /run/lock
+</span></span><span class=line><span class=cl>/dev/sda15      124M   12M  113M  10% /boot/efi
+</span></span><span class=line><span class=cl>tmpfs           198M     0  198M   0% /run/user/0
+</span></span><span class=line><span class=cl>root@host:~# mount /dev/sdb1 /data
+</span></span><span class=line><span class=cl>root@host:~# df -h
+</span></span><span class=line><span class=cl>Filesystem      Size  Used Avail Use% Mounted on
+</span></span><span class=line><span class=cl>udev            979M     0  979M   0% /dev
+</span></span><span class=line><span class=cl>tmpfs           198M  732K  198M   1% /run
+</span></span><span class=line><span class=cl>/dev/sda1        20G  2.1G   17G  12% /
+</span></span><span class=line><span class=cl>tmpfs           990M     0  990M   0% /dev/shm
+</span></span><span class=line><span class=cl>tmpfs           5.0M     0  5.0M   0% /run/lock
+</span></span><span class=line><span class=cl>/dev/sda15      124M   12M  113M  10% /boot/efi
+</span></span><span class=line><span class=cl>tmpfs           198M     0  198M   0% /run/user/0
+</span></span><span class=line><span class=cl>/dev/sdb1       2.9T   28K  2.8T   1% /data
+</span></span></code></pre></td></tr></table></div></div><p>可以通过命令df -h查看磁盘挂载情况，如上是已经成功挂载了。</p><h3 id=磁盘开机自动挂载>磁盘开机自动挂载</h3><p>经过上面的挂载后，如果系统重启，那么挂载就会失效，所以如果你希望磁盘在系统重启时自动挂载，可以编辑<code>/etc/fstab</code>文件：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>root@host-c:~# vim /etc/fstab
+</span></span><span class=line><span class=cl>/dev/sdb1   /data   ext4   defaults   0   2
+</span></span></code></pre></td></tr></table></div></div><p>如上添加一行<code>/dev/sdb1 /data ext4 defaults 0 2</code>就可以重启后自动实现挂载。</p><h2 id=1t盘挂载>1T盘挂载</h2><p>在3t盘挂载的教程中可以看出整个挂载过程分为：<code>磁盘查看-磁盘分区-磁盘格式化-磁盘挂载-磁盘开机自动挂载</code>共5个步骤，处理1T盘过程基本一致，只是在<code>磁盘分区</code>的时候有两种选择，第一种就还是使用到parted命令，另一种是使用fdisk命令。</p><p>先来查看磁盘的分布</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>root@host:~# fdisk -l
+</span></span><span class=line><span class=cl>Disk /dev/sdb: 1000 GiB, 1073741824000 bytes, 2097152000 sectors
+</span></span><span class=line><span class=cl>Disk model: QEMU HARDDISK
+</span></span><span class=line><span class=cl>Units: sectors of 1 * 512 = 512 bytes
+</span></span><span class=line><span class=cl>Sector size (logical/physical): 512 bytes / 512 bytes
+</span></span><span class=line><span class=cl>I/O size (minimum/optimal): 512 bytes / 512 bytes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Disk /dev/sda: 20 GiB, 21474836480 bytes, 41943040 sectors
+</span></span><span class=line><span class=cl>Disk model: QEMU HARDDISK
+</span></span><span class=line><span class=cl>Units: sectors of 1 * 512 = 512 bytes
+</span></span><span class=line><span class=cl>Sector size (logical/physical): 512 bytes / 512 bytes
+</span></span><span class=line><span class=cl>I/O size (minimum/optimal): 512 bytes / 512 bytes
+</span></span><span class=line><span class=cl>Disklabel type: gpt
+</span></span><span class=line><span class=cl>Disk identifier: 0DA7595A-DE2A-1042-8C4F-3C883C4D7BA6
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Device      Start      End  Sectors  Size Type
+</span></span><span class=line><span class=cl>/dev/sda1  262144 41943006 41680863 19.9G Linux filesystem
+</span></span><span class=line><span class=cl>/dev/sda14   2048     8191     6144    3M BIOS boot
+</span></span><span class=line><span class=cl>/dev/sda15   8192   262143   253952  124M EFI System
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Partition table entries are not in disk order.
+</span></span></code></pre></td></tr></table></div></div><p>可以看到有一个<code>/dev/sdb: 1000 GiB</code>的磁盘。</p><h3 id=fdisk命令>fdisk命令</h3><p>先来介绍一下fdisk命令，输入/dev/sdb开始进行分区，默认是创建MBR分区，下边每个<code>Command (m for help)</code>都是需要进行输入的地方。首先是输入<code>o</code>,创建一个MBR分区，然后是输入<code>n</code>来创建分区，<code>partition type</code>选择主分区<code>p</code>，分区号码我这里只需要一个分区，所以输入1，然后就是<code>first sector</code>和<code>last sector</code>默认直接回车就是整个盘。最后输入<code>w</code>来写入修改，就完成了分区。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>root@host:~# fdisk /dev/sdb
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Welcome to fdisk (util-linux 2.38.1).
+</span></span><span class=line><span class=cl>Changes will remain in memory only, until you decide to write them.
+</span></span><span class=line><span class=cl>Be careful before using the write command.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Device does not contain a recognized partition table.
+</span></span><span class=line><span class=cl>Created a new DOS (MBR) disklabel with disk identifier 0x17afed0e.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Command (m for help): o
+</span></span><span class=line><span class=cl>Created a new DOS (MBR) disklabel with disk identifier 0xa7272020.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Command (m for help): n
+</span></span><span class=line><span class=cl>Partition type
+</span></span><span class=line><span class=cl>   p   primary (0 primary, 0 extended, 4 free)
+</span></span><span class=line><span class=cl>   e   extended (container for logical partitions)
+</span></span><span class=line><span class=cl>Select (default p): p
+</span></span><span class=line><span class=cl>Partition number (1-4, default 1): 1
+</span></span><span class=line><span class=cl>First sector (2048-2097151999, default 2048):
+</span></span><span class=line><span class=cl>Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-2097151999, default 2097151999):
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Created a new partition 1 of type &#39;Linux&#39; and of size 1000 GiB.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Command (m for help): w
+</span></span><span class=line><span class=cl>The partition table has been altered.
+</span></span><span class=line><span class=cl>Calling ioctl() to re-read partition table.
+</span></span><span class=line><span class=cl>Syncing disks.
+</span></span></code></pre></td></tr></table></div></div><p>然后就是对新建的分区进行格式化和挂载了。和3T盘操作一样。</p><h3 id=parted命令>parted命令</h3><p>parted不仅可以处理大于2T的，小于2T的也是可以处理的，下边就来看看具体怎么处理。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>root@host:~# parted /dev/sdb
+</span></span><span class=line><span class=cl>GNU Parted 3.5
+</span></span><span class=line><span class=cl>Using /dev/sdb
+</span></span><span class=line><span class=cl>Welcome to GNU Parted! Type &#39;help&#39; to view a list of commands.
+</span></span><span class=line><span class=cl>(parted) mklabel msdos
+</span></span><span class=line><span class=cl>(parted) mkpart primary ext4 0% 100%
+</span></span><span class=line><span class=cl>(parted) quit
+</span></span><span class=line><span class=cl>Information: You may need to update /etc/fstab.
+</span></span></code></pre></td></tr></table></div></div><p>唯一的区别就是mklable命令，原来是gpt（GPT分区），现在改成msdos（MBR分区），其他命令都一样。分区完成后进行格式化，挂载等一系列操作。</p><p>以上就是针对小于2T以及大于2T的盘的挂载教程，希望可以帮到大家。</p></section><footer class=article-footer><section class=article-tags><a href=/tags/fdisk/>Fdisk</a>
+<a href=/tags/linux/>Linux</a>
+<a href=/tags/parted/>Parted</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class=article-lastmod><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>Last updated on Dec 04, 2024 15:04 UTC</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Related content</h2><div class=related-content><div class="flex article-list--tile"><article class=has-image><a href=/2024/docker-install-fail2ban-protect-ssh/><div class=article-image><img src="https://images.iminling.com/app/hide.php?key=SVBwbXRUTnkxdENoNlUzQ0w1QjVKd2xKc3pVK3BWZjlZNk1aeEtRT1BmcXpEcGlaa1h2c3ZhMnVGZlRXV2sweE1TcDhYTVU9" loading=lazy data-key data-hash="https://images.iminling.com/app/hide.php?key=SVBwbXRUTnkxdENoNlUzQ0w1QjVKd2xKc3pVK3BWZjlZNk1aeEtRT1BmcXpEcGlaa1h2c3ZhMnVGZlRXV2sweE1TcDhYTVU9"></div><div class=article-details><h2 class=article-title>docker安装fail2ban并配置防止ssh登录爆破</h2></div></a></article><article><a href=/2024/modify-ssh-port-and-use-publick-key-login/><div class=article-details><h2 class=article-title>修改SSH端口使用公钥登录并禁用root密码登录</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//hugo-theme-stack.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2025 iminling.com</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.30.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

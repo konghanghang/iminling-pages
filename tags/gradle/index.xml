@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Gradle on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/gradle/</link><description>Recent content in Gradle on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 19 May 2024 02:02:03 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/gradle/index.xml" rel="self" type="application/rss+xml"/><item><title>使用gradle kts脚本发布个人项目的jar包文件到maven中央仓库</title><link>https://www.iminling.com/2024/gradle-kts-push-jar-to-maven-central/</link><pubDate>Sun, 19 May 2024 02:02:03 +0000</pubDate><guid>https://www.iminling.com/2024/gradle-kts-push-jar-to-maven-central/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=YmduQTFleVVSNGloQzkvRXJvK2dtcjNiZEtrUjRMSEdYRFVzeitxNXUrNzVPeFpRQ2pBVzBlU2I4dGtPRWUxeWFZNWJQdzg9" alt="Featured image of post 使用gradle kts脚本发布个人项目的jar包文件到maven中央仓库" />&lt;p>上篇文章记录了如何使用maven来发布自己的个人项目到中央仓库，后边项目改使用gradle来管理依赖了，为了能及时的把jar发布到maven仓库，所以就又折腾了一遍如何使用gradle来发布自己的jar到中央仓库，在这里记录一下折腾和踩坑经历，并分享给大家。&lt;/p>
+&lt;h2 id="前提准备">前提准备
+&lt;/h2>&lt;p>如果你是第一次发布jar到仓库，则需要参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2024/push-jar-to-maven-central/" >发布个人项目的jar包文件到maven中央仓库&lt;/a> 来创建好sonatype账号并生成gpg key。这些就不在另外说明了。&lt;/p>
+&lt;p>本篇文章就是在我已经使用了maven发布过jar到中央仓库，然后在此基础上把项目迁移到gradle，然后使用gradle来继续发布项目到中央仓库。&lt;/p>
+&lt;h2 id="gradle配置">gradle配置
+&lt;/h2>&lt;h3 id="设置发布plugins">设置发布plugins
+&lt;/h3>&lt;p>想要把jar发布的maven仓库需要先将项目的代码打包成jar，然后对jar进行签名，最后发布到maven仓库，三步对应三个插件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">plugins&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">`&lt;/span>&lt;span class="n">java&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">library&lt;/span>&lt;span class="err">`&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">`&lt;/span>&lt;span class="n">maven&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">publish&lt;/span>&lt;span class="err">`&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">signing&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边就添加了三个插件，将用于后续的发布使用。&lt;/p>
+&lt;h3 id="配置jar打包">配置jar打包
+&lt;/h3>&lt;p>下边设置对项目进行打包成jar的设置&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">jar&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dependsOn&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">withType&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">GenerateMavenPom&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="k">class&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">manifest&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">attributes&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Created-By&amp;#34;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="s2">&amp;#34;Gradle &lt;/span>&lt;span class="si">${project.ext[&amp;#34;gradleVersion&amp;#34;]}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">into&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;META-INF&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">from&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">$buildDir&lt;/span>&lt;span class="s2">/publications/mavenJava&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">exclude&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;*.asc&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rename&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;pom-default.xml&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;pom.xml&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">withType&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">JavaCompile&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">options&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">encoding&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;UTF-8&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">java&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sourceCompatibility&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nc">JavaVersion&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">VERSION_17&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">targetCompatibility&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nc">JavaVersion&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">VERSION_17&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">withJavadocJar&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">withSourcesJar&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边指定了jdk的版本，并且生成javadoc和java source文件，指定打包的编码以及对manifest文件属性添加等一系列的操作。&lt;/p>
+&lt;h3 id="配置发布">配置发布
+&lt;/h3>&lt;p>主要是配置仓库，pom文件以及签名等信息，先贴一下整个配置，下面单独讲。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;span class="lnt">64
+&lt;/span>&lt;span class="lnt">65
+&lt;/span>&lt;span class="lnt">66
+&lt;/span>&lt;span class="lnt">67
+&lt;/span>&lt;span class="lnt">68
+&lt;/span>&lt;span class="lnt">69
+&lt;/span>&lt;span class="lnt">70
+&lt;/span>&lt;span class="lnt">71
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">publishing&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">publications&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">create&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">MavenPublication&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="s2">&amp;#34;mavenJava&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">artifactId&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">project&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">from&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">components&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;java&amp;#34;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/*versionMapping {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> usage(&amp;#34;java-api&amp;#34;) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> fromResolutionOf(&amp;#34;runtimeClasspath&amp;#34;)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> usage(&amp;#34;java-runtime&amp;#34;) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> fromResolutionResult()
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> }*/&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">pom&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">project&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">description&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;A concise description of my library&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://www.example.com/library&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/*properties.set(mapOf(
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> &amp;#34;myProp&amp;#34; to &amp;#34;value&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> &amp;#34;prop.with.dots&amp;#34; to &amp;#34;anotherValue&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> ))*/&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">licenses&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">license&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;The Apache License, Version 2.0&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://www.apache.org/licenses/LICENSE-2.0.txt&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">developers&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">developer&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">id&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;yslao&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;yslao&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">email&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;yslao@outlook.com&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">scm&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">connection&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;scm:git:git://github.com/konghanghang/base-iminling-core.git&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">developerConnection&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;scm:git:ssh://github.com/konghanghang/base-iminling-core.git&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://github.com/konghanghang/base-iminling-core&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">repositories&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">maven&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;mavenCentral&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// change URLs to point to your repos, e.g. http://my.org/repo
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// val releasesRepoUrl = uri(layout.buildDirectory.dir(&amp;#34;repos/releases&amp;#34;))
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">val&lt;/span> &lt;span class="py">releasesRepoUrl&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">uri&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://oss.sonatype.org/service/local/staging/deploy/maven2/&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">snapshotsRepoUrl&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">uri&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://oss.sonatype.org/content/repositories/snapshots&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">version&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">toString&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">endsWith&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;SNAPSHOT&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="n">snapshotsRepoUrl&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="n">releasesRepoUrl&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">credentials&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// System.getenv放在.bash_profile中
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// System.getProperty可以放在命令行也可以放在gradle.properties中
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">username&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nc">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">getProperty&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;SONATYPE_NEXUS_USERNAME&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">password&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nc">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">getProperty&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;SONATYPE_NEXUS_PASSWORD&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">signing&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sign&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">publishing&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">publications&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;mavenJava&amp;#34;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">javadoc&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nc">JavaVersion&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">current&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">isJava9Compatible&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="n">options&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">StandardJavadocDocletOptions&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">addBooleanOption&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;html5&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">true&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="n">options&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">StandardJavadocDocletOptions&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">encoding&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;UTF-8&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>整个publishing共分为四部分：&lt;/p>
+&lt;h3 id="publications">publications
+&lt;/h3>&lt;p>指定jar的version，groupId和artifactId。另外还有pom的信息，这个在使用maven发布的时候也设置过&lt;/p>
+&lt;h3 id="repositories">repositories
+&lt;/h3>&lt;p>指定仓库地址，以及配置sonetype的账号和密码，可以放在用户目录的gradle.properties中：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="err">#&lt;/span> &lt;span class="n">k&lt;/span> &lt;span class="err">@&lt;/span> &lt;span class="n">MacBook&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="p">~/.&lt;/span>&lt;span class="n">gradle&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="m">9&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">30&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">05&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">$&lt;/span> &lt;span class="n">pwd&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">/&lt;/span>&lt;span class="n">Users&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">k&lt;/span>&lt;span class="p">/.&lt;/span>&lt;span class="n">gradle&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">#&lt;/span> &lt;span class="n">k&lt;/span> &lt;span class="err">@&lt;/span> &lt;span class="n">MacBook&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="p">~/.&lt;/span>&lt;span class="n">gradle&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="m">9&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">30&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">06&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">$&lt;/span> &lt;span class="n">ls&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">caches&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">properties&lt;/span> &lt;span class="n">kotlin&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">profile&lt;/span> &lt;span class="n">notifications&lt;/span> &lt;span class="n">wrapper&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">daemon&lt;/span> &lt;span class="n">jdks&lt;/span> &lt;span class="n">native&lt;/span> &lt;span class="n">workers&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">#&lt;/span> &lt;span class="n">k&lt;/span> &lt;span class="err">@&lt;/span> &lt;span class="n">MacBook&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="p">~/.&lt;/span>&lt;span class="n">gradle&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="m">9&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">30&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">09&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">$&lt;/span> &lt;span class="n">cat&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">properties&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">systemProp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SONATYPE_NEXUS_USERNAME&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="n">aaa&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">systemProp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SONATYPE_NEXUS_PASSWORD&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="n">aaa&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上在gradle.properties中以key-value的形式进行配置。另外同时配置了快照版本的发布地址和release版本的发布地址，通过项目的版本好结尾是不是&lt;code>SNAPSHOT&lt;/code>来确定到底是发布到哪里。&lt;/p>
+&lt;h3 id="signing">signing
+&lt;/h3>&lt;p>指定签名哪个publications，名字要和上边publications中配置的名称一致。另外有一点还需要特别进行配置，我maven发布的时候使用gpg生成了key，在使用gradle的时候还需要导出私钥，同样是导出到用户家目录下的.gnupg目录下，进入到此目录执行&lt;code>gpg --export-secret-keys -o secring.gpg&lt;/code> ：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ MacBook-Pro in ~ [9:39:08] C:1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ &lt;span class="nb">cd&lt;/span> .gnupg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ MacBook-Pro in ~/.gnupg [9:39:13]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ls
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">common.conf openpgp-revocs.d public-keys.d trustdb.gpg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">crls.d private-keys-v1.d secring.gpg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ MacBook-Pro in ~/.gnupg [9:39:14]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ gpg --export-secret-keys -o secring.gpg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>会生成一个secring.gpg的文件，这时候需要在&lt;code>/Users/k/.gradle/gradle.properties&lt;/code>进行配置&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ MacBook-Pro in ~/.gradle [9:41:37]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ cat gradle.properties
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">signing.keyId&lt;span class="o">=&lt;/span>44405DA7
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">signing.password&lt;span class="o">=&lt;/span>&lt;span class="m">12345&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">signing.secretKeyRingFile&lt;span class="o">=&lt;/span>/Users/k/.gnupg/secring.gpg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">systemProp.SONATYPE_NEXUS_USERNAME&lt;span class="o">=&lt;/span>aa
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">systemProp.SONATYPE_NEXUS_PASSWORD&lt;span class="o">=&lt;/span>aa
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边有三个参数，keyId使用gpg &amp;ndash;list-keys中展示出来的pub下&lt;code>C87B0403E54CD05D431E5C1A7204BFB944405DA7&lt;/code> 中的后8位。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ gpg --list-keys
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: checking the trustdb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: marginals needed: &lt;span class="m">3&lt;/span> completes needed: &lt;span class="m">1&lt;/span> trust model: pgp
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: depth: &lt;span class="m">0&lt;/span> valid: &lt;span class="m">1&lt;/span> signed: &lt;span class="m">0&lt;/span> trust: 0-, 0q, 0n, 0m, 0f, 1u
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: next trustdb check due at 2023-02-20
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/c/Users/aaa/.gnupg/pubring.kbx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">---------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pub rsa2048 2021-02-20 &lt;span class="o">[&lt;/span>SC&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>expires: 2023-02-20&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> C87B0403E54CD05D431E5C1A7204BFB944405DA7
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">uid &lt;span class="o">[&lt;/span>ultimate&lt;span class="o">]&lt;/span> ysl &amp;lt;ysl@test.com&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sub rsa2048 2021-02-20 &lt;span class="o">[&lt;/span>E&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>expires: 2023-02-20&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>password则是生成gpg key的时候输入的密码，这个在maven发布的那篇文章中讲过，有不清楚的可以再去看一下那篇文章。&lt;/p>
+&lt;p>secretKeyRingFile则是刚才使用gpg导出的文件。&lt;/p>
+&lt;p>签名相关的配置就已经配置完成了。&lt;/p>
+&lt;h3 id="javadoc">javadoc
+&lt;/h3>&lt;p>这个配置相对简单，指定编码。&lt;/p>
+&lt;p>经过上边的配置基本就已经完成了，可以去发布了。&lt;/p>
+&lt;h2 id="发布">发布
+&lt;/h2>&lt;p>publishing下有几个选项，主要用的还是publishToMavenLocal，这个是发布到本地的maven仓库，可以在本地测试使用。另外就是publish直接往maven仓库中发布。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=SDhNZkxreTRURWpUbTMxTVJEUForSFZwRUFsZFVLMmQ1VGNhb2c3QzZBazdmUW10elAweFR3NnpJdVBCNU1pZmx1MDF1NHM9"
+loading="lazy"
+alt="gradle"
+>&lt;/p>
+&lt;p>双击上边的任务进行运行，或者直接在终端使用gradle + 具体的参数来运行，比如：&lt;code>gradle publishToMavenLocal&lt;/code> 。&lt;/p>
+&lt;h2 id="遇到的问题">遇到的问题
+&lt;/h2>&lt;p>在经过上边配置后发现发布到maven仓库里的只有.moudle的文件，并没有我们的jar和doc相关的文件，经过网上查询添加以下配置就可以了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 解决打包后生成.module文件，导致发布到中央仓库时只上传了.module文件没有上传jar文件
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">withType&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">GenerateModuleMetadata&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">enabled&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上就是使用gradle发布jar到中央仓库的折腾过程。&lt;/p>
+&lt;p>参考：&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a class="link" href="https://docs.gradle.org/current/userguide/publishing_setup.html" title="Publishing a project as module"
+target="_blank" rel="noopener"
+>Publishing a project as module&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>Mac使用Homebrew安装Gradle环境</title><link>https://www.iminling.com/2023/mac-use-homebrew-install-gradle/</link><pubDate>Fri, 27 Oct 2023 05:24:40 +0000</pubDate><guid>https://www.iminling.com/2023/mac-use-homebrew-install-gradle/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/3F5D90BA94A32843C781364B437AB148.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2023/10/02/265.html" title="Mac更换源更快速的安装Homebrew"
+target="_blank" rel="noopener"
+>Mac更换源更快速的安装Homebrew&lt;/a>，有了Homebrew后一切安装都变的很简单了。&lt;/p>
+&lt;h2 id="安装">安装
+&lt;/h2>&lt;p>首先是来搜索一下gradle:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">k@MacBook-Pro ~ % brew search gradle
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">==&amp;gt; Formulae
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gradle gradle-profiler gradle@7 grails
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gradle-completion gradle@6 grace glade
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">==&amp;gt; Casks
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">grads qlgradle
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上有几个版本的gradle:6,7以及没有加版本号的代表最新的。我这里安装gradle@7的版本：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">k&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">MacBook&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">brew&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">ghcr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">io&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">v2&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">core&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">gradle&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">manifests&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">######################################################################### 100.0%&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Fetching&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Downloading&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">ghcr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">io&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">v2&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">core&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">gradle&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">blobs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sha256&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">cc0def9cb&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">######################################################################### 100.0%&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Pouring&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">3.&lt;/span>&lt;span class="n">all&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bottle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tar&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">gz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Caveats&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">keg&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">only&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">which&lt;/span> &lt;span class="n">means&lt;/span> &lt;span class="n">it&lt;/span> &lt;span class="n">was&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">symlinked&lt;/span> &lt;span class="n">into&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">because&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">an&lt;/span> &lt;span class="n">alternate&lt;/span> &lt;span class="n">version&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">another&lt;/span> &lt;span class="n">formula&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">If&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">need&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">have&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span> &lt;span class="n">first&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">your&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">run&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">echo&lt;/span> &lt;span class="s1">&amp;#39;export PATH=&amp;#34;/usr/local/opt/gradle@7/bin:$PATH&amp;#34;&amp;#39;&lt;/span> &lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="o">~/.&lt;/span>&lt;span class="n">zshrc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Summary&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">🍺&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Cellar&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">11&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">535&lt;/span> &lt;span class="n">files&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">272.3&lt;/span>&lt;span class="n">MB&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">Running&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="n">brew&lt;/span> &lt;span class="n">cleanup&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">7&lt;/span>&lt;span class="err">`&lt;/span>&lt;span class="o">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Disable&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">behaviour&lt;/span> &lt;span class="n">by&lt;/span> &lt;span class="n">setting&lt;/span> &lt;span class="n">HOMEBREW_NO_INSTALL_CLEANUP&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Hide&lt;/span> &lt;span class="n">these&lt;/span> &lt;span class="n">hints&lt;/span> &lt;span class="n">with&lt;/span> &lt;span class="n">HOMEBREW_NO_ENV_HINTS&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">see&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="n">man&lt;/span> &lt;span class="n">brew&lt;/span>&lt;span class="err">`&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过上边就已经安装好了gradle,可以看到默认安装的是7.6.3版本的gradle,安装目录是/usr/local/Cellar/gradle@7/7.6.3,接下来我们就需要配置一下maven的环境变量。&lt;/p>
+&lt;h2 id="添加环境变量">添加环境变量
+&lt;/h2>&lt;p>上边安装完输出的信息中有提示可以直接把上边提示的命令在终端执行就可以添加环境变量到.zshrc文件中：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">echo&lt;/span> &lt;span class="s1">&amp;#39;export PATH=&amp;#34;/usr/local/opt/gradle@7/bin:$PATH&amp;#34;&amp;#39;&lt;/span> &lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="o">~/.&lt;/span>&lt;span class="n">zshrc&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>或者直接编辑.zshrc文件，在文件末尾添加：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;/usr/local/opt/gradle@7/bin:$PATH&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后就是刷新变量信息：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">source .zshrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后就可以通过命令来查看gradle的版本信息：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">k&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">MacBook&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">gradle&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Welcome&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">Gradle&lt;/span> &lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">!&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Here&lt;/span> &lt;span class="n">are&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">highlights&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">release&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">Added&lt;/span> &lt;span class="n">support&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">Java&lt;/span> &lt;span class="mf">19.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">Introduced&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="n">rerun&lt;/span>&lt;span class="err">`&lt;/span> &lt;span class="n">flag&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">individual&lt;/span> &lt;span class="n">task&lt;/span> &lt;span class="n">rerun&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">Improved&lt;/span> &lt;span class="n">dependency&lt;/span> &lt;span class="n">block&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">test&lt;/span> &lt;span class="n">suites&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">be&lt;/span> &lt;span class="n">strongly&lt;/span> &lt;span class="n">typed&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">Added&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="n">pluggable&lt;/span> &lt;span class="n">system&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">Java&lt;/span> &lt;span class="n">toolchains&lt;/span> &lt;span class="n">provisioning&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">For&lt;/span> &lt;span class="n">more&lt;/span> &lt;span class="n">details&lt;/span> &lt;span class="n">see&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">docs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">gradle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">org&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">release&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">notes&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">html&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">------------------------------------------------------------&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Gradle&lt;/span> &lt;span class="mf">7.6&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">------------------------------------------------------------&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Build&lt;/span> &lt;span class="n">time&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">2023&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">04&lt;/span> &lt;span class="mi">15&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">59&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">47&lt;/span> &lt;span class="n">UTC&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Revision&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1694251&lt;/span>&lt;span class="n">d59e0d4752d547e1fd5b5020b798a7e71&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Kotlin&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mf">1.7&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Groovy&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mf">3.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">13&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Ant&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Apache&lt;/span> &lt;span class="n">Ant&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">TM&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">version&lt;/span> &lt;span class="mf">1.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">11&lt;/span> &lt;span class="n">compiled&lt;/span> &lt;span class="n">on&lt;/span> &lt;span class="n">July&lt;/span> &lt;span class="mi">10&lt;/span> &lt;span class="mi">2021&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">JVM&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mf">17.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">9&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">Homebrew&lt;/span> &lt;span class="mf">17.0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">9&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="ne">OS&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Mac&lt;/span> &lt;span class="ne">OS&lt;/span> &lt;span class="n">X&lt;/span> &lt;span class="mf">14.1&lt;/span> &lt;span class="n">x86_64&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上，Gradle就安装成功。也可以参考官网的安装步骤进行手工下载安装：&lt;a class="link" href="https://gradle.org/install/" target="_blank" rel="noopener"
+>Installing manually&lt;/a>。&lt;/p></description></item></channel></rss>

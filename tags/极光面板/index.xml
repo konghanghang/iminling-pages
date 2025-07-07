@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>极光面板 on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/%E6%9E%81%E5%85%89%E9%9D%A2%E6%9D%BF/</link><description>Recent content in 极光面板 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Fri, 09 Jun 2023 22:08:05 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/%E6%9E%81%E5%85%89%E9%9D%A2%E6%9D%BF/index.xml" rel="self" type="application/rss+xml"/><item><title>极光面板安装及迁移</title><link>https://www.iminling.com/2023/jiguang-pannel-install-and-migrate/</link><pubDate>Fri, 09 Jun 2023 22:08:05 +0000</pubDate><guid>https://www.iminling.com/2023/jiguang-pannel-install-and-migrate/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=VE8yR2psZGRDY05xQlZsRmlJUzB5cTVjcERqTGZnTVNjNHFiU2g5SjJvazNMbUxNRjcrTFd3Si9PdDhTd3ViTGJBRHErTzg9" alt="Featured image of post 极光面板安装及迁移" />&lt;p>极光面板是一个多服务器端口租用管理面板，你可以添加多台服务器及端口，并将其分配给任意注册用户，租户则可以很方便地使用被分配的端口来完成各种操作。支持IPv4以及IPv6。github地址：&lt;a class="link" href="https://github.com/Aurora-Admin-Panel/deploy" target="_blank" rel="noopener"
+>极光面板&lt;/a>。&lt;/p>
+&lt;h2 id="准备工作">准备工作
+&lt;/h2>&lt;p>在正式安装极光面板之前需要在要安装的机器上准备以下工作：&lt;/p>
+&lt;ol>
+&lt;li>安装docker和docker-compose, 参考：&lt;a class="link" href="https://www.iminling.com/2023/06/10/164.html" title="docker安装"
+target="_blank" rel="noopener"
+>docker安装&lt;/a>&lt;/li>
+&lt;li>生成ssh密钥。如果使用密码连接就不用生成&lt;/li>
+&lt;/ol>
+&lt;p>ssh密钥生成：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 如果面板服务器并没有已经生成好的 ssh 密钥&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ssh-keygen -t rsa -b &lt;span class="m">4096&lt;/span> -C &lt;span class="s2">&amp;#34;your_email@example.com&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 后面一直回车，跳过设置 passphase 即可&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 然后还需要将面板服务器 ~/.ssh/id_rsa.pub 里面的内容复制到每一台被控机的 ~/.ssh/authorized_keys 文件中去。&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>准备工作好了以后就可以安装了。&lt;/p>
+&lt;h2 id="安装">安装
+&lt;/h2>&lt;p>使用官方的安装命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">mkdir -p ~/aurora &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">cd&lt;/span> ~/aurora &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> wget https://raw.githubusercontent.com/Aurora-Admin-Panel/deploy/main/docker-compose.yml -O docker-compose.yml &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> docker compose up -d
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 创建管理员用户（密码必须设置8位以上，否则无法登陆）&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker-compose &lt;span class="nb">exec&lt;/span> backend python app/initial_data.py
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>首先创建aurara目录，然后把官方的docker-compose.yaml文件下载下来，直接启动就可以了。&lt;/p>
+&lt;p>之后可以访问 &lt;code>http://你的IP:8000&lt;/code> 进入面板。&lt;/p>
+&lt;p>之后就是添加机器以及添加端口转发。&lt;/p>
+&lt;h2 id="迁移">迁移
+&lt;/h2>&lt;p>使用了一段时间后，想把面板迁移到另一台机器，已经配置好的端口转发不想再配置一遍，所以就需要使用到迁移功能。迁移的步骤也比较简单，首先是要把原面板中的数据导出来，执行命令要在aurora目录下进行：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># docker-compose exec -T postgres pg_dump -d aurora -U [数据库用户名，默认aurora] -c &amp;gt; data.sql&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker compose &lt;span class="nb">exec&lt;/span> -T postgres pg_dump -d aurora -U aurora -c &amp;gt; data.sql
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后把导出的data.sql传到新的要安装面板的机器上，在那边用同样的方法先安装面板(把上边的安装步骤完整的走一遍)，然后根据官方的迁移指引，在新安装面板的机器上的aurora目录执行以下命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 首先先把所有服务停下&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker compose down
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 只启动数据库服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker compose up -d postgres
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 执行数据恢复&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker compose &lt;span class="nb">exec&lt;/span> -T postgres psql -d aurora -U &lt;span class="o">[&lt;/span>数据库用户名，默认aurora&lt;span class="o">]&lt;/span> &amp;lt; data.sql
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 然后正常启动所有服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker compose up -d
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>等到所有容器都起来的时候，可以继续访问 &lt;code>http://你的IP:8000&lt;/code> 进入面板。查看相关的数据是否也迁移过来了。安照步骤来我是已经可以正常迁移的。&lt;/p></description></item></channel></rss>

@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>IDEA on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/idea/</link><description>Recent content in IDEA on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 16 Dec 2023 03:00:20 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/idea/index.xml" rel="self" type="application/rss+xml"/><item><title>升级Intellij IDEA 2023.3后找回Ant构建工具</title><link>https://www.iminling.com/2023/intellij-idea2023-find-ant-tool/</link><pubDate>Sat, 16 Dec 2023 03:00:20 +0000</pubDate><guid>https://www.iminling.com/2023/intellij-idea2023-find-ant-tool/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=MklMSXFFczNLSWQ5Zkl4N1RrVGo4NkxlOXJXRTZ6L1B2cndwZEJ2ai9OMnRkV21kdVdzcTZsek1qK1ZKMFJINHVWenoyNjg9" alt="Featured image of post 升级Intellij IDEA 2023.3后找回Ant构建工具" />&lt;p>公司有一个项目使用的是Ant来进行打包构建的，没升级IDEA前还可以在工具栏找到Ant功能来进行构建，升级2023.3版本后，Ant就找不到了，经过一番折腾，终于找回了Ant。再次提醒各位，升级还是需要谨慎呀，旧的又不是不能用，哈哈。废话不多说，下边给出具体的解决方法。&lt;/p>
+&lt;h2 id="20233以前版本">2023.3以前版本
+&lt;/h2>&lt;p>在2023.3版本以前，如果在工具栏找不到Ant，可以在IDEA的菜单中把Ant给添加到工具栏，如下图：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dzZLUEtFY05OQ1Bpc21TMlhaOG5RVEZ1d3VuS1JydGJQMmkrK2xzSXdGTDh4Ti90ODUrODRZMDlKTVg5VnUzOHFMU0tzSjQ9"
+loading="lazy"
+alt="view菜单"
+>
+view菜单 tool windows - Ant就可以找到Ant工具。&lt;/p>
+&lt;h2 id="20233版本">2023.3版本
+&lt;/h2>&lt;p>升级到2023.3版本后，在view菜单 tool windows中找不到Ant选项了，但是多了一个 AI Assistant 的功能，在IDEA中找Ant相关的配置也是无果。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=K2hxVHlXVmEvOFVNSnQydSt6d1dRS3gwNG16Z0JHeDdtZ3pWVHJZRW16OTlpYVlvMWdNcjJ1RkpkaEs5c1RsWHhpejBqcVU9"
+loading="lazy"
+alt="view无ant"
+>&lt;/p>
+&lt;p>最后在IDEA的官方日志中找到了原因，官方地址：&lt;a class="link" href="https://www.jetbrains.com/zh-cn/idea/whatsnew/" target="_blank" rel="noopener"
+>IntelliJ IDEA 2023.3 最新变化&lt;/a>。其实上图里也有说明，只是升级后并没有仔细阅读，而是后来网上找到了中文的升级说明：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=L255bWZmaFZCL1pDSnlDWXR4c1VDeXdySWdDZDk0dXlLcnhTcWFFeGM4aEJ1V3JhL1NOTEpwNElZQk8rWUtlRzVJOVJRWE09"
+loading="lazy"
+alt="2023.3中文升级说明"
+>&lt;/p>
+&lt;p>在新版本中Ant要去到市场下载了。&lt;/p>
+&lt;h2 id="下载ant插件">下载Ant插件
+&lt;/h2>&lt;p>在plugin中搜索Ant，就可以看到一个jetbrains提供的Ant插件，进行下载，然后就可以在view - tool windows中找到Ant插件了。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=THpqL1FOb1dVbEVPRm9VK3JYTnhlUTc4eDIvU010QnB3YXRtN2JzNTRnTXdPL0YvTFNaV3ZOOGZ4RkxSTmFMSURYdHppMHc9"
+loading="lazy"
+alt="jetbrain Ant插件"
+>&lt;/p>
+&lt;p>安装后立马就可以找到，也不需要重启IDEA，经过上述过程就成功的找回了Ant插件，可以愉快的使用Ant来编译打包项目了。&lt;/p>
+&lt;p>IDEA如何使用开源项目申请可以参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2023/apply-jetbrains-open-source-development-license/" >开源项目申请JetBrains Open Source Development License&lt;/a>。&lt;/p></description></item><item><title>开源项目申请JetBrains Open Source Development License</title><link>https://www.iminling.com/2023/apply-jetbrains-open-source-development-license/</link><pubDate>Sat, 20 May 2023 04:18:39 +0000</pubDate><guid>https://www.iminling.com/2023/apply-jetbrains-open-source-development-license/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=a3ZmSmVFVjBZbzZDQkpDKzNPQ0hCQ1p3VFpIYVVWU0tUSk54LzZVbjY3R0t1VXVzRThlcDdGOGFXYmtzREE3NW1rY3duQzg9" alt="Featured image of post 开源项目申请JetBrains Open Source Development License" />&lt;p>开发需要使用idea，以前使用的是破解版，使用起来没什么区别，后边觉得破解实在是麻烦，就转正购买了正式版，随意升级的感觉还是很美好的，哈哈。等到第二年快要续费的时候才了解到可以使用开源项目来申请idea全家桶的License，于是就开始了折腾之路。&lt;/p>
+&lt;h2 id="申请准备">申请准备
+&lt;/h2>&lt;p>想要申请免费的License还是需要准备一些事情的：&lt;/p>
+&lt;blockquote>
+&lt;h3 id="满足以下条件的开源项目">满足以下条件的开源项目：
+&lt;/h3>&lt;ul class="js-check-list">
+&lt;li class="wt-text-1 check-item wt-offset-top-24">
+了解&lt;a class="wt-link wt-link_external" href="https://opensource.org/docs/osd">开源&lt;/a>定义。
+&lt;/li>
+&lt;li>
+正在积极开发，例如，在过去 3 个月内定期提交新代码。
+&lt;/li>
+&lt;li>
+不提供开源软件的付费版本，也不提供与开源项目相关的任何商业服务（例如付费支持、咨询等）。
+&lt;/li>
+&lt;li>
+未获得商业公司或组织（NGO、教育、研究或政府组织）的资助。
+&lt;/li>
+&lt;li>
+不为他们的核心项目开发者支付工资。
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="支持条款">支持条款：
+&lt;/h3>&lt;ul>
+&lt;li>许可证仅提供给项目负责人和核心项目提交者。&lt;/li>
+&lt;li>许可证有效期为一年，之后如果您的项目仍符合支持计划要求，也可以续订。&lt;/li>
+&lt;li>您只能将免费许可证用于开发非商业开源项目。&lt;/li>
+&lt;li>您不能与任何第三方共享免费许可证。&lt;/li>
+&lt;/ul>&lt;/blockquote>
+&lt;p>github的邮箱要设置成公开的，&lt;code>keep my email addresses private&lt;/code>去掉勾选：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=TCtiV1lEVVFLVU9nQ3V6UXl5TFM3RFRaTzI1V2ExOGJscVA2ZGFwbTROek80Q2hnMzk4WVVmQjFsajhxUXNSOC92b0FRd0U9"
+loading="lazy"
+>&lt;/p>
+&lt;p>然后就可以开始申请了。&lt;/p>
+&lt;h2 id="申请">申请
+&lt;/h2>&lt;p>申请地址：&lt;a href="https://www.jetbrains.com/shop/eform/opensource" target="_blank" rel="noopener">Request for Open Source Development License&lt;/a>，里边共有三大项需要填写&lt;/p>
+&lt;h3 id="新用户还是老用户">新用户还是老用户
+&lt;/h3>&lt;p>如果是第一次申请，那么肯定是新用户，选择 **No, we are a new customer.**如果是后续通道到期续的话，那就是第二个选项了&lt;/p>
+&lt;h3 id="项目信息">项目信息
+&lt;/h3>&lt;p>填写自己项目的一些信息：项目名称，项目网站地址(如果没有项目网站地址可以和仓库地址填写同一个地址)，仓库地址，License地址(仓库中的开源协议文件)，以及一些项目的信息，如实填写就可以了。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=b2wwN1dtSFZBaSs5SSsra2libVlGSThNK0hLeTJYUmRHSTVUR2hKRytaaVhldGRjdW4yVDNwTWtJUWVZQkhvSFBvN1EvNzg9"
+loading="lazy"
+>&lt;/p>
+&lt;h3 id="关于我们自己">关于我们自己
+&lt;/h3>&lt;p>主要就是邮箱，github个人主页，以及姓名，填写完成后再勾选一些协议信息就可以提交了。整个过程还是很快的。提交后就会收到邮件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hello xxx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you for your OSS development license request.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">We will evaluate your project, and we’ll notify you of our decision by email. Please note that it could take up to one week to have your project reviewed.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you have any questions, please contact us atJetBrains Community Support.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Kind regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains Community Support Team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>提示已经收到了我们的申请，需要一个星期来审核我们的申请。接下来就是耐心等待了。&lt;/p>
+&lt;h2 id="审核结果">审核结果
+&lt;/h2>&lt;p>大概四五天就会出审核结果，审核不通过就是下边的邮件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hello xxx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you for contacting us.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I’ve checked if your open source project is still actively and regularly developed - it is one of the main requirements ofJetBrains Open Source Support Program. According to the project&amp;#39;s repository, it has not been actively developed, so I’m afraid that we cannot provide free licenses for your project at this point.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Please feel free to contact us again atopensource@jetbrains.comonce you resume active work on your project.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you have any additional questions, I will be glad to help.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Paige Rothmaller
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains Americas
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Phone: 609-714-7883
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Fax: 866-838-6784
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果审核通过则是下边的邮件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Dear xxx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Congratulations, your request to JetBrains for Open Source development license(s) has been approved! The license certificate is attached to this message.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Main facts about your license(s):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">They are valid for one year. You will receive an automatic email reminder shortly before the license expiration date.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">They should be used for developing your non-commercial open source projects only.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you’ve received more than one license, please share them only with active contributors to your project.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">To redeem your license(s), please click the link below:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Take me to my license(s)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you find that JetBrains software has been useful for your project, please consider mentioning JetBrains support on your project’s homepage. Feel free to use theJetBrains logoand a link to our website such ashttps://jb.gg/OpenSourceSupport.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you have any questions, please get in touch with us atopensource@jetbrains.com. We’ll be glad to help.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Kind regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains Community Support Team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="续期">续期
+&lt;/h2>&lt;p>免费的license需要一年一续的，在到期前会有邮件通知我们来进行续期：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hi xxx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Your JetBrains All Products Pack license(s) will expire in two weeks, on June 3, 2023.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">We hope that our products have been useful in the development of your open source project. If your project is still in active development, please consider applying for renewal.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Don’t hesitate to contact us if you have any questions or issues regarding our support program – we&amp;#39;ll be glad to help. We would also appreciate any feedback on your experience with JetBrains products.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Kind regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains Community Support Team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我们可以直接点击邮件里的&lt;code>applying for renewal&lt;/code>来续期我们的license。&lt;/p>
+&lt;p>填写的信息和第一次申请基本一样，只是在第一项新老用户选择的时候选择老用户，然后填写第一次申请通过的license ID就可以了。&lt;/p>
+&lt;p>提交申请后还是会有邮件通知：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hello xx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">We&amp;#39;re writing to you in regards to your OSS development license request.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">We&amp;#39;ve run an automated check of your GitHub repository to see if your open source project meets the requirements of our Open Source Support Program. Unfortunately, the check failed because the project has not been actively developed recently. We need to see regular code commits submitted for the past 3 months or more. Readme.md and other non-code commits do not count.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you continue working on your project for a few more months, you&amp;#39;re welcome to re-apply for support.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you believe that your application has been evaluated incorrectly, please email us back at opensource@jetbrains.com. We’ll be glad to look into your case and see how we can help you.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Community Support team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>由于我的项目最近三个月没有提交过记录，很快就收到了拒绝的邮件，所以如果想续期，续期前的三个月最好提交一下commit：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hello xxx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you for your OSS development license request. We will evaluate your project, and we’ll notify you of our decision by email.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Please allow up to 2 weeks for your application to be processed, as we&amp;#39;re currently experiencing a high volume of requests. We appreciate your patience.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you need assistance with an urgent license renewal request, please contact us at opensource@jetbrains.com.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Kind regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains Community Support Team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="后续">后续
+&lt;/h3>&lt;p>终于等到了3个月，2023-07-01日马上又提交了申请，这次终于过了检查，有开始了漫长的等待。07-07凌晨收到了一封邮件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">Dear&lt;/span> &lt;span class="n">xx&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Thanks&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">your&lt;/span> &lt;span class="n">interest&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">our&lt;/span> &lt;span class="n">Open&lt;/span> &lt;span class="n">Source&lt;/span> &lt;span class="n">Program&lt;/span>&lt;span class="o">!&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Could&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">please&lt;/span> &lt;span class="n">provide&lt;/span> &lt;span class="n">more&lt;/span> &lt;span class="n">details&lt;/span> &lt;span class="n">about&lt;/span> &lt;span class="n">your&lt;/span> &lt;span class="ne">OS&lt;/span> &lt;span class="n">project&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">its&lt;/span> &lt;span class="n">functionality&lt;/span>&lt;span class="err">?&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">What&lt;/span> &lt;span class="n">tools&lt;/span> &lt;span class="n">are&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">interested&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">how&lt;/span> &lt;span class="n">are&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">going&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">use&lt;/span> &lt;span class="n">them&lt;/span>&lt;span class="err">?&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Thanks&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">I&lt;/span> &lt;span class="n">look&lt;/span> &lt;span class="n">forward&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">your&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">!&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Kind&lt;/span> &lt;span class="n">Regards&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">xx&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Community&lt;/span> &lt;span class="n">Support&lt;/span> &lt;span class="n">Team&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">JetBrains&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">www&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">jetbrains&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">The&lt;/span> &lt;span class="n">Drive&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">Develop&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>早上就赶紧回复邮件，介绍了一下项目情况，以及对哪些工具感兴趣，当天晚上就收到了通过的邮件，比初次申请的时候稍微麻烦了一点：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Hi xx,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thank you for providing such detailed information.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">We’ve extended your free All Products Pack license for another year. Please check your inbox for the new license certificate.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you have any questions, please feel free to contact me. Have a nice day!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Kind Regards,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">xx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Community Support Team
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">JetBrains
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">www.jetbrains.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The Drive to Develop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>最后祝大家都可以成功的申请下来。&lt;/p></description></item></channel></rss>

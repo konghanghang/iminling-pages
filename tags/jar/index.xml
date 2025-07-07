@@ -1,0 +1,1107 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jar on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/jar/</link><description>Recent content in Jar on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 19 May 2024 02:02:03 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/jar/index.xml" rel="self" type="application/rss+xml"/><item><title>使用gradle kts脚本发布个人项目的jar包文件到maven中央仓库</title><link>https://www.iminling.com/2024/gradle-kts-push-jar-to-maven-central/</link><pubDate>Sun, 19 May 2024 02:02:03 +0000</pubDate><guid>https://www.iminling.com/2024/gradle-kts-push-jar-to-maven-central/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=YmduQTFleVVSNGloQzkvRXJvK2dtcjNiZEtrUjRMSEdYRFVzeitxNXUrNzVPeFpRQ2pBVzBlU2I4dGtPRWUxeWFZNWJQdzg9" alt="Featured image of post 使用gradle kts脚本发布个人项目的jar包文件到maven中央仓库" />&lt;p>上篇文章记录了如何使用maven来发布自己的个人项目到中央仓库，后边项目改使用gradle来管理依赖了，为了能及时的把jar发布到maven仓库，所以就又折腾了一遍如何使用gradle来发布自己的jar到中央仓库，在这里记录一下折腾和踩坑经历，并分享给大家。&lt;/p>
+&lt;h2 id="前提准备">前提准备
+&lt;/h2>&lt;p>如果你是第一次发布jar到仓库，则需要参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2024/push-jar-to-maven-central/" >发布个人项目的jar包文件到maven中央仓库&lt;/a> 来创建好sonatype账号并生成gpg key。这些就不在另外说明了。&lt;/p>
+&lt;p>本篇文章就是在我已经使用了maven发布过jar到中央仓库，然后在此基础上把项目迁移到gradle，然后使用gradle来继续发布项目到中央仓库。&lt;/p>
+&lt;h2 id="gradle配置">gradle配置
+&lt;/h2>&lt;h3 id="设置发布plugins">设置发布plugins
+&lt;/h3>&lt;p>想要把jar发布的maven仓库需要先将项目的代码打包成jar，然后对jar进行签名，最后发布到maven仓库，三步对应三个插件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">plugins&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">`&lt;/span>&lt;span class="n">java&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">library&lt;/span>&lt;span class="err">`&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">`&lt;/span>&lt;span class="n">maven&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">publish&lt;/span>&lt;span class="err">`&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">signing&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边就添加了三个插件，将用于后续的发布使用。&lt;/p>
+&lt;h3 id="配置jar打包">配置jar打包
+&lt;/h3>&lt;p>下边设置对项目进行打包成jar的设置&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">jar&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dependsOn&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">withType&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">GenerateMavenPom&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="k">class&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">manifest&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">attributes&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Created-By&amp;#34;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="s2">&amp;#34;Gradle &lt;/span>&lt;span class="si">${project.ext[&amp;#34;gradleVersion&amp;#34;]}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">into&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;META-INF&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">from&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">$buildDir&lt;/span>&lt;span class="s2">/publications/mavenJava&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">exclude&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;*.asc&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rename&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;pom-default.xml&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;pom.xml&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">withType&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">JavaCompile&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">options&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">encoding&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;UTF-8&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">java&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sourceCompatibility&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nc">JavaVersion&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">VERSION_17&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">targetCompatibility&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nc">JavaVersion&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">VERSION_17&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">withJavadocJar&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">withSourcesJar&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边指定了jdk的版本，并且生成javadoc和java source文件，指定打包的编码以及对manifest文件属性添加等一系列的操作。&lt;/p>
+&lt;h3 id="配置发布">配置发布
+&lt;/h3>&lt;p>主要是配置仓库，pom文件以及签名等信息，先贴一下整个配置，下面单独讲。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;span class="lnt">64
+&lt;/span>&lt;span class="lnt">65
+&lt;/span>&lt;span class="lnt">66
+&lt;/span>&lt;span class="lnt">67
+&lt;/span>&lt;span class="lnt">68
+&lt;/span>&lt;span class="lnt">69
+&lt;/span>&lt;span class="lnt">70
+&lt;/span>&lt;span class="lnt">71
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">publishing&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">publications&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">create&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">MavenPublication&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="s2">&amp;#34;mavenJava&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">artifactId&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">project&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">from&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">components&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;java&amp;#34;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/*versionMapping {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> usage(&amp;#34;java-api&amp;#34;) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> fromResolutionOf(&amp;#34;runtimeClasspath&amp;#34;)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> usage(&amp;#34;java-runtime&amp;#34;) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> fromResolutionResult()
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> }*/&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">pom&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">project&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">description&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;A concise description of my library&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://www.example.com/library&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/*properties.set(mapOf(
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> &amp;#34;myProp&amp;#34; to &amp;#34;value&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> &amp;#34;prop.with.dots&amp;#34; to &amp;#34;anotherValue&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> ))*/&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">licenses&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">license&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;The Apache License, Version 2.0&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://www.apache.org/licenses/LICENSE-2.0.txt&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">developers&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">developer&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">id&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;yslao&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;yslao&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">email&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;yslao@outlook.com&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">scm&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">connection&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;scm:git:git://github.com/konghanghang/base-iminling-core.git&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">developerConnection&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;scm:git:ssh://github.com/konghanghang/base-iminling-core.git&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://github.com/konghanghang/base-iminling-core&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">repositories&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">maven&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;mavenCentral&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// change URLs to point to your repos, e.g. http://my.org/repo
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// val releasesRepoUrl = uri(layout.buildDirectory.dir(&amp;#34;repos/releases&amp;#34;))
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">val&lt;/span> &lt;span class="py">releasesRepoUrl&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">uri&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://oss.sonatype.org/service/local/staging/deploy/maven2/&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">snapshotsRepoUrl&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">uri&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://oss.sonatype.org/content/repositories/snapshots&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">version&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">toString&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">endsWith&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;SNAPSHOT&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="n">snapshotsRepoUrl&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="n">releasesRepoUrl&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">credentials&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// System.getenv放在.bash_profile中
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// System.getProperty可以放在命令行也可以放在gradle.properties中
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">username&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nc">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">getProperty&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;SONATYPE_NEXUS_USERNAME&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">password&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nc">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">getProperty&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;SONATYPE_NEXUS_PASSWORD&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">signing&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sign&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">publishing&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">publications&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;mavenJava&amp;#34;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">javadoc&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nc">JavaVersion&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">current&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">isJava9Compatible&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="n">options&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">StandardJavadocDocletOptions&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">addBooleanOption&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;html5&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">true&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="n">options&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">StandardJavadocDocletOptions&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">encoding&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;UTF-8&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>整个publishing共分为四部分：&lt;/p>
+&lt;h3 id="publications">publications
+&lt;/h3>&lt;p>指定jar的version，groupId和artifactId。另外还有pom的信息，这个在使用maven发布的时候也设置过&lt;/p>
+&lt;h3 id="repositories">repositories
+&lt;/h3>&lt;p>指定仓库地址，以及配置sonetype的账号和密码，可以放在用户目录的gradle.properties中：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="err">#&lt;/span> &lt;span class="n">k&lt;/span> &lt;span class="err">@&lt;/span> &lt;span class="n">MacBook&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="p">~/.&lt;/span>&lt;span class="n">gradle&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="m">9&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">30&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">05&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">$&lt;/span> &lt;span class="n">pwd&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">/&lt;/span>&lt;span class="n">Users&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">k&lt;/span>&lt;span class="p">/.&lt;/span>&lt;span class="n">gradle&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">#&lt;/span> &lt;span class="n">k&lt;/span> &lt;span class="err">@&lt;/span> &lt;span class="n">MacBook&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="p">~/.&lt;/span>&lt;span class="n">gradle&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="m">9&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">30&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">06&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">$&lt;/span> &lt;span class="n">ls&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">caches&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">properties&lt;/span> &lt;span class="n">kotlin&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">profile&lt;/span> &lt;span class="n">notifications&lt;/span> &lt;span class="n">wrapper&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">daemon&lt;/span> &lt;span class="n">jdks&lt;/span> &lt;span class="n">native&lt;/span> &lt;span class="n">workers&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">#&lt;/span> &lt;span class="n">k&lt;/span> &lt;span class="err">@&lt;/span> &lt;span class="n">MacBook&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="p">~/.&lt;/span>&lt;span class="n">gradle&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="m">9&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">30&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">09&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">$&lt;/span> &lt;span class="n">cat&lt;/span> &lt;span class="n">gradle&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">properties&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">systemProp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SONATYPE_NEXUS_USERNAME&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="n">aaa&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">systemProp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SONATYPE_NEXUS_PASSWORD&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="n">aaa&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上在gradle.properties中以key-value的形式进行配置。另外同时配置了快照版本的发布地址和release版本的发布地址，通过项目的版本好结尾是不是&lt;code>SNAPSHOT&lt;/code>来确定到底是发布到哪里。&lt;/p>
+&lt;h3 id="signing">signing
+&lt;/h3>&lt;p>指定签名哪个publications，名字要和上边publications中配置的名称一致。另外有一点还需要特别进行配置，我maven发布的时候使用gpg生成了key，在使用gradle的时候还需要导出私钥，同样是导出到用户家目录下的.gnupg目录下，进入到此目录执行&lt;code>gpg --export-secret-keys -o secring.gpg&lt;/code> ：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ MacBook-Pro in ~ [9:39:08] C:1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ &lt;span class="nb">cd&lt;/span> .gnupg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ MacBook-Pro in ~/.gnupg [9:39:13]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ls
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">common.conf openpgp-revocs.d public-keys.d trustdb.gpg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">crls.d private-keys-v1.d secring.gpg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ MacBook-Pro in ~/.gnupg [9:39:14]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ gpg --export-secret-keys -o secring.gpg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>会生成一个secring.gpg的文件，这时候需要在&lt;code>/Users/k/.gradle/gradle.properties&lt;/code>进行配置&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ MacBook-Pro in ~/.gradle [9:41:37]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ cat gradle.properties
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">signing.keyId&lt;span class="o">=&lt;/span>44405DA7
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">signing.password&lt;span class="o">=&lt;/span>&lt;span class="m">12345&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">signing.secretKeyRingFile&lt;span class="o">=&lt;/span>/Users/k/.gnupg/secring.gpg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">systemProp.SONATYPE_NEXUS_USERNAME&lt;span class="o">=&lt;/span>aa
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">systemProp.SONATYPE_NEXUS_PASSWORD&lt;span class="o">=&lt;/span>aa
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边有三个参数，keyId使用gpg &amp;ndash;list-keys中展示出来的pub下&lt;code>C87B0403E54CD05D431E5C1A7204BFB944405DA7&lt;/code> 中的后8位。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ gpg --list-keys
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: checking the trustdb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: marginals needed: &lt;span class="m">3&lt;/span> completes needed: &lt;span class="m">1&lt;/span> trust model: pgp
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: depth: &lt;span class="m">0&lt;/span> valid: &lt;span class="m">1&lt;/span> signed: &lt;span class="m">0&lt;/span> trust: 0-, 0q, 0n, 0m, 0f, 1u
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: next trustdb check due at 2023-02-20
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/c/Users/aaa/.gnupg/pubring.kbx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">---------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pub rsa2048 2021-02-20 &lt;span class="o">[&lt;/span>SC&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>expires: 2023-02-20&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> C87B0403E54CD05D431E5C1A7204BFB944405DA7
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">uid &lt;span class="o">[&lt;/span>ultimate&lt;span class="o">]&lt;/span> ysl &amp;lt;ysl@test.com&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sub rsa2048 2021-02-20 &lt;span class="o">[&lt;/span>E&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>expires: 2023-02-20&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>password则是生成gpg key的时候输入的密码，这个在maven发布的那篇文章中讲过，有不清楚的可以再去看一下那篇文章。&lt;/p>
+&lt;p>secretKeyRingFile则是刚才使用gpg导出的文件。&lt;/p>
+&lt;p>签名相关的配置就已经配置完成了。&lt;/p>
+&lt;h3 id="javadoc">javadoc
+&lt;/h3>&lt;p>这个配置相对简单，指定编码。&lt;/p>
+&lt;p>经过上边的配置基本就已经完成了，可以去发布了。&lt;/p>
+&lt;h2 id="发布">发布
+&lt;/h2>&lt;p>publishing下有几个选项，主要用的还是publishToMavenLocal，这个是发布到本地的maven仓库，可以在本地测试使用。另外就是publish直接往maven仓库中发布。&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=SDhNZkxreTRURWpUbTMxTVJEUForSFZwRUFsZFVLMmQ1VGNhb2c3QzZBazdmUW10elAweFR3NnpJdVBCNU1pZmx1MDF1NHM9"
+loading="lazy"
+alt="gradle"
+>&lt;/p>
+&lt;p>双击上边的任务进行运行，或者直接在终端使用gradle + 具体的参数来运行，比如：&lt;code>gradle publishToMavenLocal&lt;/code> 。&lt;/p>
+&lt;h2 id="遇到的问题">遇到的问题
+&lt;/h2>&lt;p>在经过上边配置后发现发布到maven仓库里的只有.moudle的文件，并没有我们的jar和doc相关的文件，经过网上查询添加以下配置就可以了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 解决打包后生成.module文件，导致发布到中央仓库时只上传了.module文件没有上传jar文件
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">withType&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">GenerateModuleMetadata&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">enabled&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上就是使用gradle发布jar到中央仓库的折腾过程。&lt;/p>
+&lt;p>参考：&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a class="link" href="https://docs.gradle.org/current/userguide/publishing_setup.html" title="Publishing a project as module"
+target="_blank" rel="noopener"
+>Publishing a project as module&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>发布个人项目的jar包文件到maven中央仓库</title><link>https://www.iminling.com/2024/push-jar-to-maven-central/</link><pubDate>Wed, 08 May 2024 14:33:57 +0000</pubDate><guid>https://www.iminling.com/2024/push-jar-to-maven-central/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=VmhUVjAvWExidzB3U04rbmdWZjJwRG54MDgvZkZYZjZjdFYxNXNXbHlXVlU1MmRGVVJmeFpEV0FFeXBQbkdHbXpVMDA5TW89" alt="Featured image of post 发布个人项目的jar包文件到maven中央仓库" />&lt;p>自己有一个项目想要在任何机器上都能引用到，最简单的办法就是在所要使用的机器上把项目下载下来，然后install到本地仓库，但是如何直接通过引用坐标就能引用到呢？答案就是发布到maven的中央仓库，这样子无论你在什么机器上，只要能上网输入gav三个坐标就可以引入了。这篇文章就介绍一下自己项目打成jar包并发布到maven中央仓库的完整过程。mac安装maven可以参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2023/mac-use-homebrew-install-maven/" >Mac使用Homebrew安装maven环境&lt;/a>。&lt;/p>
+&lt;h2 id="账号注册">账号注册
+&lt;/h2>&lt;p>首先我们要先注册sonatype账号，访问地址&lt;a href="https://issues.sonatype.org/secure/Signup!default.jspa" target="_blank" rel="nofollow noopener">sonatype&lt;/a>输入必须的内容就可以成功注册一个账号,不过对密码就有一些特殊的安全要求，正确注册就可以了。&lt;/p>
+&lt;h2 id="item-2">sonatype工单
+&lt;/h2>&lt;h3 id="新建工单">新建工单
+&lt;/h3>&lt;p>点击新建按钮，项目选择&lt;code>open&lt;/code>的那个，问题类型选择&lt;code>new project&lt;/code>，概要，描述随便写就ok了&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=bGVlVUNlOWJaenRqanBmM1dySVdLcVdGdVF0aTh2V3RXMjFHYW8xckpSdmFYTVRVakJ4eEZXYWFlNTBMZjk3bHZGdXcvTEU9"
+loading="lazy"
+alt="sonatype工单"
+>&lt;/p>
+&lt;p>摘要根据自己需要填写，我这里填写的是项目的名称。&lt;/p>
+&lt;p>group id就是maven坐标的名称，一般是域名反转过来。例如我的域名是iminling.com,则这里填写com.imining.&lt;/p>
+&lt;p>project URL则是github的仓库地址，或者其他代码仓库的地址。&lt;/p>
+&lt;p>SCM url就是在project URL后边加上&lt;code>.git&lt;/code>&lt;/p>
+&lt;p>其他的默认就可以了，创建。新建完成后如下图：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=T3FlMFIyb0ZZRHRLQ0ZsRHdUK2ZwMzIrYnRNWTRQL1hOWGJhWGNSSXBwaTZmbzZmU1pyM3VzWUNZd1VueHhlWmQzRWVzUUE9"
+loading="lazy"
+alt="工单"
+>&lt;/p>
+&lt;h3 id="添加txt记录">添加TXT记录
+&lt;/h3>&lt;p>如上边的图所示，它为了验证你是域名的所有者，会让你去解析一条txt记录。两种方案选一种就可以了，我这里选择的是添加一条txt的记录，如下图所示，我这里是不清楚规则，提交了两个工单，所以添加了两条记录，最后其中一个工单被认为是重复提交，已关闭。其中记录值填写你的工单地址，下图中框住的部分，主机记录就是&lt;code>jira tiket&lt;/code>.&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=SVRrd1BlcWx2bFE0OUhNRlpJTURjdmZJMTBzTitnM1o2a2ExSUlrL0FhODNZb25qdkxhTnIzRVI3Z1l0a29XT0FyT1VUU0U9"
+loading="lazy"
+alt="sonatype txt"
+>&lt;/p>
+&lt;p>这里txt解析的值来源就是你的问题url，如下：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=STFZMHNLcERrUndGWnprckwxc0RjVmFqM0lndWFmQjZFNU13QnNhcE5QbzE5RWtUanBJTm9UNHNUaHpqTDVRNitkZHlZOXM9"
+loading="lazy"
+alt="txt record"
+>&lt;/p>
+&lt;p>解析完后就可以再等待审核了，我的大概是凌晨3点进行的审核，通过以后会有邮件通知，工单下边也有评论,此时我们就可以准备发布我们的jar包了。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">com.iminling has been prepared, now user&lt;span class="o">(&lt;/span>s&lt;span class="o">)&lt;/span> yslaoo can:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Publish snapshot and release artifacts to https://oss.sonatype.org
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Have a look at this section of our official guide &lt;span class="k">for&lt;/span> deployment instructions:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://central.sonatype.org/pages/ossrh-guide.html#deployment
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Please comment on this ticket when you&lt;span class="err">&amp;#39;&lt;/span>ve released your first component&lt;span class="o">(&lt;/span>s&lt;span class="o">)&lt;/span>, so we can activate the sync to Maven Central.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Depending on your build configuration, this might happen automatically. If not, you can follow the steps in this section of our guide:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://central.sonatype.org/pages/releasing-the-deployment.html
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="发布准备">发布准备
+&lt;/h2>&lt;h3 id="gpg安装">gpg安装
+&lt;/h3>&lt;p>mac可以使用用brew进行安装 &lt;code>brew install gpg&lt;/code>就可以了。&lt;/p>
+&lt;p>windows安装了git客户端就自带了这个功能。&lt;/p>
+&lt;p>检查自己的gpg的版本，有些是gpg，有些则需要输入gpg2.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 或者使用gpg2 --version 就看自己的电脑上哪个命令可以运行&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ gpg --version
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg &lt;span class="o">(&lt;/span>GnuPG&lt;span class="o">)&lt;/span> 2.2.13-unknown
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">libgcrypt 1.8.4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Copyright &lt;span class="o">(&lt;/span>C&lt;span class="o">)&lt;/span> &lt;span class="m">2019&lt;/span> Free Software Foundation, Inc.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">License GPLv3+: GNU GPL version &lt;span class="m">3&lt;/span> or later &amp;lt;https://gnu.org/licenses/gpl.html&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">This is free software: you are free to change and redistribute it.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">There is NO WARRANTY, to the extent permitted by law.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Home: /c/Users
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Supported algorithms:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Pubkey: RSA, ELG, DSA, ECDH, ECDSA, EDDSA
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> CAMELLIA128, CAMELLIA192, CAMELLIA256
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Hash: SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Compression: Uncompressed, ZIP, ZLIB, BZIP2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="生成key">生成key
+&lt;/h3>&lt;p>不论是mac还是windows都是使用命令&lt;code>gpg --gen-key&lt;/code>来生成。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ gpg --gen-key
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg &lt;span class="o">(&lt;/span>GnuPG&lt;span class="o">)&lt;/span> 2.2.27&lt;span class="p">;&lt;/span> Copyright &lt;span class="o">(&lt;/span>C&lt;span class="o">)&lt;/span> &lt;span class="m">2021&lt;/span> Free Software Foundation, Inc.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">This is free software: you are free to change and redistribute it.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">There is NO WARRANTY, to the extent permitted by law.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">注意：使用 “gpg --full-generate-key” 以获得一个功能完整的密钥产生对话框。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">GnuPG 需要构建用户标识以辨认您的密钥。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">真实姓名： yslaoo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">电子邮件地址： ysl@test.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">您选定了此用户标识：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> “ysl &amp;lt;ysl@test.com&amp;gt;”
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">更改姓名（N）、注释（C）、电子邮件地址（E）或确定（O）/退出（Q）？ O
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">我们需要生成大量的随机字节。在质数生成期间做些其他操作（敲打键盘
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">、移动鼠标、读写硬盘之类的）将会是一个不错的主意；这会让随机数
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">发生器有更好的机会获得足够的熵。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">我们需要生成大量的随机字节。在质数生成期间做些其他操作（敲打键盘
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">、移动鼠标、读写硬盘之类的）将会是一个不错的主意；这会让随机数
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">发生器有更好的机会获得足够的熵。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: /Users/aaa/.gnupg/trustdb.gpg：建立了信任度数据库
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: 密钥 84040E735F931A32 被标记为绝对信任
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: 目录‘/Users/aaa/.gnupg/openpgp-revocs.d’已创建
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: 吊销证书已被存储为‘/Users/aaa/.gnupg/openpgp-revocs.d/DD1E1B8213D07DA46FC3F2B684040E735F931A32.rev’
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">公钥和私钥已经生成并被签名。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pub rsa3072 2021-02-20 &lt;span class="o">[&lt;/span>SC&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>有效至：2023-02-20&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> DD1E1B8213A07DA46FC3F2B684040E735F931A32
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">uid yslao &amp;lt;yslao@outlook.com&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sub rsa3072 2021-02-20 &lt;span class="o">[&lt;/span>E&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>有效至：2023-02-20&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>期间会让输入密码，&lt;strong>牢记密码&lt;/strong>，后边会使用。&lt;/p>
+&lt;h3 id="key操作">key操作
+&lt;/h3>&lt;p>生成key后需要发布key到公有服务器。&lt;/p>
+&lt;p>先查看key：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ gpg --list-keys
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: checking the trustdb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: marginals needed: &lt;span class="m">3&lt;/span> completes needed: &lt;span class="m">1&lt;/span> trust model: pgp
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: depth: &lt;span class="m">0&lt;/span> valid: &lt;span class="m">1&lt;/span> signed: &lt;span class="m">0&lt;/span> trust: 0-, 0q, 0n, 0m, 0f, 1u
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: next trustdb check due at 2023-02-20
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/c/Users/aaa/.gnupg/pubring.kbx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">---------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pub rsa2048 2021-02-20 &lt;span class="o">[&lt;/span>SC&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>expires: 2023-02-20&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> C87B0403E54CD05D431E5C1A7204BFB944405DA7
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">uid &lt;span class="o">[&lt;/span>ultimate&lt;span class="o">]&lt;/span> ysl &amp;lt;ysl@test.com&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sub rsa2048 2021-02-20 &lt;span class="o">[&lt;/span>E&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>expires: 2023-02-20&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后发布：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 命令格式：gpg --keyserver [key的服务器](这个有很多，随便找一个就行了) --send-keys [key] key就是查看key操作中pub对应的那串字符串&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ gpg --keyserver hkp://keyserver.ubuntu.com:11371 --send-keys C87B0403E54CD05D431E5C1A7204BFB944405DA7
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: sending key 7204BFB944405DA7 to hkp://keyserver.ubuntu.com:11371
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="distribution-管理">Distribution 管理
+&lt;/h3>&lt;p>修改pom.xml, 添加以下代码&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="line">&lt;span class="cl">&lt;span class="c">&amp;lt;!--父级是project--&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;distributionManagement&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;snapshotRepository&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;id&amp;gt;&lt;/span>ossrh&lt;span class="nt">&amp;lt;/id&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;url&amp;gt;&lt;/span>https://oss.sonatype.org/content/repositories/snapshots&lt;span class="nt">&amp;lt;/url&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/snapshotRepository&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;repository&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;id&amp;gt;&lt;/span>ossrh&lt;span class="nt">&amp;lt;/id&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;url&amp;gt;&lt;/span>https://oss.sonatype.org/service/local/staging/deploy/maven2/&lt;span class="nt">&amp;lt;/url&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/repository&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/distributionManagement&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;build&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;plugins&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;plugin&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>org.sonatype.plugins&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>nexus-staging-maven-plugin&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;version&amp;gt;&lt;/span>1.6.7&lt;span class="nt">&amp;lt;/version&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;extensions&amp;gt;&lt;/span>true&lt;span class="nt">&amp;lt;/extensions&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;configuration&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;serverId&amp;gt;&lt;/span>ossrh&lt;span class="nt">&amp;lt;/serverId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;nexusUrl&amp;gt;&lt;/span>https://oss.sonatype.org/&lt;span class="nt">&amp;lt;/nexusUrl&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;autoReleaseAfterClose&amp;gt;&lt;/span>true&lt;span class="nt">&amp;lt;/autoReleaseAfterClose&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/configuration&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/plugin&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/plugins&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/build&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="认证配置">认证配置
+&lt;/h3>&lt;p>在&lt;code>setting.xml&lt;/code>中添加认证信息,此处的id要和&lt;code>pom&lt;/code>文件中的&lt;code>distributionManagement&lt;/code>下&lt;code>snapshotRepository&lt;/code>和&lt;code>repository&lt;/code>的id保持一致.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;settings&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;servers&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;server&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;id&amp;gt;&lt;/span>ossrh&lt;span class="nt">&amp;lt;/id&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c">&amp;lt;!-- username就是注册sonatype时的username --&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;username&amp;gt;&lt;/span>your-jira-id&lt;span class="nt">&amp;lt;/username&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c">&amp;lt;!-- password就是注册sonatype时的password --&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;password&amp;gt;&lt;/span>your-jira-pwd&lt;span class="nt">&amp;lt;/password&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/server&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/servers&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/settings&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="javadoc和源代码配置">javadoc和源代码配置
+&lt;/h3>&lt;p>在pom.xml中添加配置如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;build&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;plugins&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;plugin&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>org.apache.maven.plugins&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>maven-source-plugin&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;version&amp;gt;&lt;/span>2.2.1&lt;span class="nt">&amp;lt;/version&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;executions&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;execution&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;id&amp;gt;&lt;/span>attach-sources&lt;span class="nt">&amp;lt;/id&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;goals&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;goal&amp;gt;&lt;/span>jar-no-fork&lt;span class="nt">&amp;lt;/goal&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/goals&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/execution&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/executions&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/plugin&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;plugin&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>org.apache.maven.plugins&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>maven-javadoc-plugin&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;version&amp;gt;&lt;/span>2.9.1&lt;span class="nt">&amp;lt;/version&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;executions&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;execution&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;id&amp;gt;&lt;/span>attach-javadocs&lt;span class="nt">&amp;lt;/id&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;goals&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;goal&amp;gt;&lt;/span>jar&lt;span class="nt">&amp;lt;/goal&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/goals&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/execution&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/executions&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/plugin&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/plugins&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/build&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="gpg签名配置">gpg签名配置
+&lt;/h3>&lt;p>在pom中添加gpg插件&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">&amp;lt;plugin&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;groupId&amp;gt;org.apache.maven.plugins&amp;lt;/groupId&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;artifactId&amp;gt;maven-gpg-plugin&amp;lt;/artifactId&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;version&amp;gt;1.5&amp;lt;/version&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;executions&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;execution&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;id&amp;gt;sign-artifacts&amp;lt;/id&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;phase&amp;gt;verify&amp;lt;/phase&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;goals&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;goal&amp;gt;sign&amp;lt;/goal&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;/goals&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;/execution&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;/executions&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;/plugin&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在setting.xml中添加gpg profile配置,&lt;code>gpg.executable&lt;/code>属性要根据自己的电脑环境进行添加.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;settings&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;profiles&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;profile&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;id&amp;gt;&lt;/span>ossrh&lt;span class="nt">&amp;lt;/id&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;activation&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;activeByDefault&amp;gt;&lt;/span>true&lt;span class="nt">&amp;lt;/activeByDefault&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/activation&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;properties&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c">&amp;lt;!--这里根据实际情况填写gpg或gpg2,看自己的环境能使用哪个命令--&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;gpg.executable&amp;gt;&lt;/span>gpg2&lt;span class="nt">&amp;lt;/gpg.executable&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c">&amp;lt;!--passphrase就是我们在gpg安装生成key的时候设置的--&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;gpg.passphrase&amp;gt;&lt;/span>the_pass_phrase&lt;span class="nt">&amp;lt;/gpg.passphrase&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/properties&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/profile&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/profiles&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/settings&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="nexus-staging-maven插件用于部署和发布">Nexus Staging Maven插件，用于部署和发布
+&lt;/h3>&lt;p>在pom.xml中添加以下内容&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;plugin&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;groupId&amp;gt;&lt;/span>org.sonatype.plugins&lt;span class="nt">&amp;lt;/groupId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;artifactId&amp;gt;&lt;/span>nexus-staging-maven-plugin&lt;span class="nt">&amp;lt;/artifactId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;version&amp;gt;&lt;/span>1.6.7&lt;span class="nt">&amp;lt;/version&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;extensions&amp;gt;&lt;/span>true&lt;span class="nt">&amp;lt;/extensions&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;configuration&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;serverId&amp;gt;&lt;/span>ossrh&lt;span class="nt">&amp;lt;/serverId&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;nexusUrl&amp;gt;&lt;/span>https://oss.sonatype.org/&lt;span class="nt">&amp;lt;/nexusUrl&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;autoReleaseAfterClose&amp;gt;&lt;/span>true&lt;span class="nt">&amp;lt;/autoReleaseAfterClose&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/configuration&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/plugin&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过上边操作，准备工作已完毕，下边就可以开始发布jar包了。&lt;/p>
+&lt;h2 id="发布">发布
+&lt;/h2>&lt;p>所有的发布操作确保gpg命令是可以用的,在windows下进行发布一定要注意是在&lt;code>git bash&lt;/code>客户端中进行,以确保gpg可以使用.以及发布过程中可能会让你再次输入gpg的密码，这里需要注意一下。&lt;/p>
+&lt;h3 id="快照版本">快照版本
+&lt;/h3>&lt;p>项目的版本如果是以&lt;code>-SNAPSHOT&lt;/code>结尾的,就会发布到快照仓库,如下:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">D:&lt;span class="se">\p&lt;/span>roject&lt;span class="se">\i&lt;/span>dea&lt;span class="se">\b&lt;/span>ase-iminling-parent&amp;gt;mvn clean deploy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">INFO&lt;span class="o">]&lt;/span> Scanning &lt;span class="k">for&lt;/span> projects...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span> Some problems were encountered &lt;span class="k">while&lt;/span> building the effective model &lt;span class="k">for&lt;/span> com.iminling:base-iminling-parent:pom:1.0.0-SNAPSHOT
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span> &lt;span class="s1">&amp;#39;build.pluginManagement.plugins.plugin.(groupId:artifactId)&amp;#39;&lt;/span> must be unique but found duplicate declaration of plugin org.sonatype.plugins:nexus-staging-
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">maven-plugin @ line 326, column &lt;span class="m">25&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span> It is highly recommended to fix these problems because they threaten the stability of your build.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span> For this reason, future Maven versions might no longer support building such malformed projects.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> -----------------&amp;lt; com.iminling:base-iminling-parent &amp;gt;------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Building base-iminling-parent 1.0.0-SNAPSHOT
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> --------------------------------&lt;span class="o">[&lt;/span> pom &lt;span class="o">]&lt;/span>---------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> --- maven-clean-plugin:2.5:clean &lt;span class="o">(&lt;/span>default-clean&lt;span class="o">)&lt;/span> @ base-iminling-parent ---
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> --- maven-install-plugin:2.4:install &lt;span class="o">(&lt;/span>default-install&lt;span class="o">)&lt;/span> @ base-iminling-parent ---
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Installing D:&lt;span class="se">\p&lt;/span>roject&lt;span class="se">\i&lt;/span>dea&lt;span class="se">\b&lt;/span>ase-iminling-parent&lt;span class="se">\p&lt;/span>om.xml to D:&lt;span class="se">\m&lt;/span>aven-repository&lt;span class="se">\c&lt;/span>om&lt;span class="se">\i&lt;/span>minling&lt;span class="se">\b&lt;/span>ase-iminling-parent&lt;span class="se">\1&lt;/span>.0.0-SNAPSHOT&lt;span class="se">\b&lt;/span>ase-iminling-parent-1.0.0-S
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">NAPSHOT.pom
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> --- maven-deploy-plugin:2.7:deploy &lt;span class="o">(&lt;/span>default-deploy&lt;span class="o">)&lt;/span> @ base-iminling-parent ---
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Downloading from ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/1.0.0-SNAPSHOT/maven-metadata.xml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Uploading to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/1.0.0-SNAPSHOT/base-iminling-parent-1.0.0-20210220.03
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">4207-1.pom
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Uploaded to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/1.0.0-SNAPSHOT/base-iminling-parent-1.0.0-20210220.034
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">207-1.pom &lt;span class="o">(&lt;/span>&lt;span class="m">14&lt;/span> kB at 4.8 kB/s&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Downloading from ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/maven-metadata.xml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Uploading to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/1.0.0-SNAPSHOT/maven-metadata.xml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Uploaded to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/1.0.0-SNAPSHOT/maven-metadata.xml &lt;span class="o">(&lt;/span>&lt;span class="m">609&lt;/span> B at &lt;span class="m">263&lt;/span> B/s&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Uploading to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/maven-metadata.xml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Uploaded to ossrh: https://oss.sonatype.org/content/repositories/snapshots/com/iminling/base-iminling-parent/maven-metadata.xml &lt;span class="o">(&lt;/span>&lt;span class="m">292&lt;/span> B at &lt;span class="m">54&lt;/span> B/s&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> ------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> BUILD SUCCESS
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> ------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Total time: 15.105 s
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Finished at: 2021-05-20T11:42:18+08:00
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> ------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="release版本">release版本
+&lt;/h3>&lt;p>项目的版本不是以&lt;code>-SNAPSHOT&lt;/code>结尾的,就会发布到release仓库,如下:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">D:&lt;span class="se">\p&lt;/span>roject&lt;span class="se">\i&lt;/span>dea&lt;span class="se">\b&lt;/span>ase-iminling-parent&amp;gt;mvn clean deploy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Scanning &lt;span class="k">for&lt;/span> projects...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span> Some problems were encountered &lt;span class="k">while&lt;/span> building the effective model &lt;span class="k">for&lt;/span> com.iminling:base-iminling-parent:pom:1.0.0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span> &lt;span class="s1">&amp;#39;build.pluginManagement.plugins.plugin.(groupId:artifactId)&amp;#39;&lt;/span> must be unique but found duplicate declaration of plugin org.sonatype.plugins:nexus-staging-
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">maven-plugin @ line 326, column &lt;span class="m">25&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span> It is highly recommended to fix these problems because they threaten the stability of your build.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span> For this reason, future Maven versions might no longer support building such malformed projects.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>WARNING&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> -----------------&amp;lt; com.iminling:base-iminling-parent &amp;gt;------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Building base-iminling-parent 1.0.0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> --------------------------------&lt;span class="o">[&lt;/span> pom &lt;span class="o">]&lt;/span>---------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> --- maven-clean-plugin:2.5:clean &lt;span class="o">(&lt;/span>default-clean&lt;span class="o">)&lt;/span> @ base-iminling-parent ---
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> --- maven-install-plugin:2.4:install &lt;span class="o">(&lt;/span>default-install&lt;span class="o">)&lt;/span> @ base-iminling-parent ---
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Installing D:&lt;span class="se">\p&lt;/span>roject&lt;span class="se">\i&lt;/span>dea&lt;span class="se">\b&lt;/span>ase-iminling-parent&lt;span class="se">\p&lt;/span>om.xml to D:&lt;span class="se">\m&lt;/span>aven-repository&lt;span class="se">\c&lt;/span>om&lt;span class="se">\i&lt;/span>minling&lt;span class="se">\b&lt;/span>ase-iminling-parent&lt;span class="se">\1&lt;/span>.0.0&lt;span class="se">\b&lt;/span>ase-iminling-parent-1.0.0.pom
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> --- maven-deploy-plugin:2.7:deploy &lt;span class="o">(&lt;/span>default-deploy&lt;span class="o">)&lt;/span> @ base-iminling-parent ---
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Uploading to ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/com/iminling/base-iminling-parent/1.0.0/base-iminling-parent-1.0.0.pom
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Uploaded to ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/com/iminling/base-iminling-parent/1.0.0/base-iminling-parent-1.0.0.pom &lt;span class="o">(&lt;/span>&lt;span class="m">14&lt;/span> kB at &lt;span class="m">59&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">7&lt;/span> B/s&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Downloading from ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/com/iminling/base-iminling-parent/maven-metadata.xml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Uploading to ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/com/iminling/base-iminling-parent/maven-metadata.xml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Uploaded to ossrh: https://oss.sonatype.org/service/local/staging/deploy/maven2/com/iminling/base-iminling-parent/maven-metadata.xml &lt;span class="o">(&lt;/span>&lt;span class="m">312&lt;/span> B at &lt;span class="m">51&lt;/span> B/s&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> ------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> BUILD SUCCESS
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> ------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Total time: 32.049 s
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Finished at: 2021-02-20T14:11:23+08:00
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> ------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="遇到的问题">遇到的问题
+&lt;/h3>&lt;p>在mac上进行发布的时候遇到下边问题：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> --- maven-gpg-plugin:1.5:sign &lt;span class="o">(&lt;/span>sign-artifacts&lt;span class="o">)&lt;/span> @ base-iminling-parent ---
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: 签名时失败： Inappropriate ioctl &lt;span class="k">for&lt;/span> device
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gpg: signing failed: Inappropriate ioctl &lt;span class="k">for&lt;/span> device
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> ------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> BUILD FAILURE
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> ------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Total time: 17.069 s
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> Finished at: 2021-02-21T09:36:03+08:00
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>INFO&lt;span class="o">]&lt;/span> ------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上网查询后，原因是 gpg 在当前终端无法弹出密码输入页面。&lt;/p>
+&lt;p>解决办法很简单在终端执行&lt;code>export GPG_TTY=$(tty)&lt;/code> 。重新执行，发现会弹出一个密码输入界面。&lt;/p>
+&lt;h3 id="同步中央仓库">同步中央仓库
+&lt;/h3>&lt;p>发布后我们还需要在sonatype中问题下方进行评论,来激活同步到maven中心仓库.&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=alYxQXJQb1dGYk9kMFhXVUtHR2NKL3cwd3JOZXhIZGlaODJMK2tvK2tRTGlGWnZQYVVXa1dva0lFTHptKy9ZaHA3QWtLVjA9"
+loading="lazy"
+alt="sync maven centrl"
+>&lt;/p>
+&lt;p>后续的release就可以同步到maven仓库了。&lt;/p>
+&lt;h2 id="版本引用">版本引用
+&lt;/h2>&lt;h3 id="release">release
+&lt;/h3>&lt;p>正常使用gav三个坐标来引入就可以了。可能刚发布的并没有同步到所有的仓库，需要等待同步，例如可以去阿里仓库里搜索几遍，让它去同步。&lt;/p>
+&lt;h3 id="快照版本-1">快照版本
+&lt;/h3>&lt;p>快照版本需要引入仓库地址：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="line">&lt;span class="cl">&lt;span class="c">&amp;lt;!--定义snapshots库的地址--&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;repositories&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;repository&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;id&amp;gt;&lt;/span>sonatype-snapshots&lt;span class="nt">&amp;lt;/id&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;name&amp;gt;&lt;/span>sonatype-snapshots&lt;span class="nt">&amp;lt;/name&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;url&amp;gt;&lt;/span>https://oss.sonatype.org/content/repositories/snapshots/&lt;span class="nt">&amp;lt;/url&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;snapshots&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;enabled&amp;gt;&lt;/span>true&lt;span class="nt">&amp;lt;/enabled&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/snapshots&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/repository&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/repositories&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">&amp;lt;!--经测试,不要下边的应该也是可以的,留着做不时之需--&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;pluginRepositories&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;pluginRepository&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;id&amp;gt;&lt;/span>sonatype-snapshots&lt;span class="nt">&amp;lt;/id&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;name&amp;gt;&lt;/span>sonatype-snapshots&lt;span class="nt">&amp;lt;/name&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;url&amp;gt;&lt;/span>https://oss.sonatype.org/content/repositories/snapshots/&lt;span class="nt">&amp;lt;/url&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;snapshots&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;enabled&amp;gt;&lt;/span>true&lt;span class="nt">&amp;lt;/enabled&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/snapshots&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/pluginRepository&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/pluginRepositories&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上边就是通过maven发布jar包到maven中央仓库的的过程，希望可以帮助到大家。&lt;/p></description></item></channel></rss>
