@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hugo on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/hugo/</link><description>Recent content in Hugo on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 05 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>Hugo文章引用完整指南</title><link>https://www.iminling.com/p/hugo%E6%96%87%E7%AB%A0%E5%BC%95%E7%94%A8%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://www.iminling.com/p/hugo%E6%96%87%E7%AB%A0%E5%BC%95%E7%94%A8%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</guid><description>&lt;h1 id="hugo文章引用完整指南">Hugo文章引用完整指南
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hugo on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/hugo/</link><description>Recent content in Hugo on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 05 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>Hugo文章引用完整指南</title><link>https://konghanghang.github.io/iminling-pages/p/hugo%E6%96%87%E7%AB%A0%E5%BC%95%E7%94%A8%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/p/hugo%E6%96%87%E7%AB%A0%E5%BC%95%E7%94%A8%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</guid><description>&lt;h1 id="hugo文章引用完整指南">Hugo文章引用完整指南
 &lt;/h1>&lt;p>在Hugo中，文章之间的相互引用是提高用户体验和SEO的重要功能。本文将详细介绍各种文章引用方法。&lt;/p>
 &lt;h2 id="1-基础引用方法">1. 基础引用方法
 &lt;/h2>&lt;h3 id="11-使用-ref-shortcode推荐">1.1 使用 &lt;code>ref&lt;/code> shortcode（推荐）
@@ -262,7 +262,7 @@
 &lt;p>通过合理使用这些引用功能，可以构建一个互联互通的知识体系，提高读者的阅读体验。&lt;/p>
 &lt;h2 id="相关文章">相关文章
 &lt;/h2>&lt;div class="post-reference-card">
-&lt;a href="https://www.iminling.com/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/" class="post-ref-link">
+&lt;a href="https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/" class="post-ref-link">
 &lt;div class="post-ref-content">
 &lt;h3 class="post-ref-title">WordPress使用git-it-write插件配合github自动发布markdown&lt;/h3>
 &lt;p class="post-ref-summary">&lt;h1 id="wordpress使用git-it-write插件配合github自动发布markdown">WordPress使用git-it-write插件配合github自动发布markdown
@@ -273,7 +273,7 @@
 &lt;/a>
 &lt;/div>
 &lt;div class="post-reference-card">
-&lt;a href="https://www.iminling.com/2025/typora-how-to-use-picgo-upload-image-to-easyimage/" class="post-ref-link">
+&lt;a href="https://konghanghang.github.io/iminling-pages/2025/typora-how-to-use-picgo-upload-image-to-easyimage/" class="post-ref-link">
 &lt;div class="post-ref-content">
 &lt;h3 class="post-ref-title">Typora使用picgo-core配置上传图片到easyimage图床&lt;/h3>
 &lt;p class="post-ref-summary">&lt;h1 id="typora使用picgo-core配置上传图片到easyimage图床">Typora使用picgo-core配置上传图片到easyimage图床&lt;figure class="wp-block-image size-full">
@@ -282,7 +282,7 @@
 &lt;span class="post-ref-date">2025-04-05&lt;/span>&lt;span class="post-ref-category">wordpress&lt;/span>&lt;/div>
 &lt;/div>
 &lt;/a>
-&lt;/div></description></item><item><title>Hugo文章SEO配置完整指南</title><link>https://www.iminling.com/p/hugo%E6%96%87%E7%AB%A0seo%E9%85%8D%E7%BD%AE%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</link><pubDate>Fri, 04 Jul 2025 00:00:00 +0000</pubDate><guid>https://www.iminling.com/p/hugo%E6%96%87%E7%AB%A0seo%E9%85%8D%E7%BD%AE%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</guid><description>&lt;h1 id="hugo文章seo配置完整指南">Hugo文章SEO配置完整指南
+&lt;/div></description></item><item><title>Hugo文章SEO配置完整指南</title><link>https://konghanghang.github.io/iminling-pages/p/hugo%E6%96%87%E7%AB%A0seo%E9%85%8D%E7%BD%AE%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</link><pubDate>Fri, 04 Jul 2025 00:00:00 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/p/hugo%E6%96%87%E7%AB%A0seo%E9%85%8D%E7%BD%AE%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</guid><description>&lt;h1 id="hugo文章seo配置完整指南">Hugo文章SEO配置完整指南
 &lt;/h1>&lt;p>在Hugo中，正确配置SEO元数据对提高搜索引擎收录和排名至关重要。本文将详细介绍如何配置文章的各种SEO字段。&lt;/p>
 &lt;h2 id="-front-matter中的seo字段">📋 Front Matter中的SEO字段
 &lt;/h2>&lt;h3 id="1-description-字段重要">1. description 字段（重要）

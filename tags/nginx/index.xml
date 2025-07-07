@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nginx on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/nginx/</link><description>Recent content in Nginx on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Mon, 05 Feb 2024 13:12:33 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/nginx/index.xml" rel="self" type="application/rss+xml"/><item><title>docker配置fail2ban拦截nginx非法请求ip</title><link>https://www.iminling.com/2024/docker-install-fail2ban-interception-nginx-ip/</link><pubDate>Mon, 05 Feb 2024 13:12:33 +0000</pubDate><guid>https://www.iminling.com/2024/docker-install-fail2ban-interception-nginx-ip/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=S2lnNFVkM3BpS1h5b1RvRlF3V0tocVFuZ3YrTHQ3YWhJQXp6YnNJdUZlenRpSTZOdmF2b0M0MTJpR2VoaVU1eG1PNTZ6Z1E9" alt="Featured image of post docker配置fail2ban拦截nginx非法请求ip" />&lt;p>前边写过一篇通过fail2ban来拦截ssh暴力破解：&lt;a class="link" href="https://www.iminling.com/2024/docker-install-fail2ban-protect-ssh/" >docker安装fail2ban并配置防止ssh登录爆破&lt;/a>，fail2ban能做到的远不止这些，如果你有一个属于自己的网站，那么一定会遇到有无数不知明ip来访问你网站的敏感路径，总是想着要来获取你网站的一些有用信息。今天我们就来使用fail2ban去拦截那些非法访问的ip地址。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nginx on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/nginx/</link><description>Recent content in Nginx on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Mon, 05 Feb 2024 13:12:33 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/nginx/index.xml" rel="self" type="application/rss+xml"/><item><title>docker配置fail2ban拦截nginx非法请求ip</title><link>https://konghanghang.github.io/iminling-pages/2024/docker-install-fail2ban-interception-nginx-ip/</link><pubDate>Mon, 05 Feb 2024 13:12:33 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/docker-install-fail2ban-interception-nginx-ip/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=S2lnNFVkM3BpS1h5b1RvRlF3V0tocVFuZ3YrTHQ3YWhJQXp6YnNJdUZlenRpSTZOdmF2b0M0MTJpR2VoaVU1eG1PNTZ6Z1E9" alt="Featured image of post docker配置fail2ban拦截nginx非法请求ip" />&lt;p>前边写过一篇通过fail2ban来拦截ssh暴力破解：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/docker-install-fail2ban-protect-ssh/" >docker安装fail2ban并配置防止ssh登录爆破&lt;/a>，fail2ban能做到的远不止这些，如果你有一个属于自己的网站，那么一定会遇到有无数不知明ip来访问你网站的敏感路径，总是想着要来获取你网站的一些有用信息。今天我们就来使用fail2ban去拦截那些非法访问的ip地址。&lt;/p>
 &lt;h2 id="环境与目录情况">环境与目录情况
 &lt;/h2>&lt;p>fail2ban如上篇：中的安装方式，是使用docker来安装的
 nginx也是使用docker来安装的，并使用的是桥接网络。
@@ -200,7 +200,7 @@ alt="fail2ban add fail"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>可以看到，已经切换成功了，并且重启了&lt;code>networking&lt;/code>服务。此时再去看禁止ip发现还是不行，仍然可以访问，&lt;strong>官方建议重启&lt;/strong>，我以为重启&lt;code>networking&lt;/code>就可以了，但是并不行，最后只好&lt;strong>对服务器进行了重启&lt;/strong>，最终终于生效，成功的对异常访问ip进行了禁止。&lt;/p>
-&lt;p>以上就是折腾过程，希望可以帮助到大家。&lt;/p></description></item><item><title>自定义Nginx日志属性并设置日志以JSON输出</title><link>https://www.iminling.com/2023/custom-nginx-log-output-json/</link><pubDate>Wed, 04 Oct 2023 15:04:07 +0000</pubDate><guid>https://www.iminling.com/2023/custom-nginx-log-output-json/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=eEZmbmFBSW14MCtoRHpiR0RHeW52cHZqTmNJRU1Zblg0cCtiYWo1Z3VSbHNiNUY2cHF0OHJKZHlpbGVCQUpGRVRMWmRwYXM9" alt="Featured image of post 自定义Nginx日志属性并设置日志以JSON输出" />&lt;p>日志在日常开发中是非常重要的东西，在出现错误后可以快速的进行排查，对Nginx而言同样也很重要，同Nginx的日志我们可以清晰的了解什么url被访问，是什么Ip访问过来等一些重要信息，所以无论是在开发中还是线上环境，都会开启日志。下边就来了解一下Nginx的日志。&lt;/p>
+&lt;p>以上就是折腾过程，希望可以帮助到大家。&lt;/p></description></item><item><title>自定义Nginx日志属性并设置日志以JSON输出</title><link>https://konghanghang.github.io/iminling-pages/2023/custom-nginx-log-output-json/</link><pubDate>Wed, 04 Oct 2023 15:04:07 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/custom-nginx-log-output-json/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=eEZmbmFBSW14MCtoRHpiR0RHeW52cHZqTmNJRU1Zblg0cCtiYWo1Z3VSbHNiNUY2cHF0OHJKZHlpbGVCQUpGRVRMWmRwYXM9" alt="Featured image of post 自定义Nginx日志属性并设置日志以JSON输出" />&lt;p>日志在日常开发中是非常重要的东西，在出现错误后可以快速的进行排查，对Nginx而言同样也很重要，同Nginx的日志我们可以清晰的了解什么url被访问，是什么Ip访问过来等一些重要信息，所以无论是在开发中还是线上环境，都会开启日志。下边就来了解一下Nginx的日志。&lt;/p>
 &lt;h2 id="日志类型">日志类型
 &lt;/h2>&lt;p>在Nginx的配置文件中，日志相关的配置可以出现在_&lt;strong>http,server,location&lt;/strong>_中，通常我们会设置以下格式：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -518,7 +518,7 @@ alt="fail2ban add fail"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>以上就是对日志格式的说明以及如何实现以json格式输出日志。&lt;/p></description></item><item><title>nginx中location使用方法总结</title><link>https://www.iminling.com/2023/nginx-location-use-summary/</link><pubDate>Wed, 30 Aug 2023 14:57:18 +0000</pubDate><guid>https://www.iminling.com/2023/nginx-location-use-summary/</guid><description>&lt;p>在nignx中我们比较长使用的就是location，我们使用location来定位资源或者转发请求，使用不当经常就会遇到404错误，无法找到资源或者请求异常。下面我们来详细了解一下location的用法。&lt;/p>
+&lt;/div>&lt;p>以上就是对日志格式的说明以及如何实现以json格式输出日志。&lt;/p></description></item><item><title>nginx中location使用方法总结</title><link>https://konghanghang.github.io/iminling-pages/2023/nginx-location-use-summary/</link><pubDate>Wed, 30 Aug 2023 14:57:18 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/nginx-location-use-summary/</guid><description>&lt;p>在nignx中我们比较长使用的就是location，我们使用location来定位资源或者转发请求，使用不当经常就会遇到404错误，无法找到资源或者请求异常。下面我们来详细了解一下location的用法。&lt;/p>
 &lt;h2 id="语法">语法
 &lt;/h2>&lt;p>location的具体语法如下：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -723,7 +723,7 @@ alt="fail2ban add fail"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>以上就是nginx中location的使用方法，匹配规则，以及代码块中proxy_pass的使用方法，希望可以帮到大家。&lt;/p></description></item><item><title>nginx配置隐藏版本号提升安全</title><link>https://www.iminling.com/2023/nginx-hides-version-number/</link><pubDate>Sat, 05 Aug 2023 19:21:16 +0000</pubDate><guid>https://www.iminling.com/2023/nginx-hides-version-number/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=eEZmbmFBSW14MCtoRHpiR0RHeW52cHZqTmNJRU1Zblg0cCtiYWo1Z3VSbHNiNUY2cHF0OHJKZHlpbGVCQUpGRVRMWmRwYXM9" alt="Featured image of post nginx配置隐藏版本号提升安全" />&lt;div>
+&lt;/div>&lt;p>以上就是nginx中location的使用方法，匹配规则，以及代码块中proxy_pass的使用方法，希望可以帮到大家。&lt;/p></description></item><item><title>nginx配置隐藏版本号提升安全</title><link>https://konghanghang.github.io/iminling-pages/2023/nginx-hides-version-number/</link><pubDate>Sat, 05 Aug 2023 19:21:16 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/nginx-hides-version-number/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=eEZmbmFBSW14MCtoRHpiR0RHeW52cHZqTmNJRU1Zblg0cCtiYWo1Z3VSbHNiNUY2cHF0OHJKZHlpbGVCQUpGRVRMWmRwYXM9" alt="Featured image of post nginx配置隐藏版本号提升安全" />&lt;div>
 Nginx (engine x) 是一个高性能的HTTP和反向代理web服务器  ，同时也提供了IMAP/POP3/SMTP服务，是个软件肯定都会多多少少有一些漏洞，所以我们需要隐藏nginx的版本号，让攻击者没那么容易很快的攻破我们的网站。
 &lt;/div>
 &lt;div>
@@ -783,11 +783,11 @@ try_files $uri $uri/ /index.php$is_args$args;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>如上，server里只显示了nginx。&lt;/p>
-&lt;p>经过上边的配置就可以隐藏nginx的版本号了。&lt;/p></description></item><item><title>xray搭建reality和网站共用443端口启用网站SSL</title><link>https://www.iminling.com/2023/both-xray-reality-website-use-443/</link><pubDate>Mon, 31 Jul 2023 06:30:46 +0000</pubDate><guid>https://www.iminling.com/2023/both-xray-reality-website-use-443/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=TUVLUjRhOHdSS21VVjh4dDdmbElGUVhHZHRFRlR3c3h1R2F2Qi8wOEg0V3V6cGZReGx5NUs1Z3FQYjRhVXdCdm14WWVma2c9" alt="Featured image of post xray搭建reality和网站共用443端口启用网站SSL" />&lt;p>当我们只有一个vps，又想部署网站同时又想搭建代理，当然两个程序可以分开占用端口，做到不冲突，但是感觉不怎么优雅，所以想要让两个程序都去共用一个443端口，这样子网站可以使用域名并开启ssl，代理也可以使用443(心理作用，感觉代理走443会更好一些，毕竟代理使用了ssl，走其他端口怪怪的)。下面就开启折腾之路。&lt;/p>
+&lt;p>经过上边的配置就可以隐藏nginx的版本号了。&lt;/p></description></item><item><title>xray搭建reality和网站共用443端口启用网站SSL</title><link>https://konghanghang.github.io/iminling-pages/2023/both-xray-reality-website-use-443/</link><pubDate>Mon, 31 Jul 2023 06:30:46 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/both-xray-reality-website-use-443/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=TUVLUjRhOHdSS21VVjh4dDdmbElGUVhHZHRFRlR3c3h1R2F2Qi8wOEg0V3V6cGZReGx5NUs1Z3FQYjRhVXdCdm14WWVma2c9" alt="Featured image of post xray搭建reality和网站共用443端口启用网站SSL" />&lt;p>当我们只有一个vps，又想部署网站同时又想搭建代理，当然两个程序可以分开占用端口，做到不冲突，但是感觉不怎么优雅，所以想要让两个程序都去共用一个443端口，这样子网站可以使用域名并开启ssl，代理也可以使用443(心理作用，感觉代理走443会更好一些，毕竟代理使用了ssl，走其他端口怪怪的)。下面就开启折腾之路。&lt;/p>
 &lt;h2 id="代理协议">代理协议
 &lt;/h2>&lt;p>目前比较稳定的协议要数reality了，所以自己搭建的代理也是使用reality，reality可以使用自己的证书，也可以使用其他域名的证书：就是宣传的“偷证书”。既然我的网站要使用443开启ssl，那我当时使用自己的证书最方便，而且延迟最小。&lt;/p>
 &lt;h2 id="证书申请">证书申请
-&lt;/h2>&lt;p>安装reality可以使用xui来安装，具体的xui安装可以参考我的文章：&lt;a class="link" href="https://www.iminling.com/2023/x-ui-configuration-and-use/" >x-ui安装配置使用&lt;/a>。xui本身可以帮助我们申请证书，如果不想使用xui的证书申请，还可以参考我的另一篇文章使用certbot来申请证书：&lt;a class="link" href="https://www.iminling.com/2023/docker-use-certbot-apply-lets-encrypt/" >docker部署certbot申请Let’s Encrypt证书&lt;/a>，我这里就使用certbot来申请证书。&lt;/p>
+&lt;/h2>&lt;p>安装reality可以使用xui来安装，具体的xui安装可以参考我的文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2023/x-ui-configuration-and-use/" >x-ui安装配置使用&lt;/a>。xui本身可以帮助我们申请证书，如果不想使用xui的证书申请，还可以参考我的另一篇文章使用certbot来申请证书：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2023/docker-use-certbot-apply-lets-encrypt/" >docker部署certbot申请Let’s Encrypt证书&lt;/a>，我这里就使用certbot来申请证书。&lt;/p>
 &lt;h2 id="站点部署">站点部署
 &lt;/h2>&lt;p>这里是为了演示，所以我这里就只启动nginx，然后配置ssl，对域名启用ssl。nginx我使用的是docker来启动的，具体的目录如下,所在的路径是：&lt;code>/root/images/nginx&lt;/code>&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -1041,7 +1041,7 @@ try_files $uri $uri/ /index.php$is_args$args;
 &lt;p>这时候我们把nginx启动起来，通过域名访问我们的网站看是否已经可以正常使用https。&lt;/p>
 &lt;h2 id="代理配置">代理配置
 &lt;/h2>&lt;p>代理的配置这里就简单带过，通过x-ui或者直接安装xray-core来运行。也可以通过我的镜像：&lt;a class="link" href="https://github.com/konghanghang/images/tree/master/xray" target="_blank" rel="noopener"
->xray&lt;/a>，直接使用docker安装，参考文章：&lt;a class="link" href="https://www.iminling.com/2023/xray-configutaion-reality/" >xray配置使用reality&lt;/a>&lt;/p>
+>xray&lt;/a>，直接使用docker安装，参考文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2023/xray-configutaion-reality/" >xray配置使用reality&lt;/a>&lt;/p>
 &lt;p>xray的配置文件如下：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">

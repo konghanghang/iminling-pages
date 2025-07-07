@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Openwrt on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/openwrt/</link><description>Recent content in Openwrt on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 24 Mar 2024 05:43:31 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/openwrt/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式</title><link>https://www.iminling.com/2024/pve-install-openwrt/</link><pubDate>Sun, 24 Mar 2024 05:43:31 +0000</pubDate><guid>https://www.iminling.com/2024/pve-install-openwrt/</guid><description>&lt;p>在前两篇文章中分别介绍了&lt;a class="link" href="https://www.iminling.com/2024/03/23/459.html" title="畅网J4125安装Proxmox virtual environment(pve) 8.0"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Openwrt on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/openwrt/</link><description>Recent content in Openwrt on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 24 Mar 2024 05:43:31 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/openwrt/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-install-openwrt/</link><pubDate>Sun, 24 Mar 2024 05:43:31 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-install-openwrt/</guid><description>&lt;p>在前两篇文章中分别介绍了&lt;a class="link" href="https://www.iminling.com/2024/03/23/459.html" title="畅网J4125安装Proxmox virtual environment(pve) 8.0"
 target="_blank" rel="noopener"
 >pve的安装&lt;/a>以及pve安装ikuai做为主路由来拨号上网，此时的网络环境基本已经稳定，但出于特殊需求，我需要使用Openwrt来进行科学上网，所以今天就来折腾一下pve安装Openwrt并实现旁路由模式。&lt;/p>
 &lt;h2 id="openwrt镜像">openwrt镜像
@@ -150,7 +150,7 @@ alt="pve openwrt ikuai"
 loading="lazy"
 alt="pve ikuai dhcp"
 >&lt;/p>
-&lt;p>大功告成，使用pve安装ikuai并使用openwrt做为旁路由。&lt;/p></description></item><item><title>openwrt系统frps配置使用</title><link>https://www.iminling.com/2023/openwrt-frps-configuration/</link><pubDate>Sun, 09 Apr 2023 06:23:58 +0000</pubDate><guid>https://www.iminling.com/2023/openwrt-frps-configuration/</guid><description>&lt;p>宽带给了公网ip，所以想在自己家搭建一个frp的服务端，这样子就可以当做一台服务器，来进行内网穿透使用了。&lt;/p>
+&lt;p>大功告成，使用pve安装ikuai并使用openwrt做为旁路由。&lt;/p></description></item><item><title>openwrt系统frps配置使用</title><link>https://konghanghang.github.io/iminling-pages/2023/openwrt-frps-configuration/</link><pubDate>Sun, 09 Apr 2023 06:23:58 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/openwrt-frps-configuration/</guid><description>&lt;p>宽带给了公网ip，所以想在自己家搭建一个frp的服务端，这样子就可以当做一台服务器，来进行内网穿透使用了。&lt;/p>
 &lt;h2 id="frps配置">frps配置
 &lt;/h2>&lt;p>我家里是使用的r2s刷的openwrt系统，所以可以在r2s中进行frps的搭建，找到对应的菜单：&lt;/p>
 &lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/1681048330252.jpg"
@@ -210,7 +210,7 @@ loading="lazy"
 &lt;p>如上图我添加的子域名是gzax6,那么我还需要去添加一条解析才能使用gzax6.frps.com:7000来访问我的ax6这个路由器的管理界面。&lt;/p>
 &lt;p>我们添加一条CNAME的记录，因为ip地址是一直在变化的，我们唯一不变的就是ddns使用的域名，我们解析一条CNAME记录到我们ddns使用的域名，这样子就可以正确的解析到我的openwrt里的frps服务端了。&lt;/p>
 &lt;h2 id="总结">总结
-&lt;/h2>&lt;p>经过上述步骤，我们就可以使用域名:7000端口来在外网访问我们内网的路由器管理界面了。&lt;/p></description></item><item><title>openwrt配置Cloudflare DDNS</title><link>https://www.iminling.com/2023/openwrt-configuration-cf-ddns/</link><pubDate>Sat, 08 Apr 2023 18:12:20 +0000</pubDate><guid>https://www.iminling.com/2023/openwrt-configuration-cf-ddns/</guid><description>&lt;p>配置DDNS的前提条件是家里的宽带需要有公网ip。下面我们开始使用cloudflare来进行DDNS的配置。&lt;/p>
+&lt;/h2>&lt;p>经过上述步骤，我们就可以使用域名:7000端口来在外网访问我们内网的路由器管理界面了。&lt;/p></description></item><item><title>openwrt配置Cloudflare DDNS</title><link>https://konghanghang.github.io/iminling-pages/2023/openwrt-configuration-cf-ddns/</link><pubDate>Sat, 08 Apr 2023 18:12:20 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/openwrt-configuration-cf-ddns/</guid><description>&lt;p>配置DDNS的前提条件是家里的宽带需要有公网ip。下面我们开始使用cloudflare来进行DDNS的配置。&lt;/p>
 &lt;h2 id="添加ddns配置">添加ddns配置
 &lt;/h2>&lt;p>选择openwrt里的动态DNS功能，然后在里边添加一个自己的配置，名称随便，如我添加的&lt;code>MYDDNS&lt;/code>`。&lt;/p>
 &lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/1681004803830.jpg"

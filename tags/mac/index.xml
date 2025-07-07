@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mac on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/mac/</link><description>Recent content in Mac on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Fri, 27 Oct 2023 10:07:07 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/mac/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac终端美化之Oh My Zsh安装配置</title><link>https://www.iminling.com/2023/mac-install-oh-my-zsh/</link><pubDate>Fri, 27 Oct 2023 10:07:07 +0000</pubDate><guid>https://www.iminling.com/2023/mac-install-oh-my-zsh/</guid><description>&lt;p>使用Mac的同学应该对Mac自带的终端配置都没什么好感，默认白底黑字，文件夹也没有特殊标识，还是上一张图来感受一下吧：&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mac on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/mac/</link><description>Recent content in Mac on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Fri, 27 Oct 2023 10:07:07 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/mac/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac终端美化之Oh My Zsh安装配置</title><link>https://konghanghang.github.io/iminling-pages/2023/mac-install-oh-my-zsh/</link><pubDate>Fri, 27 Oct 2023 10:07:07 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/mac-install-oh-my-zsh/</guid><description>&lt;p>使用Mac的同学应该对Mac自带的终端配置都没什么好感，默认白底黑字，文件夹也没有特殊标识，还是上一张图来感受一下吧：&lt;/p>
 &lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/F23BC444669EA0029CFA2A5734A568D6.png"
 loading="lazy"
 >&lt;/p>
@@ -542,7 +542,7 @@ loading="lazy"
 &lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/83E97AAB128886574F7D67D116697633.png"
 loading="lazy"
 >&lt;/p>
-&lt;p>选择import后，在上边的选项中就会有你刚才文件名称对应的一个配置文件，比如我这里叫me-old,然后设置为default就可以了，就和我图片中的终端配色一样了。&lt;/p></description></item><item><title>Mac使用Homebrew安装Gradle环境</title><link>https://www.iminling.com/2023/mac-use-homebrew-install-gradle/</link><pubDate>Fri, 27 Oct 2023 05:24:40 +0000</pubDate><guid>https://www.iminling.com/2023/mac-use-homebrew-install-gradle/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/3F5D90BA94A32843C781364B437AB148.png"
+&lt;p>选择import后，在上边的选项中就会有你刚才文件名称对应的一个配置文件，比如我这里叫me-old,然后设置为default就可以了，就和我图片中的终端配色一样了。&lt;/p></description></item><item><title>Mac使用Homebrew安装Gradle环境</title><link>https://konghanghang.github.io/iminling-pages/2023/mac-use-homebrew-install-gradle/</link><pubDate>Fri, 27 Oct 2023 05:24:40 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/mac-use-homebrew-install-gradle/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/3F5D90BA94A32843C781364B437AB148.png"
 loading="lazy"
 >&lt;/p>
 &lt;p>首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2023/10/02/265.html" title="Mac更换源更快速的安装Homebrew"
@@ -698,7 +698,7 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>以上，Gradle就安装成功。也可以参考官网的安装步骤进行手工下载安装：&lt;a class="link" href="https://gradle.org/install/" target="_blank" rel="noopener"
->Installing manually&lt;/a>。&lt;/p></description></item><item><title>Mac使用Homebrew安装maven环境</title><link>https://www.iminling.com/2023/mac-use-homebrew-install-maven/</link><pubDate>Fri, 27 Oct 2023 04:01:20 +0000</pubDate><guid>https://www.iminling.com/2023/mac-use-homebrew-install-maven/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/C57B82469E62154EDED97C0E6200B82F.png"
+>Installing manually&lt;/a>。&lt;/p></description></item><item><title>Mac使用Homebrew安装maven环境</title><link>https://konghanghang.github.io/iminling-pages/2023/mac-use-homebrew-install-maven/</link><pubDate>Fri, 27 Oct 2023 04:01:20 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/mac-use-homebrew-install-maven/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/C57B82469E62154EDED97C0E6200B82F.png"
 loading="lazy"
 >&lt;/p>
 &lt;p>首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：&lt;a class="link" href="https://www.iminling.com/2023/10/02/265.html" title="Mac更换源更快速的安装Homebrew"
@@ -830,7 +830,7 @@ target="_blank" rel="noopener"
 &lt;/div>
 &lt;/div>&lt;p>至此maven就安装完成了，我这里使用的是brew来进行安装，除了这个方法，还可以直接去maven官网进行下载maven的压缩包，然后进行解压，再进行环境变量的配置就可以了。maven官网的下载地址：&lt;a class="link" href="https://maven.apache.org/download.cgi" target="_blank" rel="noopener"
 >Maven - Download&lt;/a>，这里默认下载的是最新版本，如果想下载历史的版本可以去到历史库下载，具体地址：&lt;a class="link" href="https://maven.apache.org/docs/history.html" target="_blank" rel="noopener"
->Maven Releases History&lt;/a>。&lt;/p></description></item><item><title>Mac更换源更快速的安装Homebrew</title><link>https://www.iminling.com/2023/mac-change-source-install-homebrew/</link><pubDate>Mon, 02 Oct 2023 00:00:00 +0000</pubDate><guid>https://www.iminling.com/2023/mac-change-source-install-homebrew/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/ac50dc06f009fe58bbe7cf4cde2e26eb.jpg"
+>Maven Releases History&lt;/a>。&lt;/p></description></item><item><title>Mac更换源更快速的安装Homebrew</title><link>https://konghanghang.github.io/iminling-pages/2023/mac-change-source-install-homebrew/</link><pubDate>Mon, 02 Oct 2023 00:00:00 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/mac-change-source-install-homebrew/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/ac50dc06f009fe58bbe7cf4cde2e26eb.jpg"
 loading="lazy"
 >&lt;/p>
 &lt;p>&lt;a class="link" href="https://brew.sh/" target="_blank" rel="noopener"

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>影音 on 记录点滴 - 分享</title><link>https://www.iminling.com/categories/%E5%BD%B1%E9%9F%B3/</link><description>Recent content in 影音 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 13 Oct 2024 02:04:10 +0000</lastBuildDate><atom:link href="https://www.iminling.com/categories/%E5%BD%B1%E9%9F%B3/index.xml" rel="self" type="application/rss+xml"/><item><title>私人影院之rclone安装以及通过WebDav配置alist</title><link>https://www.iminling.com/2024/install-rclone-and-configuration/</link><pubDate>Sun, 13 Oct 2024 02:04:10 +0000</pubDate><guid>https://www.iminling.com/2024/install-rclone-and-configuration/</guid><description>&lt;p>上一篇文章介绍了对&lt;a class="link" href="https://www.iminling.com/2024/build-alist-server" title="私人影院之搭建自己的alist服务端并添加常见网盘"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>影音 on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/categories/%E5%BD%B1%E9%9F%B3/</link><description>Recent content in 影音 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 13 Oct 2024 02:04:10 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/categories/%E5%BD%B1%E9%9F%B3/index.xml" rel="self" type="application/rss+xml"/><item><title>私人影院之rclone安装以及通过WebDav配置alist</title><link>https://konghanghang.github.io/iminling-pages/2024/install-rclone-and-configuration/</link><pubDate>Sun, 13 Oct 2024 02:04:10 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/install-rclone-and-configuration/</guid><description>&lt;p>上一篇文章介绍了对&lt;a class="link" href="https://www.iminling.com/2024/build-alist-server" title="私人影院之搭建自己的alist服务端并添加常见网盘"
 target="_blank" rel="noopener"
 >alist的安装&lt;/a>，本篇文章则来介绍一下rclone把alist里挂载的网盘再套娃挂载到本地磁盘，为后续emby直接读取本地的挂载文件做准备。那么接下来就开始折腾rclone.&lt;/p>
 &lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/10/FE27085E1D15A96BA8B9CD0E182FA3C9.png"
@@ -130,7 +130,7 @@ alt="rclone "
 &lt;/div>
 &lt;/div>&lt;p>然后在rclone目录下执行&lt;code>docker compose up -d&lt;/code>启动容器就可以了。&lt;/p>
 &lt;p>如果配置没问题应该就可以在宿主机&lt;code>/data/movies&lt;/code>目录下看到alist中的网盘和所有文件了。&lt;/p>
-&lt;p>以上就是折腾rclone和alist的过程，把alist挂载到本地，想本地目录文件一样来进行浏览，方便后续emby进行影视库的添加。&lt;/p></description></item><item><title>私人影院之搭建自己的alist服务端并添加常见网盘</title><link>https://www.iminling.com/2024/build-alist-server/</link><pubDate>Sat, 21 Sep 2024 09:56:03 +0000</pubDate><guid>https://www.iminling.com/2024/build-alist-server/</guid><description>&lt;p>前段时间写了一篇如何&lt;a class="link" href="https://www.iminling.com/2024/how-to-build-xiaoya-alist-and-use" title="搭建属于自己的影视小站：小雅Alist安装及使用"
+&lt;p>以上就是折腾rclone和alist的过程，把alist挂载到本地，想本地目录文件一样来进行浏览，方便后续emby进行影视库的添加。&lt;/p></description></item><item><title>私人影院之搭建自己的alist服务端并添加常见网盘</title><link>https://konghanghang.github.io/iminling-pages/2024/build-alist-server/</link><pubDate>Sat, 21 Sep 2024 09:56:03 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/build-alist-server/</guid><description>&lt;p>前段时间写了一篇如何&lt;a class="link" href="https://www.iminling.com/2024/how-to-build-xiaoya-alist-and-use" title="搭建属于自己的影视小站：小雅Alist安装及使用"
 target="_blank" rel="noopener"
 >搭建小雅alist&lt;/a>的文章，使用小雅的媒体库来进行观影，但是这种有一个问题就是小雅的库更新的不是很快，而且如果我想在电视上观看比较麻烦，就算搭配emby,也无法避免资源更新慢的问题。所以就想着使用自己的网盘配合自己搭建的alist服务端，来进行资源快速入库，方便自己快速观看。那么接下来就详细说明一下自己的搭建过程。&lt;/p>
 &lt;h2 id="alist服务端">alist服务端
@@ -254,7 +254,7 @@ alt="alist add smb nas"
 &lt;p>smb是本地文件，启用签名就可以不用开了。地址、用户名、密码和分享名称(smb中的目录)根据自己的需求填写就可以了。&lt;/p>
 &lt;h2 id="总结">总结
 &lt;/h2>&lt;p>我这里介绍了三种网盘的添加方式，其他的网盘也都大同小异，比如添加阿里云盘等。那么搭建alist服务端并添加网盘，就介绍到这里。希望可以帮到大家。&lt;/p>
-&lt;p>接下来还会介绍利用rclone挂载alist，然后让emby来使用并实现302播放。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘</title><link>https://www.iminling.com/2024/pve-install-nas/</link><pubDate>Mon, 16 Sep 2024 10:00:29 +0000</pubDate><guid>https://www.iminling.com/2024/pve-install-nas/</guid><description>&lt;p>前段时间通过pve安装&lt;a class="link" href="https://www.iminling.com/2024/pve-install-ikuai" title="Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"
+&lt;p>接下来还会介绍利用rclone挂载alist，然后让emby来使用并实现302播放。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/</link><pubDate>Mon, 16 Sep 2024 10:00:29 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/</guid><description>&lt;p>前段时间通过pve安装&lt;a class="link" href="https://www.iminling.com/2024/pve-install-ikuai" title="Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"
 target="_blank" rel="noopener"
 >ikuai&lt;/a>,&lt;a class="link" href="https://www.iminling.com/2024/pve-install-openwrt" title="Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式"
 target="_blank" rel="noopener"
@@ -450,7 +450,7 @@ alt="sa6400 configuration check"
 loading="lazy"
 alt="sa6400 desktop"
 >&lt;/p>
-&lt;p>以上就是pve安装黑群晖的折腾记录。&lt;/p></description></item><item><title>docker搭建aliyunpan-sync时实增量同步阿里云盘文件</title><link>https://www.iminling.com/2024/docker-deploy-aliyunpan-sync/</link><pubDate>Sat, 06 Jul 2024 03:11:29 +0000</pubDate><guid>https://www.iminling.com/2024/docker-deploy-aliyunpan-sync/</guid><description>&lt;p>在前边的文章中介绍了如何快速的搭建&lt;a class="link" href="https://www.iminling.com/2024/04/20/586.html" title="搭建属于自己的影视小站：小雅Alist安装及使用"
+&lt;p>以上就是pve安装黑群晖的折腾记录。&lt;/p></description></item><item><title>docker搭建aliyunpan-sync时实增量同步阿里云盘文件</title><link>https://konghanghang.github.io/iminling-pages/2024/docker-deploy-aliyunpan-sync/</link><pubDate>Sat, 06 Jul 2024 03:11:29 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/docker-deploy-aliyunpan-sync/</guid><description>&lt;p>在前边的文章中介绍了如何快速的搭建&lt;a class="link" href="https://www.iminling.com/2024/04/20/586.html" title="搭建属于自己的影视小站：小雅Alist安装及使用"
 target="_blank" rel="noopener"
 >小雅alist&lt;/a>来满足大家的观影需求，但是有一些剧小雅更新没那么及时，这时候就需要大家八仙过海了。如何及时找到自己要观看的剧，并成功观看呢？下边就带着大家一起使用&lt;a class="link" href="https://github.com/tickstep/aliyunpan" target="_blank" rel="noopener"
 >aliyunpan-sync&lt;/a>工具来同步阿里云盘的数据。&lt;/p>
@@ -839,7 +839,7 @@ aliyunpan-sync | 2024-07-06T02:53:56.554962070Z 下载文件：/来自分享/Jad
 &lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/07/05B5E84F322C5B0AB5CFF6A562CEADFC.jpg"
 loading="lazy"
 alt="aliyunpan sync notification"
->&lt;/p></description></item><item><title>搭建属于自己的影视小站：小雅Alist安装及使用</title><link>https://www.iminling.com/2024/how-to-build-xiaoya-alist-and-use/</link><pubDate>Sat, 20 Apr 2024 06:39:56 +0000</pubDate><guid>https://www.iminling.com/2024/how-to-build-xiaoya-alist-and-use/</guid><description>&lt;p>之前一直在使用其他的影视站去看一些电影，这些影视站基本网速都比较慢，画质也都一般，观看体验也不怎么好，这里顺便也分享一下我一直使用的影视站：&lt;a class="link" href="https://www.549.tv/" target="_blank" rel="noopener"
+>&lt;/p></description></item><item><title>搭建属于自己的影视小站：小雅Alist安装及使用</title><link>https://konghanghang.github.io/iminling-pages/2024/how-to-build-xiaoya-alist-and-use/</link><pubDate>Sat, 20 Apr 2024 06:39:56 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/how-to-build-xiaoya-alist-and-use/</guid><description>&lt;p>之前一直在使用其他的影视站去看一些电影，这些影视站基本网速都比较慢，画质也都一般，观看体验也不怎么好，这里顺便也分享一下我一直使用的影视站：&lt;a class="link" href="https://www.549.tv/" target="_blank" rel="noopener"
 >影视森林&lt;/a>，该站整理了一些比较不错的影视站。偶然的机会下了解到了小雅(xiaoya)Alist，搭配阿里云盘简直不要太爽，作者也在一直更新资源，非常推荐自己搭建，下边就简单介绍一下我的搭建过程以及一些使用。&lt;/p>
 &lt;h2 id="准备工作">准备工作
 &lt;/h2>&lt;p>在进行安装前需要先获取三个东西：token,open token以及folder id,下边介绍一下如何获取这几个信息。另外需要在机器上安装docker，因为小雅Alist是使用docker镜像来安装的，如果本机还没有安装docker,可以参考我的文章：&lt;a class="link" href="https://www.iminling.com/2023/06/10/164.html" title="docker安装"

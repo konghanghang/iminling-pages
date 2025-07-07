@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 记录点滴 - 分享</title><link>https://www.iminling.com/tags/docker/</link><description>Recent content in Docker on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 06 Jul 2024 03:11:29 +0000</lastBuildDate><atom:link href="https://www.iminling.com/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>docker搭建aliyunpan-sync时实增量同步阿里云盘文件</title><link>https://www.iminling.com/2024/docker-deploy-aliyunpan-sync/</link><pubDate>Sat, 06 Jul 2024 03:11:29 +0000</pubDate><guid>https://www.iminling.com/2024/docker-deploy-aliyunpan-sync/</guid><description>&lt;p>在前边的文章中介绍了如何快速的搭建&lt;a class="link" href="https://www.iminling.com/2024/04/20/586.html" title="搭建属于自己的影视小站：小雅Alist安装及使用"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/docker/</link><description>Recent content in Docker on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 06 Jul 2024 03:11:29 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>docker搭建aliyunpan-sync时实增量同步阿里云盘文件</title><link>https://konghanghang.github.io/iminling-pages/2024/docker-deploy-aliyunpan-sync/</link><pubDate>Sat, 06 Jul 2024 03:11:29 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/docker-deploy-aliyunpan-sync/</guid><description>&lt;p>在前边的文章中介绍了如何快速的搭建&lt;a class="link" href="https://www.iminling.com/2024/04/20/586.html" title="搭建属于自己的影视小站：小雅Alist安装及使用"
 target="_blank" rel="noopener"
 >小雅alist&lt;/a>来满足大家的观影需求，但是有一些剧小雅更新没那么及时，这时候就需要大家八仙过海了。如何及时找到自己要观看的剧，并成功观看呢？下边就带着大家一起使用&lt;a class="link" href="https://github.com/tickstep/aliyunpan" target="_blank" rel="noopener"
 >aliyunpan-sync&lt;/a>工具来同步阿里云盘的数据。&lt;/p>
@@ -387,9 +387,9 @@ aliyunpan-sync | 2024-07-06T02:53:56.554962070Z 下载文件：/来自分享/Jad
 &lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/07/05B5E84F322C5B0AB5CFF6A562CEADFC.jpg"
 loading="lazy"
 alt="aliyunpan sync notification"
->&lt;/p></description></item><item><title>debian系统使用docker快速安装promutheus</title><link>https://www.iminling.com/2023/debian-use-docker-install-promutheus/</link><pubDate>Sun, 26 Nov 2023 00:00:00 +0000</pubDate><guid>https://www.iminling.com/2023/debian-use-docker-install-promutheus/</guid><description>&lt;p>&lt;a class="link" href="https://prometheus.io/" target="_blank" rel="noopener"
+>&lt;/p></description></item><item><title>debian系统使用docker快速安装promutheus</title><link>https://konghanghang.github.io/iminling-pages/2023/debian-use-docker-install-promutheus/</link><pubDate>Sun, 26 Nov 2023 00:00:00 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/debian-use-docker-install-promutheus/</guid><description>&lt;p>&lt;a class="link" href="https://prometheus.io/" target="_blank" rel="noopener"
 >Prometheus&lt;/a>是一套开源的监控&amp;amp;报警&amp;amp;时间序列数据库的组合,起始是由SoundCloud公司开发的。它的功能强大，被广泛使用。今天这边文章就简单介绍一下如何使用docker快速的搭建一个prometheus的服务，其他相关的知识在后续的文章里再详细分享。先把服务跑起来。&lt;/p>
-&lt;p>如果还没有安装docker的同学可以参考的我另一篇文章来快速的安装docker环境：&lt;a class="link" href="https://www.iminling.com/2023/linux-install-docker/" >docker安装&lt;/a>。&lt;/p>
+&lt;p>如果还没有安装docker的同学可以参考的我另一篇文章来快速的安装docker环境：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2023/linux-install-docker/" >docker安装&lt;/a>。&lt;/p>
 &lt;h2 id="docker-compose文件准备">docker-compose文件准备
 &lt;/h2>&lt;p>我习惯直接使用docker-compose来安装所有服务，我的所有服务都使用同一个网络，实现服务的互通，下边贴出我的配置：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -525,7 +525,7 @@ loading="lazy"
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Q1AvdXgyWU5aZjRFY3dqeEt5OWlBUkhoclVPbWdQQm9URVAvSERHTGw1b1FkZ0ZWKzN2dnRPZ1cwK0lqTVpVTVlKWGk1b2c9"
 loading="lazy"
 >&lt;/p>
-&lt;p>以上就是简单的安装prometheus的过程，希望可以帮到大家。&lt;/p></description></item><item><title>docker网络模式简介</title><link>https://www.iminling.com/2023/introduction-to-docker-network-mode/</link><pubDate>Mon, 07 Aug 2023 21:29:16 +0000</pubDate><guid>https://www.iminling.com/2023/introduction-to-docker-network-mode/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=alYxQXJQb1dGYk9kMFhXVUtHR2NKNElMWkFmL2JGekd5a09YNmNzbWJBSERqeWR2OUFTTXo1a25MZGRPS2JlKytwUFgvQWs9" alt="Featured image of post docker网络模式简介" />&lt;p>日常开发中都有使用到docker，一直对docker的网络不是很清楚，所以花了点时间了解一下docker的网络，这里对了解的知识进行一下总结。&lt;/p>
+&lt;p>以上就是简单的安装prometheus的过程，希望可以帮到大家。&lt;/p></description></item><item><title>docker网络模式简介</title><link>https://konghanghang.github.io/iminling-pages/2023/introduction-to-docker-network-mode/</link><pubDate>Mon, 07 Aug 2023 21:29:16 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/introduction-to-docker-network-mode/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=alYxQXJQb1dGYk9kMFhXVUtHR2NKNElMWkFmL2JGekd5a09YNmNzbWJBSERqeWR2OUFTTXo1a25MZGRPS2JlKytwUFgvQWs9" alt="Featured image of post docker网络模式简介" />&lt;p>日常开发中都有使用到docker，一直对docker的网络不是很清楚，所以花了点时间了解一下docker的网络，这里对了解的知识进行一下总结。&lt;/p>
 &lt;p>当我们安装好docker后，docker默认给我们创建了3个网络，如下：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -865,11 +865,11 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">]&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>我们正常使用的话，还是bridge网络用的多一些，因为各服务都是需要相互调用的，要做到网络互通。以上就是对docker三种模式的一些总结。&lt;/p></description></item><item><title>xray搭建reality和网站共用443端口启用网站SSL</title><link>https://www.iminling.com/2023/both-xray-reality-website-use-443/</link><pubDate>Mon, 31 Jul 2023 06:30:46 +0000</pubDate><guid>https://www.iminling.com/2023/both-xray-reality-website-use-443/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=TUVLUjRhOHdSS21VVjh4dDdmbElGUVhHZHRFRlR3c3h1R2F2Qi8wOEg0V3V6cGZReGx5NUs1Z3FQYjRhVXdCdm14WWVma2c9" alt="Featured image of post xray搭建reality和网站共用443端口启用网站SSL" />&lt;p>当我们只有一个vps，又想部署网站同时又想搭建代理，当然两个程序可以分开占用端口，做到不冲突，但是感觉不怎么优雅，所以想要让两个程序都去共用一个443端口，这样子网站可以使用域名并开启ssl，代理也可以使用443(心理作用，感觉代理走443会更好一些，毕竟代理使用了ssl，走其他端口怪怪的)。下面就开启折腾之路。&lt;/p>
+&lt;/div>&lt;p>我们正常使用的话，还是bridge网络用的多一些，因为各服务都是需要相互调用的，要做到网络互通。以上就是对docker三种模式的一些总结。&lt;/p></description></item><item><title>xray搭建reality和网站共用443端口启用网站SSL</title><link>https://konghanghang.github.io/iminling-pages/2023/both-xray-reality-website-use-443/</link><pubDate>Mon, 31 Jul 2023 06:30:46 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/both-xray-reality-website-use-443/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=TUVLUjRhOHdSS21VVjh4dDdmbElGUVhHZHRFRlR3c3h1R2F2Qi8wOEg0V3V6cGZReGx5NUs1Z3FQYjRhVXdCdm14WWVma2c9" alt="Featured image of post xray搭建reality和网站共用443端口启用网站SSL" />&lt;p>当我们只有一个vps，又想部署网站同时又想搭建代理，当然两个程序可以分开占用端口，做到不冲突，但是感觉不怎么优雅，所以想要让两个程序都去共用一个443端口，这样子网站可以使用域名并开启ssl，代理也可以使用443(心理作用，感觉代理走443会更好一些，毕竟代理使用了ssl，走其他端口怪怪的)。下面就开启折腾之路。&lt;/p>
 &lt;h2 id="代理协议">代理协议
 &lt;/h2>&lt;p>目前比较稳定的协议要数reality了，所以自己搭建的代理也是使用reality，reality可以使用自己的证书，也可以使用其他域名的证书：就是宣传的“偷证书”。既然我的网站要使用443开启ssl，那我当时使用自己的证书最方便，而且延迟最小。&lt;/p>
 &lt;h2 id="证书申请">证书申请
-&lt;/h2>&lt;p>安装reality可以使用xui来安装，具体的xui安装可以参考我的文章：&lt;a class="link" href="https://www.iminling.com/2023/x-ui-configuration-and-use/" >x-ui安装配置使用&lt;/a>。xui本身可以帮助我们申请证书，如果不想使用xui的证书申请，还可以参考我的另一篇文章使用certbot来申请证书：&lt;a class="link" href="https://www.iminling.com/2023/docker-use-certbot-apply-lets-encrypt/" >docker部署certbot申请Let’s Encrypt证书&lt;/a>，我这里就使用certbot来申请证书。&lt;/p>
+&lt;/h2>&lt;p>安装reality可以使用xui来安装，具体的xui安装可以参考我的文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2023/x-ui-configuration-and-use/" >x-ui安装配置使用&lt;/a>。xui本身可以帮助我们申请证书，如果不想使用xui的证书申请，还可以参考我的另一篇文章使用certbot来申请证书：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2023/docker-use-certbot-apply-lets-encrypt/" >docker部署certbot申请Let’s Encrypt证书&lt;/a>，我这里就使用certbot来申请证书。&lt;/p>
 &lt;h2 id="站点部署">站点部署
 &lt;/h2>&lt;p>这里是为了演示，所以我这里就只启动nginx，然后配置ssl，对域名启用ssl。nginx我使用的是docker来启动的，具体的目录如下,所在的路径是：&lt;code>/root/images/nginx&lt;/code>&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -1123,7 +1123,7 @@ loading="lazy"
 &lt;p>这时候我们把nginx启动起来，通过域名访问我们的网站看是否已经可以正常使用https。&lt;/p>
 &lt;h2 id="代理配置">代理配置
 &lt;/h2>&lt;p>代理的配置这里就简单带过，通过x-ui或者直接安装xray-core来运行。也可以通过我的镜像：&lt;a class="link" href="https://github.com/konghanghang/images/tree/master/xray" target="_blank" rel="noopener"
->xray&lt;/a>，直接使用docker安装，参考文章：&lt;a class="link" href="https://www.iminling.com/2023/xray-configutaion-reality/" >xray配置使用reality&lt;/a>&lt;/p>
+>xray&lt;/a>，直接使用docker安装，参考文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2023/xray-configutaion-reality/" >xray配置使用reality&lt;/a>&lt;/p>
 &lt;p>xray的配置文件如下：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -1627,7 +1627,7 @@ loading="lazy"
 &lt;p>参考：&lt;/p>
 &lt;blockquote>
 &lt;p>&lt;a class="link" href="https://github.com/chika0801/Xray-examples/tree/main/VLESS-XTLS-uTLS-REALITY/steal_yourself" target="_blank" rel="noopener"
->steal_yourself&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>docker部署certbot申请Let’s Encrypt证书</title><link>https://www.iminling.com/2023/docker-use-certbot-apply-lets-encrypt/</link><pubDate>Sun, 30 Jul 2023 00:21:32 +0000</pubDate><guid>https://www.iminling.com/2023/docker-use-certbot-apply-lets-encrypt/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=UVQ4dnZwSDJWNWNTTFNwWXo3QUxlM2wvcFhCdGEyU1diN0lUbGVKZ0gxQXExdFFJV2FIazdvVEorM0Vsak5xWFNDQ1FVNVU9" alt="Featured image of post docker部署certbot申请Let’s Encrypt证书" />&lt;p>最近想给域名申请一个免费的证书，经过查询找到了Let&amp;rsquo;s Encrypt，并且可以使用certbot来申请，因为一直在使用docker,所以就想着看是否可以使用docker来进行证书的申请，于是就开启了此次的折腾之路：使用docker部署certbot申请Let&amp;rsquo;s Encrypt证书。&lt;/p>
+>steal_yourself&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>docker部署certbot申请Let’s Encrypt证书</title><link>https://konghanghang.github.io/iminling-pages/2023/docker-use-certbot-apply-lets-encrypt/</link><pubDate>Sun, 30 Jul 2023 00:21:32 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/docker-use-certbot-apply-lets-encrypt/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=UVQ4dnZwSDJWNWNTTFNwWXo3QUxlM2wvcFhCdGEyU1diN0lUbGVKZ0gxQXExdFFJV2FIazdvVEorM0Vsak5xWFNDQ1FVNVU9" alt="Featured image of post docker部署certbot申请Let’s Encrypt证书" />&lt;p>最近想给域名申请一个免费的证书，经过查询找到了Let&amp;rsquo;s Encrypt，并且可以使用certbot来申请，因为一直在使用docker,所以就想着看是否可以使用docker来进行证书的申请，于是就开启了此次的折腾之路：使用docker部署certbot申请Let&amp;rsquo;s Encrypt证书。&lt;/p>
 &lt;h2 id="安装certbot">安装certbot
 &lt;/h2>&lt;p>certbot的安装方式有很多种，官方也有一些系统的安装文档，可以根据官方的安装文档来直接安装到对应的操作系统上：&lt;a class="link" href="https://certbot.eff.org/instructions" target="_blank" rel="noopener"
 >installation&lt;/a>，非常详细。官方推荐的方式是通过&lt;code>snap&lt;/code>的形式来安装，另外还有&lt;code>docker&lt;/code>、&lt;code>pip&lt;/code>、&lt;code>第三放发行版本&lt;/code>以及&lt;code>certbot-auto(官方已经标示为过期)&lt;/code>。&lt;/p>
@@ -1769,7 +1769,7 @@ CERTBOT_EMAIL=your_email&lt;/code>&lt;/pre>
 &lt;/div>&lt;p>证书文件在live下。然后我们就可以在nginx中使用我们申请的证书文件了。&lt;/p>
 &lt;h2 id="续期">续期
 &lt;/h2>&lt;p>证书三个月的有效期，在快要过期的时候需要进行续期，续期则使用docker-compose.yaml文件中的续期命令就可以了。大家也可以做一个corn定时任务来进行定期续期。&lt;/p>
-&lt;p>最后祝大家申请顺利。&lt;/p></description></item><item><title>docker容器配置ipv6</title><link>https://www.iminling.com/2023/docker-container-configuration-ipv6/</link><pubDate>Sat, 15 Jul 2023 21:34:56 +0000</pubDate><guid>https://www.iminling.com/2023/docker-container-configuration-ipv6/</guid><description>&lt;p>在默认情况下，docker默认只是配置了ipv4地址，并没有ipv6地址，需要我们手动的去进行ipv6地址配置。下面就介绍一下容器支持ipv6的一种方式。&lt;/p>
+&lt;p>最后祝大家申请顺利。&lt;/p></description></item><item><title>docker容器配置ipv6</title><link>https://konghanghang.github.io/iminling-pages/2023/docker-container-configuration-ipv6/</link><pubDate>Sat, 15 Jul 2023 21:34:56 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/docker-container-configuration-ipv6/</guid><description>&lt;p>在默认情况下，docker默认只是配置了ipv4地址，并没有ipv6地址，需要我们手动的去进行ipv6地址配置。下面就介绍一下容器支持ipv6的一种方式。&lt;/p>
 &lt;h2 id="docker启用ipv6">docker启用ipv6
 &lt;/h2>&lt;p>具体的方式我们先参考docker的官方文档：&lt;a class="link" href="https://docs.docker.com/config/daemon/ipv6/" target="_blank" rel="noopener"
 >&lt;span class="md-plain">Enable IPv6 support&lt;/span>&lt;/a>,启用docker对ipv6的支持。需要修改daemon.json文件，具体位置为/etc/docker/目录下，如果没有则自己创建daemon.json,添加以下内容：&lt;/p>
@@ -2052,7 +2052,7 @@ CERTBOT_EMAIL=your_email&lt;/code>&lt;/pre>
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>运行上边的xray后再执行ping v6，也是可以正常ping通的。&lt;/p>
-&lt;p>至次，我们已经可以给docker容器分配ipv6地址了，以上就是折腾过程，记录一下。&lt;/p></description></item><item><title>linux服务器快速安装docker和docker-compose</title><link>https://www.iminling.com/2023/linux-install-docker/</link><pubDate>Fri, 09 Jun 2023 21:49:42 +0000</pubDate><guid>https://www.iminling.com/2023/linux-install-docker/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=dnp6YVlCOXUzcXZ3NHRyMlZGVEZDYUY3c3h6eW9ET21TY3YrWWwrZTZBcllvQU1ZQkIxWXlaQnRpRVR5cml3VDVIRUJUTFk9" alt="Featured image of post linux服务器快速安装docker和docker-compose" />&lt;p>记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。&lt;/p>
+&lt;p>至次，我们已经可以给docker容器分配ipv6地址了，以上就是折腾过程，记录一下。&lt;/p></description></item><item><title>linux服务器快速安装docker和docker-compose</title><link>https://konghanghang.github.io/iminling-pages/2023/linux-install-docker/</link><pubDate>Fri, 09 Jun 2023 21:49:42 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/linux-install-docker/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=dnp6YVlCOXUzcXZ3NHRyMlZGVEZDYUY3c3h6eW9ET21TY3YrWWwrZTZBcllvQU1ZQkIxWXlaQnRpRVR5cml3VDVIRUJUTFk9" alt="Featured image of post linux服务器快速安装docker和docker-compose" />&lt;p>记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。&lt;/p>
 &lt;h2 id="ubuntu安装">ubuntu安装
 &lt;/h2>&lt;h3 id="卸载旧版">卸载旧版
 &lt;/h3>&lt;p>执行下边的命令&lt;/p>
@@ -2259,7 +2259,7 @@ CERTBOT_EMAIL=your_email&lt;/code>&lt;/pre>
 &lt;/div>&lt;p>整个安装过程也不是很麻烦，跟着官方的步骤走就可以了，这里记录一下自己的安装过程，方便以后快速安装。&lt;/p>
 &lt;p> &lt;/p>
 &lt;p> &lt;/p>
-&lt;p> &lt;/p></description></item><item><title>linux服务器快速安装docker和docker-compose</title><link>https://www.iminling.com/2023/linux-install-docker/</link><pubDate>Fri, 09 Jun 2023 21:49:42 +0000</pubDate><guid>https://www.iminling.com/2023/linux-install-docker/</guid><description>&lt;p>记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。&lt;/p>
+&lt;p> &lt;/p></description></item><item><title>linux服务器快速安装docker和docker-compose</title><link>https://konghanghang.github.io/iminling-pages/2023/linux-install-docker/</link><pubDate>Fri, 09 Jun 2023 21:49:42 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/linux-install-docker/</guid><description>&lt;p>记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。&lt;/p>
 &lt;h2 id="ubuntu安装">ubuntu安装
 &lt;/h2>&lt;h3 id="卸载旧版">卸载旧版
 &lt;/h3>&lt;p>执行下边的命令&lt;/p>
