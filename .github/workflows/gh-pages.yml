@@ -5,6 +5,11 @@ on:
     branches:
       - master   # 你实际用的主分支，改成你的分支名
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
