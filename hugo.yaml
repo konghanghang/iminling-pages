@@ -18,14 +18,6 @@ taxonomies:
   category: categories
   tag: tags
 
-services:
-    # Change it to your Disqus shortname before using
-    disqus:
-        shortname: "hugo-theme-stack"
-    # GA Tracking ID
-    googleAnalytics:
-        id:
-
 pagination:
     pagerSize: 10
 
@@ -66,88 +58,44 @@ params:
 
     comments:
         enabled: true
-        provider: disqus
-
-        disqusjs:
-            shortname:
-            apiUrl:
-            apiKey:
-            admin:
-            adminLabel:
-
-        utterances:
-            repo:
-            issueTerm: pathname
-            label:
-
-        beaudar:
-            repo:
-            issueTerm: pathname
-            label:
-            theme:
-
-        remark42:
-            host:
-            site:
-            locale:
-
-        vssue:
-            platform:
-            owner:
-            repo:
-            clientId:
-            clientSecret:
-            autoCreateIssue: false
-
+        provider: waline
+        
         # Waline client configuration see: https://waline.js.org/en/reference/component.html
         waline:
-            serverURL:
-            lang:
-            pageview:
+            serverURL: https://waline.iminling.com  # 替换为您的Waline服务器地址
+            lang: zh-CN
+            pageview: true
             emoji:
                 - https://unpkg.com/@waline/emojis@1.0.1/weibo
+                - https://unpkg.com/@waline/emojis@1.0.1/alus
+                - https://unpkg.com/@waline/emojis@1.0.1/bilibili
             requiredMeta:
-                - name
-                - email
-                - url
+                - nick
+                - mail
             locale:
-                admin: Admin
-                placeholder:
+                admin: 博主
+                placeholder: 欢迎留言交流，支持Markdown语法
+                sofa: 来发评论吧~
+                submit: 提交
+                reply: 回复
+                cancelReply: 取消回复
+                comment: 评论
+                refresh: 刷新
+                more: 加载更多...
+                preview: 预览
+                emoji: 表情
+                uploadImage: 上传图片
+                seconds: 秒前
+                minutes: 分钟前
+                hours: 小时前
+                days: 天前
+                now: 刚刚
+            wordLimit: [0, 1000]  # 评论字数限制
+            pageSize: 10  # 每页评论数
+            meta: ['nick', 'mail', 'link']
+            login: enable  # 登录模式 'enable', 'disable', 'force'
+            copyright: false  # 是否显示版权信息
 
-        twikoo:
-            envId:
-            region:
-            path:
-            lang:
-
-        # See https://cactus.chat/docs/reference/web-client/#configuration for description of the various options
-        cactus:
-            defaultHomeserverUrl: "https://matrix.cactus.chat:8448"
-            serverName: "cactus.chat"
-            siteName: "" # You must insert a unique identifier here matching the one you registered (See https://cactus.chat/docs/getting-started/quick-start/#register-your-site)
-
-        giscus:
-            repo:
-            repoID:
-            category:
-            categoryID:
-            mapping:
-            lightTheme:
-            darkTheme:
-            reactionsEnabled: 1
-            emitMetadata: 0
-
-        gitalk:
-            owner:
-            admin:
-            repo:
-            clientID:
-            clientSecret:
-            proxy:
-
-        cusdis:
-            host:
-            id:
     widgets:
         homepage:
             - type: search
@@ -165,22 +113,12 @@ params:
 
     opengraph:
         twitter:
-            # Your Twitter username
-            site:
-
             # Available values: summary, summary_large_image
             card: summary_large_image
-
-    defaultImage:
-        opengraph:
-            enabled: false
-            local: false
-            src:
 
     colorScheme:
         # Display toggle
         toggle: true
-
         # Available values: auto, light, dark
         default: auto
 
@@ -195,19 +133,7 @@ params:
 ### To remove about, archive and search page menu item, remove `menu` field from their FrontMatter
 menu:
     main: []
-
-    social:
-        - identifier: github
-          name: GitHub
-          url: https://github.com/CaiJimmy/hugo-theme-stack
-          params:
-              icon: brand-github
-
-        - identifier: twitter
-          name: Twitter
-          url: https://twitter.com
-          params:
-              icon: brand-twitter
+    social: []
 
 related:
     includeNewer: true
@@ -216,7 +142,6 @@ related:
     indices:
         - name: tags
           weight: 100
-
         - name: categories
           weight: 200
 

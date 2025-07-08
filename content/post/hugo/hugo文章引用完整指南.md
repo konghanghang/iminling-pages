@@ -1,6 +1,9 @@
 ---
 title: "Hugo文章引用完整指南"
 date: 2025-07-05
+url: /hugo/hugo-article-refrence-guid
+description: "在Hugo中，文章之间的相互引用是提高用户体验和SEO的重要功能。本文将详细介绍各种文章引用方法。"
+image: https://images.iminling.com/app/hide.php?key=Q0FpelpEUnUxeStGdHFxRjNuZUpaZ0llYzBBUit1SlI1dkdzTlBSRFo1Q2t2UE1uNW15dDNDRWZBS0p3ZEhnellrZVVITFE9
 categories:
   - Hugo
 tags:

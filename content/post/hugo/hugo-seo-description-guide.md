@@ -1,11 +1,13 @@
 ---
 title: "Hugo文章SEO配置完整指南"
 date: 2025-07-04
+url: /hugo/hugo-seo-description-guide
 description: "详细介绍Hugo中如何配置文章的SEO元数据，包括description、keywords等字段的正确使用方法，提高搜索引擎收录效果。"
 excerpt: "本文将深入讲解Hugo中SEO优化的各种配置方法，帮助您的文章在搜索引擎中获得更好的排名。"
 keywords: ["Hugo", "SEO", "meta description", "搜索引擎优化", "网站优化"]
+image: https://images.iminling.com/app/hide.php?key=Q0FpelpEUnUxeStGdHFxRjNuZUpaZ0llYzBBUit1SlI1dkdzTlBSRFo1Q2t2UE1uNW15dDNDRWZBS0p3ZEhnellrZVVITFE9
 categories:
-  - SEO
+  - hugo
 tags:
   - hugo
   - seo
