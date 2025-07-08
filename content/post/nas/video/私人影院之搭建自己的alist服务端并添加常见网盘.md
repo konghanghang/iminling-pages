@@ -4,17 +4,17 @@ author: 要名俗气
 type: post
 date: 2024-09-21T09:56:03+00:00
 url: /2024/build-alist-server
-description: 前段时间写了一篇如何[搭建小雅alist](https://www.iminling.com/2024/how-to-build-xiaoya-alist-and-use "搭建属于自己的影视小站：小雅Alist安装及使用")的文章，使用小雅的媒体库来进行观影，但是这种有一个问题就是小雅的库更新的不是很快，而且如果我想在电视上观看比较麻烦，就算搭配emby,也无法避免资源更新慢的问题。所以就想着使用自己的网盘配合自己搭建的alist服务端，来进行资源快速入库，方便自己快速观看。那么接下来就详细说明一下自己的搭建过程。
-featured_image: /wp-content/uploads/2024/09/3D235946E3F03628AFC314D9E2018E97.png
+description: 前段时间写了一篇如何搭建小雅alist的文章，使用小雅的媒体库来进行观影，但是这种有一个问题就是小雅的库更新的不是很快，而且如果我想在电视上观看比较麻烦，就算搭配emby,也无法避免资源更新慢的问题。所以就想着使用自己的网盘配合自己搭建的alist服务端，来进行资源快速入库，方便自己快速观看。那么接下来就详细说明一下自己的搭建过程。
+image: https://images.iminling.com/app/hide.php?key=ZVpuQ3crbnpMRHc2N2lQQktsMm93TkVobGtsOXZrV2ZsUUYyajMxd1FuSlFXSW5iK0wxRUxPcEYvcEhDU0NkSnJJQzdnT289
 categories:
-  - 影音
+  - nas
 tags:
   - 115网盘
   - 189
   - alist
   - 天翼网盘
 ---
-前段时间写了一篇如何[搭建小雅alist](https://www.iminling.com/2024/how-to-build-xiaoya-alist-and-use "搭建属于自己的影视小站：小雅Alist安装及使用")的文章，使用小雅的媒体库来进行观影，但是这种有一个问题就是小雅的库更新的不是很快，而且如果我想在电视上观看比较麻烦，就算搭配emby,也无法避免资源更新慢的问题。所以就想着使用自己的网盘配合自己搭建的alist服务端，来进行资源快速入库，方便自己快速观看。那么接下来就详细说明一下自己的搭建过程。
+前段时间写了一篇如何[搭建小雅alist]({{< ref "/post/nas/video/搭建属于自己的影视小站：小雅Alist安装及使用.md" >}})的文章，使用小雅的媒体库来进行观影，但是这种有一个问题就是小雅的库更新的不是很快，而且如果我想在电视上观看比较麻烦，就算搭配emby,也无法避免资源更新慢的问题。所以就想着使用自己的网盘配合自己搭建的alist服务端，来进行资源快速入库，方便自己快速观看。那么接下来就详细说明一下自己的搭建过程。
 
 ## alist服务端
 
@@ -22,7 +22,7 @@ tags:
 
 我的docker-compose.yaml如下：
 
-```
+```yaml
 networks:
   mynet:
     external: true
@@ -48,7 +48,7 @@ services:
 
 我的目录分配如下：
 
-```
+```bash
 .
 ├── data
 └── docker-compose.yaml
@@ -68,11 +68,11 @@ services:
 
 进入到alist的管理界面
 
-![alist disk](https://www.iminling.com/wp-content/uploads/2024/09/12346FDFD92375CFACA05F8AE99636F2.png)
+![alist disk](https://images.iminling.com/app/hide.php?key=VzFnSjkyMkZvU2JNMFZtT0pDeFhJTEFCM1NtK2ZwTGdmN2d5L251ZTVlMk80TzBFVWJqa1hhR2k2ZUR1V001amJPWVhhdXM9)
 
 点击存储-添加,然后选择`天翼云盘客户端`(官方建议的类型)。然后就可以看到很多选项需要填写，具体的填写操作步骤参考[官方文档](https://alist.nn.ci/zh/guide/drivers/189.html)。
 
-![alist add 189](https://www.iminling.com/wp-content/uploads/2024/09/643C95E88930EA3944C1185A24EBB379.png)
+![alist add 189](https://images.iminling.com/app/hide.php?key=Y2FYY1hHdHZaYjB0OFdmdklWNEF0TXA0b0d3YmFIc2lzcklvajY5ZWc1bDJqRmFSRHM1TEFxYVpyWXJLaFlQdVZxMWdEL2c9)
 
 挂载路径是最终显示在alist主页的名称，需要唯一。
 
@@ -80,7 +80,7 @@ services:
 
 WebDAV策略建议都使用302重定向，这样子在通过WebDAV访问alist服务端的内容的时候，实际上会重定向到网盘内真实的路径，等于直接访问网盘。
 
-![alist add 189](https://www.iminling.com/wp-content/uploads/2024/09/35D3FFFECD6E46B2E2B13B4C3082C901.png)
+![alist add 189](https://images.iminling.com/app/hide.php?key=RnZOZEdPMDR4UTNuVzNnOXdnQm5rNDB2N05KTnpDcXVKL0FUeEZLMzlkRTgzME03NUxTQkp5TjhGUjNrdlZpTDRaMDJVRFE9)
 
 启用签名选项如果后续是需要配合emby实现302播放，**一定要打开，一定要打开，一定要打开**。
 
@@ -98,19 +98,19 @@ WebDAV策略建议都使用302重定向，这样子在通过WebDAV访问alist服
 
 基本和天翼云盘添加流程差不多，驱动类型选择`115网盘`,挂载路径、缓存过期时间、WebDAV策略、启用签名四个选项和天翼云盘意向逻辑，进行处理就行了。有不明白的可以参考[官方文档](https://alist.nn.ci/zh/guide/drivers/115.html)。
 
-![alist add 115](https://www.iminling.com/wp-content/uploads/2024/09/3D235946E3F03628AFC314D9E2018E98.png)
+![alist add 115](https://images.iminling.com/app/hide.php?key=NFZFUVpyNmtTaUY3TnhFd2o1MURwaGRTcWpZZHB5TWFLS0RXbzVpSXBLK2cyRlo3aWxiTmRVYzluenJIcFZUejcwU0hNNTQ9)
 
 cookie和Qrcode二选一，[官方文档](https://alist.nn.ci/zh/guide/drivers/115.html#_1-qrcode-%E6%89%AB%E7%A0%81%E6%96%B9%E5%BC%8F%E7%99%BB%E5%BD%95)也有详细的介绍，包括根文件夹ID，都有详细的介绍，参考文档就可以了。感觉Qrcode会简单一点。我是直接使用的抓包软件抓的应用的cookie。这里有一个事项需要注意一下，如果使用了手机端软件，后续在网页登录的时候最好选择用手机扫码登录，要不然可能会把手机应用端挤掉导致cookie失效。
 
 ### SMB添加
 
-有些文件没有放在网盘，而是放在自己本地或者放在本地nas中，比如我上篇文档也介绍了[如何安装黑群晖](https://www.iminling.com/2024/pve-install-nas "Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘")，这样子想要在alist中把nas中的资源添加进去，就需要使用到SMB一些了，nas中是有开启这个功能的。
+有些文件没有放在网盘，而是放在自己本地或者放在本地nas中，比如我上篇文档也介绍了[Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘]({{< ref "/post/linux/pve/Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘.md" >}})，这样子想要在alist中把nas中的资源添加进去，就需要使用到SMB一些了，nas中是有开启这个功能的。
 
-![alist add smb nas](https://www.iminling.com/wp-content/uploads/2024/09/6BFD9B721FB31AFA57FF87D6CF084938.png)
+![alist add smb nas](https://images.iminling.com/app/hide.php?key=d2U1N1FpRE1RSnBmcEhLUFRibUxKV1lmM3ZpSGxzek5xYXZKcjJuZVVlQk1QcDVlMHB5bVNidE9pUDNJbXF0N3FZOVlaMzg9)
 
 添加驱动类型选择`SMB`
 
-![alist add smb nas](https://www.iminling.com/wp-content/uploads/2024/09/08EBBBA8CC68A83179643B66EBDB09EE.png)
+![alist add smb nas](https://images.iminling.com/app/hide.php?key=MFVsanZ1SUh1bTgrYldBSjhGYThsdVlwelpSTHNSV3dKcm8zKy9kZ1FGOERCQktXRWNzRTIxYmpvZ2NSQ1crbWJVeHdkUzQ9)
 
 smb是本地文件，启用签名就可以不用开了。地址、用户名、密码和分享名称(smb中的目录)根据自己的需求填写就可以了。
 

@@ -5,19 +5,19 @@ type: post
 date: 2023-11-26T06:42:47+00:00
 url: /2023/install-node-exporter
 description: 在上一篇文章中讲解了如何在docker环境下快速的安装prometheus：[debian系统使用docker快速安装promutheus](https://www.iminling.com/2023/11/26/302.html "debian系统使用docker快速安装promutheus")，这篇文章咱们来讲一下如何在linux主机中安装node exporter来采集linux系统的各项指标。
-featured_image: /wp-content/uploads/2023/11/prometheus.png
+image: https://images.iminling.com/app/hide.php?key=M3JOYmRIT1UyZHJjcTZJRXloNjR6aTUyME1KbkhNak8yVDlTVm9saGloSXUwWkNsN0VZSStxRGU1Q1ZTQS9xVzRuY0szTHM9
 categories:
   - prometheus
 tags:
   - prometheus
 ---
-在上一篇文章中讲解了如何在docker环境下快速的安装prometheus：[debian系统使用docker快速安装promutheus](https://www.iminling.com/2023/11/26/302.html "debian系统使用docker快速安装promutheus")，这篇文章咱们来讲一下如何在linux主机中安装node exporter来采集linux系统的各项指标。
+在上一篇文章中讲解了如何在docker环境下快速的安装prometheus：[debian系统使用docker快速安装promutheus]({{< ref "/post/linux/docker/debian系统使用docker快速安装promutheus.md" >}})，这篇文章咱们来讲一下如何在linux主机中安装node exporter来采集linux系统的各项指标。
 
 ## 安装node exporter
 
 node exporter的安装非常简单，可以去prometheus的官网下载：[node exporter - prometheus](https://prometheus.io/download/ "node exporter")，或者去github进行下载：[node_exporter - github](https://github.com/prometheus/node_exporter "node_exporter - github")，我这里直接使用wget命令从github上下载最新的安装包`wget https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.linux-amd64.tar.gz`：
 
-```
+```bash
 root@admin:~# wget https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.linux-amd64.tar.gz
 --2023-11-25 22:35:44--  https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.linux-amd64.tar.gz
 Resolving github.com (github.com)... 20.205.243.166
@@ -38,7 +38,7 @@ node_exporter-1.2.2.linux-amd64.tar.gz   100%[==================================
 
 下载到本地主机后解压刚下载的文件，里边有三个文件，node_exporter就是我们需要的可执行文件：
 
-```
+```bash
 root@admin:~# tar -zxf node_exporter-1.2.2.linux-amd64.tar.gz
 root@admin:~# ls
 images  node_exporter-1.2.2.linux-amd64  node_exporter-1.2.2.linux-amd64.tar.gz
@@ -53,7 +53,7 @@ LICENSE  node_exporter NOTICE
 
 目录，执行`./node_export`来执行项目，如下：
 
-```
+```bash
 root@admin:~/node_exporter-1.2.2.linux-amd64# ./node_exporter
 level=info ts=2023-11-26T06:17:11.718Z caller=node_exporter.go:182 msg="Starting node_exporter" version="(version=1.2.2, branch=HEAD, revision=26645363b486e12be40af7ce4fc91e731a33104e)"
 .......
@@ -63,7 +63,7 @@ level=info ts=2023-11-26T06:17:11.720Z caller=tls_config.go:191 msg="TLS is disa
 
 从上边启动的日志可以看出采集的具体指标，倒数第二行日志可以看出node_exporter占用的是9100端口，如果我们想控制采集的指标或者更改占用端口，可以使用-h命令查看启动参数说明：
 
-```
+```bash
 root@admin:~/node_exporter-1.2.2.linux-amd64# ./node_exporter -h
     --web.listen-address=":9100"  # 监听的端口，默认是9100
     --web.telemetry-path="/metrics"  # metrics的路径，默认为/metrics
@@ -82,7 +82,7 @@ root@admin:~/node_exporter-1.2.2.linux-amd64# ./node_exporter -h
 
 首先把把解压后的node\_exporter移动到/usr/local/bin目录下，然后新建一个node\_exporter.service，需要建到/etc/systemd/system目录下，具体内容如下：
 
-```
+```bash
 Unit]
 Description=node exporter service
 Documentation=https://prometheus.io
@@ -101,7 +101,7 @@ WantedBy=multi-user.target
 
 如上所示，启动命令指定了启动的时候占用的端口，这个根据自己的实际情况进行更改，创建完毕后需要重启systemd服务，并使用systemd启动服务：
 
-```
+```bash
 root@admin:/usr/local/bin# systemctl daemon-reload
 root@admin:/usr/local/bin# systemctl start node_exporter
 root@admin:/usr/local/bin# systemctl status node_exporter
@@ -126,9 +126,9 @@ Nov 26 01:28:25 WIKI-HK-A1 node_exporter[2794065]: level=info ts=2023-11-26T06:2
 
 ## prometheus指标获取
 
-在文章：[debian系统使用docker快速安装promutheus](https://www.iminling.com/2023/11/26/302.html "debian系统使用docker快速安装promutheus")中只配置了对promutheus本身指标的采集，下边我们修改prometheus的配置文件，对刚才配置的linux主机进行指标采集，修改prometheus的配置文件如下：
+在文章：[debian系统使用docker快速安装promutheus]({{< ref "/post/linux/docker/debian系统使用docker快速安装promutheus.md" >}})中只配置了对promutheus本身指标的采集，下边我们修改prometheus的配置文件，对刚才配置的linux主机进行指标采集，修改prometheus的配置文件如下：
 
-```
+```yaml
 global:
   scrape_interval: 1m
 
@@ -145,6 +145,6 @@ scrape_configs:
 
 如上，配置了一个任务名称为linux-node的任务，它去获取127.0.0.1机器的指标，我们可以在prometheus的后台查看到对应的targets:
 
-![](https://www.iminling.com/wp-content/uploads/2023/11/50DD2EE4163485EB9C03011B506E16D2.png)
+![](https://images.iminling.com/app/hide.php?key=TzFEUWFRdXdmV3NWcURMSUxWRUdNN1pXSTRveHIrL0tueFpCVmNncnBHZ21GaTJlakJYQ2RuV3ZZd3FQeXFKb3hSd3Y2Q289)
 
 到这里就配置好了prometheus采集linux主机指标的配置，可以在prometheus的后台对信息进行查询，后续也可以配置grafana的图形界面来对node exporter采集的数据进行可视化展示。

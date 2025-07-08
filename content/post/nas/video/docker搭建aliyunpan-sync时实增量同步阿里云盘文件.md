@@ -4,15 +4,15 @@ author: 要名俗气
 type: post
 date: 2024-07-06T03:11:29+00:00
 url: /2024/docker-deploy-aliyunpan-sync
-description: 在前边的文章中介绍了如何快速的搭建[小雅alist](https://www.iminling.com/2024/04/20/586.html "搭建属于自己的影视小站：小雅Alist安装及使用")来满足大家的观影需求，但是有一些剧小雅更新没那么及时，这时候就需要大家八仙过海了。如何及时找到自己要观看的剧，并成功观看呢？下边就带着大家一起使用[aliyunpan-sync](https://github.com/tickstep/aliyunpan)工具来同步阿里云盘的数据。
-featured_image: /wp-content/uploads/2024/07/aliyunpan.jpg
+description: 在前边的文章中介绍了如何快速的搭建小雅alist来满足大家的观影需求，但是有一些剧小雅更新没那么及时，这时候就需要大家八仙过海了。如何及时找到自己要观看的剧，并成功观看呢？下边就带着大家一起使用aliyunpan-sync工具来同步阿里云盘的数据。
+image: https://images.iminling.com/app/hide.php?key=dTRuQi9oWFFCZ2JmUDF2bDRUUFVERFNJZnc2Sm43RTU4dXlnVzViM3pMYzdEenBDM0t4MDBwbkM2eTY5QlZ1MSt2UjhuRjQ9
 categories:
-  - 影音
+  - nas
 tags:
   - aliyunpan
   - docker
 ---
-在前边的文章中介绍了如何快速的搭建[小雅alist](https://www.iminling.com/2024/04/20/586.html "搭建属于自己的影视小站：小雅Alist安装及使用")来满足大家的观影需求，但是有一些剧小雅更新没那么及时，这时候就需要大家八仙过海了。如何及时找到自己要观看的剧，并成功观看呢？下边就带着大家一起使用[aliyunpan-sync](https://github.com/tickstep/aliyunpan)工具来同步阿里云盘的数据。
+在前边的文章中介绍了如何快速的搭建[小雅alist]({{< ref "/post/nas/video/搭建属于自己的影视小站：小雅Alist安装及使用.md" >}})来满足大家的观影需求，但是有一些剧小雅更新没那么及时，这时候就需要大家八仙过海了。如何及时找到自己要观看的剧，并成功观看呢？下边就带着大家一起使用[aliyunpan-sync](https://github.com/tickstep/aliyunpan)工具来同步阿里云盘的数据。
 
 ## 网盘选择
 
@@ -20,17 +20,17 @@ tags:
 
 ## 安装aliyunpan-sync
 
-我这里使用的是docker compose进行的安装，如果还没有安装docker的同学可以参考的我的文章把docker 给安装一下：[docker安装](https://www.iminling.com/2023/06/10/164.html "docker安装")。
+我这里使用的是docker compose进行的安装，如果还没有安装docker的同学可以参考的我的文章把docker 给安装一下：[docker安装]({{< ref "/post/linux/docker/linux服务器快速安装docker和docker-compose.md" >}})。
 
 ### 获取阿里云盘token
 
 要想从阿里云盘里下载文件，肯定是需要先登录阿里云盘才能进行数据同步，如何登录阿里云盘aliyunpan-sync工具里也有具体的说明：[登录阿里云盘](https://github.com/tickstep/aliyunpan/blob/main/docs/manual.md#%E7%99%BB%E5%BD%95%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E5%B8%90%E5%8F%B7)，需要先在[release](https://github.com/tickstep/aliyunpan/releases)页面下载一个对应系统的release，我的操作系统是mac m1芯片我就下载arm那个
 
-![aliyunpan sync release](https://www.iminling.com/wp-content/uploads/2024/07/FAEE60916F633EC24FFD16E75F5AAB73.png)
+![aliyunpan sync release](https://images.iminling.com/app/hide.php?key=R0FVYnRhNEJZWmVoZTdMQTkyOFRxVUM3cmN3TUZPbjFZSWF4OVNablFBWUsxNGNpYW83dkJpZFduaWMrV1YzOXBhd0lmR2s9)
 
 然后对文件进行解压，使用终端进入到对应的目录里，看到有一个`aliyunpan`的文件，执行这个文件获取登录链接，然后在网页端进行扫码登录就可以了。
 
-```
+```bash
 # k @ Mac-mini in ~/Downloads/aliyunpan-v0.3.2-darwin-macos-arm64 [10:03:26]
 $ ls
 README.md             manual.md             sync.sh               webdav.sh
@@ -52,7 +52,7 @@ https://openapi.alipan.com/oauth/authorize?client_id=cf9f70e8fc6143031375&redire
 
 打开url就需要使用手机端的阿里云盘进行扫码登录，提示进行授权：
 
-![aliyunpan authority](https://www.iminling.com/wp-content/uploads/2024/07/2F4D63F1408D9F02A15CC4F6E7533A1B.png)
+![aliyunpan authority](https://images.iminling.com/app/hide.php?key=UHVPZkRvYkllMlN2SzRMa09qTXcxRDR3aTBhZHVsNmdCaTlwbzlmMXhqcXhvS2lPSnFRS1lKbjB6TnM4VkpNcXQxSUVhV0k9)
 
 根据需要选择授权范围，我这里把`备份盘`和`资源库`都进行授权，其实就是整个阿里云盘这个工具都可以访问。然后就是回到终端看到具体的token。保存好这个token.
 
@@ -60,7 +60,7 @@ https://openapi.alipan.com/oauth/authorize?client_id=cf9f70e8fc6143031375&redire
 
 我这里使用的是docker compose来进行安装的，我的文件目录如下：
 
-```
+```bash
 $ tree
 .
 ├── config
@@ -83,7 +83,7 @@ sync_drive是保存数据库的信息，用来记录同步的一些信息，即�
 
 具体的docker-compose.yaml文件内容如下：
 
-```
+```yaml
 version: '3'
 services:
   sync:
@@ -139,7 +139,7 @@ services:
 
 第四个是备份目标目录：`ALIYUNPAN_PAN_DIR`，这个配置就是当前容器需要下载的目录，上边指定了需要下载资源盘的文件，但是肯定不能整个资源盘都下载，只需要指定特定的目录下载就行了，比如我转存的文件都是放在`来自分享`目录下，我这里就配置来自分享。
 
-![aliyunpan share](https://www.iminling.com/wp-content/uploads/2024/07/9BB509B435FAFEFE2A9CE751D2D1E313.jpg)
+![aliyunpan share](https://images.iminling.com/app/hide.php?key=STRHaU84cVVtSm1LSEZrWHVLdDhqcStzK1ZoYjdmc3lJRXBsekxKcjNjYmpxajdFVFVhcWZrejg4TUwrQTJRdFo0OGZDcmc9)
 
 js的通知后边在讲，这个目录里边暂时可以先不放任何js文件。
 
@@ -155,7 +155,8 @@ docker compose up -d
 
 接下来就是找一个文件保存到云盘的指定要下载的目录，我是`来自分享`，然后去看一下目录有没有进行下载。也可以通过查看容器的日志：
 
-<pre class="corepress-code-pre">root@docker:~/images/aliyunpancli# docker compose logs -tf --tail 10
+```bash
+root@docker:~/images/aliyunpancli# docker compose logs -tf --tail 10
 WARN[0000] /root/images/aliyunpancli/docker-compose.yaml: `version` is obsolete
 aliyunpan-sync | 2024-07-06T02:52:51.522742265Z 扫描到云盘文件：/来自分享/Cover the sky.S01E61.2023.2160p.WEB.DL.H265.DDP2.0-BestWEB.mkv
 aliyunpan-sync | 2024-07-06T02:52:56.282356345Z 完成全部文件的同步下载，等待下一次扫描
@@ -163,7 +164,11 @@ aliyunpan-sync | 2024-07-06T02:53:51.550419129Z 开始进行文件扫描...
 aliyunpan-sync | 2024-07-06T02:53:51.756156867Z 扫描到云盘文件：/来自分享/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv
 aliyunpan-sync | 2024-07-06T02:53:51.756982180Z 扫描到云盘文件：/来自分享/Cover the sky.S01E61.2023.2160p.WEB.DL.H265.DDP2.0-BestWEB.mkv
 aliyunpan-sync | 2024-07-06T02:53:56.554962070Z 下载文件：/来自分享/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv
-下载到本地:/home/app/data/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv ↓ 773.00MB/779.46MB(99.17%) 9.64MB/s............下载完毕：/home/app/data/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv</pre>
+下载到本地:/home/app/data/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv ↓ 773.00MB/779.46MB(99.17%) 9.64MB/s............下载完毕：/home/app/data/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv
+```
+
+
+
 
 通过日志可以看出它在不停的扫描，检测到新文件就开始进行下载。
 
@@ -173,7 +178,7 @@ aliyunpan-sync | 2024-07-06T02:53:56.554962070Z 下载文件：/来自分享/Jad
 
 这里要使用到的js文件是`sync_handler.js`文件。文件具体的内容如下：
 
-```
+```javascript
 // ------------------------------------------------------------------------------------------
 // 函数说明：同步备份-同步文件后的回调函数
 //
@@ -253,4 +258,4 @@ function syncFileFinishCallback(context, params) {
 
 text就是通知的内容，来看一下最终的通知效果：
 
-![aliyunpan sync notification](https://www.iminling.com/wp-content/uploads/2024/07/05B5E84F322C5B0AB5CFF6A562CEADFC.jpg)
+![aliyunpan sync notification](https://images.iminling.com/app/hide.php?key=Nzd2MWN1T2xseG0rcFptY0V2UnVZYkJXRzN3b2EyMC9LeWszckhUZmY2TGZZWllQUFFST1hIbnNwa1BGWmVrWmVnM2dUTG89)

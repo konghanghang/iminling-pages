@@ -4,10 +4,10 @@ author: 要名俗气
 type: post
 date: 2024-04-20T06:39:56+00:00
 url: /2024/how-to-build-xiaoya-alist-and-use
-description: 之前一直在使用其他的影视站去看一些电影，这些影视站基本网速都比较慢，画质也都一般，观看体验也不怎么好，这里顺便也分享一下我一直使用的影视站：[影视森林](https://www.549.tv/)，该站整理了一些比较不错的影视站。偶然的机会下了解到了小雅(xiaoya)Alist，搭配阿里云盘简直不要太爽，作者也在一直更新资源，非常推荐自己搭建，下边就简单介绍一下我的搭建过程以及一些使用。
-featured_image: /wp-content/uploads/2024/04/697B5CB9F83A10AB9E96C68F7E958820.png
+description: 之前一直在使用其他的影视站去看一些电影，这些影视站基本网速都比较慢，画质也都一般，观看体验也不怎么好，这里顺便也分享一下我一直使用的影视站：影视森林，该站整理了一些比较不错的影视站。偶然的机会下了解到了小雅(xiaoya)Alist，搭配阿里云盘简直不要太爽，作者也在一直更新资源，非常推荐自己搭建，下边就简单介绍一下我的搭建过程以及一些使用。
+image: https://images.iminling.com/app/hide.php?key=VTJuMzZadnFMdGQzWkp6ZFlHWk44dm1scFJnV0xZVXp4aGVnbHBCNmszQ2tqSU9sRkxTSmJNZlljSWtSb3pkWVdMdXVkQlk9
 categories:
-  - 影音
+  - nas
 tags:
   - alist
   - kodi
@@ -28,17 +28,17 @@ tags:
 
 打开网站：[Get Aliyundrive Refresh Token](https://alist.nn.ci/tool/aliyundrive/request.html)，首先点击`Scan QrCode`获取二维码，然后使用手机端阿里云盘扫描，扫描完成后再点击`I have scan` 来获取`refresh token`。同时记录下这个token。
 
-![aliyun refresh token](https://www.iminling.com/wp-content/uploads/2024/04/56ECF1D6D2882D49983EC43FFEEB4BC7.png)
+![aliyun refresh token](https://images.iminling.com/app/hide.php?key=MU5XZFJXZ09VR2xVZkt3dS8vNEVzY2JvK3pWR0xLckI4M0c3M1JTdG5ER2piOERla09Obnd0NGJmd0thUTNseFNNc3JvdXM9)
 
 ### folder id
 
 打开小雅的分享地址：<https://www.alipan.com/s/rP9gP3h9asE>，将里边的内容转存到自己的网盘下，选择资源库。
 
-![aliyun share save](https://www.iminling.com/wp-content/uploads/2024/04/F06E1DE419C12BD3D4F5A0E45E14236C.png)
+![aliyun share save](https://images.iminling.com/app/hide.php?key=d0I5Y0JBQUVXSVBRRlVLcEF4TGEwU3k5ekxnVS85cXJTVU1iRHFDUStYNlRkMDhCcjZPdzF3WkFGSTlMQ0g3eGRubExvQjg9)
 
 然后进入到自己的[阿里云盘](https://www.alipan.com/)，打开刚才转存的目录，看地址栏，最后那一串字符串就是需要的folder id.记录改folder id.
 
-![xiaoya folder id](https://www.iminling.com/wp-content/uploads/2024/04/4C4D087E902BDF21AA67098CB4264DE1.png)
+![xiaoya folder id](https://images.iminling.com/app/hide.php?key=TDBpdktOVmhIYXJKbDgxMk1uOFpBd3p3Zk85Ynd2Mm04VDZpNzllR0xOek5lb2Q4dlNTK0xiYmJ5eU4wc1A1TzZyZGN0VTA9)
 
 经过上边几步，已经准备好了所需要的三个必须信息，下边就开始安装小雅Alist。
 
@@ -60,31 +60,16 @@ tags:
 
   1. `mytoken.txt`：把信息准备中的token字符串放在这个文件里。
   2. `myopentoken.txt`：把信息准备中的refresh Token字符串放在这个文件里
-  3. <div>
-      <div>
-        <code>temp_transfer_folder_id.txt</code>：把folder id字符串放在这个文件里。
-      </div>
-    </div>
-
-    <div>
-    </div>
+  3. `temp_transfer_folder_id.txt`：把folder id字符串放在这个文件里。
 
 此时准备工作就完成了，可以来使用命令来安装小雅了：
+`docker run -d --network=host -v /data/xiaoya:/data --restart=always --name=xiaoya xiaoyaliu/alist:hostmode`,等待安装完成，同样通过`docker ps`来查看是否启动成功，后续所有的配置文件都放在`/data/xiaoya`目录下。
 
-<div>
-  <div>
-    <code>docker run -d --network=host -v /data/xiaoya:/data --restart=always --name=xiaoya xiaoyaliu/alist:hostmode</code>,等待安装完成，同样通过<code>docker ps</code>来查看是否启动成功，后续所有的配置文件都放在<code>/data/xiaoya</code>目录下。
-  </div>
+### docker compose安装
 
-  <h3>
-    docker compose安装
-  </h3>
+这种是我最常用的方式，容器的配置都放在compose文件中，方便管理。和docker安装差不多，也是先需要将三个文件创建出来，目录结构如下：
 
-  <p>
-    这种是我最常用的方式，容器的配置都放在compose文件中，方便管理。和docker安装差不多，也是先需要将三个文件创建出来，目录结构如下：
-  </p>
-
-  ```
+```bash
 root@docker:~/xiaoya# tree -l
 .
 ├── data
@@ -95,11 +80,8 @@ root@docker:~/xiaoya# tree -l
 └── docker-compose.yaml
 ```
 
-<p>
-  docker-compose.yaml文件内容如下：
-</p>
-
-```
+docker-compose.yaml文件内容如下：
+```yaml
 root@docker:~/xiaoya# cat docker-compose.yaml
 version: '3.9'
 services:
@@ -119,75 +101,43 @@ services:
       - TZ=Asia/Shanghai
 ```
 
-<p>
-  然后在<code>~/xiaoya</code>目录下执行 <code>docker compose up -d</code>启动就可以了。
-</p>
-</div>
+然后在`~/xiaoya`目录下执行 `docker compose up -d`启动就可以了。
+
 
 经过上边的安装已经可以通过你的`机器ip:5678`来访问了。
 
-![alist index](https://www.iminling.com/wp-content/uploads/2024/04/B00FCE6AB9BD68DF013650341B6BDF55.png)
+![alist index](https://images.iminling.com/app/hide.php?key=ektqWVRFVFhvR1dxYVh3L2tER0pPcW81enFVTTdLZDNqWGRsVUdWV25ZYW0xL0thaTJEdFQwa3cyM3ZwNUcrTEsxYVZSWHM9)
 
-<div>
-  <h2>
-    播放
-  </h2>
+## 播放
 
-  <p>
-    经过上边安装默认情况下已经可以正常使用了，在网页端找到自己想观看的电影，直接在网页端观看，或者在视频播放器下边的按钮里选择自己本地已安装的程序打开进行播放,例如下边有iina,VLC等播放器，自己在本地安装就可以了。
-  </p>
+经过上边安装默认情况下已经可以正常使用了，在网页端找到自己想观看的电影，直接在网页端观看，或者在视频播放器下边的按钮里选择自己本地已安装的程序打开进行播放,例如下边有iina,VLC等播放器，自己在本地安装就可以了。
 
-  <p>
-    ![alist play](https://www.iminling.com/wp-content/uploads/2024/04/2B446AD735475942885308A513786C76.png)
-  </p>
+![alist play](https://images.iminling.com/app/hide.php?key=QUVpM0YwUDcxRG5IZGlISXhyU0pJY21VTGFMUzg2bE1qbGFXY1FFOXNIb2d4ZUlnWkticUJ5MEM1eWk3YjFiUHhyUWxlekE9)
 
-  <p>
-    也可以在小雅Alist中找到对应的安装包，也提供了很多播放器的安装包：
-  </p>
+也可以在小雅Alist中找到对应的安装包，也提供了很多播放器的安装包：
 
-  <p>
-    ![alist software](https://www.iminling.com/wp-content/uploads/2024/04/A5DB9AE8F4DCCC40B6E7D4CF0CD6BAEA.png)
-  </p>
+![alist software](https://images.iminling.com/app/hide.php?key=YnZOV01KZXNKZnlXbkZXMytqUFN4Yzc4eUxvUjJkOGpzY2JiZ05ZalB1V05UNjZSam5QZDhyMWpFUUxMQnY3Z0U0NDNON0E9)
 
-  <h3>
-    安卓手机
-  </h3>
 
-  <p>
-    想要在安卓手机上使用alist,我是使用tvbox来观看的，在小雅Alist提供的安装包里也是有tvbox的，需要在配置文件目录新建一个<code>docker_address.txt</code>文件，里边填写http://xxxxx:5678，网址最后不需要/, xxx替换为自己的vps的ip，或者搭建机器的内网ip。
-  </p>
+### 安卓手机
 
-  <p>
-    安卓手机正常安装后进行配置：http://xxxxx:5678/tvbox/my.json。
-  </p>
+想要在安卓手机上使用alist,我是使用tvbox来观看的，在小雅Alist提供的安装包里也是有tvbox的，需要在配置文件目录新建一个`docker_address.txt`文件，里边填写http://xxxxx:5678，网址最后不需要/, xxx替换为自己的vps的ip，或者搭建机器的内网ip。
 
-  <p>
-    ![tvbox setting](https://www.iminling.com/wp-content/uploads/2024/04/8C14BC01703C12A9BAA1DB2B9F3702D2.png)
-  </p>
+安卓手机正常安装后进行配置：http://xxxxx:5678/tvbox/my.json。
 
-  <p>
-    如果同时有内网以及外网地址，那么想要在公网访问，则需要再多建一个<code>docker_address_ext.txt</code>,里边需要填写公网的<code>ip:端口</code>,然后在tvbox中进行配置:http://xxxxx:5678/tvbox/my_ext.json就可以了。
-  </p>
+![tvbox setting](https://images.iminling.com/app/hide.php?key=aC9La1lEV1pSUHhsK1ZWcHZPN1hzOTU5SlljWnZEaFkweUt6NW1PNk5naHZqR0VrMUNWWWhLdWl1c3RjTVNTNXJEeXVQMTg9)
 
-  <h3>
-    电视端
-  </h3>
+如果同时有内网以及外网地址，那么想要在公网访问，则需要再多建一个`docker_address_ext.txt`,里边需要填写公网的`ip:端口`,然后在tvbox中进行配置:http://xxxxx:5678/tvbox/my_ext.json就可以了。
 
-  <p>
-    其实和安卓端是一样的，安装tvbox(安装包也是在小雅Alist中获取)，按照安卓的配置方式，进行配置后就可以观看了。
-  </p>
 
-  <h2>
-    配置
-  </h2>
+### 电视端
 
-  <h3>
-    登录配置
-  </h3>
+其实和安卓端是一样的，安装tvbox(安装包也是在小雅Alist中获取)，按照安卓的配置方式，进行配置后就可以观看了。
 
-  <p>
-    如果你搭建的机器是公网的，又不想别人随便使用，可以通过配置，需要使用账号和密码来登录，需要在配置文件目录添加两个文件:<code>guestlogin.txt</code>,和<code>guestpass.txt</code>两个文件，<code>guestlogin.txt</code>控制Alist网页端需要登录，只是一个空文件就可以了，<code>guestpass.txt</code>里边内容是登录密码，这样子访问你的Alist就需要账号和密码了，账号是：dav，密码是<code>guestpass.txt</code>中的内容。
-  </p>
-</div>
+## 配置
+### 登录配置
+
+如果你搭建的机器是公网的，又不想别人随便使用，可以通过配置，需要使用账号和密码来登录，需要在配置文件目录添加两个文件:`guestlogin.txt`,和`guestpass.txt`两个文件，`guestlogin.txt`控制Alist网页端需要登录，只是一个空文件就可以了，`guestpass.txt`里边内容是登录密码，这样子访问你的Alist就需要账号和密码了，账号是：dav，密码是`guestpass.txt`中的内容。
+
 
 其他配置暂时也没有使用到，后续有使用到再进行更新，祝大家都能顺利安装成功。

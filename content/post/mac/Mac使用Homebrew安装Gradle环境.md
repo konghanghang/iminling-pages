@@ -4,24 +4,22 @@ author: 要名俗气
 type: post
 date: 2023-10-27T05:24:40+00:00
 url: /2023/mac-use-homebrew-install-gradle
-description: 首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：[Mac更换源更快速的安装Homebrew](https://www.iminling.com/2023/10/02/265.html "Mac更换源更快速的安装Homebrew")，有了Homebrew后一切安装都变的很简单了。 安装 首先是来搜索一下gradle:如上有几个版本的gradle:6,7以及没有加版本号的代表最新的。
-featured_image: /wp-content/uploads/2023/10/3F5D90BA94A32843C781364B437AB148.png
+description: 开发中需要使用到gradle环境，在mac上我是通过Homebrew来安装的，本文主要讲述如何通过Homebrew来安装gradle并配置环境变量。
+image: https://images.iminling.com/app/hide.php?key=b1RZQ08wVXRyaHZ6RWNrVmZJTU53b3VobUVYZG5PM1lPRjVqTTV3QSt5N0IxTzJidFh6VFlCRVhMSGY2cUZGcnR2VG1ob1k9
 categories:
-  - Gradle
+  - mac
 tags:
   - Gradle
   - Homebrew
   - Mac
 ---
-![](https://www.iminling.com/wp-content/uploads/2023/10/3F5D90BA94A32843C781364B437AB148.png)
-
-首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：[Mac更换源更快速的安装Homebrew](https://www.iminling.com/2023/10/02/265.html "Mac更换源更快速的安装Homebrew")，有了Homebrew后一切安装都变的很简单了。
+首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：[Mac更换源更快速的安装Homebrew]({{< ref "/post/mac/Mac更换源更快速的安装Homebrew.md" >}})，有了Homebrew后一切安装都变的很简单了。
 
 ## 安装
 
 首先是来搜索一下gradle:
 
-```
+```bash
 k@MacBook-Pro ~ % brew search gradle
 ==> Formulae
 gradle              gradle-profiler     gradle@7            grails
@@ -33,7 +31,7 @@ grads                                    qlgradle
 
 如上有几个版本的gradle:6,7以及没有加版本号的代表最新的。我这里安装gradle@7的版本：
 
-```
+```bash
 k@MacBook-Pro ~ % brew install gradle@7
 ==> Downloading https://ghcr.io/v2/homebrew/core/gradle/7/manifests/7.6.3
 ######################################################################### 100.0%
@@ -78,7 +76,7 @@ source .zshrc
 
 然后就可以通过命令来查看gradle的版本信息：
 
-```
+```bash
 k@MacBook-Pro ~ % gradle -v
 
 Welcome to Gradle 7.6.3!

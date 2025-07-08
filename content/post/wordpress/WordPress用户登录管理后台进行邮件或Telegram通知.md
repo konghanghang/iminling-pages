@@ -5,16 +5,14 @@ type: post
 date: 2023-09-29T08:46:00+00:00
 url: /2023/wordpress-login-use-mail-telegram-notice
 description: 前段遇到了一个大麻烦，我的网站主页发布了两篇非我自己写的文章，在登录了worpress后台后，发现的确是有两篇文章，随后赶紧删除了那两篇文章。
-featured_image: /wp-content/uploads/2023/09/5b936c4101fb2b204daf36d0c1457d48.jpeg
+image: https://images.iminling.com/app/hide.php?key=NE1yYVdkUjdQS3Q1UTBUODVkbW5zcUF5ckdjQzBHNzJHSWdQZGN2bFN0N1pJK1JEN0FxVG9OZFc1SUQrekV4Um9janlZWDQ9
 categories:
   - wordpress
 tags:
   - telegram
   - wordpress
 ---
-![](https://www.iminling.com/wp-content/uploads/2023/09/5b936c4101fb2b204daf36d0c1457d48.jpeg)
-
-前段遇到了一个大麻烦，我的网站主页发布了两篇非我自己写的文章，在登录了worpress后台后，发现的确是有两篇文章，随后赶紧删除了那两篇文章。经过排查发现是xmlrpc功能没有关闭导致的，所以就有了我的上篇文章：[禁用xmlrpc.php防止wordpress被暴力破解](https://www.iminling.com/2023/09/03/241.html "禁用xmlrpc.php防止wordpress被暴力破解")，事后及时关闭了该功能，然后就想着，既然要发布文章，是不是要登录我的管理后台，那么是否可以设置在用户登录wordpress管理后台的时候进行通知我呢，然后就去搜索了一下相关功能，果然还是有办法通知到我的。下边简单的分享一下该功能。
+前段遇到了一个大麻烦，我的网站主页发布了两篇非我自己写的文章，在登录了worpress后台后，发现的确是有两篇文章，随后赶紧删除了那两篇文章。经过排查发现是xmlrpc功能没有关闭导致的，所以就有了我的上篇文章：[禁用xmlrpc.php防止wordpress被暴力破解]({{< ref "/post/wordpress/禁用xmlrpc.php防止wordpress被暴力破解.md" >}})，事后及时关闭了该功能，然后就想着，既然要发布文章，是不是要登录我的管理后台，那么是否可以设置在用户登录wordpress管理后台的时候进行通知我呢，然后就去搜索了一下相关功能，果然还是有办法通知到我的。下边简单的分享一下该功能。
 
 ## 邮件配置
 
@@ -22,7 +20,9 @@ tags:
 
 ## Telegram配置
 
-其实使用邮件配置就可以了，当有登录的时候就会通过邮件来通知我们。我这里并不想在自己的邮箱里留存太多的邮件，而且自己用Telegram比较多，就想着把通知发送Telegram会更好，我就安装了插件：WP Telegram。功能也很强，它能在要发邮件的时候劫持邮件内容到telegram:![](https://www.iminling.com/wp-content/uploads/2023/09/aef44f2535eb8f68f09d56ddfc002c94.png)
+其实使用邮件配置就可以了，当有登录的时候就会通过邮件来通知我们。我这里并不想在自己的邮箱里留存太多的邮件，而且自己用Telegram比较多，就想着把通知发送Telegram会更好，我就安装了插件：WP Telegram。功能也很强，它能在要发邮件的时候劫持邮件内容到telegram:
+
+![](https://images.iminling.com/app/hide.php?key=YmVpMHVUeVovMHZzMWd5bklhdERmQTdDVG5vVEZyVk9JQ1B3cVFlampsWXlZbFVZYjFkSkMza0dLcWpBLzhnRWxiTjRWeGc9)
 
 只需要在Telegram申请好机器人就可以了，插件中也有申请步骤。
 
@@ -30,7 +30,7 @@ tags:
 
 编辑主题文件中的functions.php文件[外观-主题文件编辑器]，在文件末尾添加以下代码就可以实现了：
 
-```
+```php
 /*****************************************************
  函数名称：wp_login_notify v1.0 by DH.huahua.
  函数作用：有登录wp后台就会email通知博主

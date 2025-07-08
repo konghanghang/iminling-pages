@@ -4,24 +4,22 @@ author: 要名俗气
 type: post
 date: 2023-10-27T04:01:20+00:00
 url: /2023/mac-use-homebrew-install-maven
-description: 首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：[Mac更换源更快速的安装Homebrew](https://www.iminling.com/2023/10/02/265.html "Mac更换源更快速的安装Homebrew")，有了Homebrew后一切安装都变的很简单了。
-featured_image: /wp-content/uploads/2023/10/C57B82469E62154EDED97C0E6200B82F.png
+description: 开发中需要使用到maven环境，在mac上我是通过Homebrew来安装的，本文主要讲述如何通过Homebrew来安装maven并配置环境变量。
+image: https://images.iminling.com/app/hide.php?key=VllGYlZxRmg1enZJWWNjVDJWQzRteEN4Mi9JdlJ3d0tGbjlldkZRem9CdkxqSU5FdGxVdUsyVVMxWlh2VG5DdlA5YUY4emc9
 categories:
-  - Maven
+  - mac
 tags:
   - Homebrew
   - Mac
   - maven
 ---
-![](https://www.iminling.com/wp-content/uploads/2023/10/C57B82469E62154EDED97C0E6200B82F.png)
-
-首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：[Mac更换源更快速的安装Homebrew](https://www.iminling.com/2023/10/02/265.html "Mac更换源更快速的安装Homebrew")，有了Homebrew后一切安装都变的很简单了。
+首先mac机器需要先安装Homebrew,具体的安装教程参考我的另一篇文章：[Mac更换源更快速的安装Homebrew]({{< ref "/post/mac/Mac更换源更快速的安装Homebrew.md" >}})，有了Homebrew后一切安装都变的很简单了。
 
 ## 安装
 
 首先是来搜索一下maven:
 
-```
+```bash
 k@MacBook-Pro ~ % brew search maven
 ==> Formulae
 maven                      maven-completion           maven-shell
@@ -32,7 +30,7 @@ marvel              marvin              mauve               mavensmate
 
 如上，第一个就是我们需要安装的maven,通过安装命令进行安装：
 
-```
+```bash
 k@MacBook-Pro ~ % brew install maven
 ==> Downloading https://formulae.brew.sh/api/formula.jws.json
 ##O#- #
@@ -82,7 +80,7 @@ source .zshrc
 
 然后就可以通过命令来查看maven的版本信息：
 
-```
+```bash
 k@MacBook-Pro ~ % mvn -v
 Apache Maven 3.9.5 (57804ffe001d7215b5e7bcb531cf83df38f93546)
 Maven home: /usr/local/Cellar/maven/3.9.5/libexec

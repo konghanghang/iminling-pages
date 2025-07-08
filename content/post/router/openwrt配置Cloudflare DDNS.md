@@ -4,31 +4,31 @@ author: 要名俗气
 type: post
 date: 2023-04-08T18:12:20+00:00
 url: /2023/openwrt-configuration-cf-ddns
-description: 配置DDNS的前提条件是家里的宽带需要有公网ip。下面我们开始使用cloudflare来进行DDNS的配置。 添加ddns配置 选择openwrt里的动态DNS功能，然后在里边添加一个自己的配置，名称随便，如我添加的\openwrt.com。
+description: 想要在外边访问家里的网络，可以使用运营商分配的ip，但是ip可能会经常变动，所以需要进行ddns配置，配置DDNS的前提条件是家里的宽带需要有公网ip。下面我们开始使用cloudflare来进行DDNS的配置。
+image: https://images.iminling.com/app/hide.php?key=N3NkMDdwS3dld0x2Q1I2a09HUW9SZU5Fb2g1SEV5Z1FBaU9QcjNwbzE3ZFZLNWlLdVBFZC9Uai9hS0VLdCtDMUFEcVVsZ1E9
 categories:
-  - openwrt
-  - VPS
+  - router
 tags:
   - cloudflare
   - ddns
   - openwrt
   - r2s
 ---
-配置DDNS的前提条件是家里的宽带需要有公网ip。下面我们开始使用cloudflare来进行DDNS的配置。
+想要在外边访问家里的网络，可以使用运营商分配的ip，但是ip可能会经常变动，所以需要进行ddns配置，配置DDNS的前提条件是家里的宽带需要有公网ip。下面我们开始使用cloudflare来进行DDNS的配置。
 
 ## 添加ddns配置
 
 选择openwrt里的动态DNS功能，然后在里边添加一个自己的配置，名称随便，如我添加的`MYDDNS`\`。
 
-![](https://www.iminling.com/wp-content/uploads/2023/04/1681004803830.jpg)
+![](https://images.iminling.com/app/hide.php?key=SnR4NzYydnp1dWRnL2NQTXBPeDhaUk1BYWNoczg5OEdXejZEbjVmTFVlZEdzRFFwV20zY1BSNjNXQWcrZGhzb2c1bzU5Vm89)
 
 添加后就跳转到了配置界面，首先我们要选择ddns的提供商，这里我们选择cloudflare:
 
-![](https://www.iminling.com/wp-content/uploads/2023/04/71685ba48430ecd770cf4478d066f580.png)
+![](https://images.iminling.com/app/hide.php?key=RVpXQnJCRHFsZVM0cXdtSjN3T1BYaWpDd1BPdjNBYktVdHM1R0w5RXdVaytpaXRNM3lOc3NlRHJsb2lueGFHV25hNkNLVWM9)
 
 切换后如下图：
 
-![](https://www.iminling.com/wp-content/uploads/2023/04/5bccfa93f359096fcbed66be11f03113.png)
+![](https://images.iminling.com/app/hide.php?key=VllGYlZxRmg1enZJWWNjVDJWQzRtOExhUHRYdjl0M0RQanZWbUJBdGsyNTNVc0FJdmEvZnhNaFBtWjNkeFZwOE41cVYvSmc9)
 
 ### 查询主机名
 
@@ -42,7 +42,7 @@ tags:
 
 用户名是cloudflare的登录邮箱，密码是cloudflare的global api key。如下图，点击后边的view就可以查看自己的key了。
 
-![](https://www.iminling.com/wp-content/uploads/2023/04/9b9dbdfdf83b87c8ecf7c552f7938b04.png)
+![](https://images.iminling.com/app/hide.php?key=M1EzaHhtZkNrUWNrUWJvdE9ZVzlSMHhtZmZOZWNPTTZqdVZ6MHdzbHpLYTN4UlJZNDFtOW1iandLc2t2aEkvamMxVHdraEk9)
 
 截止上边openwrt里的配置就已经完成了。点击保存并应用就可以了。
 
@@ -50,7 +50,7 @@ tags:
 
 我们在上边使用到了`admin.openwrt.com`。然后我们需要在cloudflare的后台去配置这个域名的解析。添加一条A记录，记录值为\`admin\`,然后我们就可以通过admin.自己的二级域名来访问我们软路由系统了。IPv4地址可以先随便填一个，等待ddns程序自动进行更新。
 
-![](https://www.iminling.com/wp-content/uploads/2023/04/dbaf8d30654b248e86a3942fd7e0ad41.png)
+![](https://images.iminling.com/app/hide.php?key=dnBCdUNXU1d5cXZldkhyVWpJU04xNll2SG1mWEpRUWlNV0lUNWRKTWh4YVQ2VU1BbU80MDhFS2puc3grbDJublNUMW93ajQ9)
 
 ## 开放openwrt端口
 
@@ -72,6 +72,6 @@ tags:
 
 内部端口：openwrt的管理后台一般都是输入ip就可以访问，所以端口是80.
 
-![](https://www.iminling.com/wp-content/uploads/2023/04/81b1d5e9cd4cfd2ad84557fa31f8a401.png)
+![](https://images.iminling.com/app/hide.php?key=cXR2WTJpMTY4WFpRY0g4aGsrcWthd2xMdmZzZzJsc0JNd05GQ3RISjBycHZuYWFQL2hteW1STzRBRzJ3M2pHSjY5d1EyYWM9)
 
 添加，然后保存并应用，就可以通过ddns里的配置的`查询域名:外部端口`访问到管理后台，本文中的就是`admin.openwrt.com:8080`。8080端口是我随便写的，根据自己情况选择一个可以使用的端口，1024~65535之间的都可以。

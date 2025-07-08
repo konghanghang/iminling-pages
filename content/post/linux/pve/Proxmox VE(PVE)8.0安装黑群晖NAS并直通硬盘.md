@@ -4,17 +4,17 @@ author: 要名俗气
 type: post
 date: 2024-09-16T10:00:29+00:00
 url: /2024/pve-install-nas
-description: 前段时间通过pve安装[ikuai](https://www.iminling.com/2024/pve-install-ikuai "Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"),[openwrt](https://www.iminling.com/2024/pve-install-openwrt "Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式")以及[使用lxc安装了docker](https://www.iminling.com/2024/pve-use-ct-template-install-lxc-docker "Proxmox VE(PVE)8.0使用CT模板创建LXC版docker服务"),之后就一直稳定使用，J4125上有一个2T的硬盘，于是就想着折腾一下在上边安装一下黑群晖，体验一下nas系统。于是就又开始了折腾之路，又学习了很多知识。下边就记录一下我折腾的过程。 准备 其实在开始装nas之前我看了很多教程，里边只是提供安装过程，并提供对应的安装包。
-featured_image: /wp-content/uploads/2024/09/synology.png
+description: 前段时间通过pve安装ikuai,openwrt]以及通过lxc安装了docker,之后就一直稳定使用，J4125上有一个2T的硬盘，于是就想着折腾一下在上边安装一下黑群晖，体验一下nas系统。于是就又开始了折腾之路，又学习了很多知识。下边就记录一下我折腾的过程。
+image: https://images.iminling.com/app/hide.php?key=NFRXQWhja0FLK28xVDVKMjg3V1dLL0xOYi9sYmloRVIra2YveWJQNVNTY1NVempCcDZMUjNrKzI1NkZmL3o0WlJJTzI2TGc9
 categories:
-  - 影音
+  - pve
 tags:
   - nas
   - pve
   - Synology
   - 黑群晖
 ---
-前段时间通过pve安装[ikuai](https://www.iminling.com/2024/pve-install-ikuai "Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"),[openwrt](https://www.iminling.com/2024/pve-install-openwrt "Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式")以及[使用lxc安装了docker](https://www.iminling.com/2024/pve-use-ct-template-install-lxc-docker "Proxmox VE(PVE)8.0使用CT模板创建LXC版docker服务"),之后就一直稳定使用，J4125上有一个2T的硬盘，于是就想着折腾一下在上边安装一下黑群晖，体验一下nas系统。于是就又开始了折腾之路，又学习了很多知识。下边就记录一下我折腾的过程。
+前段时间通过pve安装[ikuai]({{< ref "/post/linux/pve/Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡.md" >}}),[openwrt]({{< ref "/post/linux/pve/Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式.md" >}})以及[使用lxc安装了docker]({{< ref "/post/linux/pve/Proxmox VE(PVE)8.0使用CT模板创建LXC版docker服务.md" >}}),之后就一直稳定使用，J4125上有一个2T的硬盘，于是就想着折腾一下在上边安装一下黑群晖，体验一下nas系统。于是就又开始了折腾之路，又学习了很多知识。下边就记录一下我折腾的过程。
 
 ## 准备
 
@@ -28,7 +28,7 @@ tags:
 
 下载好镜像后就需要在pve中进行新建虚拟机了。步骤和openwrt差不多。
 
-![new vm](https://www.iminling.com/wp-content/uploads/2024/09/604C610F0F9AB44B9C0176E5C7753C51.png)
+![new vm](https://images.iminling.com/app/hide.php?key=UW5tdlgzclNrZVdHd2FNU2hBSVlEOExGMG93WEdnbW5oczJjbXFNaGlRYlExTGpOZEhqNm9JazZhTFFtVDFFUk40UFNMVUE9)
 
 常规选项：只需要填写一个名称就可以了。
 
@@ -52,7 +52,7 @@ CPU：`核心数`根据自己的cpu设置，我这里给4.另外`类别`下拉�
 
 如图的位置进行上传。
 
-![upload iso](https://www.iminling.com/wp-content/uploads/2024/03/BC97614C54342FD608F4DC6371CAC5A2.png)
+![upload iso](https://images.iminling.com/app/hide.php?key=Mk9kNFJMNWJvTUhFRDZOL0dkVXFIVzlRQjdrV2kvNmtGTllBN3kwWEJTWVcxK1FpRmtEZjhYV2NFL3lBRjFFRTNNMnRHV009)
 
 接下来在shell中使用命令将黑群晖的引导文件rr导入到创建好的DSM虚拟机，进入到`pve系统的shell`中执行。
 
@@ -66,7 +66,7 @@ CPU：`核心数`根据自己的cpu设置，我这里给4.另外`类别`下拉�
 
 经过上边的设置基本就可以了，此时还需要给nas添加一个磁盘。在pve的shell中通过命令找到我的固态盘ls -l /dev/disk/by-id/：
 
-![disk](https://www.iminling.com/wp-content/uploads/2024/09/A2C2455053EAB75DD05961B46B8B8144.png)
+![disk](https://images.iminling.com/app/hide.php?key=aC9La1lEV1pSUHhsK1ZWcHZPN1hzL0JGQWExcjhnOEtPdUJWd3R0cnFyY2p3bEg2KzRMQ1lHSGNkRW9WWFIvRlkyNk9KMDA9)
 
 可以看到ata开头的ZHITAI就是我的固态盘了。复制完整的名称：ata-ZHITAI\_SC001\_XT\_2000GB\_ZTB502TAB2404507RX。
 
@@ -78,13 +78,13 @@ update VM 103: -sata1 /dev/disk/by-id/ata-ZHITAI_SC001_XT_2000GB_ZTB502TAB240450
 ```
 
 执行完成后就可以看到新添加的磁盘了：
-![nas vm](https://www.iminling.com/wp-content/uploads/2024/09/C9EC9466FC5A73F50BD85C622D9B7EB7.png)
+![nas vm](https://images.iminling.com/app/hide.php?key=dmlMc2RYVnRoTHNrNDV3UDlaNi80bDAzOUF3QzVoaVpiRXhzQ2w5VHFJTVdBRWErS2VDM1JtRHQ0ZWp6aExpaEZlWmZXNUU9)
 
 然后修改启动顺序后就可以启动了。
 
 把sata0设置为第一位：
 
-![nas ](https://www.iminling.com/wp-content/uploads/2024/09/6BA2533C829AF79C9E75BBCDEBD11983.png)
+![nas ](https://images.iminling.com/app/hide.php?key=THJaK0tLOGhrR1QxRjdXczNDcVIrZEhSY2FoeStlTmE5cUswZDVzKytvMlk5djFUN1ppRnNKVENtNWU3S2JoMU5SZ2xnNTg9)
 
 启动成功后，在控制台中可以看到提示，会让访问一个ip:7681的网址去进行初次设置。
 
@@ -112,47 +112,47 @@ update VM 103: -sata1 /dev/disk/by-id/ata-ZHITAI_SC001_XT_2000GB_ZTB502TAB240450
 
 接下来就是访问ip:5000来进行NAS的初始化,我这里的ip是192.1681.42:5000
 
-![sa6400 1](https://www.iminling.com/wp-content/uploads/2024/09/592F95F353A14370E1FF9074D6FDFEA0.png)
+![sa6400 1](https://images.iminling.com/app/hide.php?key=R0M1WXkrTnZTeGdUb1BPQzlENVhJNmZVK21td1A0T05rdG5PVGFUVm50cVVpV2hwUE05TERpUHg0WVE5YmZwZUZrdDIxRXc9)
 
 安装。
 
-![nas pat](https://www.iminling.com/wp-content/uploads/2024/09/49DADB749C25BD32C29BE8EB53F3CA20.png)
+![nas pat](https://images.iminling.com/app/hide.php?key=RGczYXZIWDlzZ0wrWmdETGFzWWZLVEVCaWZBaTIvNmVNOUlhdFplQ1F5bXFkTWw4S09INTBYekJjNUNNOURIVk5aTUhSdEE9)
 
 选择`引导编译阶段`下载的pat文件。
 
-![sa6400 clean disk](https://www.iminling.com/wp-content/uploads/2024/09/5B271AB0441EC5953E419CA1D3BD98AD.png)
+![sa6400 clean disk](https://images.iminling.com/app/hide.php?key=VHduNWdkN2QyY2RocGEvbGNzOHBWelY1QXVESU5renFEWmU2TFA4N293dk14STQxQTVpNXZqWlFFQTkxcFNKZnZ5Mm5tb3c9)
 
 提示会删除硬盘数据，继续进行确认。
 
-![sa6400 install](https://www.iminling.com/wp-content/uploads/2024/09/0FE9CABE0F4CA60A3B935A85DC221EE4.png)
+![sa6400 install](https://images.iminling.com/app/hide.php?key=NmtEZ1ZGOE1SbXJlVENkbTFYQTBQaGFRVUJVVmdXWExPR3N3RmwvcVpITnJnNXJ6c1ZMSVRsUEd1RDNOVDlVM1FDYXNmZmc9)
 
 等待安装。安装后就是重启，提示大概需要10分钟，实际上我等了3分钟就可以了。
 
-![sa6400 reboot](https://www.iminling.com/wp-content/uploads/2024/09/5AD9C906151D6CBF02C59A81F8A8186A.png)
+![sa6400 reboot](https://images.iminling.com/app/hide.php?key=bjNUT2U1c1QvOHpVWDc5ZEJMQ3Jic1pCRU01VGhDZ1piR1FlNjEwR3BqTTd3eVZzTjlJMThWTTFjZ0lRY0xzcVJSV0dGMkE9)
 
 重启完成后就会提示安装组件：
 
-![sa6400 install](https://www.iminling.com/wp-content/uploads/2024/09/E215646EE5D97151C416C9479AA3B453.png)
+![sa6400 install](https://images.iminling.com/app/hide.php?key=VW54V3VOcDcvYVBFRnFQQjlSb1NIdVNKUDdhQmh3djlaZjR3bWZzMS95am1XMitiWlo3OWhYYW5nWU01L1FEaXMxbHU3elE9)
 
 套件安装完成后进入安装引导：
 
-![sa6400 install](https://www.iminling.com/wp-content/uploads/2024/09/6B22933AFE0F4B3EC3E3F60BF343449B.png)
+![sa6400 install](https://images.iminling.com/app/hide.php?key=eGRka3lwRmVHcTFrZVl4QThxbXNELzFaSHJhcjNua2hUWUo4SjVwU0VtcmR3YTQ5aEY4ZmRrbEZFZ3kvSnZMSHJZVWJ1YVE9)
 
 进入用户名和密码设置：
 
-![sa6400 username setting](https://www.iminling.com/wp-content/uploads/2024/09/4ECBD6C45D45FC7B2CA25112E5709433.png)
+![sa6400 username setting](https://images.iminling.com/app/hide.php?key=UlI0WG8xcytRZm5KT1orMDYxcjBxbENyWjNiUEIvdHhSUjdKREd6RlUranBhOThtNjZVeENWclZqdmNValRWREx1ZHBCekk9)
 
 接下来的更新就不需要了自动安装了：
 
-![sa6400 udpate options](https://www.iminling.com/wp-content/uploads/2024/09/CA6984342AD234286EC09ACB05D7D124.png)
+![sa6400 udpate options](https://images.iminling.com/app/hide.php?key=aHVuLzFGaFFtTU1HKzE1VE8raitFNVErZjFkZGVXMmtzQnRCdTBVK1VucVRkZnNKYUZJVVIvaXJpNFd5Y2dkNVNodlUxblU9)
 
 账号创建跳过：
 
-![sa6400 account](https://www.iminling.com/wp-content/uploads/2024/09/DE2ED5DABB970424565042BA51AFBECA.png)
+![sa6400 account](https://images.iminling.com/app/hide.php?key=MU5XZFJXZ09VR2xVZkt3dS8vNEVzWitTQXIrOGJoVmxaZnVzb0tkUlBURk4xZVFXMDQzVHMwaU1EaXhrUVJPTU9nQlhieHc9)
 
 用户体验不勾选，提交：
 
-![sa6400 install](https://www.iminling.com/wp-content/uploads/2024/09/6CB3DAD099AD85BF0C5B38556171A378.png)
+![sa6400 install](https://images.iminling.com/app/hide.php?key=QW5DMC95SVl5Q0pwSEpTSDV1aEw4b0ZZY1MwY2lWR1ZsTWo0U01UM2JPYmN2SlpqK3dOcHFkNzRkdW96Q3diQ1FNS213c1k9)
 
 经过上边的一系列设置，终于来到了nas的桌面中。
 
@@ -160,11 +160,11 @@ update VM 103: -sata1 /dev/disk/by-id/ata-ZHITAI_SC001_XT_2000GB_ZTB502TAB240450
 
 群晖套件：不用了，谢谢。
 
-![synology setting](https://www.iminling.com/wp-content/uploads/2024/09/619B1456828D5B4ABDE474DCA9FA912A.png)
+![synology setting](https://images.iminling.com/app/hide.php?key=Q01pd2g3dFo0SmVOdWdvUUNjQjY2Q0h3TTJTZk9PSnl0OXJyTVJQUm9qeFRXUW0ydnNFZnJrSDBMNnVDUkNFWHNablFjbHc9)
 
 双重2FA不开启：
 
-![synology 2fa](https://www.iminling.com/wp-content/uploads/2024/09/3B72584B496288EDBEE9D40F5CCF434F.png)
+![synology 2fa](https://images.iminling.com/app/hide.php?key=b2oyVytyblo2TnV2dUlzQzBReHE1RlVkTFJOYk5paXBDbmlRekR3dmcwYXFjc1cvZjZPZGJzRVQyeHQ2WmxmNXNEQnFIL3M9)
 
 下一步账户保护不开启。
 
@@ -174,39 +174,39 @@ update VM 103: -sata1 /dev/disk/by-id/ata-ZHITAI_SC001_XT_2000GB_ZTB502TAB240450
 
 经过上边的设置，终于提示要设置磁盘了。
 
-![sa6400 disk setting](https://www.iminling.com/wp-content/uploads/2024/09/FA77EE697520348E4EB0A53A7315E90C.png)
+![sa6400 disk setting](https://images.iminling.com/app/hide.php?key=SjhTMHBELzNqUjFYZ01xbEtZSWY0R1BoOHBTUnFrdnl1WkJBMTBHdk0rRTZHWkFQb0x0blZUeXBDeGxGQUkreXBvVEI1ZDQ9)
 
 点击开始进行设置：
 
-![sa6400 raid](https://www.iminling.com/wp-content/uploads/2024/09/29DA9906BF517DAD5CD40C564A4C1FDF.png)
+![sa6400 raid](https://images.iminling.com/app/hide.php?key=dFNTWWc5QWthUEVZMTVObFEybnZGQk1JSEROMVZ4YnkvU2pRbHJTMkVBQUw2SHBkditpb3c0ZXJmVEtDTEdYUjdDTTFXakU9)
 
 raid类别根据自己的需要选择，我这里 就一个硬盘，直接选择basic类型。继续下一步,选择硬盘，我这里需要一个硬盘：
-![sa6400 disk select](https://www.iminling.com/wp-content/uploads/2024/09/0566CFC1A0979B154AB4A32DB2A11DAE.png)
+![sa6400 disk select](https://images.iminling.com/app/hide.php?key=dmlMc2RYVnRoTHNrNDV3UDlaNi80akJEMnpsS0lhckd5MXd1VXllcHVoM0o2aDE2ZGcyQjZVeEl2bGNJYm1NWUdCTXVmWkk9)
 
 继续下一步，跳过硬盘检查：
 
-![sa6400 disk check](https://www.iminling.com/wp-content/uploads/2024/09/322E5645680C559C7DA307C31005E93A.png)
+![sa6400 disk check](https://images.iminling.com/app/hide.php?key=Unk0QjN0amt5MmZUb1ByamhJMVJjVHljQWNCUXA2bjVyV2hCUURaMXpZcndqNnRZemhSRnRHdDFvUmh4aUwyOW9xWDhIdjA9)
 
 继续下一步配置磁盘容量：
 
-![sa6400 disk cap](https://www.iminling.com/wp-content/uploads/2024/09/C7B2995636E2C4F9EF0686AC8325858D.png)
+![sa6400 disk cap](https://images.iminling.com/app/hide.php?key=NGtJSkQrTXRhOVFBbXJySVNDbjZjSmJVUFdCMTU0aS9GTkl0cjR6NVpFK0pIcFJXQitKTVBHL1ZoQ1pqTjBPTnRPa2VTYlU9)
 
 直接最大化，整个都分配给nas，继续下一步文件系统：
 
-![sa6400 disk file type](https://www.iminling.com/wp-content/uploads/2024/09/35A3D7B70E1BB725A8097A9E22963569.png)
+![sa6400 disk file type](https://images.iminling.com/app/hide.php?key=dExZaDkwMkc3ZitQdkFtdmFabVZYcUdPelFjRlZZRHM3OGdXeGRwc0lVRi9POTVMR2Jja2xZNFcvdUtkMFFhYVNGSFJlR2M9)
 
 这里我就选择他推荐的，继续下一步配置加密：
 
-![sa6400 file encrypt](https://www.iminling.com/wp-content/uploads/2024/09/3315AE268C487E5A8E1677C552A44706.png)
+![sa6400 file encrypt](https://images.iminling.com/app/hide.php?key=Rkx4TUllS2M5S3Z2RTFJY3BteUxsQ1BlSFZIVG5FOWJZL2orVzNBRTNmMFBEZjRMRVRTZmtLejREV3ZtRlJjSWFYSlZ6QUE9)
 
 我这里不加密，默认，继续下一步，对刚才的配置在进行概览：
 
-![sa6400 configuration check](https://www.iminling.com/wp-content/uploads/2024/09/F7CDBAB9BA5852495DCB9108238CEF4B.png)
+![sa6400 configuration check](https://images.iminling.com/app/hide.php?key=aWtSeWdQRnQxazhMN0RNdGFCdytHa2Q5V3ZjNW5LU2ZPdXNnOGg2UkVUWG1sK3dGZmdzbm5kZTRxb2ZmL3NrTllGdnV0ZTA9)
 
 配置无问题应用就可以了。终于整个nas都配置后了。
 
 最后再上一个桌面显示的图片：
 
-![sa6400 desktop](https://www.iminling.com/wp-content/uploads/2024/09/EB7EF2C081536198F30240284EFD2D04.png)
+![sa6400 desktop](https://images.iminling.com/app/hide.php?key=TlUwdWJRaGpRZ2llajJNcFpuYU1oZjByWGFCTml2Qjl4R0EvRk5FRkROMThwaldUTFJhODlrNk94RkZZbnZpWlkrS29ab1U9)
 
 以上就是pve安装黑群晖的折腾记录。

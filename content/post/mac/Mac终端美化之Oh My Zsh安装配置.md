@@ -5,7 +5,7 @@ type: post
 date: 2023-10-27T10:07:07+00:00
 url: /2023/mac-install-oh-my-zsh
 description: 使用Mac的同学应该对Mac自带的终端配置都没什么好感，默认白底黑字，文件夹也没有特殊标识，还是上一张图来感受一下吧： 黑呼呼的一团，看着实在是难受，下边就让我们使用Oh My Zsh来进行美化一下。
-featured_image: /wp-content/uploads/2023/10/72080E8ACC30B787854C0FCABD74540A.png
+image: https://images.iminling.com/app/hide.php?key=U1V5NUZ5WlYrTGt1dElzaVc2VkgrOENSZkRib09zbVk0RjVKTFhkeXNyQkJvdmdOeVhYZWM1aHR1NjdDTWNQU2h3Y1ZHVTQ9
 categories:
   - Mac
 tags:
@@ -14,7 +14,7 @@ tags:
 ---
 使用Mac的同学应该对Mac自带的终端配置都没什么好感，默认白底黑字，文件夹也没有特殊标识，还是上一张图来感受一下吧：
 
-![](https://www.iminling.com/wp-content/uploads/2023/10/F23BC444669EA0029CFA2A5734A568D6.png)
+![](https://images.iminling.com/app/hide.php?key=RjFDWXBkVGJlbVdYdkpqZTM0QmxzYzRIZWt3enBnaDltSEJyZUwvajIzUDJwRU14Z05hOTcraUNLMHViKzdMVEVhZTJhSUk9)
 
 黑呼呼的一团，看着实在是难受，下边就让我们使用Oh My Zsh来进行美化一下。
 
@@ -22,7 +22,7 @@ tags:
 
 oh my zsh的安装是非常简单的，大家可以参考官网来进行安装：[Oh My Zsh Install](https://ohmyz.sh/#install),通过curl或wget都可以安装，下边使用curl进行安装：
 
-```
+```bash
 k@MacBook-Pro ~ % sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 Cloning Oh My Zsh...
 remote: Enumerating objects: 1370, done.
@@ -60,11 +60,11 @@ Before you scream Oh My Zsh! look over the `.zshrc` file to select plugins, them
 
 安装成功后，默认的主题(<span class="s1">robbyrussell</span>)如下所示：
 
-![](https://www.iminling.com/wp-content/uploads/2023/10/7935C2E4D4F0C1EC30E51484561741E4.png)
+![](https://images.iminling.com/app/hide.php?key=NFZFUVpyNmtTaUY3TnhFd2o1MURwbUxWQTdJMVZwVFJuYUMxb3VyVlZHZjBGcWl5SWhHYnI1eXBTUXZxd1hYMHNIWXBaNEU9)
 
 文件夹也可以高亮了，看着还是不错的。剩下的就是修改自己喜欢的主题了。oh my zsh自带了一些主题，存放在~/.oh-my-sh/themes下：
 
-```
+```bash
 # k @ MacBook-Pro in ~/.oh-my-zsh/themes on git:master o [17:47:16]
 $ ls
 3den.zsh-theme                 kennethreitz.zsh-theme
@@ -143,7 +143,7 @@ kardan.zsh-theme
 
 比如默认的主题：`robbyrussell.zsh-theme`，根据自己的需求，在.zshrc文件中进行修改，
 
-```
+```bash
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -156,11 +156,11 @@ ZSH_THEME="ys"
 
 我这里将主题修改为了ys。下边展示一下我修改后的终端配色：
 
-![](https://www.iminling.com/wp-content/uploads/2023/10/72080E8ACC30B787854C0FCABD74540A.png)
+![](https://images.iminling.com/app/hide.php?key=U1V5NUZ5WlYrTGt1dElzaVc2VkgrOENSZkRib09zbVk0RjVKTFhkeXNyQkJvdmdOeVhYZWM1aHR1NjdDTWNQU2h3Y1ZHVTQ9)
 
 加了一些透明在里边，下边把我自己使用的终端配色分享给大家，大家如果喜欢可以直接下载后进行导入：
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -303,6 +303,6 @@ ZSH_THEME="ys"
 
 新建一个文件，名字随意，文件格式为<span class="s1">.terminal,例如ohmyzsh.</span><span class="s1">terminal。然后在终端中进行导入并设置为默认：</span>
 
-![](https://www.iminling.com/wp-content/uploads/2023/10/83E97AAB128886574F7D67D116697633.png)
+![](https://images.iminling.com/app/hide.php?key=TG1mVTNGNDVpMjF6TDVyc20zRkt5Yk5FWWErVFFzWW0rQUhHaXdsdjZHbzAzR3JSR1MzbkJQc2djSmZoZWdDbzJEdzU5cmM9)
 
 选择import后，在上边的选项中就会有你刚才文件名称对应的一个配置文件，比如我这里叫me-old,然后设置为default就可以了，就和我图片中的终端配色一样了。

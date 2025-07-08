@@ -4,8 +4,8 @@ author: 要名俗气
 type: post
 date: 2024-12-04T15:04:19+00:00
 url: /2024/linux-mount-new-disk
-description: 最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。 3T盘挂载 磁盘查看 先使用fdisk查看磁盘 可以看到有一个2.93TB的硬盘，下边来对这个磁盘进行分区并添加。
-featured_image: /wp-content/uploads/2024/12/06E75D7C2E1274607D0E030129712389.jpg
+description: 最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。 
+image: https://images.iminling.com/app/hide.php?key=STRHaU84cVVtSm1LSEZrWHVLdDhqbzZPUURSR0EzWDB5a3RJL2RIdWgwZUVHWTFNQjV6WEtndkhQQUcxb3VlQjNGNzg5eWc9
 categories:
   - Linux
 tags:
@@ -13,8 +13,6 @@ tags:
   - linux
   - parted
 ---
-![disk](https://www.iminling.com/wp-content/uploads/2024/12/06E75D7C2E1274607D0E030129712389.jpg)
-
 最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。
 
 ## 3T盘挂载
@@ -23,7 +21,7 @@ tags:
 
 先使用fdisk查看磁盘
 
-```
+```bash
 root@host:~# fdisk -l
 Disk /dev/sda: 20 GiB, 21474836480 bytes, 41943040 sectors
 Disk model: QEMU HARDDISK
@@ -55,7 +53,7 @@ I/O size (minimum/optimal): 512 bytes / 512 bytes
 
 首先要确认是否已安装`parted`,如果没有安装使用一下命令进行安装：
 
-```
+```bash
 root@host:~# apt install parted
 Reading package lists... Done
 Building dependency tree... Done
@@ -71,7 +69,7 @@ Reading state information... Done
 
 完整的操作命令如下：
 
-```
+```bash
 root@host:~# parted /dev/sdb
 GNU Parted 3.5
 Using /dev/sdb
@@ -98,7 +96,7 @@ Information: You may need to update /etc/fstab.
 
 创建分区后，需要格式化为文件系统。我这里使用`ext4`格式，因为我只分了一个盘，所以这里是sdb1,如果有多个盘，需要分别对每个进行格式化：
 
-```
+```bash
 root@host:~# mkfs.ext4 /dev/sdb1
 mke2fs 1.47.0 (5-Feb-2023)
 Discarding device blocks: done
@@ -121,7 +119,7 @@ Writing superblocks and filesystem accounting information: done
 
 接下来就是对这个盘进行挂载，我这里挂载到/data目录下，需要先创建/data这个目录，然后通过`mount /dev/sdb1 /data`命令，把/dev/sdb1挂载到/data目录：
 
-```
+```bash
 root@host:~# mkdir /data
 root@host:~# df -h
 Filesystem      Size  Used Avail Use% Mounted on
@@ -151,7 +149,7 @@ tmpfs           198M     0  198M   0% /run/user/0
 
 经过上面的挂载后，如果系统重启，那么挂载就会失效，所以如果你希望磁盘在系统重启时自动挂载，可以编辑`/etc/fstab`文件：
 
-```
+```bash
 root@host-c:~# vim /etc/fstab
 /dev/sdb1   /data   ext4   defaults   0   2
 ```
@@ -164,7 +162,7 @@ root@host-c:~# vim /etc/fstab
 
 先来查看磁盘的分布
 
-```
+```bash
 root@host:~# fdisk -l
 Disk /dev/sdb: 1000 GiB, 1073741824000 bytes, 2097152000 sectors
 Disk model: QEMU HARDDISK
@@ -194,7 +192,7 @@ Partition table entries are not in disk order.
 
 先来介绍一下fdisk命令，输入/dev/sdb开始进行分区，默认是创建MBR分区，下边每个`Command (m for help)`都是需要进行输入的地方。首先是输入`o`,创建一个MBR分区，然后是输入`n`来创建分区，`partition type`选择主分区`p`，分区号码我这里只需要一个分区，所以输入1，然后就是`first sector`和`last sector`默认直接回车就是整个盘。最后输入`w`来写入修改，就完成了分区。
 
-```
+```bash
 root@host:~# fdisk /dev/sdb
 
 Welcome to fdisk (util-linux 2.38.1).
@@ -230,7 +228,7 @@ Syncing disks.
 
 parted不仅可以处理大于2T的，小于2T的也是可以处理的，下边就来看看具体怎么处理。
 
-```
+```bash
 root@host:~# parted /dev/sdb
 GNU Parted 3.5
 Using /dev/sdb

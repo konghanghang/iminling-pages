@@ -4,19 +4,20 @@ author: 要名俗气
 type: post
 date: 2025-02-09T03:15:47+00:00
 url: /2025/install-fnos-nas
-description: 飞牛nas系统出来也有段时间了，一个很不错的nas系统，在以前的文章中也介绍过[群晖nas系统的安装](https://www.iminling.com/2024/pve-install-nas "Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘")，今天就来一次尝鲜，安装一下fnOS，看一下群晖的系统和飞牛的系统有什么区别。接下来就开始安装折腾之路 - 飞牛私有云fnOS nas安装。
+description: 飞牛nas系统出来也有段时间了，一个很不错的nas系统，在以前的文章中也介绍过群晖nas系统的安装，今天就来一次尝鲜，安装一下fnOS，看一下群晖的系统和飞牛的系统有什么区别。接下来就开始安装折腾之路 - 飞牛私有云fnOS nas安装。
+image: https://images.iminling.com/i/2025/01/08/d3c94bd7539929c05abffe55a8295ea2.webp
 categories:
-  - PVE
+  - nas
 tags:
   - FnOS
   - nas
   - pve
 ---
-[飞牛nas](https://www.fnnas.com)系统出来也有段时间了，一个很不错的nas系统，在以前的文章中也介绍过[群晖nas系统的安装](https://www.iminling.com/2024/pve-install-nas "Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘")，今天就来一次尝鲜，安装一下fnOS，看一下群晖的系统和飞牛的系统有什么区别。接下来就开始安装折腾之路 - 飞牛私有云fnOS nas安装。
+[飞牛nas](https://www.fnnas.com)系统出来也有段时间了，一个很不错的nas系统，在以前的文章中也介绍过[群晖nas系统的安装]({{< ref "/post/linux/pve/Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘.md" >}})，今天就来一次尝鲜，安装一下fnOS，看一下群晖的系统和飞牛的系统有什么区别。接下来就开始安装折腾之路 - 飞牛私有云fnOS nas安装。
 
 ## PVE配置
 
-首先要先去[飞牛官网](https://www.fnnas.com/download)把官方镜像ISO文件给下载下来，上传到pve中，这个还有不清楚的可以参考[Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡](https://www.iminling.com/2024/pve-install-ikuai "Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡")中对爱快ISO文件上传的步骤。
+首先要先去[飞牛官网](https://www.fnnas.com/download)把官方镜像ISO文件给下载下来，上传到pve中，这个还有不清楚的可以参考[Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡]({{< ref "/post/linux/pve/Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡.md" >}})中对爱快ISO文件上传的步骤。
 
 ### 常规
 
@@ -146,7 +147,7 @@ cpu核心根据自己的情况来，我的J4125只有4个核心，所以全给�
 
 ssh登录信息为访问网页版的用户名和密码。使用访问网页的ip和22端口+用户名和密码来进行登录。
 
-```
+```bash
 aa@FnOS:/$ df -h
 Filesystem                                               Size  Used Avail Use% Mounted on
 udev                                                     1.9G     0  1.9G   0% /dev
@@ -165,46 +166,31 @@ tmpfs                                                    394M     0  394M   0% /
   <div class="ace-line ace-line old-record-id-YajHdl9ZxoJsJIxpfL0uECmrsrb">
     在我的文件自己创建的目录在/fs目录下：
   </div>
-
-  <div>
-    ```
+```bash
 aa@FnOS:/fs/1000/ftp$ ls
 docker  download
 ```
 
+
+
+
 <p>
   直接使用应用商店安装的qb下载目录可以在qb的设置里看到，实际是在<code>/vol1</code>下。</div>
+    aa@FnOS:/var/apps/qBittorrent/shares$ ls -alh
+    total 8.0K
+    drwxr-xr-x 2 root root 4.0K Jan  7 23:05 .
+    drwxr-xr-x 6 root root 4.0K Jan  7 23:05 ..
+    lrwxrwxrwx 1 root root   27 Jan  7 23:05 qBittorrent -> /vol1/@appshare/qBittorrent
+其他的目录信息大家根据情况再去研究。
 
-  <div>
-    ```
-aa@FnOS:/var/apps/qBittorrent/shares$ ls -alh
-total 8.0K
-drwxr-xr-x 2 root root 4.0K Jan  7 23:05 .
-drwxr-xr-x 6 root root 4.0K Jan  7 23:05 ..
-lrwxrwxrwx 1 root root   27 Jan  7 23:05 qBittorrent -> /vol1/@appshare/qBittorrent
-```
 
-<p>
-  其他的目录信息大家根据情况再去研究。
-</p>
-</div>
 
-<h3>
-  qb下载
-</h3>
+### qb下载
 
-<div>
-  默认qb只能访问安装后设置里配置的目录，如果想要改变qb下载的目录，则需要去<code>系统设置-应用</code>找到qb，添加一下允许它访问的文件目录。
-</div></div>
-
-<p>
-
-</p>
+默认qb只能访问安装后设置里配置的目录，如果想要改变qb下载的目录，则需要去<code>系统设置-应用</code>找到qb，添加一下允许它访问的文件目录。
 
 <p>
   下边是完整后的桌面预览图
 </p>
+![fnos complete](https://images.iminling.com/i/2025/01/08/3b89be1091025e546acd4224064abb0a.webp)
 
-<p>
-  ![fnos complete](https://images.iminling.com/i/2025/01/08/3b89be1091025e546acd4224064abb0a.webp)
-</p>

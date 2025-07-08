@@ -4,8 +4,8 @@ author: 要名俗气
 type: post
 date: 2024-06-18T13:10:26+00:00
 url: /2024/google-adsense-address-verify
-description: 网站从成功部署后，就入了[google adsense](https://adsense.google.com)，算下来也有一年多的时间了，这一年多自己发布文章的频率也比较低，所以流量不高，广告收入非常少，没想到这么快就收到了adsense的地址验证要求。今天就介绍一下我验证地址的详细过程。
-featured_image: /wp-content/uploads/2024/06/google_adsense_logo.jpg
+description: 网站从成功部署后，就入了google adsense，算下来也有一年多的时间了，这一年多自己发布文章的频率也比较低，所以流量不高，广告收入非常少，没想到这么快就收到了adsense的地址验证要求。今天就介绍一下我验证地址的详细过程。
+image: https://images.iminling.com/app/hide.php?key=NE1yYVdkUjdQS3Q1UTBUODVkbW5zZ2NWcFVjY083SWV0RnI4Vnh2SVF3THJmY3REUE5UbGVIcHRTVCtPRmZEOEtqK0JEZTA9
 categories:
   - wordpress
 tags:
@@ -29,32 +29,32 @@ tags:
 
 过了有3天，收到了google的邮件通知，提示身份验证通过。
 
-![adsense](https://www.iminling.com/wp-content/uploads/2024/06/20240617134529.png)
+![adsense](https://images.iminling.com/app/hide.php?key=NmxWa3ZYY29Wbk9Oa3h5aDNHZVRmVFU5NHRSc21aWGMwbGgzQ3RUYWY0T0RWTGpZQTMvY0Rtais4UXNXUUV3SmxvRXpCS0k9)
 
 同一天google又给我发了一份邮件，提示验证地址的pin码已经发出，等具体收到信件后再进行pin码验证。
 
-![adsense pin](https://www.iminling.com/wp-content/uploads/2024/06/20240617134907.png)
+![adsense pin](https://images.iminling.com/app/hide.php?key=Z3djd056bzRnNlRrM05Ob29LazBoRllDQmM5OVMybXNHbWJhVFJXdnlEOXdDWVVUNkR3aC81d1hjUmY3VlpRSTAzVlRyazA9)
 
 ## 验证pin码
 
 这中间又是一段时间的等待，因为邮件是发到我租的美国地址的，中间刚好又遇到双休，处理的没那么快，等待几天后收到了pin码邮件
 
-![adsense pin post](https://www.iminling.com/wp-content/uploads/2024/06/9DFE6115E32927E1683FA1B09CD92633.png)
+![adsense pin post](https://images.iminling.com/app/hide.php?key=S3cwNHpESWhZUndqVGtCL04xUFAwaTkyR1RVVEV2Nkg4b2I4Y0lMS2VDOEpDRHVOQnkxTVo4UXBrYXJpQjhaMm1LZzAvdXc9)
 
 然后让房东进行了扫描，扫描后的内容如下
 
-![adsense pin post scan](https://www.iminling.com/wp-content/uploads/2024/06/78133E816C7E2F00EE2030A96EBA5BC9.png)
+![adsense pin post scan](https://images.iminling.com/app/hide.php?key=b0xvQzNlRWRxYUFBcGVXOEpZaXRSdEN2QUZHN3Q0WFF5bjQ0ZkpsT2NlZzBEcXFNRzB1eW9oZzg5aUo3ZlYzUkFydENkSmc9)
 
 此时登录google adsense的后台，直接看到有一个卡片就是提示要验证pin码
 
-![adsense notice](https://www.iminling.com/wp-content/uploads/2024/06/8A0377D2C955D3872B50EF753C01A53D.png)
+![adsense notice](https://images.iminling.com/app/hide.php?key=T24wall1TmY4Q3p2dk5UckVXKzFXK3ZRVVUwOVdOeXV4ZjNBejRFcXUva2h1YVZ2WW5hZURjUlo4T1F4ampoc2ozNWFzUHM9)
 
 点击验证就跳转到了pin码验证页面
 
-![adsense pin verify](https://www.iminling.com/wp-content/uploads/2024/06/66D21B8ABEF871B6C1FF8D85C4CE0976.png)
+![adsense pin verify](https://images.iminling.com/app/hide.php?key=NjF0QnBxRmdkbUZmdlBtcG9tekZiRklEbStuQzc0MWtSS0tBSXE4ZDRGelpwZnVheTJSTC9ZODg2azdpWXhWKzdOajB5dm89)
 
 正确输入后就ok了，最终身份验证和地址验证都显示已通过，至此完成google adsense的全部验证
 
-![adsense verify pass](https://www.iminling.com/wp-content/uploads/2024/06/C83A3B1DE6C9BC7D8C9AB060948AEDE9.png)
+![adsense verify pass](https://images.iminling.com/app/hide.php?key=TDQ4Z0dhSWhIeUhwM3FqZjlHWnc1djlacnFLSDZCUlFITGlsZEl1YUtkNGNmWFBaanNzcWErdU5aMDAyTlRkMDNXajNVSHc9)
 
 以上就是整个验证流程。

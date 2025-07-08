@@ -4,15 +4,14 @@ author: 要名俗气
 type: post
 date: 2023-09-03T09:07:36+00:00
 url: /2023/disable-xmlrpc-php
-description: 很多刚接触wordpress的朋友估计和我一样，对于xmlrpc.php的了解几乎为0，这玩意儿是干嘛的？为什么它会导致wordpress被暴力破解？下面我们就先来认识一下xmlrpc.php是个什么东西。 什么是xmlrpc.php XML-RPC是支持WordPress与其他系统之间通信的规范。它通过使用HTTP作为传输机制和XML作为编码机制来标准化这些通信来实现此目的。
-featured_image: https://www.iminling.com/wp-content/uploads/2023/09/xmlrpc-wordpress.jpg
+description: 很多刚接触wordpress的朋友估计和我一样，对于xmlrpc.php的了解几乎为0，这玩意儿是干嘛的？为什么它会导致wordpress被暴力破解？本文我们就先来认识一下xmlrpc.php是个什么东西。 
+image: https://images.iminling.com/app/hide.php?key=NnVNTjhMWXJ5N2tkOGpzYWFnVWJuYnhhOGFtQnZmYzc2S3BzdDJhY29HUEUvUHU5TkZVRk90VkgyTzlHUzMyVDAvMDlXcDg9
 categories:
   - wordpress
 tags:
   - wordpress
+  - xmlrpc
 ---
-![](https://www.iminling.com/wp-content/uploads/2023/09/xmlrpc-wordpress.jpg)
-
 很多刚接触wordpress的朋友估计和我一样，对于xmlrpc.php的了解几乎为0，这玩意儿是干嘛的？为什么它会导致wordpress被暴力破解？下面我们就先来认识一下xmlrpc.php是个什么东西。
 
 ## 什么是xmlrpc.php
@@ -27,7 +26,7 @@ XML-RPC是支持WordPress与其他系统之间通信的规范。它通过使用H
 
 为什么我会知道这个玩意儿呢？因为在某一天的早上，我发现我的网站突然就多了两篇文章，并不是我写的，莫名其妙的就多了两篇，于是马上修改了管理用户的登录密码，防止别人再登录。之后便开始了此次被攻击的思考，我的密码设置的也并不简单，他们是怎么知道我的密码的呢？于是我就开始了查看请求日志，在nginx的日志中果然发现了一些端倪，有大量的请求在请求xmlrpc.php这个文件：
 
-![](https://www.iminling.com/wp-content/uploads/2023/09/2483c29419769aa149fc2cfcd9a35773.png)
+![](https://images.iminling.com/app/hide.php?key=RGdFaVV3bXgyNmpWcSt0aXIxeVRDTUVVY2tFaStNSkxibDUzK0U0L3NrczJKUEpvVmZJbysxWGd4cnROditaUVNxd00zNWs9)
 
 于是我就去搜索了xmlrpc.php这个文件，不搜索不知道，一搜索吓一跳，md，肯定是这玩意儿导致我的网站多了两篇文章出来。于是开始了探索如何禁用之路。
 

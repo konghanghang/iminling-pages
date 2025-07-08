@@ -5,7 +5,7 @@ type: post
 date: 2023-11-26
 url: /2023/debian-use-docker-install-promutheus
 description: Prometheus是一套开源的监控 报警 时间序列数据库的组合,起始是由SoundCloud公司开发的。它的功能强大，被广泛使用。今天这边文章就简单介绍一下如何使用docker快速的搭建一个prometheus的服务，其他相关的知识在后续的文章里再详细分享。先把服务跑起来。如果还没有安装docker的同学可以参考的我另一篇文章来快速的安装docker环境。
-featured_image: /wp-content/uploads/2023/11/Prometheus_software_logo.svg_.png
+image: https://images.iminling.com/app/hide.php?key=M3JOYmRIT1UyZHJjcTZJRXloNjR6aTUyME1KbkhNak8yVDlTVm9saGloSXUwWkNsN0VZSStxRGU1Q1ZTQS9xVzRuY0szTHM9
 categories:
   - docker
 tags:

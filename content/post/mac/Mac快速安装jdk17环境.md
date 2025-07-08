@@ -4,16 +4,14 @@ author: 要名俗气
 type: post
 date: 2023-10-03T02:55:28+00:00
 url: /2023/mac-install-jdk17
-description: 对于java开发者来说jdk是再熟悉不过的了，在java圈还流行这样一句话：你发任你发，我用java8。jdk8是2013年发布的，是一个LTS版本，而在17年发布了jdk9之后，jdk的发布周期变化的更快了，很多开发者直呼学不动了。截止目前已经发布到jdk21了，关于jdk版本的发布可以参考wikipedia的[Java历史版本](https://zh.wikipedia.org/wiki/Java%E7%89%88%E6%9C%AC%E6%AD%B7%E5%8F%B2)来了解详细。我们今天要安装的是jdk17。
-featured_image: /wp-content/uploads/2023/10/openjdk.jpg
+description: 对于java开发者来说jdk是再熟悉不过的了，在java圈还流行这样一句话：你发任你发，我用java8。jdk8是2013年发布的，是一个LTS版本，而在17年发布了jdk9之后，jdk的发布周期变化的更快了，很多开发者直呼学不动了。截止目前已经发布到jdk21了，关于jdk版本的发布可以参考wikipedia的Java历史版本来了解详细。我们今天要安装的是jdk17。
+image: https://images.iminling.com/app/hide.php?key=bEt3WUtUZk13dFI3Z0FyckVUZGdnRDZNd1E0aVBaMDZPbVdZTm1RR1lsS3NtNWkyOWZ4UkI5R0g3ZFlVTjVxdWtzcDdkMjA9
 categories:
-  - Java
+  - mac
 tags:
   - jdk
   - jdk17
 ---
-![](https://www.iminling.com/wp-content/uploads/2023/10/openjdk.jpg)
-
 对于java开发者来说jdk是再熟悉不过的了，在java圈还流行这样一句话：你发任你发，我用java8。jdk8是2013年发布的，是一个LTS版本，而在17年发布了jdk9之后，jdk的发布周期变化的更快了，很多开发者直呼学不动了。截止目前已经发布到jdk21了，关于jdk版本的发布可以参考wikipedia的[Java历史版本](https://zh.wikipedia.org/wiki/Java%E7%89%88%E6%9C%AC%E6%AD%B7%E5%8F%B2)来了解详细。我们今天要安装的是jdk17。
 
 这么多jdk版本我们应该选择哪个来使用呢？我们先来看看jdk的版本收费情况：
@@ -29,13 +27,13 @@ tags:
 
 为了体验jdk17以及为以后切换jdk17做准备，所以就需要我们来安装jdk17的开发环境。
 
-mac可以选择安装Homebrew来快速安装jdk17，关于Homebrew的安装可以参考历史文章：[Mac更换源更快速的安装Homebrew](https://www.iminling.com/2023/10/02/265.html "Mac更换源更快速的安装Homebrew")，这里就不再多说了，下边我们使用Homebrew来安装jdk。
+mac可以选择安装Homebrew来快速安装jdk17，关于Homebrew的安装可以参考历史文章：[Mac更换源更快速的安装Homebrew]({{< ref "/post/mac/Mac更换源更快速的安装Homebrew.md" >}})，这里就不再多说了，下边我们使用Homebrew来安装jdk。
 
 ## 安装
 
 先搜索jdk版本：
 
-```
+``` bash
 # ko @ MacMini in ~ [10:32:25]
 $ brew search jdk
 ==> Formulae
@@ -45,7 +43,7 @@ openjdk@11             openjdk@8              mdk
 
 可以看到有几个jdk的版本可以安装，我们需要的是17，接下来就是安装了：
 
-```
+```bash
 # ko @ MacMini in ~ [11:28:24]
 $ brew install openjdk@17
 ==> openjdk@17
@@ -68,7 +66,7 @@ For compilers to find openjdk@17 you may need to set:
 
 根据安装最后的提示我们需要先新建一个软链接：
 
-```
+```bash
 # konghang @ MacMini in ~ [10:37:47]
 $ sudo ln -sfn /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
 Password:
@@ -76,7 +74,7 @@ Password:
 
 接下来是添加环境变量，我使用的是.base_profile，使用vim编辑后添加以下内容：
 
-```
+```bash
 # JDK
 #export JAVA_HOME="/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home"
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/openjdk-17.jdk/Contents/Home"
@@ -85,7 +83,7 @@ export PATH=${JAVA_HOME}/bin:$PATH
 
 然后刷新变量，然后查看jdk版本看是否成功：
 
-```
+```bash
 # ko @ MacMini in ~ [10:43:55]
 $ source .bash_profile
 

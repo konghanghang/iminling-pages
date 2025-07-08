@@ -5,31 +5,29 @@ type: post
 date: 2023-09-03T02:58:44+00:00
 url: /2023/linux-use-ipv4-first
 description: 双协议栈技术就是指在一台设备上同时启用 IPv4 协议栈和 IPv6 协议栈，这样就可以同时使用 IPv4 和 IPv6 的网络。但是在默认情况下都会以IPv6网络优先，只有 IPv6 无法访问的时候才会尝试访问 IPv4，某些特定的应用和场景下，我们并不想要 IPv6 优先，这时候就需要修改一些配置文件让 IPv4 优先。
-featured_image: /wp-content/uploads/2023/09/ipv4-and-ipv6.jpeg
+image: https://images.iminling.com/app/hide.php?key=cU9DUVBIUnEzWktLQnpML0x0b090RkVtOGRNa0VnNXpMMFNSSFZKcTNsZkQ3eXdWNDlnZS9pNWZvNHFXdVNZV0JZVVpBREE9
 categories:
-  - 网络
+  - linux
 tags:
   - debian
   - IPv4
   - IPV6
   - linux
 ---
-![](https://www.iminling.com/wp-content/uploads/2023/09/IPv4-vs-IPv6.jpeg)
-
 双协议栈技术就是指在一台设备上同时启用 IPv4 协议栈和 IPv6 协议栈，这样就可以同时使用 IPv4 和 IPv6 的网络。但是在默认情况下都会以IPv6网络优先，只有 IPv6 无法访问的时候才会尝试访问 IPv4，某些特定的应用和场景下，我们并不想要 IPv6 优先，这时候就需要修改一些配置文件让 IPv4 优先。
 
 ## 查看网络优先级
 
 可以通过以下命令来查看当前的机器是以哪个网络优先的：
 
-```
+```bash
 root@gc:~# curl ip.sb
 2000::97e4
 ```
 
 如上返回了IPv6的地址，所以该机器默认就是通过IPv6来访问网站的，通过配置curl强制使用IPv4协议来进行访问：
 
-```
+```bash
 root@gc:~# curl ip.sb -4
 192.168.0.235
 ```
@@ -40,7 +38,7 @@ root@gc:~# curl ip.sb -4
 
 在 Debian、Ubuntu 等 Linux 系统下，有一个 `/etc/gai.conf` 文件，用于系统的 `getaddrinfo` 调用，默认情况下，它会使用 IPv6 优先，编辑gai.conf文件，会看到以下配置：
 
-```
+```bash
 # precedence  <mask>   <value>
 #    Add another rule to the RFC 3484 precedence table.  See section 2.1
 #    and 10.3 in RFC 3484.  The default is:
@@ -60,7 +58,7 @@ root@gc:~# curl ip.sb -4
 
 ，根据提示把该行前的注释去掉，如下：
 
-```
+```bash
 # precedence  <mask>   <value>
 #    Add another rule to the RFC 3484 precedence table.  See section 2.1
 #    and 10.3 in RFC 3484.  The default is:
@@ -78,7 +76,7 @@ precedence ::ffff:0:0/96  100
 
 修改后保存，然后再使用curl访问网站，不指定使用的IPv4还是IPv6，默认情况下就走了IPv4，如下：
 
-```
+```bash
 root@gc:~# curl ip.sb -4
 192.168.0.235
 ```
@@ -89,7 +87,7 @@ root@gc:~# curl ip.sb -4
 
 有一些极端情况下，我们可能需要禁止系统的 IPv6 功能，这时候就需要修改 `/etc/sysctl.conf` 文件，首先找到你的网卡名称，默认是 `eth0` ，可以通过以下命令查看自己的网卡名：
 
-```
+```bash
 root@gc:~# ip address
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -111,7 +109,7 @@ root@gc:~# ip address
 
 我的网卡名就是eth0，然后修改`/etc/sysctl.conf`，加入一下内容(将网卡名替换为自己的)：
 
-```
+```bash
 net.ipv6.conf.all.autoconf = 0
 net.ipv6.conf.default.autoconf = 0
 net.ipv6.conf.all.accept_ra = 0

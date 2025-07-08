@@ -4,17 +4,17 @@ author: 要名俗气
 type: post
 date: 2024-10-13T02:04:10+00:00
 url: /2024/install-rclone-and-configuration
-description: 上一篇文章介绍了对[alist的安装](https://www.iminling.com/2024/build-alist-server "私人影院之搭建自己的alist服务端并添加常见网盘")，本篇文章则来介绍一下rclone把alist里挂载的网盘再套娃挂载到本地磁盘，为后续emby直接读取本地的挂载文件做准备。那么接下来就开始折腾rclone. 配置文件 本文使用docker compose来进行安装，可以[docker-hub](https://hub.docker.com/r/rclone/rclone)找到rclone的官方镜像地址，安装可以参考rclone的官方[安装教程](https://rclone.org/install/#docker)。
-featured_image: /wp-content/uploads/2024/10/rclone_logo_icon_169806.webp
+description: 上一篇文章介绍了对alist的安装，本篇文章则来介绍一下rclone把alist里挂载的网盘再套娃挂载到本地磁盘，为后续emby直接读取本地的挂载文件做准备。那么接下来就开始折腾rclone. 
+image: https://images.iminling.com/app/hide.php?key=bEt3WUtUZk13dFI3Z0FyckVUZGdnQS94cHhoaHlzMVdsNGp1c0tHVG0vVjhLRHZYbzE2Unl1VlVPdWpFUjdqMllSZE5jVGc9
 categories:
-  - 影音
+  - nas
 tags:
   - alist
   - emby
   - rclone
   - webdav
 ---
-上一篇文章介绍了对[alist的安装](https://www.iminling.com/2024/build-alist-server "私人影院之搭建自己的alist服务端并添加常见网盘")，本篇文章则来介绍一下rclone把alist里挂载的网盘再套娃挂载到本地磁盘，为后续emby直接读取本地的挂载文件做准备。那么接下来就开始折腾rclone.
+上一篇文章介绍了对[alist的安装]({{< ref "/post/nas/video/私人影院之搭建自己的alist服务端并添加常见网盘.md" >}})，本篇文章则来介绍一下rclone把alist里挂载的网盘再套娃挂载到本地磁盘，为后续emby直接读取本地的挂载文件做准备。那么接下来就开始折腾rclone.
 
 ![rclone ](https://www.iminling.com/wp-content/uploads/2024/10/FE27085E1D15A96BA8B9CD0E182FA3C9.png)
 
@@ -63,7 +63,7 @@ docker run --rm -it \
 
 老规矩，所有的应用程序都使用docker compose安装，下边是docker-compose.yaml的完整配置：
 
-```
+```yaml
 networks:
   mynet:
     external: true
@@ -103,7 +103,7 @@ rclone的配置在容器的`/config/rclone`目录下，我挂载到本地的conf
 
 上边的配置信息完成后，文件放到对应的目录下，我这边的目录结构如下：
 
-```
+```bash
 root@docker:~/rclone# tree
 .
 ├── config

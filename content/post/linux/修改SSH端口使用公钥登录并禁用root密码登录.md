@@ -4,13 +4,13 @@ author: 要名俗气
 type: post
 date: 2024-01-05T15:14:15+00:00
 url: /2024/modify-ssh-port-and-use-publick-key-login
-description: 不得不说这个世界上坏人还是比较多的，以为购买一台服务器后部署自己的服务后就可以高枕无忧了吗？NO，总有刁民想还朕，默认的SSH端口是22，这个是SSH协议的规范，那么大部分人购买了服务器后也不会想着去更改这个端口，那么就会被一些不法分子利用，服务器用户名默认root，端口默认22，那么他们就会通过这个来扫你的机器，不停的尝试登录，如果我们设置的密码强度不够，...
-featured_image: /wp-content/uploads/2024/01/ssh-thumbnail.png
+description: 默认的SSH端口是22，这个是SSH协议的规范，那么大部分人购买了服务器后也不会想着去更改这个端口，那么就会被一些不法分子利用，服务器用户名默认root，端口默认22，那么他们就会通过这个来扫你的机器，破解密码。本文带你修改高位端口，并使用密钥登录，避免被扫。
+image: https://images.iminling.com/app/hide.php?key=b0w0Mnh3eThuS0JueUNaajQrNU1LVXlDSVZsMEY4YlRqQU9leUEzazk0eVJXU2xxRFlLV1pKbXhmdnFpUnArVE1GbTEvZlU9
 categories:
-  - Linux
+  - linux
+tags:
+  - ssh
 ---
-![SSH连接](https://www.iminling.com/wp-content/uploads/2024/01/SSH_Key_-_Authentication_Using_SSH_Keys-2.png)
-
 不得不说这个世界上坏人还是比较多的，以为购买一台服务器后部署自己的服务后就可以高枕无忧了吗？NO，总有刁民想还朕，默认的SSH端口是22，这个是SSH协议的规范，那么大部分人购买了服务器后也不会想着去更改这个端口，那么就会被一些不法分子利用，服务器用户名默认root，端口默认22，那么他们就会通过这个来扫你的机器，不停的尝试登录，如果我们设置的密码强度不够，那么很快就会被穷举出来，然后你的服务器就被别人控制。今天我们就来做三步操作增强我们服务器的安全性。
 
 ## 配置公钥
@@ -33,7 +33,7 @@ ssh-keygen -t rsa -f ~/.ssh/my-ssh-key -C [USERNAME]
 
 当我们执行生成命令时，如果不指定文件路径，默认会放在当前用户的.ssh目录下，并会为改密钥设置密码，默认不设置，直接回车跳过，经过这个命令就生成了一对密钥，公钥名称：id\_rsa.pub，私钥名称：id\_rsa
 
-```
+```bash
 $ ssh-keygen -t rsa
 Generating public/private rsa key pair.
 Enter file in which to save the key (/Users/aaa/.ssh/id_rsa):
@@ -75,7 +75,7 @@ id_rsa          known_hosts
 
 我这里使用scp命令把文件传到服务器上，然后在服务器上把内容写入到authorized_keys中。上传命令中端口是非必填的默认是22端口，如果没有修改端口可以添加此参数，后边的.pub文件就是你要上传的文件，后边紧跟着你服务器的用户名@ip:具体服务器路径
 
-```
+```bash
 # scp [-P 端口] ./my-ssh-key.pub [USERNAME]@[EXTERNAL_IP_ADDRESS]:/root/.ssh
 scp ./my-ssh-key.pub root@192.168.31.1:/root/.ssh
 
@@ -91,7 +91,7 @@ $ cat my-ssh-key.pub >> ~/.ssh/authorized_keys
 
 这个上传就很简单了，直接使用命令：
 
-```
+```bash
 # ssh-copy-id -i ./my-ssh-key.pub [USERNAME]@[EXTERNAL_IP_ADDRESS] [-p 端口]
 $ ssh-copy-id -i ./my-ssh-key.pub root@192.168.31.1
 ```
@@ -104,7 +104,7 @@ $ ssh-copy-id -i ./my-ssh-key.pub root@192.168.31.1
 
 在登录前要先确认要登录的服务器是否开启了支持公钥登录，其实现在大部分服务器都是默认支持的，如果遇到登录不了的情况可以检查一下是否开启，具体的文件路径是/etc/ssh/sshd_conf,设置以下参数为yes：
 
-```
+```bash
 PasswordAuthentication yes　　　　　　# 口令登录
 RSAAuthentication yes　　　　　　　　　# RSA认证
 PubkeyAuthentication yes　　　　　　　# 公钥登录
@@ -129,7 +129,7 @@ ssh -i .ssh/my-ssh-key root@192.168.31.1
 
 默认的ssh端口是22，是在/etc/ssh/sshd_conf中配置的，在这个配置文件中我们先找到原来的配置22端口，然后复制一行出来，改成另外一个端口，比如我改成1024端口，那么此时22端口和1024端口应该都是可以通过SSH来访问的，这里一定要小心，不能一上来就把22端口干掉，万一配置错误就凉凉了。所以配置两个端口，保证22端口是肯定可以使用的，然后再添加一个新的端口，配置后重启sshd服务。然后看新配置的端口是否可以访问SSH，如果可以那说明配置没有问题，就可以干掉原来的22端口了。
 
-```
+```bash
 Port 22
 Port 1024
 ```
@@ -140,7 +140,7 @@ Port 1024
 
 上边已经配置了使用公钥登录，并且也修改了SSH的端口，但是root用户的密码还在，那么一旦一些人扫到了服务器的1024端口是ssh，那么他们还是会不停的尝试密码，暴力破解密码，所以需要把密码登录关掉，只用公钥来登录。同样也是修改/etc/ssh/sshd_conf，修改PasswordAuthentication为no就可以了：
 
-```
+```bash
 PasswordAuthentication no 　　　　　　# 口令登录
 RSAAuthentication yes　　　　　　　　　# RSA认证
 PubkeyAuthentication yes　　　　　　　# 公钥登录
@@ -152,7 +152,7 @@ PubkeyAuthentication yes　　　　　　　# 公钥登录
 
 在第一步上传公钥到服务器的时候，上传成功了，但是始终无法通过公钥去登录到服务器，研究了好久发现是服务器上的目录权限不正确，正确的权限应该是下边这样子的:
 
-```
+```bash
 $ chmod 700 ~/.ssh
 $ chmod 600 ~/.ssh/authorized_keys
 ```
