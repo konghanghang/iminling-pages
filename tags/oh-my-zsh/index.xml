@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Oh My Zsh on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/oh-my-zsh/</link><description>Recent content in Oh My Zsh on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Fri, 27 Oct 2023 10:07:07 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/oh-my-zsh/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac终端美化之Oh My Zsh安装配置</title><link>https://konghanghang.github.io/iminling-pages/2023/mac-install-oh-my-zsh/</link><pubDate>Fri, 27 Oct 2023 10:07:07 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/mac-install-oh-my-zsh/</guid><description>&lt;p>使用Mac的同学应该对Mac自带的终端配置都没什么好感，默认白底黑字，文件夹也没有特殊标识，还是上一张图来感受一下吧：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/F23BC444669EA0029CFA2A5734A568D6.png"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Oh My Zsh on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/oh-my-zsh/</link><description>Recent content in Oh My Zsh on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Fri, 27 Oct 2023 10:07:07 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/oh-my-zsh/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac终端美化之Oh My Zsh安装配置</title><link>https://konghanghang.github.io/iminling-pages/2023/mac-install-oh-my-zsh/</link><pubDate>Fri, 27 Oct 2023 10:07:07 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/mac-install-oh-my-zsh/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=U1V5NUZ5WlYrTGt1dElzaVc2VkgrOENSZkRib09zbVk0RjVKTFhkeXNyQkJvdmdOeVhYZWM1aHR1NjdDTWNQU2h3Y1ZHVTQ9" alt="Featured image of post Mac终端美化之Oh My Zsh安装配置" />&lt;p>使用Mac的同学应该对Mac自带的终端配置都没什么好感，默认白底黑字，文件夹也没有特殊标识，还是上一张图来感受一下吧：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RjFDWXBkVGJlbVdYdkpqZTM0QmxzYzRIZWt3enBnaDltSEJyZUwvajIzUDJwRU14Z05hOTcraUNLMHViKzdMVEVhZTJhSUk9"
 loading="lazy"
 >&lt;/p>
 &lt;p>黑呼呼的一团，看着实在是难受，下边就让我们使用Oh My Zsh来进行美化一下。&lt;/p>
@@ -39,41 +39,41 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">29
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">k&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">MacBook&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Pro&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">sh&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span> &lt;span class="s2">&amp;#34;$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Cloning&lt;/span> &lt;span class="n">Oh&lt;/span> &lt;span class="n">My&lt;/span> &lt;span class="n">Zsh&lt;/span>&lt;span class="o">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">remote&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Enumerating&lt;/span> &lt;span class="n">objects&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1370&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">done&lt;/span>&lt;span class="o">.&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">remote&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Counting&lt;/span> &lt;span class="n">objects&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="o">%&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">1370&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">1370&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">done&lt;/span>&lt;span class="o">.&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">remote&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Compressing&lt;/span> &lt;span class="n">objects&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="o">%&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">1318&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">1318&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">done&lt;/span>&lt;span class="o">.&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">remote&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Total&lt;/span> &lt;span class="mi">1370&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">delta&lt;/span> &lt;span class="mi">32&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">reused&lt;/span> &lt;span class="mi">1155&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">delta&lt;/span> &lt;span class="mi">28&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">pack&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">reused&lt;/span> &lt;span class="mi">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Receiving&lt;/span> &lt;span class="n">objects&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="o">%&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">1370&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">1370&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="mf">2.01&lt;/span> &lt;span class="n">MiB&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mf">2.66&lt;/span> &lt;span class="n">MiB&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">done&lt;/span>&lt;span class="o">.&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Resolving&lt;/span> &lt;span class="n">deltas&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="o">%&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">32&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">32&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">done&lt;/span>&lt;span class="o">.&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">From&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">github&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ohmyzsh&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ohmyzsh&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">*&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">new&lt;/span> &lt;span class="n">branch&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">master&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">origin&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">master&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">branch&lt;/span> &lt;span class="s1">&amp;#39;master&amp;#39;&lt;/span> &lt;span class="n">set&lt;/span> &lt;span class="n">up&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">track&lt;/span> &lt;span class="s1">&amp;#39;origin/master&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Switched&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">branch&lt;/span> &lt;span class="s1">&amp;#39;master&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">/&lt;/span>&lt;span class="n">Users&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">k&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">k@MacBook-Pro ~ % sh -c &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">$(&lt;/span>curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Cloning Oh My Zsh...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">remote: Enumerating objects: 1370, &lt;span class="k">done&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">remote: Counting objects: 100% &lt;span class="o">(&lt;/span>1370/1370&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">remote: Compressing objects: 100% &lt;span class="o">(&lt;/span>1318/1318&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">remote: Total &lt;span class="m">1370&lt;/span> &lt;span class="o">(&lt;/span>delta 32&lt;span class="o">)&lt;/span>, reused &lt;span class="m">1155&lt;/span> &lt;span class="o">(&lt;/span>delta 28&lt;span class="o">)&lt;/span>, pack-reused &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Receiving objects: 100% &lt;span class="o">(&lt;/span>1370/1370&lt;span class="o">)&lt;/span>, 2.01 MiB &lt;span class="p">|&lt;/span> 2.66 MiB/s, &lt;span class="k">done&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Resolving deltas: 100% &lt;span class="o">(&lt;/span>32/32&lt;span class="o">)&lt;/span>, &lt;span class="k">done&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">From https://github.com/ohmyzsh/ohmyzsh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> * &lt;span class="o">[&lt;/span>new branch&lt;span class="o">]&lt;/span> master -&amp;gt; origin/master
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">branch &lt;span class="s1">&amp;#39;master&amp;#39;&lt;/span> &lt;span class="nb">set&lt;/span> up to track &lt;span class="s1">&amp;#39;origin/master&amp;#39;&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Switched to a new branch &lt;span class="s1">&amp;#39;master&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/Users/k
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Looking&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">an&lt;/span> &lt;span class="n">existing&lt;/span> &lt;span class="n">zsh&lt;/span> &lt;span class="n">config&lt;/span>&lt;span class="o">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Using&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">Oh&lt;/span> &lt;span class="n">My&lt;/span> &lt;span class="n">Zsh&lt;/span> &lt;span class="n">template&lt;/span> &lt;span class="n">file&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">adding&lt;/span> &lt;span class="n">it&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">Users&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">k&lt;/span>&lt;span class="o">/.&lt;/span>&lt;span class="n">zshrc&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Looking &lt;span class="k">for&lt;/span> an existing zsh config...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Using the Oh My Zsh template file and adding it to /Users/k/.zshrc.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">__&lt;/span> &lt;span class="n">__&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">____&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span> &lt;span class="n">____&lt;/span> &lt;span class="n">___&lt;/span> &lt;span class="n">__&lt;/span> &lt;span class="n">__&lt;/span> &lt;span class="n">____&lt;/span> &lt;span class="n">_____&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">/&lt;/span> &lt;span class="n">__&lt;/span> \&lt;span class="o">/&lt;/span> &lt;span class="n">__&lt;/span> \ &lt;span class="o">/&lt;/span> &lt;span class="n">__&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="n">__&lt;/span> \&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="n">___&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="n">__&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">__&lt;/span> &lt;span class="p">)&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">\&lt;span class="n">____&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="o">/&lt;/span>\&lt;span class="n">__&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">___&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">____&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">_&lt;/span>&lt;span class="o">/&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">/&lt;/span>&lt;span class="n">____&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">....&lt;/span>&lt;span class="n">is&lt;/span> &lt;span class="n">now&lt;/span> &lt;span class="n">installed&lt;/span>&lt;span class="o">!&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> __ __
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ____ / /_ ____ ___ __ __ ____ _____/ /_
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> / __ &lt;span class="se">\/&lt;/span> __ &lt;span class="se">\ &lt;/span> / __ &lt;span class="sb">`&lt;/span>__ &lt;span class="se">\/&lt;/span> / / / /_ / / ___/ __ &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>/ /_/ / / / / / / / / / / /_/ / / /_&lt;span class="o">(&lt;/span>__ &lt;span class="o">)&lt;/span> / / /
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">\_&lt;/span>___/_/ /_/ /_/ /_/ /_/&lt;span class="se">\_&lt;/span>_, / /___/____/_/ /_/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> /____/ ....is now installed!
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Before&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">scream&lt;/span> &lt;span class="n">Oh&lt;/span> &lt;span class="n">My&lt;/span> &lt;span class="n">Zsh&lt;/span>&lt;span class="o">!&lt;/span> &lt;span class="n">look&lt;/span> &lt;span class="n">over&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="err">`&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zshrc&lt;/span>&lt;span class="err">`&lt;/span> &lt;span class="n">file&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">select&lt;/span> &lt;span class="n">plugins&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">themes&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Before you scream Oh My Zsh! look over the &lt;span class="sb">`&lt;/span>.zshrc&lt;span class="sb">`&lt;/span> file to &lt;span class="k">select&lt;/span> plugins, themes, and options.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">•&lt;/span> &lt;span class="n">Follow&lt;/span> &lt;span class="n">us&lt;/span> &lt;span class="n">on&lt;/span> &lt;span class="n">Twitter&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">twitter&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ohmyzsh&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">•&lt;/span> &lt;span class="n">Join&lt;/span> &lt;span class="n">our&lt;/span> &lt;span class="n">Discord&lt;/span> &lt;span class="n">community&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">discord&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">gg&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ohmyzsh&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">•&lt;/span> &lt;span class="n">Get&lt;/span> &lt;span class="n">stickers&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">t&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">shirts&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">coffee&lt;/span> &lt;span class="n">mugs&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">more&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">shop&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">planetargon&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">collections&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">oh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">my&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">zsh&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">• Follow us on Twitter: https://twitter.com/ohmyzsh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">• Join our Discord community: https://discord.gg/ohmyzsh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">• Get stickers, t-shirts, coffee mugs and more: https://shop.planetargon.com/collections/oh-my-zsh
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>上边就安装成功了oh my zsh。&lt;/p>
 &lt;h2 id="切换主题">切换主题
 &lt;/h2>&lt;p>安装成功后，默认的主题(&lt;span class="s1">robbyrussell&lt;/span>)如下所示：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/7935C2E4D4F0C1EC30E51484561741E4.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=NFZFUVpyNmtTaUY3TnhFd2o1MURwbUxWQTdJMVZwVFJuYUMxb3VyVlZHZjBGcWl5SWhHYnI1eXBTUXZxd1hYMHNIWXBaNEU9"
 loading="lazy"
 >&lt;/p>
 &lt;p>文件夹也可以高亮了，看着还是不错的。剩下的就是修改自己喜欢的主题了。oh my zsh自带了一些主题，存放在~/.oh-my-sh/themes下：&lt;/p>
@@ -155,80 +155,80 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">74
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ MacBook-Pro in ~/.oh-my-zsh/themes on git:master o [17:47:16]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">$&lt;/span> &lt;span class="n">ls&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="mi">3&lt;/span>&lt;span class="n">den&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">kennethreitz&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Soliah&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">kiwi&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">adben&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">kolo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">af&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">magic&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">kphoen&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">afowler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">lambda&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">agnoster&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">linuxonly&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">alanpeabody&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">lukerandall&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">amuse&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">macovsky&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ruby&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">apple&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">macovsky&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">arrow&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">maran&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">aussiegeek&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">mgutz&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">avit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">mh&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">awesomepanda&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">michelebologna&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bira&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">mikeh&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">blinks&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">miloshadzic&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bureau&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">minimal&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">candy&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">kingdom&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">mira&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">candy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">mlh&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">clean&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">mortalscumbag&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">cloud&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">mrtazz&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">crcandy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">murilasso&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">crunch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">muse&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">cypher&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">nanotech&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dallas&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">nebirhos&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">darkblood&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">nicoulaj&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">daveverwer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">norm&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dieter&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">obraun&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dogenpunk&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">oldgallois&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dpoggi&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">peepcode&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dst&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">philips&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dstufft&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">pmcgee&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">duellj&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">pygmalion&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">virtualenv&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">eastwood&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">pygmalion&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">edvardm&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">emotty&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">re5et&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">essembeh&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">refined&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">evan&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">rgm&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fino&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">time&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">risto&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fino&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">rixius&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fishy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">rkj&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">repos&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">flazz&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">rkj&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fletcherm&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">robbyrussell&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fox&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">sammy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">frisk&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">simonoff&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">frontcube&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">simple&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">funky&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">skaro&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fwalch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">smt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gallifrey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">sonicradish&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gallois&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">sorin&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">garyblessington&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">sporty_256&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gentoo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">steeef&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">geoffgarside&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">strug&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gianu&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">sunaku&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gnzh&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">sunrise&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gozilla&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">superjarin&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">half&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">life&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">suvash&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">humza&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">takashiyoshida&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">imajes&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">terminalparty&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">intheloop&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">theunraveler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">itchy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">tjkirch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">jaischeema&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">tjkirch_mod&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">jbergantine&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">tonotdo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">jispwoso&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">trapd00r&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">jnrowe&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">wedisagree&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">jonathan&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">wezm&lt;/span>&lt;span class="o">+.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">josh&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">wezm&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">jreese&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">wuffers&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">jtriley&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">xiong&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">chiamiov&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">plus&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">juanghurtado&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">xiong&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">chiamiov&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">junkfood&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">ys&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">kafeitu&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span> &lt;span class="n">zhann&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">kardan&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">zsh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">theme&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ MacBook-Pro in ~/.oh-my-zsh/themes on git:master o [17:47:16]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ls
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">3den.zsh-theme kennethreitz.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Soliah.zsh-theme kiwi.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">adben.zsh-theme kolo.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">af-magic.zsh-theme kphoen.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">afowler.zsh-theme lambda.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">agnoster.zsh-theme linuxonly.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">alanpeabody.zsh-theme lukerandall.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">amuse.zsh-theme macovsky-ruby.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">apple.zsh-theme macovsky.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">arrow.zsh-theme maran.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">aussiegeek.zsh-theme mgutz.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">avit.zsh-theme mh.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">awesomepanda.zsh-theme michelebologna.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bira.zsh-theme mikeh.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">blinks.zsh-theme miloshadzic.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bureau.zsh-theme minimal.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">candy-kingdom.zsh-theme mira.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">candy.zsh-theme mlh.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">clean.zsh-theme mortalscumbag.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cloud.zsh-theme mrtazz.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">crcandy.zsh-theme murilasso.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">crunch.zsh-theme muse.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cypher.zsh-theme nanotech.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dallas.zsh-theme nebirhos.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">darkblood.zsh-theme nicoulaj.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">daveverwer.zsh-theme norm.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dieter.zsh-theme obraun.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dogenpunk.zsh-theme oldgallois.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dpoggi.zsh-theme peepcode.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dst.zsh-theme philips.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dstufft.zsh-theme pmcgee.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">duellj.zsh-theme pygmalion-virtualenv.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">eastwood.zsh-theme pygmalion.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">edvardm.zsh-theme random.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">emotty.zsh-theme re5et.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">essembeh.zsh-theme refined.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">evan.zsh-theme rgm.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">fino-time.zsh-theme risto.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">fino.zsh-theme rixius.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">fishy.zsh-theme rkj-repos.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">flazz.zsh-theme rkj.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">fletcherm.zsh-theme robbyrussell.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">fox.zsh-theme sammy.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">frisk.zsh-theme simonoff.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">frontcube.zsh-theme simple.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">funky.zsh-theme skaro.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">fwalch.zsh-theme smt.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gallifrey.zsh-theme sonicradish.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gallois.zsh-theme sorin.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">garyblessington.zsh-theme sporty_256.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gentoo.zsh-theme steeef.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">geoffgarside.zsh-theme strug.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gianu.zsh-theme sunaku.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gnzh.zsh-theme sunrise.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gozilla.zsh-theme superjarin.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">half-life.zsh-theme suvash.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">humza.zsh-theme takashiyoshida.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">imajes.zsh-theme terminalparty.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">intheloop.zsh-theme theunraveler.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">itchy.zsh-theme tjkirch.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jaischeema.zsh-theme tjkirch_mod.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jbergantine.zsh-theme tonotdo.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jispwoso.zsh-theme trapd00r.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jnrowe.zsh-theme wedisagree.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jonathan.zsh-theme wezm+.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">josh.zsh-theme wezm.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jreese.zsh-theme wuffers.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jtriley.zsh-theme xiong-chiamiov-plus.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">juanghurtado.zsh-theme xiong-chiamiov.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">junkfood.zsh-theme ys.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kafeitu.zsh-theme zhann.zsh-theme
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kardan.zsh-theme
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>比如默认的主题：&lt;code>robbyrussell.zsh-theme&lt;/code>，根据自己的需求，在.zshrc文件中进行修改，&lt;/p>
@@ -242,17 +242,17 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">6
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Set name of the theme to load --- if set to &amp;#34;random&amp;#34;, it will&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Set name of the theme to load --- if set to &amp;#34;random&amp;#34;, it will&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># load a random theme each time oh-my-zsh is loaded, in which case,&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># to know which specific one was loaded, run: echo $RANDOM_THEME&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#ZSH_THEME=&amp;#34;robbyrussell&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ZSH_THEME&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;ys&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">ZSH_THEME&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;ys&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h2 id="终端配色">终端配色
 &lt;/h2>&lt;p>我这里将主题修改为了ys。下边展示一下我修改后的终端配色：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/72080E8ACC30B787854C0FCABD74540A.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=U1V5NUZ5WlYrTGt1dElzaVc2VkgrOENSZkRib09zbVk0RjVKTFhkeXNyQkJvdmdOeVhYZWM1aHR1NjdDTWNQU2h3Y1ZHVTQ9"
 loading="lazy"
 >&lt;/p>
 &lt;p>加了一些透明在里边，下边把我自己使用的终端配色分享给大家，大家如果喜欢可以直接下载后进行导入：&lt;/p>
@@ -398,18 +398,18 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">138
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;plist version=&amp;#34;1.0&amp;#34;&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;dict&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;BackgroundAlphaInactive&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;real&amp;gt;0.29155388779527558&amp;lt;/real&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;BackgroundBlur&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;real&amp;gt;0.197831572862122&amp;lt;/real&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;BackgroundBlurInactive&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;real&amp;gt;0.15034141538180704&amp;lt;/real&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;BackgroundColor&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;data&amp;gt;
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;plist&lt;/span> &lt;span class="na">version=&lt;/span>&lt;span class="s">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span class="nt">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>BackgroundAlphaInactive&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;real&amp;gt;&lt;/span>0.29155388779527558&lt;span class="nt">&amp;lt;/real&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>BackgroundBlur&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;real&amp;gt;&lt;/span>0.197831572862122&lt;span class="nt">&amp;lt;/real&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>BackgroundBlurInactive&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;real&amp;gt;&lt;/span>0.15034141538180704&lt;span class="nt">&amp;lt;/real&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>BackgroundColor&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;data&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> YnBsaXN0MDDUAQIDBAUGKyxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AAGGoKcHCBMZHSQoVSRudWxs1QkKCwwNDg8QERJcTlNDb21wb25lbnRzVU5TUkdCXE5T
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Q29sb3JTcGFjZV8QEk5TQ3VzdG9tQ29sb3JTcGFjZVYkY2xhc3NPECowLjQwMjQ2MTQ0
@@ -432,11 +432,11 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AAgAEQAaACMALQAyADcAPwBFAFAAXQBjAHAAhQCMALkA5gDoAOoA7ADzAPkBAwEFAQcB
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> CQEOARYDPgNAA0UDUANZA2cDawNyA3sDgAONA5ADnQOiA6oDrQO/A8IDxwAAAAAAAAIB
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AAAAAAAAAC8AAAAAAAAAAAAAAAAAAAPJ
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;/data&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;BackgroundSettingsForInactiveWindows&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;true/&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;CursorColor&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;data&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>BackgroundSettingsForInactiveWindows&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;true/&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>CursorColor&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;data&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> YnBsaXN0MDDUAQIDBAUGKyxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AAGGoKcHCBMZHSQoVSRudWxs1QkKCwwNDg8QERJcTlNDb21wb25lbnRzVU5TUkdCXE5T
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Q29sb3JTcGFjZV8QEk5TQ3VzdG9tQ29sb3JTcGFjZVYkY2xhc3NPECswLjA5MDY1NzM4
@@ -459,24 +459,24 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AQAIABEAGgAjAC0AMgA3AD8ARQBQAF0AYwBwAIUAjAC6AOcA6QDrAO0A9AD6AQQBBgEI
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AQoBDwEXAz8DQQNGA1EDWgNoA2wDcwN8A4EDjgORA54DowOrA64DwAPDA8gAAAAAAAAC
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AQAAAAAAAAAvAAAAAAAAAAAAAAAAAAADyg==
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;/data&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;Font&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;data&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>Font&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;data&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> YnBsaXN0MDDUAQIDBAUGGBlYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AAGGoKQHCBESVSRudWxs1AkKCwwNDg8QVk5TU2l6ZVhOU2ZGbGFnc1ZOU05hbWVWJGNs
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> YXNzI0AqAAAAAAAAEBCAAoADXxAcTWVzbG9MR01Gb3JQb3dlcmxpbmUtUmVndWxhctIT
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> FBUWWiRjbGFzc25hbWVYJGNsYXNzZXNWTlNGb250ohUXWE5TT2JqZWN0XxAPTlNLZXll
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ZEFyY2hpdmVy0RobVHJvb3SAAQgRGiMtMjc8QktSW2JpcnR2eJecp7C3usPV2N0AAAAA
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AAABAQAAAAAAAAAcAAAAAAAAAAAAAAAAAAAA3w==
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;/data&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;FontAntialias&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;true/&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;FontWidthSpacing&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;integer&amp;gt;1&amp;lt;/integer&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;ProfileCurrentVersion&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;real&amp;gt;2.0499999999999998&amp;lt;/real&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;SelectionColor&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;data&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>FontAntialias&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;true/&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>FontWidthSpacing&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;integer&amp;gt;&lt;/span>1&lt;span class="nt">&amp;lt;/integer&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>ProfileCurrentVersion&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;real&amp;gt;&lt;/span>2.0499999999999998&lt;span class="nt">&amp;lt;/real&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>SelectionColor&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;data&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> YnBsaXN0MDDUAQIDBAUGKyxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AAGGoKcHCBMZHSQoVSRudWxs1QkKCwwNDg8QERJcTlNDb21wb25lbnRzVU5TUkdCXE5T
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Q29sb3JTcGFjZV8QEk5TQ3VzdG9tQ29sb3JTcGFjZVYkY2xhc3NPECcwLjYyOTkyNTMz
@@ -499,9 +499,9 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ACMALQAyADcAPwBFAFAAXQBjAHAAhQCMALYA4ADiAOQA5gDtAPMA/QD/AQEBAwEIARAD
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> OAM6Az8DSgNTA2EDZQNsA3UDegOHA4oDlwOcA6QDpwO5A7wDwQAAAAAAAAIBAAAAAAAA
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AC8AAAAAAAAAAAAAAAAAAAPD
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;/data&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;TextColor&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;data&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>TextColor&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;data&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> YnBsaXN0MDDUAQIDBAUGKyxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AAGGoKcHCBMZHSQoVSRudWxs1QkKCwwNDg8QERJcTlNDb21wb25lbnRzVU5TUkdCXE5T
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Q29sb3JTcGFjZV8QEk5TQ3VzdG9tQ29sb3JTcGFjZVYkY2xhc3NHMSAxIDEgMU8QHDAu
@@ -523,23 +523,23 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AAgAEQAaACMALQAyADcAPwBFAFAAXQBjAHAAhQCMAJQAswC1ALcAuQDAAMYA0ADSANQA
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 1gDbAOMDCwMNAxIDHQMmAzQDOAM/A0gDTQNaA10DagNvA3cDegOMA48DlAAAAAAAAAIB
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> AAAAAAAAAC8AAAAAAAAAAAAAAAAAAAOW
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;/data&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;UseBoldFonts&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;false/&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;columnCount&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;integer&amp;gt;90&amp;lt;/integer&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;name&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;string&amp;gt;me&amp;lt;/string&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;rowCount&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;integer&amp;gt;25&amp;lt;/integer&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;key&amp;gt;type&amp;lt;/key&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;lt;string&amp;gt;Window Settings&amp;lt;/string&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;/dict&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;/plist&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;/data&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>UseBoldFonts&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;false/&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>columnCount&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;integer&amp;gt;&lt;/span>90&lt;span class="nt">&amp;lt;/integer&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>name&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;string&amp;gt;&lt;/span>me&lt;span class="nt">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>rowCount&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;integer&amp;gt;&lt;/span>25&lt;span class="nt">&amp;lt;/integer&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;key&amp;gt;&lt;/span>type&lt;span class="nt">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;lt;string&amp;gt;&lt;/span>Window Settings&lt;span class="nt">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/plist&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>新建一个文件，名字随意，文件格式为&lt;span class="s1">.terminal,例如ohmyzsh.&lt;/span>&lt;span class="s1">terminal。然后在终端中进行导入并设置为默认：&lt;/span>&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/83E97AAB128886574F7D67D116697633.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=TG1mVTNGNDVpMjF6TDVyc20zRkt5Yk5FWWErVFFzWW0rQUhHaXdsdjZHbzAzR3JSR1MzbkJQc2djSmZoZWdDbzJEdzU5cmM9"
 loading="lazy"
 >&lt;/p>
 &lt;p>选择import后，在上边的选项中就会有你刚才文件名称对应的一个配置文件，比如我这里叫me-old,然后设置为default就可以了，就和我图片中的终端配色一样了。&lt;/p></description></item></channel></rss>

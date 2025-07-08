@@ -1,12 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FnOS on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/fnos/</link><description>Recent content in FnOS on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 09 Feb 2025 03:15:47 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/fnos/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox VE(PVE)8.0安装飞牛私有云fnOS – NAS</title><link>https://konghanghang.github.io/iminling-pages/2025/install-fnos-nas/</link><pubDate>Sun, 09 Feb 2025 03:15:47 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2025/install-fnos-nas/</guid><description>&lt;p>&lt;a class="link" href="https://www.fnnas.com" target="_blank" rel="noopener"
->飞牛nas&lt;/a>系统出来也有段时间了，一个很不错的nas系统，在以前的文章中也介绍过&lt;a class="link" href="https://www.iminling.com/2024/pve-install-nas" title="Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘"
-target="_blank" rel="noopener"
->群晖nas系统的安装&lt;/a>，今天就来一次尝鲜，安装一下fnOS，看一下群晖的系统和飞牛的系统有什么区别。接下来就开始安装折腾之路 - 飞牛私有云fnOS nas安装。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FnOS on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/fnos/</link><description>Recent content in FnOS on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 09 Feb 2025 03:15:47 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/fnos/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox VE(PVE)8.0安装飞牛私有云fnOS – NAS</title><link>https://konghanghang.github.io/iminling-pages/2025/install-fnos-nas/</link><pubDate>Sun, 09 Feb 2025 03:15:47 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2025/install-fnos-nas/</guid><description>&lt;img src="https://images.iminling.com/i/2025/01/08/d3c94bd7539929c05abffe55a8295ea2.webp" alt="Featured image of post Proxmox VE(PVE)8.0安装飞牛私有云fnOS – NAS" />&lt;p>&lt;a class="link" href="https://www.fnnas.com" target="_blank" rel="noopener"
+>飞牛nas&lt;/a>系统出来也有段时间了，一个很不错的nas系统，在以前的文章中也介绍过&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/" >群晖nas系统的安装&lt;/a>，今天就来一次尝鲜，安装一下fnOS，看一下群晖的系统和飞牛的系统有什么区别。接下来就开始安装折腾之路 - 飞牛私有云fnOS nas安装。&lt;/p>
 &lt;h2 id="pve配置">PVE配置
 &lt;/h2>&lt;p>首先要先去&lt;a class="link" href="https://www.fnnas.com/download" target="_blank" rel="noopener"
->飞牛官网&lt;/a>把官方镜像ISO文件给下载下来，上传到pve中，这个还有不清楚的可以参考&lt;a class="link" href="https://www.iminling.com/2024/pve-install-ikuai" title="Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"
-target="_blank" rel="noopener"
->Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡&lt;/a>中对爱快ISO文件上传的步骤。&lt;/p>
+>飞牛官网&lt;/a>把官方镜像ISO文件给下载下来，上传到pve中，这个还有不清楚的可以参考&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-install-ikuai/" >Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡&lt;/a>中对爱快ISO文件上传的步骤。&lt;/p>
 &lt;h3 id="常规">常规
 &lt;/h3>&lt;p>修改为自己想要的vmid 以及 名称，我这里名称填了103，可以修改自己喜欢的，比如&lt;code>飞牛NAS&lt;/code>等。其他默认。&lt;/p>
 &lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/08/37837647596f9bb193eb5478ce1cde0f.webp"
@@ -150,16 +146,16 @@ alt="fnos disk"
 &lt;/span>&lt;span class="lnt">10
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">aa@FnOS:/$ df -h
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">aa@FnOS:/$ df -h
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem Size Used Avail Use% Mounted on
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 1.9G 0 1.9G 0% /dev
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 1.9G &lt;span class="m">0&lt;/span> 1.9G 0% /dev
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 394M 7.7M 386M 2% /run
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda2 63G 9.1G 51G 16% /
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 2.0G 1.4M 2.0G 1% /dev/shm
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M 0 5.0M 0% /run/lock
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M &lt;span class="m">0&lt;/span> 5.0M 0% /run/lock
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">trimafs 1.8T 1.7T 58G 97% /fs
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/mapper/trim_f9cc7969_89e3_4c0b_9857_bcec3a1144d7-0 1.8T 1.7T 58G 97% /vol1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 394M 0 394M 0% /run/user/1000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 394M &lt;span class="m">0&lt;/span> 394M 0% /run/user/1000
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>可以看到飞牛的系统是放在&lt;code>/&lt;/code>目录下的，63G, 而我直通的硬盘有两个目录&lt;code>/fs&lt;/code>和&lt;code>/vol1&lt;/code>。&lt;/p>
@@ -167,36 +163,21 @@ alt="fnos disk"
 &lt;div class="ace-line ace-line old-record-id-YajHdl9ZxoJsJIxpfL0uECmrsrb">
 在我的文件自己创建的目录在/fs目录下：
 &lt;/div>
-&lt;div>
-```
+```bash
 aa@FnOS:/fs/1000/ftp$ ls
 docker download
 ```
 &lt;p>
 直接使用应用商店安装的qb下载目录可以在qb的设置里看到，实际是在&lt;code>/vol1&lt;/code>下。&lt;/div>
-&lt;div>
-```
 aa@FnOS:/var/apps/qBittorrent/shares$ ls -alh
 total 8.0K
 drwxr-xr-x 2 root root 4.0K Jan 7 23:05 .
 drwxr-xr-x 6 root root 4.0K Jan 7 23:05 ..
 lrwxrwxrwx 1 root root 27 Jan 7 23:05 qBittorrent -> /vol1/@appshare/qBittorrent
-```
-&lt;p>
 其他的目录信息大家根据情况再去研究。
-&lt;/p>
-&lt;/div>
-&lt;h3>
-qb下载
-&lt;/h3>
-&lt;div>
-默认qb只能访问安装后设置里配置的目录，如果想要改变qb下载的目录，则需要去&lt;code>系统设置-应用&lt;/code>找到qb，添加一下允许它访问的文件目录。
-&lt;/div>&lt;/div>
-&lt;p>
-&lt;/p>
+&lt;h3 id="qb下载">qb下载
+&lt;/h3>&lt;p>默认qb只能访问安装后设置里配置的目录，如果想要改变qb下载的目录，则需要去&lt;code>系统设置-应用&lt;/code>找到qb，添加一下允许它访问的文件目录。&lt;/p>
 &lt;p>
 下边是完整后的桌面预览图
 &lt;/p>
-&lt;p>
-![fnos complete](https://images.iminling.com/i/2025/01/08/3b89be1091025e546acd4224064abb0a.webp)
-&lt;/p></description></item></channel></rss>
+![fnos complete](https://images.iminling.com/i/2025/01/08/3b89be1091025e546acd4224064abb0a.webp)</description></item></channel></rss>

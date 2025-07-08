@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/categories/linux/</link><description>Recent content in Linux on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Wed, 04 Dec 2024 15:04:19 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux管理磁盘分区-挂载新的磁盘到系统</title><link>https://konghanghang.github.io/iminling-pages/2024/linux-mount-new-disk/</link><pubDate>Wed, 04 Dec 2024 15:04:19 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/linux-mount-new-disk/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/12/06E75D7C2E1274607D0E030129712389.jpg"
-loading="lazy"
-alt="disk"
->&lt;/p>
-&lt;p>最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/categories/linux/</link><description>Recent content in Linux on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Wed, 04 Dec 2024 15:04:19 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux管理磁盘分区-挂载新的磁盘到系统</title><link>https://konghanghang.github.io/iminling-pages/2024/linux-mount-new-disk/</link><pubDate>Wed, 04 Dec 2024 15:04:19 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/linux-mount-new-disk/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=STRHaU84cVVtSm1LSEZrWHVLdDhqbzZPUURSR0EzWDB5a3RJL2RIdWgwZUVHWTFNQjV6WEtndkhQQUcxb3VlQjNGNzg5eWc9" alt="Featured image of post Linux管理磁盘分区-挂载新的磁盘到系统" />&lt;p>最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。&lt;/p>
 &lt;h2 id="3t盘挂载">3T盘挂载
 &lt;/h2>&lt;h3 id="磁盘查看">磁盘查看
 &lt;/h3>&lt;p>先使用fdisk查看磁盘&lt;/p>
@@ -31,27 +27,27 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">21
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk -l
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sda: 20 GiB, 21474836480 bytes, 41943040 sectors
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk -l
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sda: &lt;span class="m">20&lt;/span> GiB, &lt;span class="m">21474836480&lt;/span> bytes, &lt;span class="m">41943040&lt;/span> sectors
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of &lt;span class="m">1&lt;/span> * &lt;span class="nv">512&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size &lt;span class="o">(&lt;/span>logical/physical&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size &lt;span class="o">(&lt;/span>minimum/optimal&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disklabel type: gpt
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk identifier: 0DA7595A-DE2A-1042-8C4F-3C883C4D7BA6
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Device Start End Sectors Size Type
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 262144 41943006 41680863 19.9G Linux filesystem
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda14 2048 8191 6144 3M BIOS boot
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 8192 262143 253952 124M EFI System
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 &lt;span class="m">262144&lt;/span> &lt;span class="m">41943006&lt;/span> &lt;span class="m">41680863&lt;/span> 19.9G Linux filesystem
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda14 &lt;span class="m">2048&lt;/span> &lt;span class="m">8191&lt;/span> &lt;span class="m">6144&lt;/span> 3M BIOS boot
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 &lt;span class="m">8192&lt;/span> &lt;span class="m">262143&lt;/span> &lt;span class="m">253952&lt;/span> 124M EFI System
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition table entries are not in disk order.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 2.93 TiB, 3221225472000 bytes, 6291456000 sectors
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 2.93 TiB, &lt;span class="m">3221225472000&lt;/span> bytes, &lt;span class="m">6291456000&lt;/span> sectors
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of &lt;span class="m">1&lt;/span> * &lt;span class="nv">512&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size &lt;span class="o">(&lt;/span>logical/physical&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size &lt;span class="o">(&lt;/span>minimum/optimal&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>可以看到&lt;code>/dev/sdb&lt;/code>有一个2.93TB的硬盘，下边来对这个磁盘进行分区并添加。&lt;/p>
@@ -66,10 +62,10 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="nx">host&lt;/span>&lt;span class="p">:~&lt;/span>&lt;span class="err">#&lt;/span> &lt;span class="nx">apt&lt;/span> &lt;span class="nx">install&lt;/span> &lt;span class="nx">parted&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Building&lt;/span> &lt;span class="nx">dependency&lt;/span> &lt;span class="nx">tree&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="nx">state&lt;/span> &lt;span class="nx">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# apt install parted
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading package lists... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Building dependency tree... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading state information... Done
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>然后执行&lt;code>parted /dev/sdb&lt;/code>对&lt;code>/dev/sdb&lt;/code>这个盘进行处理，输入命令后会进入命令模式，需要经过几个步骤&lt;/p>
@@ -102,23 +98,23 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">18
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# parted /dev/sdb
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# parted /dev/sdb
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">GNU Parted 3.5
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Using /dev/sdb
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to GNU Parted! Type &amp;#39;help&amp;#39; to view a list of commands.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mklabel gpt
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mkpart primary ext4 0% 100%
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) print
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Model: QEMU QEMU HARDDISK (scsi)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to GNU Parted! Type &lt;span class="s1">&amp;#39;help&amp;#39;&lt;/span> to view a list of commands.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> mklabel gpt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> mkpart primary ext4 0% 100%
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> print
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Model: QEMU QEMU HARDDISK &lt;span class="o">(&lt;/span>scsi&lt;span class="o">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 3221GB
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512B/512B
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size &lt;span class="o">(&lt;/span>logical/physical&lt;span class="o">)&lt;/span>: 512B/512B
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition Table: gpt
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk Flags:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Number Start End Size File system Name Flags
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 1 1049kB 3221GB 3221GB ext4 primary
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="m">1&lt;/span> 1049kB 3221GB 3221GB ext4 primary
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) quit
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> quit
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Information: You may need to update /etc/fstab.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -143,20 +139,20 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">14
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# mkfs.ext4 /dev/sdb1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mke2fs 1.47.0 (5-Feb-2023)
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Discarding device blocks: done
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Creating filesystem with 786431488 4k blocks and 196608000 inodes
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# mkfs.ext4 /dev/sdb1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mke2fs 1.47.0 &lt;span class="o">(&lt;/span>5-Feb-2023&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Discarding device blocks: &lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Creating filesystem with &lt;span class="m">786431488&lt;/span> 4k blocks and &lt;span class="m">196608000&lt;/span> inodes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem UUID: f2275364-6fa6-4ae0-a214-5bd98552f5b1
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Superblock backups stored on blocks:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 102400000, 214990848, 512000000, 550731776, 644972544
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 102400000, 214990848, 512000000, 550731776, &lt;span class="m">644972544&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Allocating group tables: done
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Writing inode tables: done
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Creating journal (262144 blocks): done
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Writing superblocks and filesystem accounting information: done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Allocating group tables: &lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Writing inode tables: &lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Creating journal &lt;span class="o">(&lt;/span>&lt;span class="m">262144&lt;/span> blocks&lt;span class="o">)&lt;/span>: &lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Writing superblocks and filesystem accounting information: &lt;span class="k">done&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>经过上边就已经对刚分的那个盘进行了格式化。&lt;/p>
@@ -187,26 +183,26 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">21
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# mkdir /data
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# mkdir /data
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@host:~# df -h
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem Size Used Avail Use% Mounted on
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 979M 0 979M 0% /dev
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 979M &lt;span class="m">0&lt;/span> 979M 0% /dev
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 732K 198M 1% /run
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 20G 2.1G 17G 12% /
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 990M 0 990M 0% /dev/shm
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M 0 5.0M 0% /run/lock
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 990M &lt;span class="m">0&lt;/span> 990M 0% /dev/shm
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M &lt;span class="m">0&lt;/span> 5.0M 0% /run/lock
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 124M 12M 113M 10% /boot/efi
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 0 198M 0% /run/user/0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M &lt;span class="m">0&lt;/span> 198M 0% /run/user/0
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@host:~# mount /dev/sdb1 /data
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@host:~# df -h
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem Size Used Avail Use% Mounted on
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 979M 0 979M 0% /dev
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 979M &lt;span class="m">0&lt;/span> 979M 0% /dev
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 732K 198M 1% /run
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 20G 2.1G 17G 12% /
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 990M 0 990M 0% /dev/shm
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M 0 5.0M 0% /run/lock
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 990M &lt;span class="m">0&lt;/span> 990M 0% /dev/shm
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M &lt;span class="m">0&lt;/span> 5.0M 0% /run/lock
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 124M 12M 113M 10% /boot/efi
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 0 198M 0% /run/user/0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M &lt;span class="m">0&lt;/span> 198M 0% /run/user/0
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sdb1 2.9T 28K 2.8T 1% /data
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -219,8 +215,8 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host-c:~# vim /etc/fstab
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sdb1 /data ext4 defaults 0 2
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host-c:~# vim /etc/fstab
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sdb1 /data ext4 defaults &lt;span class="m">0&lt;/span> &lt;span class="m">2&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>如上添加一行&lt;code>/dev/sdb1 /data ext4 defaults 0 2&lt;/code>就可以重启后自动实现挂载。&lt;/p>
@@ -252,25 +248,25 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">21
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk -l
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 1000 GiB, 1073741824000 bytes, 2097152000 sectors
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk -l
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: &lt;span class="m">1000&lt;/span> GiB, &lt;span class="m">1073741824000&lt;/span> bytes, &lt;span class="m">2097152000&lt;/span> sectors
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of &lt;span class="m">1&lt;/span> * &lt;span class="nv">512&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size &lt;span class="o">(&lt;/span>logical/physical&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size &lt;span class="o">(&lt;/span>minimum/optimal&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sda: 20 GiB, 21474836480 bytes, 41943040 sectors
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sda: &lt;span class="m">20&lt;/span> GiB, &lt;span class="m">21474836480&lt;/span> bytes, &lt;span class="m">41943040&lt;/span> sectors
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of &lt;span class="m">1&lt;/span> * &lt;span class="nv">512&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size &lt;span class="o">(&lt;/span>logical/physical&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size &lt;span class="o">(&lt;/span>minimum/optimal&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disklabel type: gpt
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk identifier: 0DA7595A-DE2A-1042-8C4F-3C883C4D7BA6
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Device Start End Sectors Size Type
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 262144 41943006 41680863 19.9G Linux filesystem
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda14 2048 8191 6144 3M BIOS boot
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 8192 262143 253952 124M EFI System
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 &lt;span class="m">262144&lt;/span> &lt;span class="m">41943006&lt;/span> &lt;span class="m">41680863&lt;/span> 19.9G Linux filesystem
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda14 &lt;span class="m">2048&lt;/span> &lt;span class="m">8191&lt;/span> &lt;span class="m">6144&lt;/span> 3M BIOS boot
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 &lt;span class="m">8192&lt;/span> &lt;span class="m">262143&lt;/span> &lt;span class="m">253952&lt;/span> 124M EFI System
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition table entries are not in disk order.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
@@ -309,32 +305,32 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">27
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk /dev/sdb
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk /dev/sdb
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to fdisk (util-linux 2.38.1).
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Changes will remain in memory only, until you decide to write them.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to fdisk &lt;span class="o">(&lt;/span>util-linux 2.38.1&lt;span class="o">)&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Changes will remain in memory only, &lt;span class="k">until&lt;/span> you decide to write them.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Be careful before using the write command.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Device does not contain a recognized partition table.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new DOS (MBR) disklabel with disk identifier 0x17afed0e.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new DOS &lt;span class="o">(&lt;/span>MBR&lt;span class="o">)&lt;/span> disklabel with disk identifier 0x17afed0e.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command (m for help): o
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new DOS (MBR) disklabel with disk identifier 0xa7272020.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command &lt;span class="o">(&lt;/span>m &lt;span class="k">for&lt;/span> &lt;span class="nb">help&lt;/span>&lt;span class="o">)&lt;/span>: o
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new DOS &lt;span class="o">(&lt;/span>MBR&lt;span class="o">)&lt;/span> disklabel with disk identifier 0xa7272020.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command (m for help): n
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition type
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> p primary (0 primary, 0 extended, 4 free)
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> e extended (container for logical partitions)
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Select (default p): p
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition number (1-4, default 1): 1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">First sector (2048-2097151999, default 2048):
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-2097151999, default 2097151999):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command &lt;span class="o">(&lt;/span>m &lt;span class="k">for&lt;/span> &lt;span class="nb">help&lt;/span>&lt;span class="o">)&lt;/span>: n
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition &lt;span class="nb">type&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> p primary &lt;span class="o">(&lt;/span>&lt;span class="m">0&lt;/span> primary, &lt;span class="m">0&lt;/span> extended, &lt;span class="m">4&lt;/span> free&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> e extended &lt;span class="o">(&lt;/span>container &lt;span class="k">for&lt;/span> logical partitions&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Select &lt;span class="o">(&lt;/span>default p&lt;span class="o">)&lt;/span>: p
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition number &lt;span class="o">(&lt;/span>1-4, default 1&lt;span class="o">)&lt;/span>: &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">First sector &lt;span class="o">(&lt;/span>2048-2097151999, default 2048&lt;span class="o">)&lt;/span>:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last sector, +/-sectors or +/-size&lt;span class="o">{&lt;/span>K,M,G,T,P&lt;span class="o">}&lt;/span> &lt;span class="o">(&lt;/span>2048-2097151999, default 2097151999&lt;span class="o">)&lt;/span>:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new partition 1 of type &amp;#39;Linux&amp;#39; and of size 1000 GiB.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new partition &lt;span class="m">1&lt;/span> of &lt;span class="nb">type&lt;/span> &lt;span class="s1">&amp;#39;Linux&amp;#39;&lt;/span> and of size &lt;span class="m">1000&lt;/span> GiB.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command (m for help): w
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command &lt;span class="o">(&lt;/span>m &lt;span class="k">for&lt;/span> &lt;span class="nb">help&lt;/span>&lt;span class="o">)&lt;/span>: w
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The partition table has been altered.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Calling ioctl() to re-read partition table.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Calling ioctl&lt;span class="o">()&lt;/span> to re-read partition table.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Syncing disks.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -353,18 +349,301 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">8
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# parted /dev/sdb
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# parted /dev/sdb
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">GNU Parted 3.5
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Using /dev/sdb
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to GNU Parted! Type &amp;#39;help&amp;#39; to view a list of commands.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mklabel msdos
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mkpart primary ext4 0% 100%
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) quit
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to GNU Parted! Type &lt;span class="s1">&amp;#39;help&amp;#39;&lt;/span> to view a list of commands.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> mklabel msdos
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> mkpart primary ext4 0% 100%
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> quit
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Information: You may need to update /etc/fstab.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>唯一的区别就是mklable命令，原来是gpt（GPT分区），现在改成msdos（MBR分区），其他命令都一样。分区完成后进行格式化，挂载等一系列操作。&lt;/p>
-&lt;p>以上就是针对小于2T以及大于2T的盘的挂载教程，希望可以帮到大家。&lt;/p></description></item><item><title>docker安装fail2ban并配置防止ssh登录爆破</title><link>https://konghanghang.github.io/iminling-pages/2024/docker-install-fail2ban-protect-ssh/</link><pubDate>Sat, 03 Feb 2024 14:52:53 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/docker-install-fail2ban-protect-ssh/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=SVBwbXRUTnkxdENoNlUzQ0w1QjVKd2xKc3pVK3BWZjlZNk1aeEtRT1BmcXpEcGlaa1h2c3ZhMnVGZlRXV2sweE1TcDhYTVU9" alt="Featured image of post docker安装fail2ban并配置防止ssh登录爆破" />&lt;p>平时也没有怎么关注过ssh的日志，而且服务器的ssh登录端口也是默认的22，只是密码设置的相对来说复杂了点，后边听说有人会进行密码爆破，于是就查看了一下ssh的日志，日志路径是/var/log/auth.log，一看整个人都呆了，登录错误的日志不停的刷，都不带停的。如果密码设置的简单点，估计早就被人给试出来了。在网上查询到可以使用fail2ban来进行防御，把经常访问出错的ip加入到iptables中，禁止掉它的访问，于是就开干了，开始摸索fail2ban如何安装使用。&lt;/p>
+&lt;p>以上就是针对小于2T以及大于2T的盘的挂载教程，希望可以帮到大家。&lt;/p></description></item><item><title>服务器带宽测速iperf3工具使用</title><link>https://konghanghang.github.io/iminling-pages/2024/how-to-use-iperf3/</link><pubDate>Fri, 03 May 2024 05:52:37 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/how-to-use-iperf3/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=b0w0Mnh3eThuS0JueUNaajQrNU1LZmIrL2ZIOEpGSUM5aVl0ZWs5bTFCUjhtMWdNN0dmc3FLakhyWExPR2ExRTJqcitLdVU9" alt="Featured image of post 服务器带宽测速iperf3工具使用" />&lt;p>网络测速相信很多人都使用过，想要看看自己家里的宽带网速怎么样，最简单的方式就是搜索&lt;a class="link" href="https://www.speedtest.cn/" target="_blank" rel="noopener"
+>测速网&lt;/a>，然后等结果出来就可以了，比较简单。今天要介绍的主角是：iperf3,由于经常要和vps打交到，想要测试本地到服务器的速度，使用iperf3会更准确一点，接下来就介绍一下&lt;a class="link" href="https://iperf.fr/" target="_blank" rel="noopener"
+>iperf3&lt;/a>，以及如何使用&lt;a class="link" href="https://iperf.fr/" target="_blank" rel="noopener"
+>iperf3&lt;/a>来进行测试速度。&lt;/p>
+&lt;h2 id="iperf3是什么">iperf3是什么
+&lt;/h2>&lt;p>&lt;a class="link" href="https://iperf.fr/" target="_blank" rel="noopener"
+>iPerf3&lt;/a> 是一种主动测量 IP 网络上可实现的最大带宽的工具。 它支持调整与计时、缓冲区和协议（TCP、UDP、SCTP 与 IPv4 和 IPv6）相关的各种参数。 对于每次测试，它都会报告带宽、损耗和其他参数。它是一个 C/S 类型的测速工具，在服务器上开放某个端口，然后在客户机上连接该服务器对应的端口，就可以开始进行 tcp 或 udp 的下载速度了&lt;/p>
+&lt;h2 id="iperf3安装">iperf3安装
+&lt;/h2>&lt;p>iperf3的官网也详细介绍了几种操作平台的安装，具体的地址：&lt;a class="link" href="https://iperf.fr/iperf-download.php" target="_blank" rel="noopener"
+>安装iperf3&lt;/a>。下边说明一下几种操作系统的安装。&lt;/p>
+&lt;h3 id="windows">Windows
+&lt;/h3>&lt;p>直接去官方下载地址：&lt;a class="link" href="https://files.budman.pw/" target="_blank" rel="noopener"
+>budman.pw&lt;/a>或者&lt;a class="link" href="https://github.com/ar51an/iperf3-win-builds/releases" target="_blank" rel="noopener"
+>github&lt;/a>去下载安装文件,下载最新的就可以了。&lt;/p>
+&lt;h3 id="mac-os">Mac OS
+&lt;/h3>&lt;p>mac可以使用homebrew来进行安装，如果还没有安装homebrew可以参考我的另一篇文章来进行安装：&lt;a class="link" href="https://www.iminling.com/2023/10/02/265.html" title="Mac更换源更快速的安装Homebrew"
+target="_blank" rel="noopener"
+>Mac更换源更快速的安装Homebrew&lt;/a>.然后通过命令&lt;code>brew install iperf3&lt;/code>。&lt;/p>
+&lt;h3 id="ubuntudebian">Ubuntu/Debian
+&lt;/h3>&lt;p>使用命令：&lt;code>sudo apt-get install iperf3&lt;/code>进行安装。如果当前用户是root用户，则可以省略&lt;code>sudo&lt;/code>.&lt;/p>
+&lt;h3 id="centosred-hat">Centos/Red hat
+&lt;/h3>&lt;p>使用命令：&lt;code>yum install iperf3&lt;/code>进行安装。&lt;/p>
+&lt;h2 id="iperf3使用">iperf3使用
+&lt;/h2>&lt;p>iperf3分为客户端和服务端，服务端开放端口，客户端则连上对应的端口进行发包，达到测速。下边来使用命令来快速的进行一轮测速：&lt;/p>
+&lt;h3 id="服务端">服务端
+&lt;/h3>&lt;p>服务端执行命令&lt;code>iperf3 -s -p 1111&lt;/code>就启动了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@docker:~# iperf3 -s -p &lt;span class="m">1111&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">-----------------------------------------------------------
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Server listening on &lt;span class="m">1111&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="nb">test&lt;/span> &lt;span class="c1">#1)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">-----------------------------------------------------------
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>服务端开启&lt;code>1111&lt;/code>端口后就等待客户端连上来。&lt;/p>
+&lt;h3 id="客户端">客户端
+&lt;/h3>&lt;p>客户端执行命令&lt;span class="s1">&lt;code>iperf3 -c 192.168.1.222 -p 1111 -i 1 -t 10&lt;/code> ,其中&lt;code>192.168.1.222&lt;/code>是你服务端所在服务器的ip，执行后客户端输出如下：&lt;/span>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ iperf3 -c 192.168.1.222 -p &lt;span class="m">1111&lt;/span> -i &lt;span class="m">1&lt;/span> -t &lt;span class="m">10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Connecting to host 192.168.1.222, port &lt;span class="m">1111&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reverse mode, remote host 192.168.1.222 is sending
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> &lt;span class="nb">local&lt;/span> 192.168.1.10 port &lt;span class="m">56431&lt;/span> connected to 192.168.1.222 port &lt;span class="m">1111&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> ID&lt;span class="o">]&lt;/span> Interval Transfer Bitrate
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 0.00-1.00 sec 52.1 MBytes &lt;span class="m">435&lt;/span> Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 1.00-2.00 sec 67.4 MBytes &lt;span class="m">567&lt;/span> Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 2.00-3.00 sec 58.6 MBytes &lt;span class="m">492&lt;/span> Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 3.00-4.00 sec 71.4 MBytes &lt;span class="m">600&lt;/span> Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 4.00-5.00 sec 69.2 MBytes &lt;span class="m">579&lt;/span> Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 5.00-6.00 sec 69.8 MBytes &lt;span class="m">586&lt;/span> Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 6.00-7.00 sec 67.5 MBytes &lt;span class="m">568&lt;/span> Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 7.00-8.00 sec 70.9 MBytes &lt;span class="m">593&lt;/span> Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 8.00-9.00 sec 73.1 MBytes &lt;span class="m">613&lt;/span> Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 9.00-10.00 sec 73.1 MBytes &lt;span class="m">613&lt;/span> Mbits/sec
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">- - - - - - - - - - - - - - - - - - - - - - - - -
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> ID&lt;span class="o">]&lt;/span> Interval Transfer Bitrate Retr
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 0.00-10.03 sec &lt;span class="m">676&lt;/span> MBytes &lt;span class="m">565&lt;/span> Mbits/sec &lt;span class="m">2&lt;/span> sender
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> 5&lt;span class="o">]&lt;/span> 0.00-10.00 sec &lt;span class="m">673&lt;/span> MBytes &lt;span class="m">564&lt;/span> Mbits/sec receiver
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">iperf Done.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>一次测速就完成了。服务端也会有同样的日志输出。可见速度大概是500Mb/s。&lt;/p>
+&lt;h2 id="参数详解">参数详解
+&lt;/h2>&lt;p>具体的参数详细解释可以参考&lt;a class="link" href="https://iperf.fr/iperf-doc.php" target="_blank" rel="noopener"
+>官网的文档&lt;/a>;这里我也简单的介绍一下。&lt;/p>
+&lt;h3 id="通用参数">通用参数
+&lt;/h3>&lt;p>通用参数就是客户端和服务端都可以使用的参数。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>命令行选项&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>-p, &amp;ndash;port n&lt;/td>
+&lt;td>服务器侦听和客户端连接的服务器端口。这在客户端和服务器中应该是相同的。默认值为 5201。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&amp;ndash;cport n&lt;/td>
+&lt;td>指定客户端端端口的选项。(iPerf 3.13 新特性)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-f, &amp;ndash;format [kmKM]&lt;/td>
+&lt;td>指定打印带宽数字的格式的命令字。支持的格式有&lt;br>&amp;lsquo;k&amp;rsquo; = Kbits/sec &amp;lsquo;K&amp;rsquo; = KBytes/sec&lt;br>&amp;rsquo;m&amp;rsquo; = Mbits/sec &amp;lsquo;M&amp;rsquo; = MBytes/sec&lt;br>自适应格式根据需要在千级和兆级之间进行选择。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-i, &amp;ndash;interval n&lt;/td>
+&lt;td>设置周期性带宽、抖动和丢失报告之间的间隔时间（以秒为单位）。如果非零，则自上次报告以来每隔 n 秒带宽参数会生成一份报告。如果为零，则只打印定期报告。默认认为零。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-F, &amp;ndash;file name&lt;/td>
+&lt;td>客户端：从文件中读取并写入网络，而不是使用随机数据；&lt;br>服务器端：从网络读取并写入文件，而不是丢弃数据。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-A, &amp;ndash;affinity n/n,m/m-f&lt;/td>
+&lt;td>如果可能的话，设置 CPU 关联性（仅限 Linux 和 FreeBSD）。在客户端和服务器上，您可以使用此参数以 n 的形式（其中 n 是 CPU 编号）来设置本地关联性。&lt;br>在客户端，您可以使用 n,m 形式的参数覆盖服务器的关联性，仅用于测试。&lt;br>请注意，使用此功能时，进程将仅绑定到单个 CPU（而不是包含潜在多个 CPU 的集合）。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-B, &amp;ndash;bind host&lt;/td>
+&lt;td>绑定到特定网卡，即该计算机的地址之一。对于客户端，这设置输出的网卡接口。对于服务器端，这设置传入网卡接口。这仅在具有多个网卡接口的多宿主主机上有用。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-V, &amp;ndash;verbose&lt;/td>
+&lt;td>给出更详细的输出&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-J, &amp;ndash;json&lt;/td>
+&lt;td>以 JSON 格式输出&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&amp;ndash;logfile file&lt;/td>
+&lt;td>将输出发送到日志文件。(iPerf 3.13 新特性)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-d, &amp;ndash;debug&lt;/td>
+&lt;td>发出调试输出。主要供开发人员使用。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-v, &amp;ndash;version&lt;/td>
+&lt;td>显示版本信息并退出。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-h, &amp;ndash;help&lt;/td>
+&lt;td>显示帮助概要并退出。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>以上是通用的参数说明，可以根据需求在执行命令的时候添加。&lt;/p>
+&lt;h3 id="服务端参数">服务端参数
+&lt;/h3>&lt;p>下边对服务端特有参数进行说明：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>命令行选项&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>-s, &amp;ndash;server&lt;/td>
+&lt;td>在服务器模式下运行 iPerf。（这一次只允许一个 iperf 连接）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-D, &amp;ndash;daemon&lt;/td>
+&lt;td>服务器作为守护进程在后台运行。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>-I, &amp;ndash;pidfile &lt;em>file&lt;/em>&lt;/td>
+&lt;td>写入一个包含进程 ID 的文件，这在作为守护进程运行时最有用。（iPerf 3.1 新特性）&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>服务端的命令选项相对来说少一些。&lt;/p>
+&lt;h3 id="客户端参数">客户端参数
+&lt;/h3>&lt;p>下边对客户端特有参数进行说明：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>命令行选项&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>-c&lt;/strong>, &amp;ndash;client &lt;em>&lt;strong>host&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>在客户端模式下运行 iPerf，连接到主机上运行的 iPerf 服务器。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>&amp;ndash;sctp&lt;/strong>&lt;/td>
+&lt;td>使用 SCTP 而不是 TCP（Linux、FreeBSD 和 Solaris）。 (iPerf 3.1新特性)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-u&lt;/strong>, &amp;ndash;udp&lt;/td>
+&lt;td>使用 UDP 而不是 TCP。 另请参阅 -b 选项。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-b&lt;/strong>, &amp;ndash;bandwidth &lt;em>&lt;strong>n[KM]&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>将目标带宽设置为 n 位/秒（UDP 默认为 1 Mbit/秒，TCP 无限制）。如有多个流（-P 标志），带宽限制单独应用于每个流。可向带宽说明符添加“/”和数字，称为“突发模式”，将发送给定数量的数据包而不暂停，即使暂时超出指定带宽限制。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-t&lt;/strong>, &amp;ndash;time &lt;em>&lt;strong>n&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>传输时间（以秒为单位）。iPerf 通常通过在 time 秒内重复发送 len 个字节的数组来工作。默认值为 10 秒。另请参见 -l、-k 和 -n 选项。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-n&lt;/strong>, &amp;ndash;num &lt;em>&lt;strong>n[KM]&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>要传输的缓冲区数量。通常 iPerf 发送 10 秒。-n 选项会覆盖此设置并发送 len 个字节的数组 num 次，无论需要多长时间。另请参见 -l、-k 和 -t 选项。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-k&lt;/strong>, &amp;ndash;blockcount &lt;em>&lt;strong>n[KM]&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>要传输的块（数据包）数量。（而不是 -t 或 -n）另请参阅 -t、-l 和 -n 选项。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-l&lt;/strong>, &amp;ndash;length &lt;em>&lt;strong>n[KM]&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>要读取或写入的缓冲区的长度。iPerf 的工作原理是多次写入 len 个字节的数组。TCP 默认为 128 KB，UDP 默认为 8 KB。另请参见 -n、-k 和 -t 选项。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-P&lt;/strong>, &amp;ndash;parallel &lt;em>&lt;strong>n&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>与服务器建立的同时连接数。默认值为 1。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-R&lt;/strong>, &amp;ndash;reverse&lt;/td>
+&lt;td>以反向模式运行（服务器发送，客户端接收）。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-w&lt;/strong>, &amp;ndash;window &lt;em>&lt;strong>n[KM]&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>将套接字缓冲区大小设置为指定值。对于 TCP，这设置 TCP 窗口大小。（这会被发送到服务器并在该端使用）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-M&lt;/strong>, &amp;ndash;set-mss &lt;em>&lt;strong>n&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>尝试设置 TCP 最大分段大小 (MSS)。MSS 通常为 MTU - 40 字节。例如以太网，MSS 为 1460 字节（1500 字节 MTU）。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-N&lt;/strong>, &amp;ndash;no-delay&lt;/td>
+&lt;td>设置 TCP 无延迟选项，禁用 Nagle 算法。通常仅交互式应用（如 telnet）禁用此功能。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-4&lt;/strong>, &amp;ndash;version4&lt;/td>
+&lt;td>仅使用 IPv4。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-6&lt;/strong>, &amp;ndash;version6&lt;/td>
+&lt;td>仅使用 IPv6。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-S&lt;/strong>, &amp;ndash;tos &lt;em>&lt;strong>n&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>传出数据包的服务类型。可用“0x”前缀的十六进制、0 前缀的八进制或十进制。&lt;br>常用值：&lt;br>IPTOS_LOWDELAY 0x10&lt;br>IPTOS_THROUGHPUT 0x08&lt;br>IPTOS_RELIABILITY 0x04&lt;br>IPTOS_LOWCOST 0x02&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-L&lt;/strong>, &amp;ndash;flowlabel &lt;em>&lt;strong>n&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>设置 IPv6 流标签（目前仅在 Linux 上支持）。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-Z&lt;/strong>, &amp;ndash;zerocopy&lt;/td>
+&lt;td>使用“零复制”方法发送数据（如 sendfile(2)），而非通常的 write(2)。减少 CPU 使用率。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-O&lt;/strong>, &amp;ndash;omit &lt;em>&lt;strong>n&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>省略测试的前 n 秒，以跳过 TCP 慢启动期。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-T&lt;/strong>, &amp;ndash;title &lt;em>str&lt;/em>&lt;/td>
+&lt;td>使用此字符串作为每个输出行的前缀。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>-C&lt;/strong>, &amp;ndash;linux-congestion &lt;em>&lt;strong>algo&lt;/strong>&lt;/em>&lt;/td>
+&lt;td>设置拥塞控制算法（仅 iPerf 3.0 Linux，iPerf 3.1 支持 Linux 和 FreeBSD）。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>以上就是服务端和客户端的所有参数说明。&lt;/p></description></item><item><title>docker安装fail2ban并配置防止ssh登录爆破</title><link>https://konghanghang.github.io/iminling-pages/2024/docker-install-fail2ban-protect-ssh/</link><pubDate>Sat, 03 Feb 2024 14:52:53 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/docker-install-fail2ban-protect-ssh/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=SVBwbXRUTnkxdENoNlUzQ0w1QjVKd2xKc3pVK3BWZjlZNk1aeEtRT1BmcXpEcGlaa1h2c3ZhMnVGZlRXV2sweE1TcDhYTVU9" alt="Featured image of post docker安装fail2ban并配置防止ssh登录爆破" />&lt;p>平时也没有怎么关注过ssh的日志，而且服务器的ssh登录端口也是默认的22，只是密码设置的相对来说复杂了点，后边听说有人会进行密码爆破，于是就查看了一下ssh的日志，日志路径是/var/log/auth.log，一看整个人都呆了，登录错误的日志不停的刷，都不带停的。如果密码设置的简单点，估计早就被人给试出来了。在网上查询到可以使用fail2ban来进行防御，把经常访问出错的ip加入到iptables中，禁止掉它的访问，于是就开干了，开始摸索fail2ban如何安装使用。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -639,11 +918,7 @@ alt="disk"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>然后再通过查看监狱状态的命令查看ip是否已经被取消掉。&lt;/p>
-&lt;p>以上就是通过安装fail2ban来对暴力破解ssh密码进行拦截，另外也可以通过修改ssh的端口来进行简单的拦截，通常默认的ssh端口是22，如果换了端口他们想要找到这个ssh端口也是要花费一些时间的，再就是可以通过禁用密码只使用key来登录，会更安全一些，这个可以参考我的另一篇文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/" >修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>。希望可以帮到大家。&lt;/p></description></item><item><title>修改SSH端口使用公钥登录并禁用root密码登录</title><link>https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/</link><pubDate>Fri, 05 Jan 2024 15:14:15 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/01/SSH_Key_-_Authentication_Using_SSH_Keys-2.png"
-loading="lazy"
-alt="SSH连接"
->&lt;/p>
-&lt;p>不得不说这个世界上坏人还是比较多的，以为购买一台服务器后部署自己的服务后就可以高枕无忧了吗？NO，总有刁民想还朕，默认的SSH端口是22，这个是SSH协议的规范，那么大部分人购买了服务器后也不会想着去更改这个端口，那么就会被一些不法分子利用，服务器用户名默认root，端口默认22，那么他们就会通过这个来扫你的机器，不停的尝试登录，如果我们设置的密码强度不够，那么很快就会被穷举出来，然后你的服务器就被别人控制。今天我们就来做三步操作增强我们服务器的安全性。&lt;/p>
+&lt;p>以上就是通过安装fail2ban来对暴力破解ssh密码进行拦截，另外也可以通过修改ssh的端口来进行简单的拦截，通常默认的ssh端口是22，如果换了端口他们想要找到这个ssh端口也是要花费一些时间的，再就是可以通过禁用密码只使用key来登录，会更安全一些，这个可以参考我的另一篇文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/" >修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>。希望可以帮到大家。&lt;/p></description></item><item><title>修改SSH端口使用公钥登录并禁用root密码登录</title><link>https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/</link><pubDate>Fri, 05 Jan 2024 15:14:15 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=b0w0Mnh3eThuS0JueUNaajQrNU1LVXlDSVZsMEY4YlRqQU9leUEzazk0eVJXU2xxRFlLV1pKbXhmdnFpUnArVE1GbTEvZlU9" alt="Featured image of post 修改SSH端口使用公钥登录并禁用root密码登录" />&lt;p>不得不说这个世界上坏人还是比较多的，以为购买一台服务器后部署自己的服务后就可以高枕无忧了吗？NO，总有刁民想还朕，默认的SSH端口是22，这个是SSH协议的规范，那么大部分人购买了服务器后也不会想着去更改这个端口，那么就会被一些不法分子利用，服务器用户名默认root，端口默认22，那么他们就会通过这个来扫你的机器，不停的尝试登录，如果我们设置的密码强度不够，那么很快就会被穷举出来，然后你的服务器就被别人控制。今天我们就来做三步操作增强我们服务器的安全性。&lt;/p>
 &lt;h2 id="配置公钥">配置公钥
 &lt;/h2>&lt;h3 id="生成密钥对">生成密钥对
 &lt;/h3>&lt;p>我们首先要做的就是生成一对密钥，可以使用ssh-keygen来生成一对，生成语法如下：&lt;/p>
@@ -689,27 +964,27 @@ alt="SSH连接"
 &lt;/span>&lt;span class="lnt">25
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ ssh-keygen -t rsa
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ ssh-keygen -t rsa
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Generating public/private rsa key pair.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Enter file in which to save the key (/Users/aaa/.ssh/id_rsa):
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Enter passphrase (empty for no passphrase):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Enter file in which to save the key &lt;span class="o">(&lt;/span>/Users/aaa/.ssh/id_rsa&lt;span class="o">)&lt;/span>:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Enter passphrase &lt;span class="o">(&lt;/span>empty &lt;span class="k">for&lt;/span> no passphrase&lt;span class="o">)&lt;/span>:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Enter same passphrase again:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Your identification has been saved in /Users/aaa/.ssh/id_rsa
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Your public key has been saved in /Users/aaa/.ssh/id_rsa.pub
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The key fingerprint is:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SHA256:03Gf81aw0hniwCGSylV1VbOntYOrgsw1RicsUxWwKs aaa
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The key&amp;#39;s randomart image is:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+---[RSA 3072]----+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| .oo.o ooB=o|
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| o. o o B.oo|
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| . o + O.*.o|
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| o . = XoOo|
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| S . +oOo.|
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| . Eo.ooo|
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + . .o|
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| o . |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+----[SHA256]-----+
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The key&lt;span class="err">&amp;#39;&lt;/span>s randomart image is:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+---&lt;span class="o">[&lt;/span>RSA 3072&lt;span class="o">]&lt;/span>----+
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> .oo.o &lt;span class="nv">ooB&lt;/span>&lt;span class="o">=&lt;/span>o&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> o. o o B.oo&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> . o + O.*.o&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> o . &lt;span class="o">=&lt;/span> XoOo&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> S . +oOo.&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> . Eo.ooo&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> + . .o&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> o . &lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+----&lt;span class="o">[&lt;/span>SHA256&lt;span class="o">]&lt;/span>-----+
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ls .ssh
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">config id_rsa.pub
@@ -740,12 +1015,12 @@ alt="SSH连接"
 &lt;/span>&lt;span class="lnt">7
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># scp [-P 端口] ./my-ssh-key.pub [USERNAME]@[EXTERNAL_IP_ADDRESS]:/root/.ssh
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># scp [-P 端口] ./my-ssh-key.pub [USERNAME]@[EXTERNAL_IP_ADDRESS]:/root/.ssh&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">scp ./my-ssh-key.pub root@192.168.31.1:/root/.ssh
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 上传成功后，ssh登录到服务器上，把上传的pub文件追加到.ssh目录下的authorized_keys中。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 上传成功后，ssh登录到服务器上，把上传的pub文件追加到.ssh目录下的authorized_keys中。&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ssh root@192.168.31.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ cd .ssh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ &lt;span class="nb">cd&lt;/span> .ssh
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ cat my-ssh-key.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -758,7 +1033,7 @@ alt="SSH连接"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># ssh-copy-id -i ./my-ssh-key.pub [USERNAME]@[EXTERNAL_IP_ADDRESS] [-p 端口]
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># ssh-copy-id -i ./my-ssh-key.pub [USERNAME]@[EXTERNAL_IP_ADDRESS] [-p 端口]&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ssh-copy-id -i ./my-ssh-key.pub root@192.168.31.1
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -773,9 +1048,9 @@ alt="SSH连接"
 &lt;/span>&lt;span class="lnt">3
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PasswordAuthentication yes　　　　　　# 口令登录
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">RSAAuthentication yes　　　　　　　　　# RSA认证
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PubkeyAuthentication yes　　　　　　　# 公钥登录
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PasswordAuthentication yes　　　　　　&lt;span class="c1"># 口令登录&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">RSAAuthentication yes　　　　　　　　　&lt;span class="c1"># RSA认证&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PubkeyAuthentication yes　　　　　　　&lt;span class="c1"># 公钥登录&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>如果有修改需要重启一下服务器的sshd服务：&lt;/p>
@@ -807,8 +1082,8 @@ alt="SSH连接"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Port 22
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Port 1024
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">Port &lt;span class="m">22&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Port &lt;span class="m">1024&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>配置的属性就叫Port。&lt;/p>
@@ -821,9 +1096,9 @@ alt="SSH连接"
 &lt;/span>&lt;span class="lnt">3
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PasswordAuthentication no 　　　　　　# 口令登录
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">RSAAuthentication yes　　　　　　　　　# RSA认证
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PubkeyAuthentication yes　　　　　　　# 公钥登录
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PasswordAuthentication no 　　　　　　&lt;span class="c1"># 口令登录&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">RSAAuthentication yes　　　　　　　　　&lt;span class="c1"># RSA认证&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PubkeyAuthentication yes　　　　　　　&lt;span class="c1"># 公钥登录&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>经过上边的配置就可以禁用掉root用户的密码登录功能，并修改了SSH登录的端口，这样子服务器的安全性就提高了一些。&lt;/p>
@@ -835,8 +1110,179 @@ alt="SSH连接"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ chmod 700 ~/.ssh
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ chmod 600 ~/.ssh/authorized_keys
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ chmod &lt;span class="m">700&lt;/span> ~/.ssh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ chmod &lt;span class="m">600&lt;/span> ~/.ssh/authorized_keys
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div></description></item></channel></rss>
+&lt;/div></description></item><item><title>linux双栈网络设置IPv4优先</title><link>https://konghanghang.github.io/iminling-pages/2023/linux-use-ipv4-first/</link><pubDate>Sun, 03 Sep 2023 02:58:44 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/linux-use-ipv4-first/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=cU9DUVBIUnEzWktLQnpML0x0b090RkVtOGRNa0VnNXpMMFNSSFZKcTNsZkQ3eXdWNDlnZS9pNWZvNHFXdVNZV0JZVVpBREE9" alt="Featured image of post linux双栈网络设置IPv4优先" />&lt;p>双协议栈技术就是指在一台设备上同时启用 IPv4 协议栈和 IPv6 协议栈，这样就可以同时使用 IPv4 和 IPv6 的网络。但是在默认情况下都会以IPv6网络优先，只有 IPv6 无法访问的时候才会尝试访问 IPv4，某些特定的应用和场景下，我们并不想要 IPv6 优先，这时候就需要修改一些配置文件让 IPv4 优先。&lt;/p>
+&lt;h2 id="查看网络优先级">查看网络优先级
+&lt;/h2>&lt;p>可以通过以下命令来查看当前的机器是以哪个网络优先的：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2000::97e4
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如上返回了IPv6的地址，所以该机器默认就是通过IPv6来访问网站的，通过配置curl强制使用IPv4协议来进行访问：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">192.168.0.235
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>接下来就来修改配置使IPv4成功默认的出栈协议。&lt;/p>
+&lt;h2 id="修改etcgaiconf">修改/etc/gai.conf
+&lt;/h2>&lt;p>在 Debian、Ubuntu 等 Linux 系统下，有一个 &lt;code>/etc/gai.conf&lt;/code> 文件，用于系统的 &lt;code>getaddrinfo&lt;/code> 调用，默认情况下，它会使用 IPv6 优先，编辑gai.conf文件，会看到以下配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Add another rule to the RFC 3484 precedence table. See section 2.1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># and 10.3 in RFC 3484. The default is:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::1/128 50&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/0 40&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence 2002::/16 30&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/96 20&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::ffff:0:0/96 10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># For sites which prefer IPv4 connections change the last line to&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::ffff:0:0/96 100&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>里边有一行提示：&lt;code>For sites which prefer IPv4 connections change the last line to&lt;/code>，想要IPv4出栈，可以设置：&lt;code>precedence ::ffff:0:0/96 100&lt;/code>&lt;/p>
+&lt;p>，根据提示把该行前的注释去掉，如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Add another rule to the RFC 3484 precedence table. See section 2.1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># and 10.3 in RFC 3484. The default is:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::1/128 50&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/0 40&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence 2002::/16 30&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/96 20&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::ffff:0:0/96 10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># For sites which prefer IPv4 connections change the last line to&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">precedence ::ffff:0:0/96 &lt;span class="m">100&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>修改后保存，然后再使用curl访问网站，不指定使用的IPv4还是IPv6，默认情况下就走了IPv4，如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">192.168.0.235
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>修改gai.conf后就默认走了IPv4协议了。&lt;/p>
+&lt;h2 id="禁用ipv6">禁用IPv6
+&lt;/h2>&lt;p>有一些极端情况下，我们可能需要禁止系统的 IPv6 功能，这时候就需要修改 &lt;code>/etc/sysctl.conf&lt;/code> 文件，首先找到你的网卡名称，默认是 &lt;code>eth0&lt;/code> ，可以通过以下命令查看自己的网卡名：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# ip address
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu &lt;span class="m">65536&lt;/span> qdisc noqueue state UNKNOWN group default qlen &lt;span class="m">1000&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 127.0.0.1/8 scope host lo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 ::1/128 scope host
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span class="m">1500&lt;/span> qdisc fq state UP group default qlen &lt;span class="m">1000&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/ether 00:16:3c:6b:b7:c3 brd ff:ff:ff:ff:ff:ff
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> altname enp0s3
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> altname ens3
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 192.168.0.235/24 brd 192.168.0.255 scope global eth0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 2000::97e4/112 scope global
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 fe80::216:3cff:fe6b:b7c3/64 scope link
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我的网卡名就是eth0，然后修改&lt;code>/etc/sysctl.conf&lt;/code>，加入一下内容(将网卡名替换为自己的)：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.autoconf &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.autoconf &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.accept_ra &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.accept_ra &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.lo.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.eth0.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后使用 &lt;code>sysctl -p&lt;/code> 来重新加载配置文件，此时查看 &lt;code>ip a&lt;/code> 就可以发现 IPv6 已经被禁止了。&lt;/p>
+&lt;p>以上就是双栈网络的机器设置IPv4网络优先的方法，自己测试了Debian和Ubuntu都是可以实现的，希望可以帮到大家。&lt;/p></description></item></channel></rss>

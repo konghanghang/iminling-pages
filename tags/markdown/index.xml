@@ -265,8 +265,7 @@
 &lt;a href="https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/" class="post-ref-link">
 &lt;div class="post-ref-content">
 &lt;h3 class="post-ref-title">WordPress使用git-it-write插件配合github自动发布markdown&lt;/h3>
-&lt;p class="post-ref-summary">&lt;h1 id="wordpress使用git-it-write插件配合github自动发布markdown">WordPress使用git-it-write插件配合github自动发布markdown
-&lt;/h1>&lt;p>&lt;img …&lt;/p>&lt;/p>
+&lt;p class="post-ref-summary">&lt;p>以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？ …&lt;/p>&lt;/p>
 &lt;div class="post-ref-meta">
 &lt;span class="post-ref-date">2025-04-06&lt;/span>&lt;span class="post-ref-category">wordpress&lt;/span>&lt;/div>
 &lt;/div>
@@ -276,33 +275,25 @@
 &lt;a href="https://konghanghang.github.io/iminling-pages/2025/typora-how-to-use-picgo-upload-image-to-easyimage/" class="post-ref-link">
 &lt;div class="post-ref-content">
 &lt;h3 class="post-ref-title">Typora使用picgo-core配置上传图片到easyimage图床&lt;/h3>
-&lt;p class="post-ref-summary">&lt;h1 id="typora使用picgo-core配置上传图片到easyimage图床">Typora使用picgo-core配置上传图片到easyimage图床&lt;figure class="wp-block-image size-full">
-&lt;/h1>&lt;p>&lt;img …&lt;/p>&lt;/p>
+&lt;p class="post-ref-summary">&lt;p>typora是一个非常方便的markdown编辑器，如果我们不做配置，图片仅仅只是存储在本地磁盘，如果本地磁盘出现问题，那么图片就全没了，所以今天就研究一下搭配picgo-core来把插入的图片上传到图床，我这里使用的是easyimage图床。&lt;/p>&lt;/p>
 &lt;div class="post-ref-meta">
-&lt;span class="post-ref-date">2025-04-05&lt;/span>&lt;span class="post-ref-category">wordpress&lt;/span>&lt;/div>
+&lt;span class="post-ref-date">2025-04-05&lt;/span>&lt;span class="post-ref-category">tools&lt;/span>&lt;/div>
 &lt;/div>
 &lt;/a>
-&lt;/div></description></item><item><title>WordPress使用git-it-write插件配合github自动发布markdown</title><link>https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/</link><pubDate>Sun, 06 Apr 2025 09:20:36 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/</guid><description>&lt;h1 id="wordpress使用git-it-write插件配合github自动发布markdown">WordPress使用git-it-write插件配合github自动发布markdown
-&lt;/h1>&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=SlBudmJhK1kyNkJ5NGtnVm53c1kwOUpBdFNJd1I2dHR5NXk5VjM1QkNsN1VtWm9DVWNJdi9jdEEyL0o0eTZDTXJPNUhlT3c9"
-loading="lazy"
-alt="What Is Markdown, and How Do You Use It?"
->&lt;/p>
-&lt;p>以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了&lt;strong>WP-Githuber-MD&lt;/strong>这个插件，再探索的过程中无意又发现了&lt;strong>git-it-write&lt;/strong>这个可以自动化的插件，于是就开始了折腾之旅行。&lt;/p>
+&lt;/div></description></item><item><title>WordPress使用git-it-write插件配合github自动发布markdown</title><link>https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/</link><pubDate>Sun, 06 Apr 2025 09:20:36 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=SlBudmJhK1kyNkJ5NGtnVm53c1kwOUpBdFNJd1I2dHR5NXk5VjM1QkNsN1VtWm9DVWNJdi9jdEEyL0o0eTZDTXJPNUhlT3c9" alt="Featured image of post WordPress使用git-it-write插件配合github自动发布markdown" />&lt;p>以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了&lt;strong>WP-Githuber-MD&lt;/strong>这个插件，再探索的过程中无意又发现了&lt;strong>git-it-write&lt;/strong>这个可以自动化的插件，于是就开始了折腾之旅行。&lt;/p>
 &lt;h2 id="插件安装和配置">插件安装和配置
-&lt;/h2>&lt;p>Git-it-write插件在Wordpress的插件库是可以找到的，直接搜索安装就可以了。安装后可以在设置中找到对这个插件的配置。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;/h2>&lt;p>Git-it-write插件在Wordpress的插件库是可以找到的，直接搜索安装就可以了。安装后可以在设置中找到对这个插件的配置。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=MWp2VEQ0OWJhQ1ZvS3dTUmxGNHJ4VFhsc2JQcFFRY21MS0VORWFhSzRRekFOT2ZQYzBkcEl0WjlORk1pKy9ONHFiM3BRK1E9"
 loading="lazy"
 alt="image-20250406105054694"
 >&lt;/p>
-&lt;/figure>
 &lt;h2 id="仓库配置">仓库配置
 &lt;/h2>&lt;p>想要配合github进行自动发布，首先要解决的就是从仓库里拉去到&lt;code>.md&lt;/code>的文件，所以需要去配置一个git仓库，我们可以先创建好这个git仓库，然后再来进行配置。&lt;/p>
-&lt;p>点击左上的&lt;code>add a new repository to publish posts form&lt;/code>按钮来添加一个新的仓库：&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>点击左上的&lt;code>add a new repository to publish posts form&lt;/code>按钮来添加一个新的仓库：&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aHNJb2F0ZE5jMFU4azFuZ05GTVlTNS9UaHNnazV3RXhDT3pnY1F4Zk5iTkcvSzlhYy91R3JJVG5KTlBXQy96YWkzUENRajA9"
 loading="lazy"
 alt="image-20250406105418250"
 >&lt;/p>
-&lt;/figure>
 &lt;p>有几个地方需要设置一下：&lt;/p>
 &lt;table>
 &lt;thead>
@@ -337,24 +328,21 @@ alt="image-20250406105418250"
 &lt;p>其他的选项就默认了。&lt;/p>
 &lt;p>因为我这里建的是一个私有的仓库，想要拉取到仓库里的内容，我这里需要配置一下github access token,填在General settings的位置。如果是public类型的仓库，可以尝试一下不配置或者也配置一下，因为我不是这种情况，所以没有进行详细的研究。下边就来看一下如何获取github access token.&lt;/p>
 &lt;h2 id="获取github-access-token">获取github access token
-&lt;/h2>&lt;p>来到&lt;code>github&lt;/code>的&lt;code>settings&lt;/code>页面：登录&lt;code>github&lt;/code>后，点击右上角的头像，就会看到有&lt;code>settings&lt;/code>选项。进入&lt;code>settings&lt;/code>后，拉到最下边找到&lt;code>developer settings&lt;/code>选项，如下图：&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;/h2>&lt;p>来到&lt;code>github&lt;/code>的&lt;code>settings&lt;/code>页面：登录&lt;code>github&lt;/code>后，点击右上角的头像，就会看到有&lt;code>settings&lt;/code>选项。进入&lt;code>settings&lt;/code>后，拉到最下边找到&lt;code>developer settings&lt;/code>选项，如下图：&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dloxM1QyZDBSeHpkSHhuUXFnOXE3dE9KRjJ0N056ekYyb1pPMFNpak1ITmM0MWZjUHVkMDRVNVFIQjJOOW9LYkdjOXJPdHc9"
 loading="lazy"
 alt="image-20250406110451346"
 >&lt;/p>
-&lt;/figure>
-&lt;p>点击在personal access tokens中进行添加和删除等操作：&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>点击在personal access tokens中进行添加和删除等操作：&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UlVOOEFEekZDVTZkWkV1NElkd2U1NC9vWXYwVVZGRFdXZnNhMG1sZGlSZWx6NkpOT1dId201RmdaZkJVR3YvSEJQZkZvRkk9"
 loading="lazy"
 alt="image-20250406110617783"
 >&lt;/p>
-&lt;/figure>
-&lt;p>点击右上角的Generate new token来新建一个token，设置页面如下：&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>点击右上角的Generate new token来新建一个token，设置页面如下：&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=NVpqaXRGRTUyZUQ1QytZdTA1WWthQzBLU2NZdjJqd0lrT2hEYkxTSjZuWEoyaG5kUHlQa2hlaDFYNC95anpwME5sWFNHYU09"
 loading="lazy"
 alt="image-20250406110820880"
 >&lt;/p>
-&lt;/figure>
 &lt;p>相关的配置项说明：&lt;/p>
 &lt;table>
 &lt;thead>
@@ -390,69 +378,84 @@ alt="image-20250406110820880"
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>设置完成后就可以生成token了，把生成的tokent填写在&lt;code>General settings&lt;/code>处了：&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>设置完成后就可以生成token了，把生成的tokent填写在&lt;code>General settings&lt;/code>处了：&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=a3FndlRxSDZOd2xlWmVlS3pXT0FOTURqRjNWRzVMeXVsQ1AvYWpEUTc2SG1NNkhWdE9kU3U0WitWb0VSZWxIbXdsdTZnRTQ9"
 loading="lazy"
 alt="image-20250406111447759"
 >&lt;/p>
-&lt;/figure>
 &lt;p>Github username就是自己的github用户名。&lt;/p>
 &lt;p>至此git it write插件就配置完成了。现在要做的就是在仓库里写一篇markdown格式的文档来进行发布了。&lt;/p>
 &lt;h2 id="发布">发布
-&lt;/h2>&lt;p>在我们写完markdown文件后，push到上边配置的git仓库中，下边就可以来进行发布操作了。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;/h2>&lt;p>在我们写完markdown文件后，push到上边配置的git仓库中，下边就可以来进行发布操作了。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=eUtGZTQ1cTJqbWl2dHN0SVhtS1U4a0NuMEpIbTdwbE54VklTc1hldWVEMUphY2JYRTJJVGNXdlM4d2JFekxkMjNpWlNoUkU9"
 loading="lazy"
 alt="image-20250406164203217"
 >&lt;/p>
-&lt;/figure>
-&lt;p>在wordpress插件git it write插件中添加仓库后，可以看到如上图所示的内容，我们可以点击pull posts中git仓库中拉取markdown文件进行发布。点击后有两个选项，一个是只pull更新，另一个是pull所有文件。如果是第一次拉取仓库内容，就使用pull all the files拉取左右的内容，后续就可以使用pull only changes只拉取变更的内容。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>在wordpress插件git it write插件中添加仓库后，可以看到如上图所示的内容，我们可以点击pull posts中git仓库中拉取markdown文件进行发布。点击后有两个选项，一个是只pull更新，另一个是pull所有文件。如果是第一次拉取仓库内容，就使用pull all the files拉取左右的内容，后续就可以使用pull only changes只拉取变更的内容。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=ZGlPT2cwSVE3VjJwS0p2Wk94ZWg2cWR4cFFpa3YrbVYzOFVjQ21rZktRREhyeFpEK3NlNkdCbnRYWXlneG9NRktaYmtJelk9"
 loading="lazy"
 alt="image-20250406164324796"
 >&lt;/p>
-&lt;/figure>
 &lt;p>如果拉取有问题，也可以点击上边图片中的Logs来查看插件的日志来方便排查问题。截止到上边就已经差不多完成插件配置了。那么此时就需要我们每写完一篇文章就需要到wordpress的后台来进行手动pull一下，是不是也有点麻烦呢？接下来就讲一下如果来自动化发布。&lt;/p>
 &lt;h2 id="webbook-配置">Webbook 配置
-&lt;/h2>&lt;p>在git it write的配置页面可以看到webhook secret的配置选项，没错，这个就是和github的webhook进行联动的，需要我们在github中进行相关的配置。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;/h2>&lt;p>在git it write的配置页面可以看到webhook secret的配置选项，没错，这个就是和github的webhook进行联动的，需要我们在github中进行相关的配置。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RnVrcWhZd0RnMXVGdlA3Nm5mNHNXZDhPTkFtNUgvb3k0am1EaWdOZTdCYzdnRnNvbi81VlhUVDBuc3d0Y2FBOEJPQjVyZ0k9"
 loading="lazy"
 alt="image-20250406164919715"
 >&lt;/p>
-&lt;/figure>
-&lt;p>在github仓库的设置页面，我们可以进行webbook的配置，可以添加一个webhook,具体的webhook地址可以看git it write插件页面给的提示，那里会详细说明完整的webhook地址是什么。如下图是我的完整webhook地址，当时只有地址还是不行的，我们需要配置一个密钥，这个就自己根据自己的情况来进行配置，防止被别人猜到。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>在github仓库的设置页面，我们可以进行webbook的配置，可以添加一个webhook,具体的webhook地址可以看git it write插件页面给的提示，那里会详细说明完整的webhook地址是什么。如下图是我的完整webhook地址，当时只有地址还是不行的，我们需要配置一个密钥，这个就自己根据自己的情况来进行配置，防止被别人猜到。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=V2FYb2J3Q05NL0NwTWppTmdTejN1NmNKZnZveDlXMjdzbEpObEVnVVEwbE1uckYxSEloWEplNkdrOWgyN1BYZ1JhamZPRHM9"
 loading="lazy"
 alt="image-20250406165045811"
 >&lt;/p>
-&lt;/figure>
-&lt;p>github中添加webhook如下，需要填写url，content type以及secret，这里的secret和git it write中的是同一个。另外需要什么时候来触发这个webhook,我这里选择&lt;code>Just the push event&lt;/code>.其他的大家根据需求来进行填写。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>github中添加webhook如下，需要填写url，content type以及secret，这里的secret和git it write中的是同一个。另外需要什么时候来触发这个webhook,我这里选择&lt;code>Just the push event&lt;/code>.其他的大家根据需求来进行填写。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=OWt4QU9weGhOSXJLL1NjTzVxQ3VRdGlPMG5WVmdFT21XdktOMzhWTFNqTGZSVnRsVWFUMklNNzhKdytQRVV6eks5M0lTQWM9"
 loading="lazy"
 alt="image-20250406165256944"
 >&lt;/p>
-&lt;/figure>
 &lt;p>经过上边的配置，我们在写好markdown文件后，只需要push到git仓库中，那么github就会触发webhook通知到wordpress中的git it write插件，插件就会来仓库中拉取markdown文件，然后进行发布。做到自动化处理发布动作。&lt;/p>
 &lt;h2 id="markdown-文件">Markdown 文件
 &lt;/h2>&lt;p>经过上边的步骤基本已经可以正常的发布文章了，但是这里还有一个重要的问题就是发布后的文章的分类、url以及标签这些信息是怎么处理的？我们要怎么给指定呢？下边就来给大家介绍。&lt;/p>
 &lt;p>在markdown文件中，每个文件的顶部可以使用yaml来设置一些属性信息，这些属性信息就可以来设置我们发布文章的一些属性信息。设置的格式如下：&lt;/p>
-&lt;pre>&lt;code>---
-title: &amp;quot;Wordpress使用git-it-write插件配合github自动发布markdown&amp;quot;
-date: 2025-04-06
-post_excerpt: 以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了WP-Githuber-MD这个插件，再探索的过程中无意又发现了git-it-write这个可以自动化的插件，于是就开始了折腾之旅行。
-post_status: publish
-comment_status: open
-taxonomy:
-category:
-- wordpress
-post_tag:
-- wordpress
-- github
-- git-it-write
-- markdown
-slug: &amp;quot;wordpress-use-git-it-write-and-github-publish-markdown-file&amp;quot;
----
-&lt;/code>&lt;/pre>
-&lt;p>是以&lt;code>---&lt;/code>开始，然后设置一些特殊的属性。我这里介绍一下我上边使用到的一些信息。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">---
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">title: &amp;#34;Wordpress使用git-it-write插件配合github自动发布markdown&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">date: 2025-04-06
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">post_excerpt: 以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了WP-Githuber-MD这个插件，再探索的过程中无意又发现了git-it-write这个可以自动化的插件，于是就开始了折腾之旅行。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">post_status: publish
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">comment_status: open
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">taxonomy:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> category:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - wordpress
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> post_tag:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - wordpress
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - github
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - git-it-write
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - markdown
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">slug: &amp;#34;wordpress-use-git-it-write-and-github-publish-markdown-file&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">---
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>是以&lt;code>---&lt;/code>开始，然后设置一些特殊的属性。我这里介绍一下我上边使用到的一些信息。&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>

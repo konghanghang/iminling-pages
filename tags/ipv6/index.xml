@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>IPV6 on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/ipv6/</link><description>Recent content in IPV6 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 03 Sep 2023 02:58:44 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/ipv6/index.xml" rel="self" type="application/rss+xml"/><item><title>linux双栈网络设置IPv4优先</title><link>https://konghanghang.github.io/iminling-pages/2023/linux-use-ipv4-first/</link><pubDate>Sun, 03 Sep 2023 02:58:44 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/linux-use-ipv4-first/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/09/IPv4-vs-IPv6.jpeg"
-loading="lazy"
->&lt;/p>
-&lt;p>双协议栈技术就是指在一台设备上同时启用 IPv4 协议栈和 IPv6 协议栈，这样就可以同时使用 IPv4 和 IPv6 的网络。但是在默认情况下都会以IPv6网络优先，只有 IPv6 无法访问的时候才会尝试访问 IPv4，某些特定的应用和场景下，我们并不想要 IPv6 优先，这时候就需要修改一些配置文件让 IPv4 优先。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>IPV6 on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/ipv6/</link><description>Recent content in IPV6 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 03 Sep 2023 02:58:44 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/ipv6/index.xml" rel="self" type="application/rss+xml"/><item><title>linux双栈网络设置IPv4优先</title><link>https://konghanghang.github.io/iminling-pages/2023/linux-use-ipv4-first/</link><pubDate>Sun, 03 Sep 2023 02:58:44 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/linux-use-ipv4-first/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=cU9DUVBIUnEzWktLQnpML0x0b090RkVtOGRNa0VnNXpMMFNSSFZKcTNsZkQ3eXdWNDlnZS9pNWZvNHFXdVNZV0JZVVpBREE9" alt="Featured image of post linux双栈网络设置IPv4优先" />&lt;p>双协议栈技术就是指在一台设备上同时启用 IPv4 协议栈和 IPv6 协议栈，这样就可以同时使用 IPv4 和 IPv6 的网络。但是在默认情况下都会以IPv6网络优先，只有 IPv6 无法访问的时候才会尝试访问 IPv4，某些特定的应用和场景下，我们并不想要 IPv6 优先，这时候就需要修改一些配置文件让 IPv4 优先。&lt;/p>
 &lt;h2 id="查看网络优先级">查看网络优先级
 &lt;/h2>&lt;p>可以通过以下命令来查看当前的机器是以哪个网络优先的：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -10,7 +7,7 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2000::97e4
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -21,7 +18,7 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">192.168.0.235
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -45,19 +42,19 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">13
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Add another rule to the RFC 3484 precedence table. See section 2.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># and 10.3 in RFC 3484. The default is:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::1/128 50
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/0 40
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence 2002::/16 30
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/96 20
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::ffff:0:0/96 10
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># For sites which prefer IPv4 connections change the last line to
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::ffff:0:0/96 100
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Add another rule to the RFC 3484 precedence table. See section 2.1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># and 10.3 in RFC 3484. The default is:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::1/128 50&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/0 40&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence 2002::/16 30&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/96 20&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::ffff:0:0/96 10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># For sites which prefer IPv4 connections change the last line to&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::ffff:0:0/96 100&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>里边有一行提示：&lt;code>For sites which prefer IPv4 connections change the last line to&lt;/code>，想要IPv4出栈，可以设置：&lt;code>precedence ::ffff:0:0/96 100&lt;/code>&lt;/p>
@@ -79,19 +76,19 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">13
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Add another rule to the RFC 3484 precedence table. See section 2.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># and 10.3 in RFC 3484. The default is:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::1/128 50
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/0 40
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence 2002::/16 30
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/96 20
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::ffff:0:0/96 10
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># For sites which prefer IPv4 connections change the last line to
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">precedence ::ffff:0:0/96 100
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Add another rule to the RFC 3484 precedence table. See section 2.1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># and 10.3 in RFC 3484. The default is:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::1/128 50&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/0 40&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence 2002::/16 30&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/96 20&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::ffff:0:0/96 10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># For sites which prefer IPv4 connections change the last line to&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">precedence ::ffff:0:0/96 &lt;span class="m">100&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>修改后保存，然后再使用curl访问网站，不指定使用的IPv4还是IPv6，默认情况下就走了IPv4，如下：&lt;/p>
@@ -101,7 +98,7 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">192.168.0.235
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -129,14 +126,14 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">17
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# ip address
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# ip address
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu &lt;span class="m">65536&lt;/span> qdisc noqueue state UNKNOWN group default qlen &lt;span class="m">1000&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 127.0.0.1/8 scope host lo
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 ::1/128 scope host
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc fq state UP group default qlen 1000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span class="m">1500&lt;/span> qdisc fq state UP group default qlen &lt;span class="m">1000&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/ether 00:16:3c:6b:b7:c3 brd ff:ff:ff:ff:ff:ff
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> altname enp0s3
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> altname ens3
@@ -161,14 +158,14 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">8
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.autoconf = 0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.autoconf = 0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.accept_ra = 0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.accept_ra = 0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.disable_ipv6 = 1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.disable_ipv6 = 1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.lo.disable_ipv6 = 1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.eth0.disable_ipv6 = 1
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.autoconf &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.autoconf &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.accept_ra &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.accept_ra &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.lo.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.eth0.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>然后使用 &lt;code>sysctl -p&lt;/code> 来重新加载配置文件，此时查看 &lt;code>ip a&lt;/code> 就可以发现 IPv6 已经被禁止了。&lt;/p>

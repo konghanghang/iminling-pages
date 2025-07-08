@@ -265,8 +265,7 @@
 &lt;a href="https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/" class="post-ref-link">
 &lt;div class="post-ref-content">
 &lt;h3 class="post-ref-title">WordPress使用git-it-write插件配合github自动发布markdown&lt;/h3>
-&lt;p class="post-ref-summary">&lt;h1 id="wordpress使用git-it-write插件配合github自动发布markdown">WordPress使用git-it-write插件配合github自动发布markdown
-&lt;/h1>&lt;p>&lt;img …&lt;/p>&lt;/p>
+&lt;p class="post-ref-summary">&lt;p>以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？ …&lt;/p>&lt;/p>
 &lt;div class="post-ref-meta">
 &lt;span class="post-ref-date">2025-04-06&lt;/span>&lt;span class="post-ref-category">wordpress&lt;/span>&lt;/div>
 &lt;/div>
@@ -276,10 +275,9 @@
 &lt;a href="https://konghanghang.github.io/iminling-pages/2025/typora-how-to-use-picgo-upload-image-to-easyimage/" class="post-ref-link">
 &lt;div class="post-ref-content">
 &lt;h3 class="post-ref-title">Typora使用picgo-core配置上传图片到easyimage图床&lt;/h3>
-&lt;p class="post-ref-summary">&lt;h1 id="typora使用picgo-core配置上传图片到easyimage图床">Typora使用picgo-core配置上传图片到easyimage图床&lt;figure class="wp-block-image size-full">
-&lt;/h1>&lt;p>&lt;img …&lt;/p>&lt;/p>
+&lt;p class="post-ref-summary">&lt;p>typora是一个非常方便的markdown编辑器，如果我们不做配置，图片仅仅只是存储在本地磁盘，如果本地磁盘出现问题，那么图片就全没了，所以今天就研究一下搭配picgo-core来把插入的图片上传到图床，我这里使用的是easyimage图床。&lt;/p>&lt;/p>
 &lt;div class="post-ref-meta">
-&lt;span class="post-ref-date">2025-04-05&lt;/span>&lt;span class="post-ref-category">wordpress&lt;/span>&lt;/div>
+&lt;span class="post-ref-date">2025-04-05&lt;/span>&lt;span class="post-ref-category">tools&lt;/span>&lt;/div>
 &lt;/div>
 &lt;/a>
 &lt;/div></description></item><item><title>Hugo文章SEO配置完整指南</title><link>https://konghanghang.github.io/iminling-pages/p/hugo%E6%96%87%E7%AB%A0seo%E9%85%8D%E7%BD%AE%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</link><pubDate>Fri, 04 Jul 2025 00:00:00 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/p/hugo%E6%96%87%E7%AB%A0seo%E9%85%8D%E7%BD%AE%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</guid><description>&lt;h1 id="hugo文章seo配置完整指南">Hugo文章SEO配置完整指南

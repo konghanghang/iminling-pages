@@ -1,24 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Wordpress on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/wordpress/</link><description>Recent content in Wordpress on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 06 Apr 2025 09:20:36 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/wordpress/index.xml" rel="self" type="application/rss+xml"/><item><title>WordPress使用git-it-write插件配合github自动发布markdown</title><link>https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/</link><pubDate>Sun, 06 Apr 2025 09:20:36 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/</guid><description>&lt;h1 id="wordpress使用git-it-write插件配合github自动发布markdown">WordPress使用git-it-write插件配合github自动发布markdown
-&lt;/h1>&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=SlBudmJhK1kyNkJ5NGtnVm53c1kwOUpBdFNJd1I2dHR5NXk5VjM1QkNsN1VtWm9DVWNJdi9jdEEyL0o0eTZDTXJPNUhlT3c9"
-loading="lazy"
-alt="What Is Markdown, and How Do You Use It?"
->&lt;/p>
-&lt;p>以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了&lt;strong>WP-Githuber-MD&lt;/strong>这个插件，再探索的过程中无意又发现了&lt;strong>git-it-write&lt;/strong>这个可以自动化的插件，于是就开始了折腾之旅行。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Wordpress on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/wordpress/</link><description>Recent content in Wordpress on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 06 Apr 2025 09:20:36 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/wordpress/index.xml" rel="self" type="application/rss+xml"/><item><title>WordPress使用git-it-write插件配合github自动发布markdown</title><link>https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/</link><pubDate>Sun, 06 Apr 2025 09:20:36 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2025/wordpress-use-git-it-write-and-github-publish-markdown-file/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=SlBudmJhK1kyNkJ5NGtnVm53c1kwOUpBdFNJd1I2dHR5NXk5VjM1QkNsN1VtWm9DVWNJdi9jdEEyL0o0eTZDTXJPNUhlT3c9" alt="Featured image of post WordPress使用git-it-write插件配合github自动发布markdown" />&lt;p>以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了&lt;strong>WP-Githuber-MD&lt;/strong>这个插件，再探索的过程中无意又发现了&lt;strong>git-it-write&lt;/strong>这个可以自动化的插件，于是就开始了折腾之旅行。&lt;/p>
 &lt;h2 id="插件安装和配置">插件安装和配置
-&lt;/h2>&lt;p>Git-it-write插件在Wordpress的插件库是可以找到的，直接搜索安装就可以了。安装后可以在设置中找到对这个插件的配置。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;/h2>&lt;p>Git-it-write插件在Wordpress的插件库是可以找到的，直接搜索安装就可以了。安装后可以在设置中找到对这个插件的配置。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=MWp2VEQ0OWJhQ1ZvS3dTUmxGNHJ4VFhsc2JQcFFRY21MS0VORWFhSzRRekFOT2ZQYzBkcEl0WjlORk1pKy9ONHFiM3BRK1E9"
 loading="lazy"
 alt="image-20250406105054694"
 >&lt;/p>
-&lt;/figure>
 &lt;h2 id="仓库配置">仓库配置
 &lt;/h2>&lt;p>想要配合github进行自动发布，首先要解决的就是从仓库里拉去到&lt;code>.md&lt;/code>的文件，所以需要去配置一个git仓库，我们可以先创建好这个git仓库，然后再来进行配置。&lt;/p>
-&lt;p>点击左上的&lt;code>add a new repository to publish posts form&lt;/code>按钮来添加一个新的仓库：&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>点击左上的&lt;code>add a new repository to publish posts form&lt;/code>按钮来添加一个新的仓库：&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aHNJb2F0ZE5jMFU4azFuZ05GTVlTNS9UaHNnazV3RXhDT3pnY1F4Zk5iTkcvSzlhYy91R3JJVG5KTlBXQy96YWkzUENRajA9"
 loading="lazy"
 alt="image-20250406105418250"
 >&lt;/p>
-&lt;/figure>
 &lt;p>有几个地方需要设置一下：&lt;/p>
 &lt;table>
 &lt;thead>
@@ -53,24 +46,21 @@ alt="image-20250406105418250"
 &lt;p>其他的选项就默认了。&lt;/p>
 &lt;p>因为我这里建的是一个私有的仓库，想要拉取到仓库里的内容，我这里需要配置一下github access token,填在General settings的位置。如果是public类型的仓库，可以尝试一下不配置或者也配置一下，因为我不是这种情况，所以没有进行详细的研究。下边就来看一下如何获取github access token.&lt;/p>
 &lt;h2 id="获取github-access-token">获取github access token
-&lt;/h2>&lt;p>来到&lt;code>github&lt;/code>的&lt;code>settings&lt;/code>页面：登录&lt;code>github&lt;/code>后，点击右上角的头像，就会看到有&lt;code>settings&lt;/code>选项。进入&lt;code>settings&lt;/code>后，拉到最下边找到&lt;code>developer settings&lt;/code>选项，如下图：&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;/h2>&lt;p>来到&lt;code>github&lt;/code>的&lt;code>settings&lt;/code>页面：登录&lt;code>github&lt;/code>后，点击右上角的头像，就会看到有&lt;code>settings&lt;/code>选项。进入&lt;code>settings&lt;/code>后，拉到最下边找到&lt;code>developer settings&lt;/code>选项，如下图：&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dloxM1QyZDBSeHpkSHhuUXFnOXE3dE9KRjJ0N056ekYyb1pPMFNpak1ITmM0MWZjUHVkMDRVNVFIQjJOOW9LYkdjOXJPdHc9"
 loading="lazy"
 alt="image-20250406110451346"
 >&lt;/p>
-&lt;/figure>
-&lt;p>点击在personal access tokens中进行添加和删除等操作：&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>点击在personal access tokens中进行添加和删除等操作：&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UlVOOEFEekZDVTZkWkV1NElkd2U1NC9vWXYwVVZGRFdXZnNhMG1sZGlSZWx6NkpOT1dId201RmdaZkJVR3YvSEJQZkZvRkk9"
 loading="lazy"
 alt="image-20250406110617783"
 >&lt;/p>
-&lt;/figure>
-&lt;p>点击右上角的Generate new token来新建一个token，设置页面如下：&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>点击右上角的Generate new token来新建一个token，设置页面如下：&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=NVpqaXRGRTUyZUQ1QytZdTA1WWthQzBLU2NZdjJqd0lrT2hEYkxTSjZuWEoyaG5kUHlQa2hlaDFYNC95anpwME5sWFNHYU09"
 loading="lazy"
 alt="image-20250406110820880"
 >&lt;/p>
-&lt;/figure>
 &lt;p>相关的配置项说明：&lt;/p>
 &lt;table>
 &lt;thead>
@@ -106,69 +96,84 @@ alt="image-20250406110820880"
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>设置完成后就可以生成token了，把生成的tokent填写在&lt;code>General settings&lt;/code>处了：&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>设置完成后就可以生成token了，把生成的tokent填写在&lt;code>General settings&lt;/code>处了：&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=a3FndlRxSDZOd2xlWmVlS3pXT0FOTURqRjNWRzVMeXVsQ1AvYWpEUTc2SG1NNkhWdE9kU3U0WitWb0VSZWxIbXdsdTZnRTQ9"
 loading="lazy"
 alt="image-20250406111447759"
 >&lt;/p>
-&lt;/figure>
 &lt;p>Github username就是自己的github用户名。&lt;/p>
 &lt;p>至此git it write插件就配置完成了。现在要做的就是在仓库里写一篇markdown格式的文档来进行发布了。&lt;/p>
 &lt;h2 id="发布">发布
-&lt;/h2>&lt;p>在我们写完markdown文件后，push到上边配置的git仓库中，下边就可以来进行发布操作了。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;/h2>&lt;p>在我们写完markdown文件后，push到上边配置的git仓库中，下边就可以来进行发布操作了。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=eUtGZTQ1cTJqbWl2dHN0SVhtS1U4a0NuMEpIbTdwbE54VklTc1hldWVEMUphY2JYRTJJVGNXdlM4d2JFekxkMjNpWlNoUkU9"
 loading="lazy"
 alt="image-20250406164203217"
 >&lt;/p>
-&lt;/figure>
-&lt;p>在wordpress插件git it write插件中添加仓库后，可以看到如上图所示的内容，我们可以点击pull posts中git仓库中拉取markdown文件进行发布。点击后有两个选项，一个是只pull更新，另一个是pull所有文件。如果是第一次拉取仓库内容，就使用pull all the files拉取左右的内容，后续就可以使用pull only changes只拉取变更的内容。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>在wordpress插件git it write插件中添加仓库后，可以看到如上图所示的内容，我们可以点击pull posts中git仓库中拉取markdown文件进行发布。点击后有两个选项，一个是只pull更新，另一个是pull所有文件。如果是第一次拉取仓库内容，就使用pull all the files拉取左右的内容，后续就可以使用pull only changes只拉取变更的内容。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=ZGlPT2cwSVE3VjJwS0p2Wk94ZWg2cWR4cFFpa3YrbVYzOFVjQ21rZktRREhyeFpEK3NlNkdCbnRYWXlneG9NRktaYmtJelk9"
 loading="lazy"
 alt="image-20250406164324796"
 >&lt;/p>
-&lt;/figure>
 &lt;p>如果拉取有问题，也可以点击上边图片中的Logs来查看插件的日志来方便排查问题。截止到上边就已经差不多完成插件配置了。那么此时就需要我们每写完一篇文章就需要到wordpress的后台来进行手动pull一下，是不是也有点麻烦呢？接下来就讲一下如果来自动化发布。&lt;/p>
 &lt;h2 id="webbook-配置">Webbook 配置
-&lt;/h2>&lt;p>在git it write的配置页面可以看到webhook secret的配置选项，没错，这个就是和github的webhook进行联动的，需要我们在github中进行相关的配置。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;/h2>&lt;p>在git it write的配置页面可以看到webhook secret的配置选项，没错，这个就是和github的webhook进行联动的，需要我们在github中进行相关的配置。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RnVrcWhZd0RnMXVGdlA3Nm5mNHNXZDhPTkFtNUgvb3k0am1EaWdOZTdCYzdnRnNvbi81VlhUVDBuc3d0Y2FBOEJPQjVyZ0k9"
 loading="lazy"
 alt="image-20250406164919715"
 >&lt;/p>
-&lt;/figure>
-&lt;p>在github仓库的设置页面，我们可以进行webbook的配置，可以添加一个webhook,具体的webhook地址可以看git it write插件页面给的提示，那里会详细说明完整的webhook地址是什么。如下图是我的完整webhook地址，当时只有地址还是不行的，我们需要配置一个密钥，这个就自己根据自己的情况来进行配置，防止被别人猜到。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>在github仓库的设置页面，我们可以进行webbook的配置，可以添加一个webhook,具体的webhook地址可以看git it write插件页面给的提示，那里会详细说明完整的webhook地址是什么。如下图是我的完整webhook地址，当时只有地址还是不行的，我们需要配置一个密钥，这个就自己根据自己的情况来进行配置，防止被别人猜到。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=V2FYb2J3Q05NL0NwTWppTmdTejN1NmNKZnZveDlXMjdzbEpObEVnVVEwbE1uckYxSEloWEplNkdrOWgyN1BYZ1JhamZPRHM9"
 loading="lazy"
 alt="image-20250406165045811"
 >&lt;/p>
-&lt;/figure>
-&lt;p>github中添加webhook如下，需要填写url，content type以及secret，这里的secret和git it write中的是同一个。另外需要什么时候来触发这个webhook,我这里选择&lt;code>Just the push event&lt;/code>.其他的大家根据需求来进行填写。&lt;figure class="wp-block-image size-full">&lt;/p>
+&lt;p>github中添加webhook如下，需要填写url，content type以及secret，这里的secret和git it write中的是同一个。另外需要什么时候来触发这个webhook,我这里选择&lt;code>Just the push event&lt;/code>.其他的大家根据需求来进行填写。&lt;/p>
 &lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=OWt4QU9weGhOSXJLL1NjTzVxQ3VRdGlPMG5WVmdFT21XdktOMzhWTFNqTGZSVnRsVWFUMklNNzhKdytQRVV6eks5M0lTQWM9"
 loading="lazy"
 alt="image-20250406165256944"
 >&lt;/p>
-&lt;/figure>
 &lt;p>经过上边的配置，我们在写好markdown文件后，只需要push到git仓库中，那么github就会触发webhook通知到wordpress中的git it write插件，插件就会来仓库中拉取markdown文件，然后进行发布。做到自动化处理发布动作。&lt;/p>
 &lt;h2 id="markdown-文件">Markdown 文件
 &lt;/h2>&lt;p>经过上边的步骤基本已经可以正常的发布文章了，但是这里还有一个重要的问题就是发布后的文章的分类、url以及标签这些信息是怎么处理的？我们要怎么给指定呢？下边就来给大家介绍。&lt;/p>
 &lt;p>在markdown文件中，每个文件的顶部可以使用yaml来设置一些属性信息，这些属性信息就可以来设置我们发布文章的一些属性信息。设置的格式如下：&lt;/p>
-&lt;pre>&lt;code>---
-title: &amp;quot;Wordpress使用git-it-write插件配合github自动发布markdown&amp;quot;
-date: 2025-04-06
-post_excerpt: 以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了WP-Githuber-MD这个插件，再探索的过程中无意又发现了git-it-write这个可以自动化的插件，于是就开始了折腾之旅行。
-post_status: publish
-comment_status: open
-taxonomy:
-category:
-- wordpress
-post_tag:
-- wordpress
-- github
-- git-it-write
-- markdown
-slug: &amp;quot;wordpress-use-git-it-write-and-github-publish-markdown-file&amp;quot;
----
-&lt;/code>&lt;/pre>
-&lt;p>是以&lt;code>---&lt;/code>开始，然后设置一些特殊的属性。我这里介绍一下我上边使用到的一些信息。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">---
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">title: &amp;#34;Wordpress使用git-it-write插件配合github自动发布markdown&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">date: 2025-04-06
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">post_excerpt: 以前发布文章都是直接在wordpress后台手动编辑，手动上传文件，确认无误后再发布，整个过程比较耗时，并且有点麻烦。最近这两天忽然有一个想法：我直接写markdown然后，然后在wordpress中找支持markdown的编辑器插件，把我的内容直接粘贴进去，这样子不就方便很多了吗？于是就找到了WP-Githuber-MD这个插件，再探索的过程中无意又发现了git-it-write这个可以自动化的插件，于是就开始了折腾之旅行。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">post_status: publish
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">comment_status: open
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">taxonomy:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> category:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - wordpress
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> post_tag:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - wordpress
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - github
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - git-it-write
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - markdown
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">slug: &amp;#34;wordpress-use-git-it-write-and-github-publish-markdown-file&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">---
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>是以&lt;code>---&lt;/code>开始，然后设置一些特殊的属性。我这里介绍一下我上边使用到的一些信息。&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
@@ -219,16 +224,12 @@ slug: &amp;quot;wordpress-use-git-it-write-and-github-publish-markdown-file&amp;
 >Getting started&lt;/a>.&lt;/p>
 &lt;p>&lt;strong>另外文章的自定义url是读取的md文件的文件名。&lt;/strong>&lt;/p>
 &lt;p>另外，如果github仓库中的文章是有目录的，那么他会发布一个以文件夹命名的文章，暂时没有很好的解决这个问题，他只会发布一次，发布后改后私有的解决问题。&lt;/p>
-&lt;p>以上就是Wordpress使用git-it-write插件配合github自动发布markdown文章的折腾过程，希望可以帮助到大家。&lt;/p></description></item><item><title>WordPress用户登录管理后台进行邮件或Telegram通知</title><link>https://konghanghang.github.io/iminling-pages/2023/wordpress-login-use-mail-telegram-notice/</link><pubDate>Fri, 29 Sep 2023 08:46:00 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/wordpress-login-use-mail-telegram-notice/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/09/5b936c4101fb2b204daf36d0c1457d48.jpeg"
-loading="lazy"
->&lt;/p>
-&lt;p>前段遇到了一个大麻烦，我的网站主页发布了两篇非我自己写的文章，在登录了worpress后台后，发现的确是有两篇文章，随后赶紧删除了那两篇文章。经过排查发现是xmlrpc功能没有关闭导致的，所以就有了我的上篇文章：&lt;a class="link" href="https://www.iminling.com/2023/09/03/241.html" title="禁用xmlrpc.php防止wordpress被暴力破解"
-target="_blank" rel="noopener"
->禁用xmlrpc.php防止wordpress被暴力破解&lt;/a>，事后及时关闭了该功能，然后就想着，既然要发布文章，是不是要登录我的管理后台，那么是否可以设置在用户登录wordpress管理后台的时候进行通知我呢，然后就去搜索了一下相关功能，果然还是有办法通知到我的。下边简单的分享一下该功能。&lt;/p>
+&lt;p>以上就是Wordpress使用git-it-write插件配合github自动发布markdown文章的折腾过程，希望可以帮助到大家。&lt;/p></description></item><item><title>WordPress用户登录管理后台进行邮件或Telegram通知</title><link>https://konghanghang.github.io/iminling-pages/2023/wordpress-login-use-mail-telegram-notice/</link><pubDate>Fri, 29 Sep 2023 08:46:00 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/wordpress-login-use-mail-telegram-notice/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=NE1yYVdkUjdQS3Q1UTBUODVkbW5zcUF5ckdjQzBHNzJHSWdQZGN2bFN0N1pJK1JEN0FxVG9OZFc1SUQrekV4Um9janlZWDQ9" alt="Featured image of post WordPress用户登录管理后台进行邮件或Telegram通知" />&lt;p>前段遇到了一个大麻烦，我的网站主页发布了两篇非我自己写的文章，在登录了worpress后台后，发现的确是有两篇文章，随后赶紧删除了那两篇文章。经过排查发现是xmlrpc功能没有关闭导致的，所以就有了我的上篇文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2023/disable-xmlrpc-php/" >禁用xmlrpc.php防止wordpress被暴力破解&lt;/a>，事后及时关闭了该功能，然后就想着，既然要发布文章，是不是要登录我的管理后台，那么是否可以设置在用户登录wordpress管理后台的时候进行通知我呢，然后就去搜索了一下相关功能，果然还是有办法通知到我的。下边简单的分享一下该功能。&lt;/p>
 &lt;h2 id="邮件配置">邮件配置
 &lt;/h2>&lt;p>邮件的配置网上有很多教程，比如使用WP Mail SMTP插件，这里就跳过了。&lt;/p>
 &lt;h2 id="telegram配置">Telegram配置
-&lt;/h2>&lt;p>其实使用邮件配置就可以了，当有登录的时候就会通过邮件来通知我们。我这里并不想在自己的邮箱里留存太多的邮件，而且自己用Telegram比较多，就想着把通知发送Telegram会更好，我就安装了插件：WP Telegram。功能也很强，它能在要发邮件的时候劫持邮件内容到telegram:&lt;img src="https://www.iminling.com/wp-content/uploads/2023/09/aef44f2535eb8f68f09d56ddfc002c94.png"
+&lt;/h2>&lt;p>其实使用邮件配置就可以了，当有登录的时候就会通过邮件来通知我们。我这里并不想在自己的邮箱里留存太多的邮件，而且自己用Telegram比较多，就想着把通知发送Telegram会更好，我就安装了插件：WP Telegram。功能也很强，它能在要发邮件的时候劫持邮件内容到telegram:&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=YmVpMHVUeVovMHZzMWd5bklhdERmQTdDVG5vVEZyVk9JQ1B3cVFlampsWXlZbFVZYjFkSkMza0dLcWpBLzhnRWxiTjRWeGc9"
 loading="lazy"
 >&lt;/p>
 &lt;p>只需要在Telegram申请好机器人就可以了，插件中也有申请步骤。&lt;/p>
@@ -283,51 +284,51 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">45
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">/*****************************************************
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 函数名称：wp_login_notify v1.0 by DH.huahua.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 函数作用：有登录wp后台就会email通知博主
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">******************************************************/
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">function wp_login_notify()
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">{
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> date_default_timezone_set(&amp;#39;PRC&amp;#39;);
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $admin_email = get_bloginfo (&amp;#39;admin_email&amp;#39;);
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $to = $admin_email;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $subject = &amp;#39;你的博客空间登录提醒&amp;#39;;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $message = &amp;#39;&amp;lt;p&amp;gt;你好！你的博客空间(&amp;#39; . get_option(&amp;#34;blogname&amp;#34;) . &amp;#39;)有登录！&amp;lt;/p&amp;gt;&amp;#39; .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;请确定是您自己的登录，以防别人攻击！登录信息如下：&amp;lt;/p&amp;gt;&amp;#39; .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录名：&amp;#39; . $_POST[&amp;#39;username&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录密码：&amp;#39; . $_POST[&amp;#39;password&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录时间：&amp;#39; . date(&amp;#34;Y-m-d H:i:s&amp;#34;) . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录IP：&amp;#39; . $_SERVER[&amp;#39;REMOTE_ADDR&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39;;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $wp_email = &amp;#39;no-reply@&amp;#39; . preg_replace(&amp;#39;#^www\.#&amp;#39;, &amp;#39;&amp;#39;, strtolower($_SERVER[&amp;#39;SERVER_NAME&amp;#39;]));
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $from = &amp;#34;From: \&amp;#34;&amp;#34; . get_option(&amp;#39;blogname&amp;#39;) . &amp;#34;\&amp;#34; &amp;lt;$wp_email&amp;gt;&amp;#34;;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $headers = &amp;#34;$from\nContent-Type: text/html; charset=&amp;#34; . get_option(&amp;#39;blog_charset&amp;#39;) . &amp;#34;\n&amp;#34;;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> wp_mail( $to, $subject, $message, $headers );
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">add_action(&amp;#39;wp_login&amp;#39;, &amp;#39;wp_login_notify&amp;#39;);
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="sd">/*****************************************************
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="sd"> 函数名称：wp_login_notify v1.0 by DH.huahua.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="sd"> 函数作用：有登录wp后台就会email通知博主
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="sd">******************************************************/&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">function&lt;/span> &lt;span class="nf">wp_login_notify&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">date_default_timezone_set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;PRC&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$admin_email&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">get_bloginfo&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;admin_email&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$to&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nv">$admin_email&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$subject&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;你的博客空间登录提醒&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;你好！你的博客空间(&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nx">get_option&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;blogname&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s1">&amp;#39;)有登录！&amp;lt;/p&amp;gt;&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;请确定是您自己的登录，以防别人攻击！登录信息如下：&amp;lt;/p&amp;gt;&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;登录名：&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;username&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;登录密码：&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;password&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;登录时间：&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nx">date&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Y-m-d H:i:s&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;登录IP：&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nv">$_SERVER&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;REMOTE_ADDR&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$wp_email&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;no-reply@&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nx">preg_replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;#^www\.#&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">strtolower&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$_SERVER&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;SERVER_NAME&amp;#39;&lt;/span>&lt;span class="p">]));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$from&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;From: &lt;/span>&lt;span class="se">\&amp;#34;&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nx">get_option&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;blogname&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="se">\&amp;#34;&lt;/span>&lt;span class="s2"> &amp;lt;&lt;/span>&lt;span class="si">$wp_email&lt;/span>&lt;span class="s2">&amp;gt;&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$headers&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">$from\nContent&lt;/span>&lt;span class="s2">-Type: text/html; charset=&amp;#34;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nx">get_option&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;blog_charset&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">wp_mail&lt;/span>&lt;span class="p">(&lt;/span> &lt;span class="nv">$to&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$subject&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$message&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$headers&lt;/span> &lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">add_action&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;wp_login&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;wp_login_notify&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/*****************************************************
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 函数名称：wp_login_failed_notify v1.0 by DH.huahua.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 函数作用：有错误登录wp后台就会email通知博主
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">******************************************************/
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">function wp_login_failed_notify()
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">{
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> date_default_timezone_set(&amp;#39;PRC&amp;#39;);
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $admin_email = get_bloginfo (&amp;#39;admin_email&amp;#39;);
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $to = $admin_email;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $subject = &amp;#39;你的博客空间登录错误警告&amp;#39;;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $message = &amp;#39;&amp;lt;p&amp;gt;你好！你的博客空间(&amp;#39; . get_option(&amp;#34;blogname&amp;#34;) . &amp;#39;)有登录错误！&amp;lt;/p&amp;gt;&amp;#39; .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;请确定是您自己的登录失误，以防别人攻击！登录信息如下：&amp;lt;/p&amp;gt;&amp;#39; .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录名：&amp;#39; . $_POST[&amp;#39;username&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录密码：&amp;#39; . $_POST[&amp;#39;password&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录时间：&amp;#39; . date(&amp;#34;Y-m-d H:i:s&amp;#34;) . &amp;#39;&amp;lt;p&amp;gt;&amp;#39; .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;&amp;lt;p&amp;gt;登录IP：&amp;#39; . $_SERVER[&amp;#39;REMOTE_ADDR&amp;#39;] . &amp;#39;&amp;lt;p&amp;gt;&amp;#39;;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $wp_email = &amp;#39;no-reply@&amp;#39; . preg_replace(&amp;#39;#^www\.#&amp;#39;, &amp;#39;&amp;#39;, strtolower($_SERVER[&amp;#39;SERVER_NAME&amp;#39;]));
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $from = &amp;#34;From: \&amp;#34;&amp;#34; . get_option(&amp;#39;blogname&amp;#39;) . &amp;#34;\&amp;#34; &amp;lt;$wp_email&amp;gt;&amp;#34;;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> $headers = &amp;#34;$from\nContent-Type: text/html; charset=&amp;#34; . get_option(&amp;#39;blog_charset&amp;#39;) . &amp;#34;\n&amp;#34;;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> wp_mail( $to, $subject, $message, $headers );
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">add_action(&amp;#39;wp_login_failed&amp;#39;, &amp;#39;wp_login_failed_notify&amp;#39;);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="sd">/*****************************************************
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="sd"> 函数名称：wp_login_failed_notify v1.0 by DH.huahua.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="sd"> 函数作用：有错误登录wp后台就会email通知博主
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="sd">******************************************************/&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">function&lt;/span> &lt;span class="nf">wp_login_failed_notify&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">date_default_timezone_set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;PRC&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$admin_email&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">get_bloginfo&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;admin_email&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$to&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nv">$admin_email&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$subject&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;你的博客空间登录错误警告&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;你好！你的博客空间(&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nx">get_option&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;blogname&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s1">&amp;#39;)有登录错误！&amp;lt;/p&amp;gt;&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;请确定是您自己的登录失误，以防别人攻击！登录信息如下：&amp;lt;/p&amp;gt;&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;登录名：&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;username&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;登录密码：&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;password&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;登录时间：&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nx">date&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Y-m-d H:i:s&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;登录IP：&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nv">$_SERVER&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;REMOTE_ADDR&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;p&amp;gt;&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$wp_email&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;no-reply@&amp;#39;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nx">preg_replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;#^www\.#&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">strtolower&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$_SERVER&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;SERVER_NAME&amp;#39;&lt;/span>&lt;span class="p">]));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$from&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;From: &lt;/span>&lt;span class="se">\&amp;#34;&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nx">get_option&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;blogname&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="se">\&amp;#34;&lt;/span>&lt;span class="s2"> &amp;lt;&lt;/span>&lt;span class="si">$wp_email&lt;/span>&lt;span class="s2">&amp;gt;&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$headers&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">$from\nContent&lt;/span>&lt;span class="s2">-Type: text/html; charset=&amp;#34;&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="nx">get_option&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;blog_charset&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">.&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">wp_mail&lt;/span>&lt;span class="p">(&lt;/span> &lt;span class="nv">$to&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$subject&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$message&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nv">$headers&lt;/span> &lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">add_action&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;wp_login_failed&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;wp_login_failed_notify&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>一个是登录成功的提醒，一个是登录失败的提醒，如果有人登录wordpress后台的时候就会在telegram的机器人中进行通知：&lt;/p>
@@ -363,17 +364,14 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">登录IP：24:4:2::
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>经过上边的配置，就可以在有人登录worpress后台的时候及时的通知我们，避免出现我上次遇到的情况，相对来说避免发生一些自己预想以外的事情。&lt;/p></description></item><item><title>禁用xmlrpc.php防止wordpress被暴力破解</title><link>https://konghanghang.github.io/iminling-pages/2023/disable-xmlrpc-php/</link><pubDate>Sun, 03 Sep 2023 09:07:36 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/disable-xmlrpc-php/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/09/xmlrpc-wordpress.jpg"
-loading="lazy"
->&lt;/p>
-&lt;p>很多刚接触wordpress的朋友估计和我一样，对于xmlrpc.php的了解几乎为0，这玩意儿是干嘛的？为什么它会导致wordpress被暴力破解？下面我们就先来认识一下xmlrpc.php是个什么东西。&lt;/p>
+&lt;/div>&lt;p>经过上边的配置，就可以在有人登录worpress后台的时候及时的通知我们，避免出现我上次遇到的情况，相对来说避免发生一些自己预想以外的事情。&lt;/p></description></item><item><title>禁用xmlrpc.php防止wordpress被暴力破解</title><link>https://konghanghang.github.io/iminling-pages/2023/disable-xmlrpc-php/</link><pubDate>Sun, 03 Sep 2023 09:07:36 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/disable-xmlrpc-php/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=NnVNTjhMWXJ5N2tkOGpzYWFnVWJuYnhhOGFtQnZmYzc2S3BzdDJhY29HUEUvUHU5TkZVRk90VkgyTzlHUzMyVDAvMDlXcDg9" alt="Featured image of post 禁用xmlrpc.php防止wordpress被暴力破解" />&lt;p>很多刚接触wordpress的朋友估计和我一样，对于xmlrpc.php的了解几乎为0，这玩意儿是干嘛的？为什么它会导致wordpress被暴力破解？下面我们就先来认识一下xmlrpc.php是个什么东西。&lt;/p>
 &lt;h2 id="什么是xmlrpcphp">什么是xmlrpc.php
 &lt;/h2>&lt;p>XML-RPC是支持WordPress与其他系统之间通信的规范。它通过使用HTTP作为传输机制和XML作为编码机制来标准化这些通信来实现此目的。例如，假设您想通过移动设备在您的网站上发帖，因为您的计算机不在附近。 您可以使用 xmlrpc.php 启用的远程访问功能来做到这一点。&lt;/p>
 &lt;p>在WordPress的早期版本中，默认情况下已关闭XML-RPC。但是自v3.5版本开始，默认情况下又启用它。这样做的主要原因是允许WordPress移动应用程序与WordPress安装进行对话通讯。&lt;/p>
 &lt;p>但是由于REST API已集成到WordPress核心中，因此xmlrpc.php文件不再用于此通信。相反，REST API用于与WordPress移动应用程序，桌面客户端，其他博客平台，WordPress.com（用于Jetpack插件）以及其他系统和服务进行通信。REST API-可与之交互的系统范围比xmlrpc.php所允许的大得多。此外，拥有更强的灵活性。&lt;/p>
 &lt;h2 id="经历">经历
 &lt;/h2>&lt;p>为什么我会知道这个玩意儿呢？因为在某一天的早上，我发现我的网站突然就多了两篇文章，并不是我写的，莫名其妙的就多了两篇，于是马上修改了管理用户的登录密码，防止别人再登录。之后便开始了此次被攻击的思考，我的密码设置的也并不简单，他们是怎么知道我的密码的呢？于是我就开始了查看请求日志，在nginx的日志中果然发现了一些端倪，有大量的请求在请求xmlrpc.php这个文件：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/09/2483c29419769aa149fc2cfcd9a35773.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RGdFaVV3bXgyNmpWcSt0aXIxeVRDTUVVY2tFaStNSkxibDUzK0U0L3NrczJKUEpvVmZJbysxWGd4cnROditaUVNxd00zNWs9"
 loading="lazy"
 >&lt;/p>
 &lt;p>于是我就去搜索了xmlrpc.php这个文件，不搜索不知道，一搜索吓一跳，md，肯定是这玩意儿导致我的网站多了两篇文章出来。于是开始了探索如何禁用之路。&lt;/p>

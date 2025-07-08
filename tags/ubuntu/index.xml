@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ubuntu on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/ubuntu/</link><description>Recent content in Ubuntu on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 17 Aug 2024 07:12:52 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/ubuntu/index.xml" rel="self" type="application/rss+xml"/><item><title>WSL2 Ubuntu开启SSH并配置远程登录</title><link>https://konghanghang.github.io/iminling-pages/2024/wsl2-ubuntu-open-ssh-remote-login/</link><pubDate>Sat, 17 Aug 2024 07:12:52 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/wsl2-ubuntu-open-ssh-remote-login/</guid><description>&lt;p>在公司有两台电脑，其中一台正常使用的工作电脑(A)，另一台(B)想要部署一些服务，当做一台服务器来使用，于是就是在B机器上启用了WSL服务，并安装了Ubuntu 22。但是这里遇到一个问题，我总不能一直远程桌面从A中来通过SSH操作B电脑，于是就开始折腾在B电脑开启Ubuntu的远程访问，下边记录一下折腾过程。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ubuntu on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/ubuntu/</link><description>Recent content in Ubuntu on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 17 Aug 2024 07:12:52 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/ubuntu/index.xml" rel="self" type="application/rss+xml"/><item><title>WSL2 Ubuntu开启SSH并配置远程登录</title><link>https://konghanghang.github.io/iminling-pages/2024/wsl2-ubuntu-open-ssh-remote-login/</link><pubDate>Sat, 17 Aug 2024 07:12:52 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/wsl2-ubuntu-open-ssh-remote-login/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=ektqWVRFVFhvR1dxYVh3L2tER0pPa0dsR00zZUxYZGJHbnNaY1lZankzNEpyMzgyT0ZoclN3bG5CQkVhajB6cjh0bVl3R0U9" alt="Featured image of post WSL2 Ubuntu开启SSH并配置远程登录" />&lt;p>在公司有两台电脑，其中一台正常使用的工作电脑(A)，另一台(B)想要部署一些服务，当做一台服务器来使用，于是就是在B机器上启用了WSL服务，并安装了Ubuntu 22。但是这里遇到一个问题，我总不能一直远程桌面从A中来通过SSH操作B电脑，于是就开始折腾在B电脑开启Ubuntu的远程访问，下边记录一下折腾过程。&lt;/p>
 &lt;h2 id="准备">准备
 &lt;/h2>&lt;p>A电脑需要有SSH远程访问工具，使用自带的powershell或者其他第三方的工具都是可以的。&lt;/p>
 &lt;p>B电脑需要开启WSL并安装好Ubuntu子程序。&lt;/p>
@@ -12,10 +12,10 @@
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">ai&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="nx">DESKTOP&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">KKMQ55S&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nx">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nx">apt&lt;/span>&lt;span class="err">$&lt;/span> &lt;span class="nx">sudo&lt;/span> &lt;span class="nx">apt&lt;/span> &lt;span class="nx">install&lt;/span> &lt;span class="nx">openssh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">server&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="nx">y&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Building&lt;/span> &lt;span class="nx">dependency&lt;/span> &lt;span class="nx">tree&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="nx">state&lt;/span> &lt;span class="nx">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:/etc/apt$ sudo apt install openssh-server -y
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading package lists... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Building dependency tree... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading state information... Done
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>等待安装成功后就可以对ssh服务进行启用：&lt;/p>
@@ -27,8 +27,8 @@
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$ sudo service ssh restart
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> * Restarting OpenBSD Secure Shell server sshd [ OK ]
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$ sudo service ssh restart
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> * Restarting OpenBSD Secure Shell server sshd &lt;span class="o">[&lt;/span> OK &lt;span class="o">]&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$ service ssh status
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> * sshd is running
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
@@ -45,13 +45,13 @@
 &lt;/span>&lt;span class="lnt">7
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ai&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">DESKTOP&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">KKMQ55S&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">sudo&lt;/span> &lt;span class="n">apt&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="n">net&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">tools&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Reading&lt;/span> &lt;span class="n">package&lt;/span> &lt;span class="n">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="n">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Setting&lt;/span> &lt;span class="n">up&lt;/span> &lt;span class="n">net&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">tools&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mf">1.60&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="n">git20181103&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="n">eebece&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="n">ubuntu5&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Processing&lt;/span> &lt;span class="n">triggers&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">man&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">db&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mf">2.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ai&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">DESKTOP&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">KKMQ55S&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">ifconfig&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">eth0&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">flags&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">4163&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">UP&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">BROADCAST&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">RUNNING&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">MULTICAST&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">mtu&lt;/span> &lt;span class="mi">1500&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">inet&lt;/span> &lt;span class="mf">172.17&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">33.211&lt;/span> &lt;span class="n">netmask&lt;/span> &lt;span class="mf">255.255&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">240.0&lt;/span> &lt;span class="n">broadcast&lt;/span> &lt;span class="mf">172.17&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">47.255&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$ sudo apt install net-tools
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading package lists... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Setting up net-tools &lt;span class="o">(&lt;/span>1.60+git20181103.0eebece-1ubuntu5&lt;span class="o">)&lt;/span> ...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Processing triggers &lt;span class="k">for&lt;/span> man-db &lt;span class="o">(&lt;/span>2.10.2-1&lt;span class="o">)&lt;/span> ...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$ ifconfig
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">eth0: &lt;span class="nv">flags&lt;/span>&lt;span class="o">=&lt;/span>4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu &lt;span class="m">1500&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 172.17.33.211 netmask 255.255.240.0 broadcast 172.17.47.255
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>如上，通过ifconfig命令查看到ubuntu机器的ip是172.17.33.211，那么可以在B机器中进行远程ubuntu机器，看一下是否可以正常远程：&lt;/p>
@@ -65,18 +65,18 @@
 &lt;/span>&lt;span class="lnt">6
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">C:\Users\ai001&amp;gt;ssh ai@172.17.33.211
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@172.17.33.211&amp;#39;s password:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.10.16.3-microsoft-standard-WSL2 x86_64)
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt;ssh ai@172.17.33.211
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@172.17.33.211&lt;span class="err">&amp;#39;&lt;/span>s password:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to Ubuntu 22.04.3 LTS &lt;span class="o">(&lt;/span>GNU/Linux 5.10.16.3-microsoft-standard-WSL2 x86_64&lt;span class="o">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last login: Fri Aug 16 16:15:43 2024 from 127.0.0.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last login: Fri Aug &lt;span class="m">16&lt;/span> 16:15:43 &lt;span class="m">2024&lt;/span> from 127.0.0.1
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>可以看到才已经正常开启了ssh并可以连接。&lt;/p>
 &lt;h2 id="其他机器访问">其他机器访问
 &lt;/h2>&lt;p>上边已经对WSL的Ubuntu开启了SSH访问，接下来还需要通过其他的机器来连接这个机器，连接示意图如下：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/08/B96A62FB450691107BCD008A6CD63A5D.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Ni9teHZsaWUwOGliZUkyc05OdTFxQmJzOUlwU0pFZkZwNnR0d2d5U2ZSMkgvL2M5Y1ZvL1dLQ2l1bThGYkRDUndyUlloVjQ9"
 loading="lazy"
 alt="wsl ubuntu"
 >&lt;/p>
@@ -97,15 +97,15 @@ alt="wsl ubuntu"
 &lt;/span>&lt;span class="lnt">9
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh interface portproxy add v4tov4 listenport=22 listenaddress=0.0.0.0 connectport=22 connectaddress=localhost
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh interface portproxy add v4tov4 &lt;span class="nv">listenport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">22&lt;/span> &lt;span class="nv">listenaddress&lt;/span>&lt;span class="o">=&lt;/span>0.0.0.0 &lt;span class="nv">connectport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">22&lt;/span> &lt;span class="nv">connectaddress&lt;/span>&lt;span class="o">=&lt;/span>localhost
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh interface portproxy show v4tov4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh interface portproxy show v4tov4
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">侦听 ipv4: 连接到 ipv4:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">地址 端口 地址 端口
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">--------------- ---------- --------------- ----------
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 22 localhost 22
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 &lt;span class="m">22&lt;/span> localhost &lt;span class="m">22&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>经过上边的步骤后，我们还需要对电脑B进行防火墙放行22端口的入站流量，命令如下，name可以自定义，我这里是对ssh放行的，所以取名字就叫ssh，&lt;a class="link" href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/netsh-advfirewall-firewall-control-firewall-behavior" target="_blank" rel="noopener"
@@ -115,7 +115,7 @@ alt="wsl ubuntu"
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh advfirewall firewall add rule name=ssh dir=in action=allow protocol=TCP localport=22
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh advfirewall firewall add rule &lt;span class="nv">name&lt;/span>&lt;span class="o">=&lt;/span>ssh &lt;span class="nv">dir&lt;/span>&lt;span class="o">=&lt;/span>in &lt;span class="nv">action&lt;/span>&lt;span class="o">=&lt;/span>allow &lt;span class="nv">protocol&lt;/span>&lt;span class="o">=&lt;/span>TCP &lt;span class="nv">localport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">22&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>然后就可以在电脑A通过电脑B的22端口访问到电脑B的WSL Ubuntu子系统了。&lt;/p>
@@ -127,9 +127,9 @@ alt="wsl ubuntu"
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">k@admin:~$ ssh ai@192.168.6.39
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.10.16.3-microsoft-standard-WSL2 x86_64)
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last login: Sat Aug 17 14:36:06 2024 from 172.17.32.1
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">k@admin:~$ ssh ai@192.168.6.39
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to Ubuntu 22.04.3 LTS &lt;span class="o">(&lt;/span>GNU/Linux 5.10.16.3-microsoft-standard-WSL2 x86_64&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last login: Sat Aug &lt;span class="m">17&lt;/span> 14:36:06 &lt;span class="m">2024&lt;/span> from 172.17.32.1
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -150,16 +150,16 @@ alt="wsl ubuntu"
 &lt;/span>&lt;span class="lnt">10
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh interface portproxy add v4tov4 listenport=18080 listenaddress=0.0.0.0 connectport=18080 connectaddress=172.17.33.211
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh interface portproxy add v4tov4 &lt;span class="nv">listenport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">18080&lt;/span> &lt;span class="nv">listenaddress&lt;/span>&lt;span class="o">=&lt;/span>0.0.0.0 &lt;span class="nv">connectport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">18080&lt;/span> &lt;span class="nv">connectaddress&lt;/span>&lt;span class="o">=&lt;/span>172.17.33.211
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh interface portproxy show all
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh interface portproxy show all
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">侦听 ipv4: 连接到 ipv4:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">地址 端口 地址 端口
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">--------------- ---------- --------------- ----------
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 22 localhost 22
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 18080 172.17.33.211 18080
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 &lt;span class="m">22&lt;/span> localhost &lt;span class="m">22&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 &lt;span class="m">18080&lt;/span> 172.17.33.211 &lt;span class="m">18080&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>如果对代理规则或者防火墙配置错误可以通过以下命令来进行删除，代理规则根据监听的端口和ip来进行删除，防火墙则通过name来进行删除。&lt;/p>
@@ -172,10 +172,10 @@ alt="wsl ubuntu"
 &lt;/span>&lt;span class="lnt">5
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh interface portproxy delete v4tov4 listenport=18080 listenaddress=0.0.0.0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh advfirewall firewall delete rule name=tomcat
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh interface portproxy delete v4tov4 &lt;span class="nv">listenport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">18080&lt;/span> &lt;span class="nv">listenaddress&lt;/span>&lt;span class="o">=&lt;/span>0.0.0.0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh advfirewall firewall delete rule &lt;span class="nv">name&lt;/span>&lt;span class="o">=&lt;/span>tomcat
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">已删除 1 规则。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">已删除 &lt;span class="m">1&lt;/span> 规则。
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">确定。
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -386,210 +386,4 @@ alt="wsl ubuntu"
 &lt;/div>&lt;p>整个安装过程也不是很麻烦，跟着官方的步骤走就可以了，这里记录一下自己的安装过程，方便以后快速安装。&lt;/p>
 &lt;p> &lt;/p>
 &lt;p> &lt;/p>
-&lt;p> &lt;/p></description></item><item><title>linux服务器快速安装docker和docker-compose</title><link>https://konghanghang.github.io/iminling-pages/2023/linux-install-docker/</link><pubDate>Fri, 09 Jun 2023 21:49:42 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/linux-install-docker/</guid><description>&lt;p>记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。&lt;/p>
-&lt;h2 id="ubuntu安装">ubuntu安装
-&lt;/h2>&lt;h3 id="卸载旧版">卸载旧版
-&lt;/h3>&lt;p>执行下边的命令&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="nx">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">ubuntu&lt;/span>&lt;span class="p">:~&lt;/span>&lt;span class="err">$&lt;/span> &lt;span class="nx">sudo&lt;/span> &lt;span class="nx">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">get&lt;/span> &lt;span class="nx">remove&lt;/span> &lt;span class="nx">docker&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">engine&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">io&lt;/span> &lt;span class="nx">containerd&lt;/span> &lt;span class="nx">runc&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Building&lt;/span> &lt;span class="nx">dependency&lt;/span> &lt;span class="nx">tree&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="nx">state&lt;/span> &lt;span class="nx">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">E&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">Unable&lt;/span> &lt;span class="nx">to&lt;/span> &lt;span class="nx">locate&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">engine&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>执行上边的命令清除以前的安装。&lt;/p>
-&lt;h3 id="设置源">设置源
-&lt;/h3>&lt;p>执行以下命令：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">sudo&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">update&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">sudo&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">install&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ca&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">certificates&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">curl&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">gnupg&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lsb&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">release&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 添加docker官方GPG key&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">curl&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">fsSL&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">gpg&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">o&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">keyrings&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">asc&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 执行&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">echo&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu &lt;/span>&lt;span class="se">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>&lt;span class="s2"> $(. /etc/os-release &amp;amp;&amp;amp; echo &amp;#34;&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;) stable&amp;#34;&lt;/span> &lt;span class="o">|&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sudo&lt;/span> &lt;span class="n">tee&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">dev&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">null&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>设置安装源。&lt;/p>
-&lt;h3 id="安装">安装
-&lt;/h3>&lt;p>先更新刚才安装的源，然后就可以执行安装了：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 更新
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get update
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 安装
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>上边的安装是安装最新版本，如果想安装特定版本则需要先查看有哪些可以安装的版本：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cache&lt;/span> &lt;span class="n">madison&lt;/span> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">16&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">15&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">14&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">13&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>找到版本后执行以下命令来进行安装：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 版本是上个命令输出的第个列5:20.10.16~3-0~ubuntu-focal
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce=&amp;lt;VERSION_STRING&amp;gt; docker-ce-cli=&amp;lt;VERSION_STRING&amp;gt; containerd.io docker-compose-plugin
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>安装后就可以使用了。&lt;/p>
-&lt;h3 id="不使用sudo">不使用sudo
-&lt;/h3>&lt;p>ubuntu的系统如果使用的不是root安装，每次运行命令都是需要使用sudo,相对来说是比较麻烦的，如果不想使用sudo，可以使用下面的命令来解决：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo groupadd docker
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[sudo] password for root:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">groupadd: group &amp;#39;docker&amp;#39; already exists
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo gpasswd -a ${USER} docker
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Adding user ubuntu to group docker
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ newgrp - docker
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>这样子使用起来就方便了很多。&lt;/p>
-&lt;h2 id="debain安装">debain安装
-&lt;/h2>&lt;p>前两步和ubuntu基本一样，删除旧版，然后设置源。&lt;/p>
-&lt;h3 id="删除旧版以及更新apt">删除旧版以及更新apt
-&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 删除旧版
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get remove docker docker-engine docker.io containerd runc
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 更新apt包索引
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get update
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="添加gpg">添加gpg
-&lt;/h3>&lt;p>执行以下命令添加gpg&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="c1"># mkdir -p /etc/apt/keyrings&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="c1"># curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>如果在添加gpg的时候报错：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">gpg: command not found
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>则可以先安装gpg：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@s9707:~# apt-get install gnupg gnupg2
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="设置仓库">设置仓库
-&lt;/h3>&lt;p>通过以下命令添加仓库&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="c1"># echo \&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian &lt;/span>&lt;span class="se">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>&lt;span class="s2"> $(. /etc/os-release &amp;amp;&amp;amp; echo &amp;#34;&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;) stable&amp;#34;&lt;/span> &lt;span class="o">|&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tee&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">dev&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">null&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>然后再次更新apt包索引：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get update
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="安装docker">安装docker
-&lt;/h3>&lt;p>接下来就是安装：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>整个安装过程也不是很麻烦，跟着官方的步骤走就可以了，这里记录一下自己的安装过程，方便以后快速安装。&lt;/p></description></item></channel></rss>
+&lt;p> &lt;/p></description></item></channel></rss>

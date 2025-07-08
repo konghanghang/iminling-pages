@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jdk17 on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/jdk17/</link><description>Recent content in Jdk17 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Tue, 03 Oct 2023 02:55:28 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/jdk17/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac快速安装jdk17环境</title><link>https://konghanghang.github.io/iminling-pages/2023/mac-install-jdk17/</link><pubDate>Tue, 03 Oct 2023 02:55:28 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/mac-install-jdk17/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/10/openjdk.jpg"
-loading="lazy"
->&lt;/p>
-&lt;p>对于java开发者来说jdk是再熟悉不过的了，在java圈还流行这样一句话：你发任你发，我用java8。jdk8是2013年发布的，是一个LTS版本，而在17年发布了jdk9之后，jdk的发布周期变化的更快了，很多开发者直呼学不动了。截止目前已经发布到jdk21了，关于jdk版本的发布可以参考wikipedia的&lt;a class="link" href="https://zh.wikipedia.org/wiki/Java%E7%89%88%E6%9C%AC%E6%AD%B7%E5%8F%B2" target="_blank" rel="noopener"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jdk17 on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/jdk17/</link><description>Recent content in Jdk17 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Tue, 03 Oct 2023 02:55:28 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/jdk17/index.xml" rel="self" type="application/rss+xml"/><item><title>Mac快速安装jdk17环境</title><link>https://konghanghang.github.io/iminling-pages/2023/mac-install-jdk17/</link><pubDate>Tue, 03 Oct 2023 02:55:28 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/mac-install-jdk17/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=bEt3WUtUZk13dFI3Z0FyckVUZGdnRDZNd1E0aVBaMDZPbVdZTm1RR1lsS3NtNWkyOWZ4UkI5R0g3ZFlVTjVxdWtzcDdkMjA9" alt="Featured image of post Mac快速安装jdk17环境" />&lt;p>对于java开发者来说jdk是再熟悉不过的了，在java圈还流行这样一句话：你发任你发，我用java8。jdk8是2013年发布的，是一个LTS版本，而在17年发布了jdk9之后，jdk的发布周期变化的更快了，很多开发者直呼学不动了。截止目前已经发布到jdk21了，关于jdk版本的发布可以参考wikipedia的&lt;a class="link" href="https://zh.wikipedia.org/wiki/Java%E7%89%88%E6%9C%AC%E6%AD%B7%E5%8F%B2" target="_blank" rel="noopener"
 >Java历史版本&lt;/a>来了解详细。我们今天要安装的是jdk17。&lt;/p>
 &lt;p>这么多jdk版本我们应该选择哪个来使用呢？我们先来看看jdk的版本收费情况：&lt;/p>
 &lt;ul>
@@ -14,9 +11,7 @@ loading="lazy"
 &lt;/ul>
 &lt;p>作为企业，很大一部分都是不想付费的，所以这也是为什么很多企业使用jdk8的8u202版本，并且不愿意升级的原因。而且jdk8是一个LTS版本，支持到2030年。而下一个LTS版本是jdk11，而jdk11又是收费的，很大一部分企业都不愿意使用，所以直到jdk17出来后，jdk又开始不收费了，而且jdk17是一个LTS版本，所以如果企业想要升级jdk，那么jdk17是一个很好的选择，oracel会支持jdk17到2029年。&lt;/p>
 &lt;p>为了体验jdk17以及为以后切换jdk17做准备，所以就需要我们来安装jdk17的开发环境。&lt;/p>
-&lt;p>mac可以选择安装Homebrew来快速安装jdk17，关于Homebrew的安装可以参考历史文章：&lt;a class="link" href="https://www.iminling.com/2023/10/02/265.html" title="Mac更换源更快速的安装Homebrew"
-target="_blank" rel="noopener"
->Mac更换源更快速的安装Homebrew&lt;/a>，这里就不再多说了，下边我们使用Homebrew来安装jdk。&lt;/p>
+&lt;p>mac可以选择安装Homebrew来快速安装jdk17，关于Homebrew的安装可以参考历史文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2023/mac-change-source-install-homebrew/" >Mac更换源更快速的安装Homebrew&lt;/a>，这里就不再多说了，下边我们使用Homebrew来安装jdk。&lt;/p>
 &lt;h2 id="安装">安装
 &lt;/h2>&lt;p>先搜索jdk版本：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -54,20 +49,20 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">14
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># ko @ MacMini in ~ [11:28:24]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">$&lt;/span> &lt;span class="n">brew&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&amp;gt;&lt;/span> &lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">For&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">system&lt;/span> &lt;span class="n">Java&lt;/span> &lt;span class="n">wrappers&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">find&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">JDK&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">symlink&lt;/span> &lt;span class="n">it&lt;/span> &lt;span class="n">with&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sudo&lt;/span> &lt;span class="n">ln&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">sfn&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">opt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">opt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">libexec&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">jdk&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">Library&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Java&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">JavaVirtualMachines&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">openjdk&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mf">17.j&lt;/span>&lt;span class="n">dk&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># ko @ MacMini in ~ [11:28:24]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ brew install openjdk@17
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">==&lt;/span>&amp;gt; openjdk@17
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">For the system Java wrappers to find this JDK, symlink it with
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> sudo ln -sfn /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">keg&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">only&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">which&lt;/span> &lt;span class="n">means&lt;/span> &lt;span class="n">it&lt;/span> &lt;span class="n">was&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">symlinked&lt;/span> &lt;span class="n">into&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">opt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">homebrew&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">because&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">an&lt;/span> &lt;span class="n">alternate&lt;/span> &lt;span class="n">version&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">another&lt;/span> &lt;span class="n">formula&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">openjdk@17 is keg-only, which means it was not symlinked into /opt/homebrew,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">because this is an alternate version of another formula.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">If&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">need&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">have&lt;/span> &lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span> &lt;span class="n">first&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">your&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">run&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">echo&lt;/span> &lt;span class="s1">&amp;#39;export PATH=&amp;#34;/opt/homebrew/opt/openjdk@17/bin:$PATH&amp;#34;&amp;#39;&lt;/span> &lt;span class="o">&amp;gt;&amp;gt;&lt;/span> &lt;span class="o">~/.&lt;/span>&lt;span class="n">zshrc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">If you need to have openjdk@17 first in your PATH, run:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">echo&lt;/span> &lt;span class="s1">&amp;#39;export PATH=&amp;#34;/opt/homebrew/opt/openjdk@17/bin:$PATH&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; ~/.zshrc
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">For&lt;/span> &lt;span class="n">compilers&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">find&lt;/span> &lt;span class="n">openjdk&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="mi">17&lt;/span> &lt;span class="n">you&lt;/span> &lt;span class="n">may&lt;/span> &lt;span class="n">need&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">set&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">export&lt;/span> &lt;span class="n">CPPFLAGS&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;-I/opt/homebrew/opt/openjdk@17/include&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">For compilers to find openjdk@17 you may need to set:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">export&lt;/span> &lt;span class="nv">CPPFLAGS&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;-I/opt/homebrew/opt/openjdk@17/include&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>经过上边的命令后，jdk17就已经安装好了。&lt;/p>
@@ -80,7 +75,7 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">3
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># konghang @ MacMini in ~ [10:37:47]
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># konghang @ MacMini in ~ [10:37:47]&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ sudo ln -sfn /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Password:
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
@@ -94,10 +89,10 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># JDK&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># JDK&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#export JAVA_HOME=&amp;#34;/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">JAVA_HOME&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;/Library/Java/JavaVirtualMachines/openjdk-17.jdk/Contents/Home&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">export&lt;/span> &lt;span class="n">PATH&lt;/span>&lt;span class="o">=$&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">JAVA_HOME&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">bin&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">PATH&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">JAVA_HOME&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;/Library/Java/JavaVirtualMachines/openjdk-17.jdk/Contents/Home&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nv">JAVA_HOME&lt;/span>&lt;span class="si">}&lt;/span>/bin:&lt;span class="nv">$PATH&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>然后刷新变量，然后查看jdk版本看是否成功：&lt;/p>
@@ -113,14 +108,14 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">8
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># ko @ MacMini in ~ [10:43:55]
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ source .bash_profile
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># ko @ MacMini in ~ [10:43:55]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ &lt;span class="nb">source&lt;/span> .bash_profile
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># ko @ MacMini in ~ [10:43:59]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># ko @ MacMini in ~ [10:43:59]&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ java -version
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">openjdk version &amp;#34;17.0.8.1&amp;#34; 2023-08-24
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">OpenJDK Runtime Environment Homebrew (build 17.0.8.1+0)
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">OpenJDK 64-Bit Server VM Homebrew (build 17.0.8.1+0, mixed mode, sharing)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">openjdk version &lt;span class="s2">&amp;#34;17.0.8.1&amp;#34;&lt;/span> 2023-08-24
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">OpenJDK Runtime Environment Homebrew &lt;span class="o">(&lt;/span>build 17.0.8.1+0&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">OpenJDK 64-Bit Server VM Homebrew &lt;span class="o">(&lt;/span>build 17.0.8.1+0, mixed mode, sharing&lt;span class="o">)&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>看到当前的环境下使用的是jdk17了，截止到这里jdk17就已经安装成功了。接下来就可以使用jdk来进行开发和研究了。&lt;/p></description></item></channel></rss>

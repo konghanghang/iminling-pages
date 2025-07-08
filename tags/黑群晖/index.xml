@@ -1,10 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>黑群晖 on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/%E9%BB%91%E7%BE%A4%E6%99%96/</link><description>Recent content in 黑群晖 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Mon, 16 Sep 2024 10:00:29 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/%E9%BB%91%E7%BE%A4%E6%99%96/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/</link><pubDate>Mon, 16 Sep 2024 10:00:29 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/</guid><description>&lt;p>前段时间通过pve安装&lt;a class="link" href="https://www.iminling.com/2024/pve-install-ikuai" title="Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"
-target="_blank" rel="noopener"
->ikuai&lt;/a>,&lt;a class="link" href="https://www.iminling.com/2024/pve-install-openwrt" title="Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式"
-target="_blank" rel="noopener"
->openwrt&lt;/a>以及&lt;a class="link" href="https://www.iminling.com/2024/pve-use-ct-template-install-lxc-docker" title="Proxmox VE(PVE)8.0使用CT模板创建LXC版docker服务"
-target="_blank" rel="noopener"
->使用lxc安装了docker&lt;/a>,之后就一直稳定使用，J4125上有一个2T的硬盘，于是就想着折腾一下在上边安装一下黑群晖，体验一下nas系统。于是就又开始了折腾之路，又学习了很多知识。下边就记录一下我折腾的过程。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>黑群晖 on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/%E9%BB%91%E7%BE%A4%E6%99%96/</link><description>Recent content in 黑群晖 on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Mon, 16 Sep 2024 10:00:29 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/%E9%BB%91%E7%BE%A4%E6%99%96/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/</link><pubDate>Mon, 16 Sep 2024 10:00:29 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=NFRXQWhja0FLK28xVDVKMjg3V1dLL0xOYi9sYmloRVIra2YveWJQNVNTY1NVempCcDZMUjNrKzI1NkZmL3o0WlJJTzI2TGc9" alt="Featured image of post Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘" />&lt;p>前段时间通过pve安装&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-install-ikuai/" >ikuai&lt;/a>,&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-install-openwrt/" >openwrt&lt;/a>以及&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-use-ct-template-install-lxc-docker/" >使用lxc安装了docker&lt;/a>,之后就一直稳定使用，J4125上有一个2T的硬盘，于是就想着折腾一下在上边安装一下黑群晖，体验一下nas系统。于是就又开始了折腾之路，又学习了很多知识。下边就记录一下我折腾的过程。&lt;/p>
 &lt;h2 id="准备">准备
 &lt;/h2>&lt;p>其实在开始装nas之前我看了很多教程，里边只是提供安装过程，并提供对应的安装包。说实在的，虽然很贴心，但是每个人的主机不尽相同，适合他的nas包不一定适合我，那么自己应该选择什么nas包呢？他们基本都没有说明，但是基本都是安装DS918+。于是在b站找到了一个&lt;a class="link" href="https://www.bilibili.com/video/BV1KE421N7mN" target="_blank" rel="noopener"
 >版本选择教程&lt;/a>，腾讯文档地址：&lt;a class="link" href="https://docs.qq.com/sheet/DYXhtcVRPaXRCY0tv" target="_blank" rel="noopener"
@@ -14,7 +8,7 @@ target="_blank" rel="noopener"
 &lt;h2 id="安装">安装
 &lt;/h2>&lt;h3 id="新建虚拟机">新建虚拟机
 &lt;/h3>&lt;p>下载好镜像后就需要在pve中进行新建虚拟机了。步骤和openwrt差不多。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/604C610F0F9AB44B9C0176E5C7753C51.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UW5tdlgzclNrZVdHd2FNU2hBSVlEOExGMG93WEdnbW5oczJjbXFNaGlRYlExTGpOZEhqNm9JazZhTFFtVDFFUk40UFNMVUE9"
 loading="lazy"
 alt="new vm"
 >&lt;/p>
@@ -29,7 +23,7 @@ alt="new vm"
 &lt;p>经过上边已经创建好了一个虚拟机，下边还需要上传刚才下载的rr镜像。&lt;/p>
 &lt;h3 id="镜像上传">镜像上传
 &lt;/h3>&lt;p>如图的位置进行上传。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/BC97614C54342FD608F4DC6371CAC5A2.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Mk9kNFJMNWJvTUhFRDZOL0dkVXFIVzlRQjdrV2kvNmtGTllBN3kwWEJTWVcxK1FpRmtEZjhYV2NFL3lBRjFFRTNNMnRHV009"
 loading="lazy"
 alt="upload iso"
 >&lt;/p>
@@ -39,7 +33,7 @@ alt="upload iso"
 &lt;p>总线设备选sata，磁盘映像默认就是刚看到的那个未使用的磁盘。其他的默认就可以了。&lt;/p>
 &lt;h3 id="硬盘直通">硬盘直通
 &lt;/h3>&lt;p>经过上边的设置基本就可以了，此时还需要给nas添加一个磁盘。在pve的shell中通过命令找到我的固态盘ls -l /dev/disk/by-id/：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/A2C2455053EAB75DD05961B46B8B8144.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aC9La1lEV1pSUHhsK1ZWcHZPN1hzL0JGQWExcjhnOEtPdUJWd3R0cnFyY2p3bEg2KzRMQ1lHSGNkRW9WWFIvRlkyNk9KMDA9"
 loading="lazy"
 alt="disk"
 >&lt;/p>
@@ -56,13 +50,13 @@ alt="disk"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>执行完成后就可以看到新添加的磁盘了：
-&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/C9EC9466FC5A73F50BD85C622D9B7EB7.png"
+&lt;img src="https://images.iminling.com/app/hide.php?key=dmlMc2RYVnRoTHNrNDV3UDlaNi80bDAzOUF3QzVoaVpiRXhzQ2w5VHFJTVdBRWErS2VDM1JtRHQ0ZWp6aExpaEZlWmZXNUU9"
 loading="lazy"
 alt="nas vm"
 >&lt;/p>
 &lt;p>然后修改启动顺序后就可以启动了。&lt;/p>
 &lt;p>把sata0设置为第一位：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/6BA2533C829AF79C9E75BBCDEBD11983.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=THJaK0tLOGhrR1QxRjdXczNDcVIrZEhSY2FoeStlTmE5cUswZDVzKytvMlk5djFUN1ppRnNKVENtNWU3S2JoMU5SZ2xnNTg9"
 loading="lazy"
 alt="nas "
 >&lt;/p>
@@ -79,69 +73,69 @@ alt="nas "
 &lt;p>正常开机后，可以再次在&lt;code>控制台&lt;/code>看到让访问&lt;code>ip:5000&lt;/code>的端口，此时说明安装已经ok了。&lt;/p>
 &lt;h2 id="nas初始化">NAS初始化
 &lt;/h2>&lt;p>接下来就是访问ip:5000来进行NAS的初始化,我这里的ip是192.1681.42:5000&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/592F95F353A14370E1FF9074D6FDFEA0.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=R0M1WXkrTnZTeGdUb1BPQzlENVhJNmZVK21td1A0T05rdG5PVGFUVm50cVVpV2hwUE05TERpUHg0WVE5YmZwZUZrdDIxRXc9"
 loading="lazy"
 alt="sa6400 1"
 >&lt;/p>
 &lt;p>安装。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/49DADB749C25BD32C29BE8EB53F3CA20.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RGczYXZIWDlzZ0wrWmdETGFzWWZLVEVCaWZBaTIvNmVNOUlhdFplQ1F5bXFkTWw4S09INTBYekJjNUNNOURIVk5aTUhSdEE9"
 loading="lazy"
 alt="nas pat"
 >&lt;/p>
 &lt;p>选择&lt;code>引导编译阶段&lt;/code>下载的pat文件。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/5B271AB0441EC5953E419CA1D3BD98AD.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=VHduNWdkN2QyY2RocGEvbGNzOHBWelY1QXVESU5renFEWmU2TFA4N293dk14STQxQTVpNXZqWlFFQTkxcFNKZnZ5Mm5tb3c9"
 loading="lazy"
 alt="sa6400 clean disk"
 >&lt;/p>
 &lt;p>提示会删除硬盘数据，继续进行确认。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/0FE9CABE0F4CA60A3B935A85DC221EE4.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=NmtEZ1ZGOE1SbXJlVENkbTFYQTBQaGFRVUJVVmdXWExPR3N3RmwvcVpITnJnNXJ6c1ZMSVRsUEd1RDNOVDlVM1FDYXNmZmc9"
 loading="lazy"
 alt="sa6400 install"
 >&lt;/p>
 &lt;p>等待安装。安装后就是重启，提示大概需要10分钟，实际上我等了3分钟就可以了。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/5AD9C906151D6CBF02C59A81F8A8186A.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=bjNUT2U1c1QvOHpVWDc5ZEJMQ3Jic1pCRU01VGhDZ1piR1FlNjEwR3BqTTd3eVZzTjlJMThWTTFjZ0lRY0xzcVJSV0dGMkE9"
 loading="lazy"
 alt="sa6400 reboot"
 >&lt;/p>
 &lt;p>重启完成后就会提示安装组件：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/E215646EE5D97151C416C9479AA3B453.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=VW54V3VOcDcvYVBFRnFQQjlSb1NIdVNKUDdhQmh3djlaZjR3bWZzMS95am1XMitiWlo3OWhYYW5nWU01L1FEaXMxbHU3elE9"
 loading="lazy"
 alt="sa6400 install"
 >&lt;/p>
 &lt;p>套件安装完成后进入安装引导：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/6B22933AFE0F4B3EC3E3F60BF343449B.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=eGRka3lwRmVHcTFrZVl4QThxbXNELzFaSHJhcjNua2hUWUo4SjVwU0VtcmR3YTQ5aEY4ZmRrbEZFZ3kvSnZMSHJZVWJ1YVE9"
 loading="lazy"
 alt="sa6400 install"
 >&lt;/p>
 &lt;p>进入用户名和密码设置：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/4ECBD6C45D45FC7B2CA25112E5709433.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UlI0WG8xcytRZm5KT1orMDYxcjBxbENyWjNiUEIvdHhSUjdKREd6RlUranBhOThtNjZVeENWclZqdmNValRWREx1ZHBCekk9"
 loading="lazy"
 alt="sa6400 username setting"
 >&lt;/p>
 &lt;p>接下来的更新就不需要了自动安装了：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/CA6984342AD234286EC09ACB05D7D124.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aHVuLzFGaFFtTU1HKzE1VE8raitFNVErZjFkZGVXMmtzQnRCdTBVK1VucVRkZnNKYUZJVVIvaXJpNFd5Y2dkNVNodlUxblU9"
 loading="lazy"
 alt="sa6400 udpate options"
 >&lt;/p>
 &lt;p>账号创建跳过：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/DE2ED5DABB970424565042BA51AFBECA.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=MU5XZFJXZ09VR2xVZkt3dS8vNEVzWitTQXIrOGJoVmxaZnVzb0tkUlBURk4xZVFXMDQzVHMwaU1EaXhrUVJPTU9nQlhieHc9"
 loading="lazy"
 alt="sa6400 account"
 >&lt;/p>
 &lt;p>用户体验不勾选，提交：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/6CB3DAD099AD85BF0C5B38556171A378.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=QW5DMC95SVl5Q0pwSEpTSDV1aEw4b0ZZY1MwY2lWR1ZsTWo0U01UM2JPYmN2SlpqK3dOcHFkNzRkdW96Q3diQ1FNS213c1k9"
 loading="lazy"
 alt="sa6400 install"
 >&lt;/p>
 &lt;p>经过上边的一系列设置，终于来到了nas的桌面中。&lt;/p>
 &lt;h3 id="桌面设置">桌面设置
 &lt;/h3>&lt;p>群晖套件：不用了，谢谢。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/619B1456828D5B4ABDE474DCA9FA912A.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Q01pd2g3dFo0SmVOdWdvUUNjQjY2Q0h3TTJTZk9PSnl0OXJyTVJQUm9qeFRXUW0ydnNFZnJrSDBMNnVDUkNFWHNablFjbHc9"
 loading="lazy"
 alt="synology setting"
 >&lt;/p>
 &lt;p>双重2FA不开启：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/3B72584B496288EDBEE9D40F5CCF434F.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=b2oyVytyblo2TnV2dUlzQzBReHE1RlVkTFJOYk5paXBDbmlRekR3dmcwYXFjc1cvZjZPZGJzRVQyeHQ2WmxmNXNEQnFIL3M9"
 loading="lazy"
 alt="synology 2fa"
 >&lt;/p>
@@ -149,48 +143,48 @@ alt="synology 2fa"
 &lt;p>终于都设置完了。。。&lt;/p>
 &lt;h3 id="磁盘设置">磁盘设置
 &lt;/h3>&lt;p>经过上边的设置，终于提示要设置磁盘了。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/FA77EE697520348E4EB0A53A7315E90C.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=SjhTMHBELzNqUjFYZ01xbEtZSWY0R1BoOHBTUnFrdnl1WkJBMTBHdk0rRTZHWkFQb0x0blZUeXBDeGxGQUkreXBvVEI1ZDQ9"
 loading="lazy"
 alt="sa6400 disk setting"
 >&lt;/p>
 &lt;p>点击开始进行设置：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/29DA9906BF517DAD5CD40C564A4C1FDF.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dFNTWWc5QWthUEVZMTVObFEybnZGQk1JSEROMVZ4YnkvU2pRbHJTMkVBQUw2SHBkditpb3c0ZXJmVEtDTEdYUjdDTTFXakU9"
 loading="lazy"
 alt="sa6400 raid"
 >&lt;/p>
 &lt;p>raid类别根据自己的需要选择，我这里 就一个硬盘，直接选择basic类型。继续下一步,选择硬盘，我这里需要一个硬盘：
-&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/0566CFC1A0979B154AB4A32DB2A11DAE.png"
+&lt;img src="https://images.iminling.com/app/hide.php?key=dmlMc2RYVnRoTHNrNDV3UDlaNi80akJEMnpsS0lhckd5MXd1VXllcHVoM0o2aDE2ZGcyQjZVeEl2bGNJYm1NWUdCTXVmWkk9"
 loading="lazy"
 alt="sa6400 disk select"
 >&lt;/p>
 &lt;p>继续下一步，跳过硬盘检查：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/322E5645680C559C7DA307C31005E93A.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Unk0QjN0amt5MmZUb1ByamhJMVJjVHljQWNCUXA2bjVyV2hCUURaMXpZcndqNnRZemhSRnRHdDFvUmh4aUwyOW9xWDhIdjA9"
 loading="lazy"
 alt="sa6400 disk check"
 >&lt;/p>
 &lt;p>继续下一步配置磁盘容量：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/C7B2995636E2C4F9EF0686AC8325858D.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=NGtJSkQrTXRhOVFBbXJySVNDbjZjSmJVUFdCMTU0aS9GTkl0cjR6NVpFK0pIcFJXQitKTVBHL1ZoQ1pqTjBPTnRPa2VTYlU9"
 loading="lazy"
 alt="sa6400 disk cap"
 >&lt;/p>
 &lt;p>直接最大化，整个都分配给nas，继续下一步文件系统：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/35A3D7B70E1BB725A8097A9E22963569.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dExZaDkwMkc3ZitQdkFtdmFabVZYcUdPelFjRlZZRHM3OGdXeGRwc0lVRi9POTVMR2Jja2xZNFcvdUtkMFFhYVNGSFJlR2M9"
 loading="lazy"
 alt="sa6400 disk file type"
 >&lt;/p>
 &lt;p>这里我就选择他推荐的，继续下一步配置加密：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/3315AE268C487E5A8E1677C552A44706.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Rkx4TUllS2M5S3Z2RTFJY3BteUxsQ1BlSFZIVG5FOWJZL2orVzNBRTNmMFBEZjRMRVRTZmtLejREV3ZtRlJjSWFYSlZ6QUE9"
 loading="lazy"
 alt="sa6400 file encrypt"
 >&lt;/p>
 &lt;p>我这里不加密，默认，继续下一步，对刚才的配置在进行概览：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/F7CDBAB9BA5852495DCB9108238CEF4B.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aWtSeWdQRnQxazhMN0RNdGFCdytHa2Q5V3ZjNW5LU2ZPdXNnOGg2UkVUWG1sK3dGZmdzbm5kZTRxb2ZmL3NrTllGdnV0ZTA9"
 loading="lazy"
 alt="sa6400 configuration check"
 >&lt;/p>
 &lt;p>配置无问题应用就可以了。终于整个nas都配置后了。&lt;/p>
 &lt;p>最后再上一个桌面显示的图片：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/EB7EF2C081536198F30240284EFD2D04.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=TlUwdWJRaGpRZ2llajJNcFpuYU1oZjByWGFCTml2Qjl4R0EvRk5FRkROMThwaldUTFJhODlrNk94RkZZbnZpWlkrS29ab1U9"
 loading="lazy"
 alt="sa6400 desktop"
 >&lt;/p>

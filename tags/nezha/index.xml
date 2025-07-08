@@ -1,15 +1,13 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nezha on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/nezha/</link><description>Recent content in Nezha on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Tue, 28 Mar 2023 06:48:18 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/nezha/index.xml" rel="self" type="application/rss+xml"/><item><title>哪吒面板迁移</title><link>https://konghanghang.github.io/iminling-pages/2023/nezha-pannel-migrate/</link><pubDate>Tue, 28 Mar 2023 06:48:18 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/nezha-pannel-migrate/</guid><description>&lt;p>安装哪吒面板的机器是RN的一台小鸡，本来安装的是ubuntu系统，想换成debian系统，所以需要对哪吒面板的数据进行迁移，所以写此篇文章记录迁移过程。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nezha on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/nezha/</link><description>Recent content in Nezha on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Tue, 28 Mar 2023 06:48:18 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/nezha/index.xml" rel="self" type="application/rss+xml"/><item><title>哪吒面板迁移</title><link>https://konghanghang.github.io/iminling-pages/2023/nezha-pannel-migrate/</link><pubDate>Tue, 28 Mar 2023 06:48:18 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/nezha-pannel-migrate/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=M05ad0RZN21FSGFHQWRWZlBhRjdJejRteTdYV1dUUml0eWRmbTExY1Ntc2lHcXIrSmlLVmF1VHc1NnJqQzVkKytPZFJNWVE9" alt="Featured image of post 哪吒面板迁移" />&lt;p>安装哪吒面板的机器是RN的一台小鸡，本来安装的是ubuntu系统，想换成debian系统，所以需要对哪吒面板的数据进行迁移，所以写此篇文章记录迁移过程。&lt;/p>
 &lt;h2 id="迁移准备">迁移准备
 &lt;/h2>&lt;p>参考哪吒面板官方的wiki，所有的数据都存放在&lt;code>/opt/nezha&lt;/code>目录下，所以需要备份一下此目录，下载到本地。&lt;/p>
-&lt;blockquote>
-&lt;h4 id="如何进行数据迁移、备份恢复？" tabindex="-1">
-如何进行数据迁移、备份恢复？&lt;a class="header-anchor" href="https://nezha.wiki/guide/q5.html#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%E3%80%81%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%EF%BC%9F" aria-hidden="true">#&lt;/a>
-&lt;/h4>
+&lt;p>&lt;a class="link" href="https://nezha.wiki/guide/q5.html#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%E3%80%81%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%EF%BC%9F" target="_blank" rel="noopener"
+>如何进行数据迁移、备份恢复？&lt;/a>&lt;/p>
 &lt;ol>
 &lt;li>先运行一键脚本，选择&lt;code>停止面板&lt;/code>&lt;/li>
 &lt;li>在旧服务器中打包&lt;code>/opt/nezha&lt;/code>文件夹，复制到新环境相同位置解压&lt;/li>
 &lt;li>在新环境中运行一键脚本，选择&lt;code>启动面板&lt;/code>&lt;/li>
-&lt;/ol>&lt;/blockquote>
+&lt;/ol>
 &lt;h2 id="迁移">迁移
 &lt;/h2>&lt;p>将备份数据上传到新的服务器，解压到&lt;code>/opt/nezha&lt;/code>目录下。通过&lt;code>nezha.sh&lt;/code>启动面板。&lt;/p>
 &lt;p>配置通过域名访问面板：&lt;/p>

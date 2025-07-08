@@ -1,12 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pve on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/pve/</link><description>Recent content in Pve on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 09 Feb 2025 03:15:47 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/pve/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox VE(PVE)8.0安装飞牛私有云fnOS – NAS</title><link>https://konghanghang.github.io/iminling-pages/2025/install-fnos-nas/</link><pubDate>Sun, 09 Feb 2025 03:15:47 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2025/install-fnos-nas/</guid><description>&lt;p>&lt;a class="link" href="https://www.fnnas.com" target="_blank" rel="noopener"
->飞牛nas&lt;/a>系统出来也有段时间了，一个很不错的nas系统，在以前的文章中也介绍过&lt;a class="link" href="https://www.iminling.com/2024/pve-install-nas" title="Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘"
-target="_blank" rel="noopener"
->群晖nas系统的安装&lt;/a>，今天就来一次尝鲜，安装一下fnOS，看一下群晖的系统和飞牛的系统有什么区别。接下来就开始安装折腾之路 - 飞牛私有云fnOS nas安装。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pve on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/pve/</link><description>Recent content in Pve on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 09 Feb 2025 03:15:47 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/pve/index.xml" rel="self" type="application/rss+xml"/><item><title>Proxmox VE(PVE)8.0安装飞牛私有云fnOS – NAS</title><link>https://konghanghang.github.io/iminling-pages/2025/install-fnos-nas/</link><pubDate>Sun, 09 Feb 2025 03:15:47 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2025/install-fnos-nas/</guid><description>&lt;img src="https://images.iminling.com/i/2025/01/08/d3c94bd7539929c05abffe55a8295ea2.webp" alt="Featured image of post Proxmox VE(PVE)8.0安装飞牛私有云fnOS – NAS" />&lt;p>&lt;a class="link" href="https://www.fnnas.com" target="_blank" rel="noopener"
+>飞牛nas&lt;/a>系统出来也有段时间了，一个很不错的nas系统，在以前的文章中也介绍过&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/" >群晖nas系统的安装&lt;/a>，今天就来一次尝鲜，安装一下fnOS，看一下群晖的系统和飞牛的系统有什么区别。接下来就开始安装折腾之路 - 飞牛私有云fnOS nas安装。&lt;/p>
 &lt;h2 id="pve配置">PVE配置
 &lt;/h2>&lt;p>首先要先去&lt;a class="link" href="https://www.fnnas.com/download" target="_blank" rel="noopener"
->飞牛官网&lt;/a>把官方镜像ISO文件给下载下来，上传到pve中，这个还有不清楚的可以参考&lt;a class="link" href="https://www.iminling.com/2024/pve-install-ikuai" title="Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"
-target="_blank" rel="noopener"
->Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡&lt;/a>中对爱快ISO文件上传的步骤。&lt;/p>
+>飞牛官网&lt;/a>把官方镜像ISO文件给下载下来，上传到pve中，这个还有不清楚的可以参考&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-install-ikuai/" >Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡&lt;/a>中对爱快ISO文件上传的步骤。&lt;/p>
 &lt;h3 id="常规">常规
 &lt;/h3>&lt;p>修改为自己想要的vmid 以及 名称，我这里名称填了103，可以修改自己喜欢的，比如&lt;code>飞牛NAS&lt;/code>等。其他默认。&lt;/p>
 &lt;p>[&lt;img src="https://images.iminling.com/i/2025/01/08/37837647596f9bb193eb5478ce1cde0f.webp"
@@ -150,16 +146,16 @@ alt="fnos disk"
 &lt;/span>&lt;span class="lnt">10
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">aa@FnOS:/$ df -h
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">aa@FnOS:/$ df -h
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem Size Used Avail Use% Mounted on
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 1.9G 0 1.9G 0% /dev
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 1.9G &lt;span class="m">0&lt;/span> 1.9G 0% /dev
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 394M 7.7M 386M 2% /run
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda2 63G 9.1G 51G 16% /
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 2.0G 1.4M 2.0G 1% /dev/shm
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M 0 5.0M 0% /run/lock
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M &lt;span class="m">0&lt;/span> 5.0M 0% /run/lock
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">trimafs 1.8T 1.7T 58G 97% /fs
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/mapper/trim_f9cc7969_89e3_4c0b_9857_bcec3a1144d7-0 1.8T 1.7T 58G 97% /vol1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 394M 0 394M 0% /run/user/1000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 394M &lt;span class="m">0&lt;/span> 394M 0% /run/user/1000
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>可以看到飞牛的系统是放在&lt;code>/&lt;/code>目录下的，63G, 而我直通的硬盘有两个目录&lt;code>/fs&lt;/code>和&lt;code>/vol1&lt;/code>。&lt;/p>
@@ -167,45 +163,24 @@ alt="fnos disk"
 &lt;div class="ace-line ace-line old-record-id-YajHdl9ZxoJsJIxpfL0uECmrsrb">
 在我的文件自己创建的目录在/fs目录下：
 &lt;/div>
-&lt;div>
-```
+```bash
 aa@FnOS:/fs/1000/ftp$ ls
 docker download
 ```
 &lt;p>
 直接使用应用商店安装的qb下载目录可以在qb的设置里看到，实际是在&lt;code>/vol1&lt;/code>下。&lt;/div>
-&lt;div>
-```
 aa@FnOS:/var/apps/qBittorrent/shares$ ls -alh
 total 8.0K
 drwxr-xr-x 2 root root 4.0K Jan 7 23:05 .
 drwxr-xr-x 6 root root 4.0K Jan 7 23:05 ..
 lrwxrwxrwx 1 root root 27 Jan 7 23:05 qBittorrent -> /vol1/@appshare/qBittorrent
-```
-&lt;p>
 其他的目录信息大家根据情况再去研究。
-&lt;/p>
-&lt;/div>
-&lt;h3>
-qb下载
-&lt;/h3>
-&lt;div>
-默认qb只能访问安装后设置里配置的目录，如果想要改变qb下载的目录，则需要去&lt;code>系统设置-应用&lt;/code>找到qb，添加一下允许它访问的文件目录。
-&lt;/div>&lt;/div>
-&lt;p>
-&lt;/p>
+&lt;h3 id="qb下载">qb下载
+&lt;/h3>&lt;p>默认qb只能访问安装后设置里配置的目录，如果想要改变qb下载的目录，则需要去&lt;code>系统设置-应用&lt;/code>找到qb，添加一下允许它访问的文件目录。&lt;/p>
 &lt;p>
 下边是完整后的桌面预览图
 &lt;/p>
-&lt;p>
-![fnos complete](https://images.iminling.com/i/2025/01/08/3b89be1091025e546acd4224064abb0a.webp)
-&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/</link><pubDate>Mon, 16 Sep 2024 10:00:29 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/</guid><description>&lt;p>前段时间通过pve安装&lt;a class="link" href="https://www.iminling.com/2024/pve-install-ikuai" title="Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"
-target="_blank" rel="noopener"
->ikuai&lt;/a>,&lt;a class="link" href="https://www.iminling.com/2024/pve-install-openwrt" title="Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式"
-target="_blank" rel="noopener"
->openwrt&lt;/a>以及&lt;a class="link" href="https://www.iminling.com/2024/pve-use-ct-template-install-lxc-docker" title="Proxmox VE(PVE)8.0使用CT模板创建LXC版docker服务"
-target="_blank" rel="noopener"
->使用lxc安装了docker&lt;/a>,之后就一直稳定使用，J4125上有一个2T的硬盘，于是就想着折腾一下在上边安装一下黑群晖，体验一下nas系统。于是就又开始了折腾之路，又学习了很多知识。下边就记录一下我折腾的过程。&lt;/p>
+![fnos complete](https://images.iminling.com/i/2025/01/08/3b89be1091025e546acd4224064abb0a.webp)</description></item><item><title>Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/</link><pubDate>Mon, 16 Sep 2024 10:00:29 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-install-nas/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=NFRXQWhja0FLK28xVDVKMjg3V1dLL0xOYi9sYmloRVIra2YveWJQNVNTY1NVempCcDZMUjNrKzI1NkZmL3o0WlJJTzI2TGc9" alt="Featured image of post Proxmox VE(PVE)8.0安装黑群晖NAS并直通硬盘" />&lt;p>前段时间通过pve安装&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-install-ikuai/" >ikuai&lt;/a>,&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-install-openwrt/" >openwrt&lt;/a>以及&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-use-ct-template-install-lxc-docker/" >使用lxc安装了docker&lt;/a>,之后就一直稳定使用，J4125上有一个2T的硬盘，于是就想着折腾一下在上边安装一下黑群晖，体验一下nas系统。于是就又开始了折腾之路，又学习了很多知识。下边就记录一下我折腾的过程。&lt;/p>
 &lt;h2 id="准备">准备
 &lt;/h2>&lt;p>其实在开始装nas之前我看了很多教程，里边只是提供安装过程，并提供对应的安装包。说实在的，虽然很贴心，但是每个人的主机不尽相同，适合他的nas包不一定适合我，那么自己应该选择什么nas包呢？他们基本都没有说明，但是基本都是安装DS918+。于是在b站找到了一个&lt;a class="link" href="https://www.bilibili.com/video/BV1KE421N7mN" target="_blank" rel="noopener"
 >版本选择教程&lt;/a>，腾讯文档地址：&lt;a class="link" href="https://docs.qq.com/sheet/DYXhtcVRPaXRCY0tv" target="_blank" rel="noopener"
@@ -215,7 +190,7 @@ target="_blank" rel="noopener"
 &lt;h2 id="安装">安装
 &lt;/h2>&lt;h3 id="新建虚拟机">新建虚拟机
 &lt;/h3>&lt;p>下载好镜像后就需要在pve中进行新建虚拟机了。步骤和openwrt差不多。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/604C610F0F9AB44B9C0176E5C7753C51.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UW5tdlgzclNrZVdHd2FNU2hBSVlEOExGMG93WEdnbW5oczJjbXFNaGlRYlExTGpOZEhqNm9JazZhTFFtVDFFUk40UFNMVUE9"
 loading="lazy"
 alt="new vm"
 >&lt;/p>
@@ -230,7 +205,7 @@ alt="new vm"
 &lt;p>经过上边已经创建好了一个虚拟机，下边还需要上传刚才下载的rr镜像。&lt;/p>
 &lt;h3 id="镜像上传">镜像上传
 &lt;/h3>&lt;p>如图的位置进行上传。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/BC97614C54342FD608F4DC6371CAC5A2.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Mk9kNFJMNWJvTUhFRDZOL0dkVXFIVzlRQjdrV2kvNmtGTllBN3kwWEJTWVcxK1FpRmtEZjhYV2NFL3lBRjFFRTNNMnRHV009"
 loading="lazy"
 alt="upload iso"
 >&lt;/p>
@@ -240,7 +215,7 @@ alt="upload iso"
 &lt;p>总线设备选sata，磁盘映像默认就是刚看到的那个未使用的磁盘。其他的默认就可以了。&lt;/p>
 &lt;h3 id="硬盘直通">硬盘直通
 &lt;/h3>&lt;p>经过上边的设置基本就可以了，此时还需要给nas添加一个磁盘。在pve的shell中通过命令找到我的固态盘ls -l /dev/disk/by-id/：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/A2C2455053EAB75DD05961B46B8B8144.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aC9La1lEV1pSUHhsK1ZWcHZPN1hzL0JGQWExcjhnOEtPdUJWd3R0cnFyY2p3bEg2KzRMQ1lHSGNkRW9WWFIvRlkyNk9KMDA9"
 loading="lazy"
 alt="disk"
 >&lt;/p>
@@ -257,13 +232,13 @@ alt="disk"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>执行完成后就可以看到新添加的磁盘了：
-&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/C9EC9466FC5A73F50BD85C622D9B7EB7.png"
+&lt;img src="https://images.iminling.com/app/hide.php?key=dmlMc2RYVnRoTHNrNDV3UDlaNi80bDAzOUF3QzVoaVpiRXhzQ2w5VHFJTVdBRWErS2VDM1JtRHQ0ZWp6aExpaEZlWmZXNUU9"
 loading="lazy"
 alt="nas vm"
 >&lt;/p>
 &lt;p>然后修改启动顺序后就可以启动了。&lt;/p>
 &lt;p>把sata0设置为第一位：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/6BA2533C829AF79C9E75BBCDEBD11983.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=THJaK0tLOGhrR1QxRjdXczNDcVIrZEhSY2FoeStlTmE5cUswZDVzKytvMlk5djFUN1ppRnNKVENtNWU3S2JoMU5SZ2xnNTg9"
 loading="lazy"
 alt="nas "
 >&lt;/p>
@@ -280,69 +255,69 @@ alt="nas "
 &lt;p>正常开机后，可以再次在&lt;code>控制台&lt;/code>看到让访问&lt;code>ip:5000&lt;/code>的端口，此时说明安装已经ok了。&lt;/p>
 &lt;h2 id="nas初始化">NAS初始化
 &lt;/h2>&lt;p>接下来就是访问ip:5000来进行NAS的初始化,我这里的ip是192.1681.42:5000&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/592F95F353A14370E1FF9074D6FDFEA0.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=R0M1WXkrTnZTeGdUb1BPQzlENVhJNmZVK21td1A0T05rdG5PVGFUVm50cVVpV2hwUE05TERpUHg0WVE5YmZwZUZrdDIxRXc9"
 loading="lazy"
 alt="sa6400 1"
 >&lt;/p>
 &lt;p>安装。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/49DADB749C25BD32C29BE8EB53F3CA20.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RGczYXZIWDlzZ0wrWmdETGFzWWZLVEVCaWZBaTIvNmVNOUlhdFplQ1F5bXFkTWw4S09INTBYekJjNUNNOURIVk5aTUhSdEE9"
 loading="lazy"
 alt="nas pat"
 >&lt;/p>
 &lt;p>选择&lt;code>引导编译阶段&lt;/code>下载的pat文件。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/5B271AB0441EC5953E419CA1D3BD98AD.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=VHduNWdkN2QyY2RocGEvbGNzOHBWelY1QXVESU5renFEWmU2TFA4N293dk14STQxQTVpNXZqWlFFQTkxcFNKZnZ5Mm5tb3c9"
 loading="lazy"
 alt="sa6400 clean disk"
 >&lt;/p>
 &lt;p>提示会删除硬盘数据，继续进行确认。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/0FE9CABE0F4CA60A3B935A85DC221EE4.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=NmtEZ1ZGOE1SbXJlVENkbTFYQTBQaGFRVUJVVmdXWExPR3N3RmwvcVpITnJnNXJ6c1ZMSVRsUEd1RDNOVDlVM1FDYXNmZmc9"
 loading="lazy"
 alt="sa6400 install"
 >&lt;/p>
 &lt;p>等待安装。安装后就是重启，提示大概需要10分钟，实际上我等了3分钟就可以了。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/5AD9C906151D6CBF02C59A81F8A8186A.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=bjNUT2U1c1QvOHpVWDc5ZEJMQ3Jic1pCRU01VGhDZ1piR1FlNjEwR3BqTTd3eVZzTjlJMThWTTFjZ0lRY0xzcVJSV0dGMkE9"
 loading="lazy"
 alt="sa6400 reboot"
 >&lt;/p>
 &lt;p>重启完成后就会提示安装组件：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/E215646EE5D97151C416C9479AA3B453.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=VW54V3VOcDcvYVBFRnFQQjlSb1NIdVNKUDdhQmh3djlaZjR3bWZzMS95am1XMitiWlo3OWhYYW5nWU01L1FEaXMxbHU3elE9"
 loading="lazy"
 alt="sa6400 install"
 >&lt;/p>
 &lt;p>套件安装完成后进入安装引导：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/6B22933AFE0F4B3EC3E3F60BF343449B.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=eGRka3lwRmVHcTFrZVl4QThxbXNELzFaSHJhcjNua2hUWUo4SjVwU0VtcmR3YTQ5aEY4ZmRrbEZFZ3kvSnZMSHJZVWJ1YVE9"
 loading="lazy"
 alt="sa6400 install"
 >&lt;/p>
 &lt;p>进入用户名和密码设置：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/4ECBD6C45D45FC7B2CA25112E5709433.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UlI0WG8xcytRZm5KT1orMDYxcjBxbENyWjNiUEIvdHhSUjdKREd6RlUranBhOThtNjZVeENWclZqdmNValRWREx1ZHBCekk9"
 loading="lazy"
 alt="sa6400 username setting"
 >&lt;/p>
 &lt;p>接下来的更新就不需要了自动安装了：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/CA6984342AD234286EC09ACB05D7D124.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aHVuLzFGaFFtTU1HKzE1VE8raitFNVErZjFkZGVXMmtzQnRCdTBVK1VucVRkZnNKYUZJVVIvaXJpNFd5Y2dkNVNodlUxblU9"
 loading="lazy"
 alt="sa6400 udpate options"
 >&lt;/p>
 &lt;p>账号创建跳过：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/DE2ED5DABB970424565042BA51AFBECA.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=MU5XZFJXZ09VR2xVZkt3dS8vNEVzWitTQXIrOGJoVmxaZnVzb0tkUlBURk4xZVFXMDQzVHMwaU1EaXhrUVJPTU9nQlhieHc9"
 loading="lazy"
 alt="sa6400 account"
 >&lt;/p>
 &lt;p>用户体验不勾选，提交：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/6CB3DAD099AD85BF0C5B38556171A378.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=QW5DMC95SVl5Q0pwSEpTSDV1aEw4b0ZZY1MwY2lWR1ZsTWo0U01UM2JPYmN2SlpqK3dOcHFkNzRkdW96Q3diQ1FNS213c1k9"
 loading="lazy"
 alt="sa6400 install"
 >&lt;/p>
 &lt;p>经过上边的一系列设置，终于来到了nas的桌面中。&lt;/p>
 &lt;h3 id="桌面设置">桌面设置
 &lt;/h3>&lt;p>群晖套件：不用了，谢谢。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/619B1456828D5B4ABDE474DCA9FA912A.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Q01pd2g3dFo0SmVOdWdvUUNjQjY2Q0h3TTJTZk9PSnl0OXJyTVJQUm9qeFRXUW0ydnNFZnJrSDBMNnVDUkNFWHNablFjbHc9"
 loading="lazy"
 alt="synology setting"
 >&lt;/p>
 &lt;p>双重2FA不开启：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/3B72584B496288EDBEE9D40F5CCF434F.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=b2oyVytyblo2TnV2dUlzQzBReHE1RlVkTFJOYk5paXBDbmlRekR3dmcwYXFjc1cvZjZPZGJzRVQyeHQ2WmxmNXNEQnFIL3M9"
 loading="lazy"
 alt="synology 2fa"
 >&lt;/p>
@@ -350,110 +325,104 @@ alt="synology 2fa"
 &lt;p>终于都设置完了。。。&lt;/p>
 &lt;h3 id="磁盘设置">磁盘设置
 &lt;/h3>&lt;p>经过上边的设置，终于提示要设置磁盘了。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/FA77EE697520348E4EB0A53A7315E90C.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=SjhTMHBELzNqUjFYZ01xbEtZSWY0R1BoOHBTUnFrdnl1WkJBMTBHdk0rRTZHWkFQb0x0blZUeXBDeGxGQUkreXBvVEI1ZDQ9"
 loading="lazy"
 alt="sa6400 disk setting"
 >&lt;/p>
 &lt;p>点击开始进行设置：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/29DA9906BF517DAD5CD40C564A4C1FDF.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dFNTWWc5QWthUEVZMTVObFEybnZGQk1JSEROMVZ4YnkvU2pRbHJTMkVBQUw2SHBkditpb3c0ZXJmVEtDTEdYUjdDTTFXakU9"
 loading="lazy"
 alt="sa6400 raid"
 >&lt;/p>
 &lt;p>raid类别根据自己的需要选择，我这里 就一个硬盘，直接选择basic类型。继续下一步,选择硬盘，我这里需要一个硬盘：
-&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/0566CFC1A0979B154AB4A32DB2A11DAE.png"
+&lt;img src="https://images.iminling.com/app/hide.php?key=dmlMc2RYVnRoTHNrNDV3UDlaNi80akJEMnpsS0lhckd5MXd1VXllcHVoM0o2aDE2ZGcyQjZVeEl2bGNJYm1NWUdCTXVmWkk9"
 loading="lazy"
 alt="sa6400 disk select"
 >&lt;/p>
 &lt;p>继续下一步，跳过硬盘检查：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/322E5645680C559C7DA307C31005E93A.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Unk0QjN0amt5MmZUb1ByamhJMVJjVHljQWNCUXA2bjVyV2hCUURaMXpZcndqNnRZemhSRnRHdDFvUmh4aUwyOW9xWDhIdjA9"
 loading="lazy"
 alt="sa6400 disk check"
 >&lt;/p>
 &lt;p>继续下一步配置磁盘容量：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/C7B2995636E2C4F9EF0686AC8325858D.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=NGtJSkQrTXRhOVFBbXJySVNDbjZjSmJVUFdCMTU0aS9GTkl0cjR6NVpFK0pIcFJXQitKTVBHL1ZoQ1pqTjBPTnRPa2VTYlU9"
 loading="lazy"
 alt="sa6400 disk cap"
 >&lt;/p>
 &lt;p>直接最大化，整个都分配给nas，继续下一步文件系统：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/35A3D7B70E1BB725A8097A9E22963569.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dExZaDkwMkc3ZitQdkFtdmFabVZYcUdPelFjRlZZRHM3OGdXeGRwc0lVRi9POTVMR2Jja2xZNFcvdUtkMFFhYVNGSFJlR2M9"
 loading="lazy"
 alt="sa6400 disk file type"
 >&lt;/p>
 &lt;p>这里我就选择他推荐的，继续下一步配置加密：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/3315AE268C487E5A8E1677C552A44706.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Rkx4TUllS2M5S3Z2RTFJY3BteUxsQ1BlSFZIVG5FOWJZL2orVzNBRTNmMFBEZjRMRVRTZmtLejREV3ZtRlJjSWFYSlZ6QUE9"
 loading="lazy"
 alt="sa6400 file encrypt"
 >&lt;/p>
 &lt;p>我这里不加密，默认，继续下一步，对刚才的配置在进行概览：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/F7CDBAB9BA5852495DCB9108238CEF4B.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aWtSeWdQRnQxazhMN0RNdGFCdytHa2Q5V3ZjNW5LU2ZPdXNnOGg2UkVUWG1sK3dGZmdzbm5kZTRxb2ZmL3NrTllGdnV0ZTA9"
 loading="lazy"
 alt="sa6400 configuration check"
 >&lt;/p>
 &lt;p>配置无问题应用就可以了。终于整个nas都配置后了。&lt;/p>
 &lt;p>最后再上一个桌面显示的图片：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/09/EB7EF2C081536198F30240284EFD2D04.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=TlUwdWJRaGpRZ2llajJNcFpuYU1oZjByWGFCTml2Qjl4R0EvRk5FRkROMThwaldUTFJhODlrNk94RkZZbnZpWlkrS29ab1U9"
 loading="lazy"
 alt="sa6400 desktop"
 >&lt;/p>
-&lt;p>以上就是pve安装黑群晖的折腾记录。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0使用CT模板创建LXC版docker服务</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-use-ct-template-install-lxc-docker/</link><pubDate>Wed, 27 Mar 2024 15:28:11 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-use-ct-template-install-lxc-docker/</guid><description>&lt;p>前边已经分享了&lt;a class="link" href="https://www.iminling.com/2024/03/23/459.html" title="畅网J4125安装Proxmox VE(PVE)8.0"
-target="_blank" rel="noopener"
->pve的安装&lt;/a>，pve下&lt;a class="link" href="https://www.iminling.com/2024/03/24/480.html" title="Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡"
-target="_blank" rel="noopener"
->安装爱快(ikuai)&lt;/a>以及pve下&lt;a class="link" href="https://www.iminling.com/2024/03/24/506.html" title="Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式"
-target="_blank" rel="noopener"
->安装openwrt&lt;/a>实现旁路由，还想要弄一个docker来跑一些其他的服务，docker的安装有两种方式，一种是装一个linux的虚拟机，然后在里边来跑docker,另一种就是今天要介绍的使用CT模板来创建LXC容器跑docker。&lt;/p>
+&lt;p>以上就是pve安装黑群晖的折腾记录。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0使用CT模板创建LXC版docker服务</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-use-ct-template-install-lxc-docker/</link><pubDate>Wed, 27 Mar 2024 15:28:11 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-use-ct-template-install-lxc-docker/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=aXJqeW9LcUVTSmRtV2N0TXhRc05EZEpDQXpLTU5oWEtLcW5CejJNa0R0SW0zalI2ZDN1MDVrcUp4Znd3RWtHK1V0em9KeFU9" alt="Featured image of post Proxmox VE(PVE)8.0使用CT模板创建LXC版docker服务" />&lt;p>前边已经分享了&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/j4125-install-pve/" >PVE的安装&lt;/a>，pve下&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-install-ikuai/" >安装爱快(ikuai)&lt;/a>以及pve下&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/pve-install-openwrt/" >安装openwrt&lt;/a>实现旁路由，还想要弄一个docker来跑一些其他的服务，docker的安装有两种方式，一种是装一个linux的虚拟机，然后在里边来跑docker,另一种就是今天要介绍的使用CT模板来创建LXC容器跑docker。&lt;/p>
 &lt;h2 id="ct模板下载">CT模板下载
 &lt;/h2>&lt;p>我这里使用的是debain12来当作模板，可以在pve里下载该模板。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/7E92FF62DB65F518A96602F5399B44F8.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=TzJJVm5XRjNrN1JRMGFZYTlnY3RTSWxwNVB2YXI5V2N0b2ZVYVpSdmFaaW5FTzdPYWFQQk14SzZZQ3RQUTl2cDZxeDY1Z1E9"
 loading="lazy"
 alt="pve ct debain"
 >&lt;/p>
 &lt;h2 id="创建ct">创建CT
 &lt;/h2>&lt;h3 id="常规">常规
 &lt;/h3>&lt;p>点击&lt;code>创建CT&lt;/code>,这里的主机名随便给一个，因为我这里是要专门来运行docker,所以我这里填：docker, 密码是这个容器的登录密码，一定要牢记。&lt;strong>另外要把无特权的容器取消勾选&lt;/strong>。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/A59C08C68890457E48A611F260EE0AAB.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=YmVpMHVUeVovMHZzMWd5bklhdERmTWU4TmhXNTdxRzlsZlBPOFliczMvdVpJaTA2MnlhSEtIemJuTVRLSUV6UkRxVW83Szg9"
 loading="lazy"
 alt="pve ct docker common"
 >&lt;/p>
 &lt;h3 id="模板">模板
 &lt;/h3>&lt;p>模板选择下载的debian模板&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/64903720B307C55D2EDE57D31A257AEC.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=MU5XZFJXZ09VR2xVZkt3dS8vNEVzYmRqV1JUYWdaZCtDWjlmTG9aWnpvWHJ2K0JqWmZSRHVxMVRTQ2lrRmUzWmV6OUNLcnc9"
 loading="lazy"
 alt="pve ct docker template"
 >&lt;/p>
 &lt;h3 id="磁盘">磁盘
 &lt;/h3>&lt;p>磁盘大小根据自己的实际需要给&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/BE6319C63E45A2E647B33499D7EE94D6.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=ZXZqajRmS2xTN3dreUhxWXM4ZG9wdElSVmNWMlB1L3BYUFpONzJudGpnMjUwaENkU0llWWZHRkplUzVZWk5CTlNtKytpdEU9"
 loading="lazy"
 alt="pve ct docker disk"
 >&lt;/p>
 &lt;h3 id="cpu">CPU
 &lt;/h3>&lt;p>cpu把j4125的4核都给过去&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/EA0406A5D024B0A4FB377E63F01993B7.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RWxKcnBENTFsa3RROE1uS1dFZkM2ZnAxVWJUdFVDUWVsZk1FZWZ4S3pLYk9ZdWVadzNHQ0xOKzczMjdjOEwxMUJuWURzdEU9"
 loading="lazy"
 alt="pve ct docker cpu"
 >&lt;/p>
 &lt;h3 id="内存">内存
 &lt;/h3>&lt;p>我这里先给2GB，后续根据需求再添加&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/90DC6043C619243EBE3F0AB48A9015AD.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=eFlxVkQrWjJYSGJhVDF1eWhmUy9LMXFlZUtzQ28wQXFIZ1JzUU84b0VIQllSS0Z3eUs3SHZYdTdKN1dBSUUyWDNBdWEvTlk9"
 loading="lazy"
 alt="pve ct docker ram"
 >&lt;/p>
 &lt;h3 id="网络">网络
 &lt;/h3>&lt;p>我这里手动指定了ip，可以使用dhcp自动分配ip&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/91E1F0C50CC80365DAD6B7A22C1EB17F.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Y2FYY1hHdHZaYjB0OFdmdklWNEF0TlpoOU53c1pQeVBYdHlLd3c4SkRuUWozZ0FyT1N0cUYrdEFwT05zZW1VdjR6d1Z0aEE9"
 loading="lazy"
 alt="pve ct docker network"
 >&lt;/p>
 &lt;h3 id="dns">DNS
 &lt;/h3>&lt;p>dns默认&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/DB074575B8092E3523636E4BBDE443B0.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=V0hrWXB3bkFYQXY4bjArODQ5NW9KaVVYbDhKaEZzVWpESE85N1Y5RXJ4ZEdHTDZNTGpkeFJ2ejBjNEtza1VabzB5cytOb3c9"
 loading="lazy"
 alt="pve ct docker dns"
 >&lt;/p>
 &lt;h3 id="确认">确认
 &lt;/h3>&lt;p>刚才设置的一些信息的预览&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/214E2A31E399F754F2DB04C2A57BFBED.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UHVPZkRvYkllMlN2SzRMa09qTXcxTTFkRHFLRFF4V0lFd1l6bGRMUGt6K0FyYkN1R3l2VDlQRWVBa0MydHUwV2kzWG9yYnM9"
 loading="lazy"
 alt="pve ct docker confirm"
 >&lt;/p>
@@ -466,13 +435,7 @@ alt="pve ct docker function"
 >&lt;/p>
 &lt;h3 id="lxc配置文件">LXC配置文件
 &lt;/h3>&lt;p>还需要进入pve的shell,对刚创建的LXC容器的配置文件进行修改，位置：/etc/pve/lxc,此时里边应该只有1个配置文件，文件名对应创建的lxc容器在pve里的id。我的是102.conf&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>需要在后边再添加几行：&lt;/p>
+&lt;p>需要在后边再添加几行：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -483,11 +446,11 @@ alt="pve ct docker function"
 &lt;/span>&lt;span class="lnt">6
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">lxc.apparmor.profile: unconfined # 表示容器内的进程将不受任何 AppArmor 限制
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">lxc.apparmor.profile: unconfined &lt;span class="c1"># 表示容器内的进程将不受任何 AppArmor 限制&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: cgroup:rw
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: proc:rw
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: sys:rw
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.cap.drop: # 用于指定容器内进程的能力限制，允许进程执行一些特定的操作，例如修改系统时间、挂载文件系统等
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.cap.drop: &lt;span class="c1"># 用于指定容器内进程的能力限制，允许进程执行一些特定的操作，例如修改系统时间、挂载文件系统等&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.cgroup.devices.allow: a
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -512,16 +475,16 @@ alt="pve ct docker function"
 &lt;/span>&lt;span class="lnt">16
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@pve:/etc/pve/lxc# cat 102.conf
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@pve:/etc/pve/lxc# cat 102.conf
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">arch: amd64
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cores: 4
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">features: fuse=1,mount=nfs;cifs,nesting=1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cores: &lt;span class="m">4&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">features: &lt;span class="nv">fuse&lt;/span>&lt;span class="o">=&lt;/span>1,mount&lt;span class="o">=&lt;/span>nfs&lt;span class="p">;&lt;/span>cifs,nesting&lt;span class="o">=&lt;/span>&lt;span class="m">1&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">hostname: docker
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">memory: 4096
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net0: name=eth0,bridge=vmbr0,firewall=1,gw=192.168.1.253,hwaddr=BA:64:EF:29:04:A6,ip=192.168.1.22/24,type=veth
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">memory: &lt;span class="m">4096&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net0: &lt;span class="nv">name&lt;/span>&lt;span class="o">=&lt;/span>eth0,bridge&lt;span class="o">=&lt;/span>vmbr0,firewall&lt;span class="o">=&lt;/span>1,gw&lt;span class="o">=&lt;/span>192.168.1.253,hwaddr&lt;span class="o">=&lt;/span>BA:64:EF:29:04:A6,ip&lt;span class="o">=&lt;/span>192.168.1.22/24,type&lt;span class="o">=&lt;/span>veth
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ostype: debian
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">rootfs: local-lvm:vm-102-disk-0,size=30G
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">swap: 512
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">rootfs: local-lvm:vm-102-disk-0,size&lt;span class="o">=&lt;/span>30G
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">swap: &lt;span class="m">512&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.apparmor.profile: unconfined
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: cgroup:rw
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lxc.mount.auto: proc:rw
@@ -541,7 +504,7 @@ alt="pve ct docker function"
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@docker:/etc/apt# cat sources.list
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@docker:/etc/apt# cat sources.list
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://mirrors.ustc.edu.cn/debian bookworm main contrib
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://mirrors.ustc.edu.cn/debian bookworm-updates main contrib
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://mirrors.ustc.edu.cn/debian-security bookworm-security main contrib
@@ -563,17 +526,17 @@ alt="pve ct docker function"
 &lt;/span>&lt;span class="lnt">11
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="c1"># apt update&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Hit&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">1&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">mirrors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ustc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">edu&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cn&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">debian&lt;/span> &lt;span class="n">bookworm&lt;/span> &lt;span class="n">InRelease&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Get&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">2&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">mirrors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ustc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">edu&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cn&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">debian&lt;/span> &lt;span class="n">bookworm&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">updates&lt;/span> &lt;span class="n">InRelease&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mf">55.4&lt;/span> &lt;span class="n">kB&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Get&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">3&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">mirrors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ustc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">edu&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cn&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">debian&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">security&lt;/span> &lt;span class="n">bookworm&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">security&lt;/span> &lt;span class="n">InRelease&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mf">48.0&lt;/span> &lt;span class="n">kB&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Get&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">4&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">mirrors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ustc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">edu&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cn&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">debian&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">security&lt;/span> &lt;span class="n">bookworm&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">security&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">main&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">148&lt;/span> &lt;span class="n">kB&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Hit&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">5&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">debian&lt;/span> &lt;span class="n">bookworm&lt;/span> &lt;span class="n">InRelease&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Fetched&lt;/span> &lt;span class="mi">251&lt;/span> &lt;span class="n">kB&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="n">s&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">228&lt;/span> &lt;span class="n">kB&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Reading&lt;/span> &lt;span class="n">package&lt;/span> &lt;span class="n">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="n">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Building&lt;/span> &lt;span class="n">dependency&lt;/span> &lt;span class="n">tree&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="n">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Reading&lt;/span> &lt;span class="n">state&lt;/span> &lt;span class="n">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="n">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="mi">51&lt;/span> &lt;span class="n">packages&lt;/span> &lt;span class="n">can&lt;/span> &lt;span class="n">be&lt;/span> &lt;span class="n">upgraded&lt;/span>&lt;span class="o">.&lt;/span> &lt;span class="n">Run&lt;/span> &lt;span class="s1">&amp;#39;apt list --upgradable&amp;#39;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">see&lt;/span> &lt;span class="n">them&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@docker:/etc/apt# apt update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Hit:1 https://mirrors.ustc.edu.cn/debian bookworm InRelease
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Get:2 https://mirrors.ustc.edu.cn/debian bookworm-updates InRelease &lt;span class="o">[&lt;/span>55.4 kB&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Get:3 https://mirrors.ustc.edu.cn/debian-security bookworm-security InRelease &lt;span class="o">[&lt;/span>48.0 kB&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Get:4 https://mirrors.ustc.edu.cn/debian-security bookworm-security/main amd64 Packages &lt;span class="o">[&lt;/span>&lt;span class="m">148&lt;/span> kB&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Hit:5 https://download.docker.com/linux/debian bookworm InRelease
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Fetched &lt;span class="m">251&lt;/span> kB in 1s &lt;span class="o">(&lt;/span>&lt;span class="m">228&lt;/span> kB/s&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading package lists... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Building dependency tree... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading state information... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">51&lt;/span> packages can be upgraded. Run &lt;span class="s1">&amp;#39;apt list --upgradable&amp;#39;&lt;/span> to see them.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>可见已经替换成功。&lt;/p>
@@ -587,7 +550,7 @@ alt="pve ct docker function"
 &lt;/span>&lt;span class="lnt">3
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PermitRootLogin yes
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PermitRootLogin yes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PubkeyAuthentication yes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">AuthorizedKeysFile .ssh/authorized_keys
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
@@ -603,10 +566,10 @@ alt="pve ct docker function"
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@docker:~# date
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sun Mar 24 07:04:09 UTC 2024
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@docker:~# date
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sun Mar &lt;span class="m">24&lt;/span> 07:04:09 UTC &lt;span class="m">2024&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@docker:~# date -R
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sun, 24 Mar 2024 07:04:11 +0000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sun, &lt;span class="m">24&lt;/span> Mar &lt;span class="m">2024&lt;/span> 07:04:11 +0000
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>修改为北京时间：&lt;/p>
@@ -623,24 +586,19 @@ alt="pve ct docker function"
 &lt;/span>&lt;span class="lnt">9
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@docker:~# timedatectl set-timezone Asia/Shanghai
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@docker:~# timedatectl set-timezone Asia/Shanghai
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@docker:~# timedatectl
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Local time: Sun 2024-03-24 15:06:22 CST
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Universal time: Sun 2024-03-24 07:06:22 UTC
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> RTC time: n/a
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Time zone: Asia/Shanghai (CST, +0800)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Time zone: Asia/Shanghai &lt;span class="o">(&lt;/span>CST, +0800&lt;span class="o">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">System clock synchronized: yes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> NTP service: inactive
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> RTC in local TZ: no
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> RTC in &lt;span class="nb">local&lt;/span> TZ: no
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>可以看到已成功设置为北京时间了。&lt;/p>
-&lt;p>整个LXC容器已设置完成。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0换中科大源</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-change-ustc-source/</link><pubDate>Tue, 26 Mar 2024 23:45:43 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-change-ustc-source/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/B42FD7FF691A2DA49E72BE3C533CF000.webp"
-loading="lazy"
->&lt;/p>
-&lt;p>前边介绍了&lt;a class="link" href="https://www.iminling.com/2024/03/23/459.html" title="畅网J4125安装Proxmox VE(PVE)8.0"
-target="_blank" rel="noopener"
->PVE的安装&lt;/a>，Proxmox VE(PVE)8.0的底层使用的是debian12，默认的源在国外下载速度非常慢，甚至可能连接失败，所以需要更换一下默认源为&lt;a class="link" href="https://mirrors.ustc.edu.cn/" target="_blank" rel="noopener"
+&lt;p>整个LXC容器已设置完成。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0换中科大源</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-change-ustc-source/</link><pubDate>Tue, 26 Mar 2024 23:45:43 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-change-ustc-source/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=Z1BQTnU0azJ3OUdjSkc0Sm9FS0Jscjhkb1drV2pXbDlWR3NBcmRoSElPWmVkN1ZCY1BOQnZ2SkRjNUxzcFdDd0dnQmRpQjQ9" alt="Featured image of post Proxmox VE(PVE)8.0换中科大源" />&lt;p>前边介绍了&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/j4125-install-pve/" >PVE的安装&lt;/a>，Proxmox VE(PVE)8.0的底层使用的是debian12，默认的源在国外下载速度非常慢，甚至可能连接失败，所以需要更换一下默认源为&lt;a class="link" href="https://mirrors.ustc.edu.cn/" target="_blank" rel="noopener"
 >中科大的源&lt;/a>来加快下载以及更新软件的速度。&lt;/p>
 &lt;h2 id="apt源">APT源
 &lt;/h2>&lt;p>需要修改三个文件&lt;/p>
@@ -657,12 +615,12 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">7
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@pve:~# cat /etc/apt/sources.list
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@pve:~# cat /etc/apt/sources.list
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb http://ftp.debian.org/debian bookworm main contrib
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb http://ftp.debian.org/debian bookworm-updates main contrib
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># security updates
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># security updates&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb http://security.debian.org bookworm-security main contrib
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -681,15 +639,15 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">10
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@pve:~# cat /etc/apt/sources.list
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#deb http://ftp.debian.org/debian bookworm main contrib
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@pve:~# cat /etc/apt/sources.list
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#deb http://ftp.debian.org/debian bookworm main contrib&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://mirrors.ustc.edu.cn/debian bookworm main contrib
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#deb http://ftp.debian.org/debian bookworm-updates main contrib
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#deb http://ftp.debian.org/debian bookworm-updates main contrib&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://mirrors.ustc.edu.cn/debian bookworm-updates main contrib
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># security updates
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#deb http://security.debian.org bookworm-security main contrib
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># security updates&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#deb http://security.debian.org bookworm-security main contrib&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://mirrors.ustc.edu.cn/debian-security bookworm-security main contrib
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -700,8 +658,8 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">sed -i &amp;#39;s|^deb http://ftp.debian.org|deb https://mirrors.ustc.edu.cn|g&amp;#39; /etc/apt/sources.list
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sed -i &amp;#39;s|^deb http://security.debian.org|deb https://mirrors.ustc.edu.cn/debian-security|g&amp;#39; /etc/apt/sources.list
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sed -i &lt;span class="s1">&amp;#39;s|^deb http://ftp.debian.org|deb https://mirrors.ustc.edu.cn|g&amp;#39;&lt;/span> /etc/apt/sources.list
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sed -i &lt;span class="s1">&amp;#39;s|^deb http://security.debian.org|deb https://mirrors.ustc.edu.cn/debian-security|g&amp;#39;&lt;/span> /etc/apt/sources.list
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>最主要的就是 &lt;code>http://ftp.debain.org&lt;/code>  替换为 &lt;code>https://mirrors.ustc.edu.cn&lt;/code>  ,  &lt;code>http://security.debian.org&lt;/code>  替换为 &lt;code>https://mirrors.ustc.edu.cn/debian-security&lt;/code>  。&lt;/p>
@@ -713,7 +671,7 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@pve:~# cat /etc/apt/sources.list.d/ceph.list
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@pve:~# cat /etc/apt/sources.list.d/ceph.list
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://enterprise.proxmox.com/debian/ceph-quincy bookworm enterprise
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -725,8 +683,8 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">3
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@pve:~# cat /etc/apt/sources.list.d/ceph.list
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#deb https://enterprise.proxmox.com/debian/ceph-quincy bookworm enterprise
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@pve:~# cat /etc/apt/sources.list.d/ceph.list
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#deb https://enterprise.proxmox.com/debian/ceph-quincy bookworm enterprise&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">deb https://mirrors.ustc.edu.cn/proxmox/debian/ceph-quincy bookworm no-subscription
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -739,8 +697,8 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@pve:~# cat /etc/apt/sources.list.d/pve-enterprise.list
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#deb https://enterprise.proxmox.com/debian/pve bookworm pve-enterprise
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@pve:~# cat /etc/apt/sources.list.d/pve-enterprise.list
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#deb https://enterprise.proxmox.com/debian/pve bookworm pve-enterprise&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>到这里apt的源就替换完成了，可以执行apt udpate来看一下是否更换成功。&lt;/p>
@@ -759,17 +717,17 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">11
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="nx">pve&lt;/span>&lt;span class="p">:~&lt;/span>&lt;span class="err">#&lt;/span> &lt;span class="nx">apt&lt;/span> &lt;span class="nx">update&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Hit&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">1&lt;/span> &lt;span class="nx">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="c1">//mirrors.ustc.edu.cn/debian bookworm InRelease&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Get&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">2&lt;/span> &lt;span class="nx">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="c1">//mirrors.ustc.edu.cn/debian bookworm-updates InRelease [55.4 kB]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Get&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">3&lt;/span> &lt;span class="nx">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="c1">//mirrors.ustc.edu.cn/debian-security bookworm-security InRelease [48.0 kB]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Hit&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">4&lt;/span> &lt;span class="nx">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="c1">//mirrors.ustc.edu.cn/proxmox/debian/ceph-quincy bookworm InRelease&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Get&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">5&lt;/span> &lt;span class="nx">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="c1">//mirrors.ustc.edu.cn/debian-security bookworm-security/main amd64 Packages [148 kB]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Fetched&lt;/span> &lt;span class="mi">251&lt;/span> &lt;span class="nx">kB&lt;/span> &lt;span class="nx">in&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="nf">s&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">300&lt;/span> &lt;span class="nx">kB&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nx">s&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Building&lt;/span> &lt;span class="nx">dependency&lt;/span> &lt;span class="nx">tree&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="nx">state&lt;/span> &lt;span class="nx">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="mi">94&lt;/span> &lt;span class="nx">packages&lt;/span> &lt;span class="nx">can&lt;/span> &lt;span class="nx">be&lt;/span> &lt;span class="nx">upgraded&lt;/span>&lt;span class="p">.&lt;/span> &lt;span class="nx">Run&lt;/span> &lt;span class="err">&amp;#39;&lt;/span>&lt;span class="nx">apt&lt;/span> &lt;span class="nx">list&lt;/span> &lt;span class="o">--&lt;/span>&lt;span class="nx">upgradable&lt;/span>&lt;span class="err">&amp;#39;&lt;/span> &lt;span class="nx">to&lt;/span> &lt;span class="nx">see&lt;/span> &lt;span class="nx">them&lt;/span>&lt;span class="p">.&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@pve:~# apt update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Hit:1 https://mirrors.ustc.edu.cn/debian bookworm InRelease
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Get:2 https://mirrors.ustc.edu.cn/debian bookworm-updates InRelease &lt;span class="o">[&lt;/span>55.4 kB&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Get:3 https://mirrors.ustc.edu.cn/debian-security bookworm-security InRelease &lt;span class="o">[&lt;/span>48.0 kB&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Hit:4 https://mirrors.ustc.edu.cn/proxmox/debian/ceph-quincy bookworm InRelease
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Get:5 https://mirrors.ustc.edu.cn/debian-security bookworm-security/main amd64 Packages &lt;span class="o">[&lt;/span>&lt;span class="m">148&lt;/span> kB&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Fetched &lt;span class="m">251&lt;/span> kB in 1s &lt;span class="o">(&lt;/span>&lt;span class="m">300&lt;/span> kB/s&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading package lists... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Building dependency tree... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading state information... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">94&lt;/span> packages can be upgraded. Run &lt;span class="s1">&amp;#39;apt list --upgradable&amp;#39;&lt;/span> to see them.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>已经使用了中科大的源了，替换成功。&lt;/p>
@@ -780,7 +738,7 @@ target="_blank" rel="noopener"
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">sed&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">i&lt;/span> &lt;span class="s1">&amp;#39;s|http://download.proxmox.com|https://mirrors.ustc.edu.cn/proxmox|g&amp;#39;&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">usr&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">share&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">perl5&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">PVE&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">APLInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pm&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sed -i &lt;span class="s1">&amp;#39;s|http://download.proxmox.com|https://mirrors.ustc.edu.cn/proxmox|g&amp;#39;&lt;/span> /usr/share/perl5/PVE/APLInfo.pm
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>或者通过直接修改APLInfo.pm的内容进行修改，替换后的内容如下：&lt;/p>
@@ -794,18 +752,16 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">6
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">my&lt;/span> &lt;span class="o">$&lt;/span>&lt;span class="n">sources&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">host&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="s2">&amp;#34;download.proxmox.com&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="s2">&amp;#34;https://mirrors.ustc.edu.cn/proxmox/images&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">file&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="s1">&amp;#39;aplinfo-pve-8.dat&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">my &lt;span class="nv">$sources&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">host&lt;/span> &lt;span class="o">=&lt;/span>&amp;gt; &lt;span class="s2">&amp;#34;download.proxmox.com&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">url&lt;/span> &lt;span class="o">=&lt;/span>&amp;gt; &lt;span class="s2">&amp;#34;https://mirrors.ustc.edu.cn/proxmox/images&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">file&lt;/span> &lt;span class="o">=&lt;/span>&amp;gt; &lt;span class="s1">&amp;#39;aplinfo-pve-8.dat&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>保存后进行重启pvedaemon：&lt;code>systemctl restart pvedaemon.service&lt;/code> 。&lt;/p>
-&lt;p>整个pve的源就替换完成了。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0无法访问网络排查</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-network-troubleshooting/</link><pubDate>Tue, 26 Mar 2024 05:34:09 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-network-troubleshooting/</guid><description>&lt;p>前边介绍了&lt;a class="link" href="https://www.iminling.com/2024/03/23/459.html" title="畅网J4125安装Proxmox virtual environment(pve) 8.0"
-target="_blank" rel="noopener"
->Proxmox VE(PVE)的安装&lt;/a>，一直也没有在pve中进行过联网动作，直到今天想要在pve中运行LXC容器，需要下载CT模板的时候才发现原来pve是无法联网的，于是又开始了折腾pve的网络了。&lt;/p>
+&lt;p>整个pve的源就替换完成了。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0无法访问网络排查</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-network-troubleshooting/</link><pubDate>Tue, 26 Mar 2024 05:34:09 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-network-troubleshooting/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=Z1BQTnU0azJ3OUdjSkc0Sm9FS0Jscjhkb1drV2pXbDlWR3NBcmRoSElPWmVkN1ZCY1BOQnZ2SkRjNUxzcFdDd0dnQmRpQjQ9" alt="Featured image of post Proxmox VE(PVE)8.0无法访问网络排查" />&lt;p>前边介绍了&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/j4125-install-pve/" >roxmox VE(PVE)的安装&lt;/a>，一直也没有在pve中进行过联网动作，直到今天想要在pve中运行LXC容器，需要下载CT模板的时候才发现原来pve是无法联网的，于是又开始了折腾pve的网络了。&lt;/p>
 &lt;h2 id="情况说明">情况说明
 &lt;/h2>&lt;p>在我下载CT模板的时候模板列表是能出来的，但是当点击下载后，等待一段时间后就提示无法下载，但是那个地址我直接在浏览器中访问是可以的。在pve的shell中ping一些地址提示：Destination Host Unreachable，如下：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -822,34 +778,34 @@ target="_blank" rel="noopener"
 &lt;/span>&lt;span class="lnt">10
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@pve:~# ping 1.1.1.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">From 192.168.1.251 icmp_seq=1 Destination Host Unreachable
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">From 192.168.1.251 icmp_seq=2 Destination Host Unreachable
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">From 192.168.1.251 icmp_seq=3 Destination Host Unreachable
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">From 192.168.1.251 icmp_seq=4 Destination Host Unreachable
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@pve:~# ping 1.1.1.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PING 1.1.1.1 &lt;span class="o">(&lt;/span>1.1.1.1&lt;span class="o">)&lt;/span> 56&lt;span class="o">(&lt;/span>84&lt;span class="o">)&lt;/span> bytes of data.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">From 192.168.1.251 &lt;span class="nv">icmp_seq&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">1&lt;/span> Destination Host Unreachable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">From 192.168.1.251 &lt;span class="nv">icmp_seq&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">2&lt;/span> Destination Host Unreachable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">From 192.168.1.251 &lt;span class="nv">icmp_seq&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">3&lt;/span> Destination Host Unreachable
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">From 192.168.1.251 &lt;span class="nv">icmp_seq&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">4&lt;/span> Destination Host Unreachable
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">^C
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">--- 1.1.1.1 ping statistics ---
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">5 packets transmitted, 0 received, +4 errors, 100% packet loss, time 4065ms
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pipe 4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">5&lt;/span> packets transmitted, &lt;span class="m">0&lt;/span> received, +4 errors, 100% packet loss, &lt;span class="nb">time&lt;/span> 4065ms
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pipe &lt;span class="m">4&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>但是ping内网的网段是完全ok的，可见是内网通，只是无法连接到互联网。&lt;/p>
 &lt;h2 id="问题分析">问题分析
 &lt;/h2>&lt;p>在遇到上边问题后，我也上网找了一些解决办法，大部分都是说DNS服务器设置的不对，第一个为lan，第二个为阿里的dns服务器，第三个为爱快(ikuai)的地址，这样子设置后发现还是同样的问题。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/EB7A04F12FB94485C93870ECAFD3A4C9.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=eDNyUlZOS2RsNkM4MVZOTXZpSVlVT2syVlpMcVoxMmdpdHJGNDhWd3lKVEZpYlliS3J3QTZYUVlkczIxRGJETVVCekhURDA9"
 loading="lazy"
 alt="pve dns"
 >&lt;/p>
 &lt;p>后来在网络配置中发现了问题，这里的网关我配置的是192.168.1.1。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/B42FD7FF691A2DA49E72BE3C533CFE1E.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=M05ad0RZN21FSGFHQWRWZlBhRjdJNFJDZTBISGFPV0tNTWVTWnI2VlF4bno4Zm9YdnFIU0NhRVZKbTRHVjgxZUE3Z0hmVkE9"
 loading="lazy"
 alt="pve network"
 >&lt;/p>
 &lt;p>当时安装pve的时候在规划网络时填的是192.168.1.1，但是当安装完pve，进行ikuai配置的时候我改变了注意，把ikuai的地址分配为192.168.1.253，所以导致192.168.1.1其实并没有设备使用，导致pve无法访问网络。&lt;/p>
 &lt;h2 id="问题解决">问题解决
 &lt;/h2>&lt;p>既然找到了问题，那就修改一下试一试，于是对pve的网关配置进行修改，把网关地址设置为爱快(ikuai)的地址：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/AC7CCDE1F9D6DDE1321A91A1B013DC38.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=bDNXRXFKQ2p4aDlMa2VYRVVGYTJ2bnZ1aWRGR3RleTlLUUhNclhZWmVIYnFHVi9IRENPR25NVEdtbG0xandoZDJUOE13N0k9"
 loading="lazy"
 alt="pve network gateway"
 >&lt;/p>
@@ -868,74 +824,72 @@ alt="pve network gateway"
 &lt;/span>&lt;span class="lnt">10
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@pve:~# ping 1.1.1.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">64 bytes from 1.1.1.1: icmp_seq=1 ttl=54 time=152 ms
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">64 bytes from 1.1.1.1: icmp_seq=2 ttl=54 time=164 ms
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">64 bytes from 1.1.1.1: icmp_seq=3 ttl=54 time=166 ms
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@pve:~# ping 1.1.1.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PING 1.1.1.1 &lt;span class="o">(&lt;/span>1.1.1.1&lt;span class="o">)&lt;/span> 56&lt;span class="o">(&lt;/span>84&lt;span class="o">)&lt;/span> bytes of data.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">64&lt;/span> bytes from 1.1.1.1: &lt;span class="nv">icmp_seq&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">1&lt;/span> &lt;span class="nv">ttl&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">54&lt;/span> &lt;span class="nv">time&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">152&lt;/span> ms
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">64&lt;/span> bytes from 1.1.1.1: &lt;span class="nv">icmp_seq&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">2&lt;/span> &lt;span class="nv">ttl&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">54&lt;/span> &lt;span class="nv">time&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">164&lt;/span> ms
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">64&lt;/span> bytes from 1.1.1.1: &lt;span class="nv">icmp_seq&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">3&lt;/span> &lt;span class="nv">ttl&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">54&lt;/span> &lt;span class="nv">time&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">166&lt;/span> ms
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">^C
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">--- 1.1.1.1 ping statistics ---
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">3 packets transmitted, 3 received, 0% packet loss, time 2002ms
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">rtt min/avg/max/mdev = 151.887/160.656/165.863/6.236 ms
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="m">3&lt;/span> packets transmitted, &lt;span class="m">3&lt;/span> received, 0% packet loss, &lt;span class="nb">time&lt;/span> 2002ms
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">rtt min/avg/max/mdev &lt;span class="o">=&lt;/span> 151.887/160.656/165.863/6.236 ms
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@pve:~#
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>成功的解决了pve无法联网的问题。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-install-openwrt/</link><pubDate>Sun, 24 Mar 2024 05:43:31 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-install-openwrt/</guid><description>&lt;p>在前两篇文章中分别介绍了&lt;a class="link" href="https://www.iminling.com/2024/03/23/459.html" title="畅网J4125安装Proxmox virtual environment(pve) 8.0"
-target="_blank" rel="noopener"
->pve的安装&lt;/a>以及pve安装ikuai做为主路由来拨号上网，此时的网络环境基本已经稳定，但出于特殊需求，我需要使用Openwrt来进行科学上网，所以今天就来折腾一下pve安装Openwrt并实现旁路由模式。&lt;/p>
+&lt;/div>&lt;p>成功的解决了pve无法联网的问题。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-install-openwrt/</link><pubDate>Sun, 24 Mar 2024 05:43:31 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-install-openwrt/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=UHVPZkRvYkllMlN2SzRMa09qTXcxSDNHaVd1czRGUGtjbmtNM2RoWnpCWEtWb0FYUmF5OHRtZWhxT3JQb2RUd2RDZkQvS3M9" alt="Featured image of post Proxmox VE(PVE)8.0安装Openwrt实现旁路由模式" />&lt;p>在前两篇文章中分别介绍了&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/j4125-install-pve/" >pve的安装&lt;/a>以及pve安装ikuai做为主路由来拨号上网，此时的网络环境基本已经稳定，但出于特殊需求，我需要使用Openwrt来进行科学上网，所以今天就来折腾一下pve安装Openwrt并实现旁路由模式。&lt;/p>
 &lt;h2 id="openwrt镜像">openwrt镜像
 &lt;/h2>&lt;p>我使用的是&lt;a class="link" href="https://github.com/DHDAXCW/OpenWRT_x86_x64/releases" target="_blank" rel="noopener"
 >骷髅头的openwrt&lt;/a>镜像，下载的是beggar版本，可根据自己的需求找不同的openwrt版本。下载完成后需要对文件进行解压，下载下来的是&lt;code>.gz&lt;/code>结尾的文件，需要解压成&lt;code>.img&lt;/code>结尾的文件，解压后上传到pve中&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/BC97614C54342FD608F4DC6371CAC5A2.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Z3djd056bzRnNlRrM05Ob29LazBoRFJpbkRmaTQ4c0QxVVZwbWUzbTRVaGtQUDlpR3dGY1dZMHZ4ak9Wc1hLeDc1TXNSeE09"
 loading="lazy"
 alt="upload iso"
 >&lt;/p>
 &lt;h2 id="创建">创建
 &lt;/h2>&lt;h3 id="常规">常规
 &lt;/h3>&lt;p>vm ID默认自增到101(ikuai是100)，名称自己填，我这里填openwrt&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/530BCC51DD19D59BD1FE510D32076904.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=VTJuMzZadnFMdGQzWkp6ZFlHWk44Z0kxQVpqemxEQ2hVOFFoT3hpUkRqNDlqZGQzQjJaN3I5YThVUldMeklPd1lOTzVFV2c9"
 loading="lazy"
 alt="pve openwrt common"
 >&lt;/p>
 &lt;h3 id="操作系统">操作系统
 &lt;/h3>&lt;p>选择不使用任何介质&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/C8D5A323386C9A1DE5B0BB9BE0386666.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=TzJJVm5XRjNrN1JRMGFZYTlnY3RTR0VPVHd2a1k0L3JKa0FHMmQ1RklOeFhKa0l3M3FMbEE1a0x2UlJaMzAwYkgvSjQzY1k9"
 loading="lazy"
 alt="pve openwrt os"
 >&lt;/p>
 &lt;h3 id="系统">系统
 &lt;/h3>&lt;p>全部默认就可以了&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/E821D7E134B98F154E16F7EAC211E8C8.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=NnVNTjhMWXJ5N2tkOGpzYWFnVWJuWmxhMFEwb2NNdVlqNHFWTmQ1ZTFEcENNd3hKWWpMTlExNlVOb1BMTTltM1RoUjlUMm89"
 loading="lazy"
 alt="pve openwrt os"
 >&lt;/p>
 &lt;h3 id="磁盘">磁盘
 &lt;/h3>&lt;p>这里保持默认，后边会进行删除。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/A26DDB4E4114936B881254ED7A0DF2B1.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=czYyZnd1N2I0WnZNcHpiRDU5TWx4TkJucmYzRUpsUFMxc2VDYkl5aEhYanlJckUwcTFtenZ5T3dVdlYwM1U2eVdaa0lJL0E9"
 loading="lazy"
 alt="pve openwrt disk"
 >&lt;/p>
 &lt;h3 id="cpu">CPU
 &lt;/h3>&lt;p>同样把j4125的四个核心都给到它&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/837D4B78C94107F0889EC9C53103D241.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=M1EzaHhtZkNrUWNrUWJvdE9ZVzlSdzlnVEJCTUp0YWNjcEJPQyswOFExYjU5aWFNencxM2dpVUhPSmlZc09VUWpnVFc0WjA9"
 loading="lazy"
 alt="pve openwrt cpu"
 >&lt;/p>
 &lt;h3 id="内存">内存
 &lt;/h3>&lt;p>运行openwrt,1GB的RAM就够用了。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/A7271E4BAEB3BEFE01324962F694F811.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=VE50Vk81QjMzTVYxSi9NZmNIQ2tEWG9KVHIzcGhIQ3RJMi9hVVBGT25wRnlMWEFHM0IwMlJqRzlTTlVOZ2pPZUFZOHp1OHM9"
 loading="lazy"
 alt="pve openwrt ram"
 >&lt;/p>
 &lt;h3 id="网络">网络
 &lt;/h3>&lt;p>全部默认&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/5A90B845671AC32312801582885D4C09.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=U1V5NUZ5WlYrTGt1dElzaVc2VkgreGVETHpnQldXUE1Bb01INWZmVjBBcW50ak1veC9vcmEvRVliVW5LVmtLdzBWSVZ6SEk9"
 loading="lazy"
 alt="pve openwrt network"
 >&lt;/p>
 &lt;h3 id="确认">确认
 &lt;/h3>&lt;p>确认所有选项是否正确。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/87FEC65DDEE9CF8BB85FFFFF5B6D8C10.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=THJaK0tLOGhrR1QxRjdXczNDcVIrVTZuMlBabEJTWmp6ZzRwZlQ0VlZSQWl6ZmtvckV3WTBwbHFyR3lKWHEwZVhObFN1clU9"
 loading="lazy"
 alt="pve openwrt summary"
 >&lt;/p>
@@ -944,42 +898,42 @@ alt="pve openwrt summary"
 &lt;/h2>&lt;p>创建过程中选择的硬盘是需要删除的，所以需要对硬件进行一些配置。&lt;/p>
 &lt;h3 id="移除cd">移除CD
 &lt;/h3>&lt;p>在硬件配置中将已存在的CD/DVD驱动器移除&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/81E209EBFF4348F0AE3B4E54454553D6.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=NnVNTjhMWXJ5N2tkOGpzYWFnVWJuVUZWWEJiVVFMeTdnVDlBMmV4enpzUnJwd3l2ZGlkL0NmY0l1VjRnKytUdngyWTJCWHc9"
 loading="lazy"
 alt="pve openwrt remove cd"
 >&lt;/p>
 &lt;h3 id="分离并移除硬盘">分离并移除硬盘
 &lt;/h3>&lt;p>选中硬盘，先进行分离，然后进行移除。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/5894F46E2E267BC2B2E470D46D4C1CE0.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=d2YrUER3VXFyRFFmZXF5Z29UL1FHQVpReDFQRy9lNXFqNFZFdVVwZEpkemRSV25iWFd6VzU3WXJ5a1JuWGJ4TVdadUIreWc9"
 loading="lazy"
 alt="pve openwrt remove disk"
 >&lt;/p>
 &lt;p>移除&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/F613F961817AF86518ABE38F0FC5C596.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=d2U1N1FpRE1RSnBmcEhLUFRibUxKZTZUSTJpWGozaFFSdFNPNnFnbWVNZ1lFZW51dmN5dFpYSmdyVkxvSDI0MDBMRnpBOGM9"
 loading="lazy"
 alt="pve openwrt remove disk"
 >&lt;/p>
 &lt;h2 id="添加磁盘">添加磁盘
 &lt;/h2>&lt;p>需要通过进入&lt;code>pve的shell&lt;/code>执行命令来导入磁盘,执行命令&lt;code>qm importdisk 虚拟主机编号 /var/lib/vz/template/iso/openwrt镜像名 local-lvm&lt;/code> ，虚拟主机编号是在经过上边创建虚拟机后pve生成的一个编号，例如我的是101，openwrt镜像名是在刚开始的时候上传到pve中的名称，我的名称是：openwrt.img. 替换后的命令如下：&lt;code>qm importdisk 101 /var/lib/vz/template/iso/openwrt.img local-lvm&lt;/code>。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/CC7BD8ADEB55C47A3D661F37295D1213.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RlhmT0s5OW9TYkg3NjBjNk1YcGNqZ0s1N2pUSDcxVGp5bU9TZk1CMUVrRDNSWlZ3NnVBMnhqblBDeEs2N21KTmY1dXJsM2M9"
 loading="lazy"
 alt="pve openwrt importdisk"
 >&lt;/p>
 &lt;p>执行成功后会在硬件中看到一个未使用的磁盘，进行添加。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/3B19CC29E51F0933E2F10FCE711C62B4.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aC9YZlFkSjUxQ2E5aUl4dmVnaGtqdGVwMSs2NG0xemF0aTZ1MGZ0SDVkUitUT01Wd3ViZlgrVkZMckpyQzI3cFd5cGxaVlE9"
 loading="lazy"
 alt="pve openwrt importdisk"
 >&lt;/p>
 &lt;h3 id="引导顺序">引导顺序
 &lt;/h3>&lt;p>磁盘添加后需要修改引导为当前的磁盘&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/3B9F70D8EF2F373E80CB1162B86C7A3E.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=N1ZWR3orL1JUZUJ0bmE0NzI0TmFMUThUTXBTeHBKL3BaSXM3ajdWMGVpakdZUC9pc0hsS2hlZ2pVRlRMOE42TzBzMm5zS2M9"
 loading="lazy"
 alt="pve openwrt boot sort"
 >&lt;/p>
 &lt;p>经过上边的设置就已经完全ok了，可以来启动openwrt了。&lt;/p>
 &lt;h2 id="openwrt设置">openwrt设置
 &lt;/h2>&lt;p>启动openwrt虚拟机，如下会卡住，敲回车就可以进行下去&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/2651DCA4CAEAB2FC8C5B7552D7AFD17B.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RWxKcnBENTFsa3RROE1uS1dFZkM2UVBJdDFXV0ZnV29TYmRtdHMyZXdyZXlFYUt2MWxjQWwzaU01WHNKQXB3d3JjR0FucDg9"
 loading="lazy"
 alt="pve openwrt boot"
 >&lt;/p>
@@ -991,171 +945,169 @@ alt="pve openwrt"
 &lt;h3 id="设置ip">设置ip
 &lt;/h3>&lt;p>一般固件都有自己的管理ip，可能和我们自己的网络不是在同一个网段，比如我下载这个默认的管理网段是192.168.6.1，我需要改成和我的网络在同一个网段，192.168.1.xxx。&lt;/p>
 &lt;p>编辑 /etc/config/network，修改如下：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/30305231BD4E418E530C4EFB1F2D2B2F.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=M01hVDFwY0tTQXByMFRweVNiNWZWeUxmSWM5SEI4MjRQOVZaRGFNRUlNbXRNSkJTM0tHNUU0TEg2Z3hrajhWL3ZhYS9zNjA9"
 loading="lazy"
 alt="pve openwrt ip"
 >&lt;/p>
 &lt;p>我这里改成192.168.1.254，修改保存后重启openwrt,重启后就可以通过访问192.168.1.254在浏览器中进行相关配置了。&lt;/p>
 &lt;h3 id="lan口设置">LAN口设置
 &lt;/h3>&lt;p>进入openwrt系统后，首先是对网络接口LAN口进行设置，设置网关为爱快(ikuai)的管理地址，并关闭LAN口的DHCP功能&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/7F71B9608FB1F3EC02023B3A60FDCD08.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=a1g0YVRCMWkvWHh0RUF0dWw3dVlHWTFKejdyditBdHlsM2RKZ282aFBaODAxQzZzR2NObWZBRXZ4SW9jU3N2RDRNK0wvQk09"
 loading="lazy"
 alt="pve openwrt lan"
 >&lt;/p>
 &lt;p>修改网关&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/0DC12C48DA49DFC3761270F7C1647457.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dExZaDkwMkc3ZitQdkFtdmFabVZYaldDWWdjS0F1WHdwNGVYMjd5eHJFOWl3QXQxMVgxdTEvNjJKTklYUmdsRFV2U2kwTWs9"
 loading="lazy"
 alt="pve openwrt gateway"
 >&lt;/p>
 &lt;p>这里需要注意一点，我在刚开始设置的时候并没有设置&lt;code>使用自定义DNS服务器&lt;/code>，后边发现openwrt无法上网，最终是填写了一个DNS服务器后才解决的，这里可以使用223.5.5.5或者其他的DNS服务器。&lt;/p>
 &lt;h3 id="关闭防火墙">关闭防火墙
 &lt;/h3>&lt;p>接下来关闭openwrt的防火墙&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/FD8C04F7DB94CBB12DB8675733828FDA.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=cTBqQlJhWTNGRFZCNVN3N29PYm5wWjFySGN5T21Sc3U5MU1DdXcxclVOd0ZGTUpFYUt1aWVWcFN6Z0NQcGxubHgvZG1hV2s9"
 loading="lazy"
 alt="pve openwrt firewall"
 >&lt;/p>
 &lt;h3 id="upnp">UPNP
 &lt;/h3>&lt;p>开启UPNP&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/A69A4758D6648D6D3977B0F2A9552B54.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=YzV0N3RvUUcvM3dCR1V0VFIzaUFMeWhGWDZzN0F1aHdHYXRSUXZCVnlMRVNNMmIrWFk2NVpnZjRKZzNzN3FGREpPUlpJMm89"
 loading="lazy"
 alt="pve openwrt upnp"
 >&lt;/p>
 &lt;p>经过上边的设置，openwrt基本已设置完毕，可以开始使用了。&lt;/p>
 &lt;h2 id="旁路由模式">旁路由模式
 &lt;/h2>&lt;p>openwrt做为旁路由，该怎么工作呢，在ikuai设置的时候我设置了31-250的一个DHCP网络段，他们只会经过ikuai来处理流量，那什么设备可以经过这个openwrt旁路由呢？这里就需要在ikuai中进行一些设置了，同样是DHCP服务,我设置了10-30这个ip段的ip的网关为&lt;code>192.168.1.254&lt;/code>也就是openwrt的ip，那么这个ip段里的设置的网络就会经过openwrt来处理，满足特定需求了。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/213157C522C8091C348D788D4777FDE0.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=QW5DMC95SVl5Q0pwSEpTSDV1aEw4cGpwTVlGNGo5NnpxZkowMHdQVUVTSHhtdUNBM2hOV0NqWXZzOG9QWVFxTnp2aHZsbzg9"
 loading="lazy"
 alt="pve openwrt ikuai"
 >&lt;/p>
 &lt;p>因为我是先设置的31-250这个ip段，所以连接上来的设置被优先往这个ip段分配，自己的其他设置如果想要使用openwrt来处理流量，则对特定设置固定ip就可以了，设置他们的ip在10-30之间。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/5B2B6D7B677CDC4C07E01EC2ADB813F4.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Ni9teHZsaWUwOGliZUkyc05OdTFxR2MyOXhJdlZBUXY0VlVORklOZnIrR1o3ZytHTDNpVTRYcjRYUnMzYnlodTNEZjVuenc9"
 loading="lazy"
 alt="pve ikuai dhcp"
 >&lt;/p>
-&lt;p>大功告成，使用pve安装ikuai并使用openwrt做为旁路由。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-install-ikuai/</link><pubDate>Sun, 24 Mar 2024 04:02:02 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-install-ikuai/</guid><description>&lt;p>上一篇介绍了在J4125机器上安装pve环境，安装好pve后整个机器还是无法上网的状态，所以接下来就来介绍一下在pve中安装爱快，使用爱快(ikuai)来进行拨号上网，当然也可以直接安装openwrt,出于综合考虑我这里还是安装爱快(ikuai)，会稳定一些，后续再折腾其他的也不影响家人上网。&lt;/p>
+&lt;p>大功告成，使用pve安装ikuai并使用openwrt做为旁路由。&lt;/p></description></item><item><title>Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡</title><link>https://konghanghang.github.io/iminling-pages/2024/pve-install-ikuai/</link><pubDate>Sun, 24 Mar 2024 04:02:02 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/pve-install-ikuai/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=MGt0VDNLdUNhUDI2MXVlRkUvSXZvVS9KSE14UzlOazF4Z3JqRjhmVnhFbmV0UzdXNE1NUXUyNUxXNkVQNjN6VlVtL1JpN009" alt="Featured image of post Proxmox VE(PVE)8.0安装爱快ikuai虚拟机并直通网卡" />&lt;p>上一篇介绍了在J4125机器上安装pve环境，安装好pve后整个机器还是无法上网的状态，所以接下来就来介绍一下在pve中安装爱快，使用爱快(ikuai)来进行拨号上网，当然也可以直接安装openwrt,出于综合考虑我这里还是安装爱快(ikuai)，会稳定一些，后续再折腾其他的也不影响家人上网。&lt;/p>
 &lt;h2 id="爱快ikuai固件">爱快(ikuai)固件
 &lt;/h2>&lt;p>爱快(ikuai)的固件也不大，直接&lt;a class="link" href="https://www.ikuai8.com/component/download" target="_blank" rel="noopener"
 >官网&lt;/a>下载就可以了，下载ISO 64位的镜像。把下载的镜像上传到pve中&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/BC97614C54342FD608F4DC6371CAC5A2.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=YmVpMHVUeVovMHZzMWd5bklhdERmR2kwTlBnWUx1U0xlc2M4Y3Z0OE5wdXNraTNKVGZnZW1XaVJMSFhWWDdUNEZpVkcvKzA9"
 loading="lazy"
 alt="upload iso"
 >&lt;/p>
 &lt;h2 id="创建ikuai虚拟机">创建ikuai虚拟机
 &lt;/h2>&lt;p>鼠标右键点击pve选择创建虚拟机：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/AB41ED7FE57F77EBE2A7CC399EBDAC49.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=TzFEUWFRdXdmV3NWcURMSUxWRUdNMG5HcDZQZ04yZzBWaitZVDgxdHFqeXBXeDliQXZocytmMmpGVHhFZjk3MGVlQ1Nyckk9"
 loading="lazy"
 alt="create vm"
 >&lt;/p>
 &lt;h3 id="常规">常规
 &lt;/h3>&lt;p>名称命名为ikuai，其他默认&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/37C50635EADEB66E0F50391CFFF4E607.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=QStIZ0I0Y3k4RmJmL1lZY3lLbjZDQzkvNXh2RkRNNXp2QmpoRGZVNVhiWWlJdlA1V0hJdDNoRlVOZWk1VHBDR2lBQVRHNWs9"
 loading="lazy"
 alt="ikuai common"
 >&lt;/p>
 &lt;h3 id="操作系统">操作系统
 &lt;/h3>&lt;p>ISO镜像选择上传的爱快镜像：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/2000A752149251377A7E236B43A53685.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=R0dOdys1WjBPVHJ2bjQzT083aE5TM1ZKZ0I4NWcrbldxeFZldnh0ZEZTcVEwaGx4T3JDcS9PUFc3VllYdjZ5bWRpSVpxdFE9"
 loading="lazy"
 alt="ikuai os"
 >&lt;/p>
 &lt;h3 id="系统">系统
 &lt;/h3>&lt;p>保持默认继续下一步&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/A902C31B27FC063D4011BC60D9D61B9D.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dTRuQi9oWFFCZ2JmUDF2bDRUUFVEQk9Kd3BpamVVU2QzWDdTUWdHWkVZMCtaclRHKzBXNlQ0bDlhdmRjZWRoYlNSa2l1QmM9"
 loading="lazy"
 alt="ikuai os"
 >&lt;/p>
 &lt;h3 id="磁盘">磁盘
 &lt;/h3>&lt;p>ikuai我不做其他用处，所以这里给5GB硬盘&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/9B5DEEC9E17C047DDD48F1EB5D333094.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=eTdOSzFldUthWHMzcGRNTUxHeHVnL2VvQ2pMUEl6OWVKZGsrbk1VU014c1FXWEFzYTF2eitOWnI1allHV0xPZ3VUVDF5bUU9"
 loading="lazy"
 alt="ikuai disk"
 >&lt;/p>
 &lt;h3 id="cpu">CPU
 &lt;/h3>&lt;p>cpu把j4125的四个核心都给它&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/EE54A081D9E2211E67F697AA788E00D2.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aFlZM3FOVzV1WWoxT0x0TVZyZHQvdGFFMmRvNzBVckJDYnljWk9MTGRoM1ZOc2hvb3NOVllFRUJYbFhDWlhMcXF5TjVBbk09"
 loading="lazy"
 alt="ikuai core"
 >&lt;/p>
 &lt;h3 id="内存">内存
 &lt;/h3>&lt;p>我这里给2GB的内存&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/844F8B73FDB622462F1AE20D96CC584A.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=N1ZWR3orL1JUZUJ0bmE0NzI0TmFMZm9IVmRFUngvTE56cit6M3JUOG1IRzV5SmJ0SHhTcWhlVFBwdVgvU2k1ajVONWFXQ2M9"
 loading="lazy"
 alt="ikuai ram"
 >&lt;/p>
 &lt;h3 id="网络">网络
 &lt;/h3>&lt;p>默认&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/62A58B9B7D3AFB4EAC410515596F963E.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=VTJuMzZadnFMdGQzWkp6ZFlHWk44dllQZjRCRjZhYlRSS0ROaVVZOFpmVXFZYlRYYmJCS2o4WDZvNkh0NmFzY2lPR3FyZW89"
 loading="lazy"
 alt="ikuai network"
 >&lt;/p>
 &lt;h3 id="确认">确认
 &lt;/h3>&lt;p>显示ikuai虚拟机的一些信息，确认和我们选择的是否一致&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/E2EF4664FA052E1AFCCD8A8B56D4BDAB.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UFdSZWV6ZHVBWGV2aVduRVRpTnFtaGlnS1h4RGdqVm5SalVHVWFXOHJTNVNmaGZJK1FHSE04SlE4UXNZekFhYkx3WG9JcVU9"
 loading="lazy"
 alt="ikuai summary"
 >&lt;/p>
 &lt;p>一些基本信息就已经完成了。&lt;/p>
 &lt;h2 id="添加直通网口">添加直通网口
-&lt;/h2>&lt;p>在&lt;a class="link" href="https://www.iminling.com/2024/03/23/459.html" title="畅网J4125安装Proxmox8.0"
-target="_blank" rel="noopener"
->畅网J4125安装pve 8.0&lt;/a>一 篇中已经规划了ETH3归为pve的管理口，那么剩下的三个网口都直通给ikuai,让ikuai来管理,选择硬件，然后点击添加，PCI设备，就会弹出下图：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/5FDA72A183F9D81807117C2A397A2B86.png"
+&lt;/h2>&lt;p>在&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/j4125-install-pve/" >畅网J4125安装pve 8.0&lt;/a>一 篇中已经规划了ETH3归为pve的管理口，那么剩下的三个网口都直通给ikuai,让ikuai来管理,选择硬件，然后点击添加，PCI设备，就会弹出下图：&lt;/p>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=b0xvQzNlRWRxYUFBcGVXOEpZaXRScnFKYUFFbkhsSE5UV01RaFpaUTdvWG4wTGpjVnlhLzlEMEVuNEljblBWRXZQQ1JLVGc9"
 loading="lazy"
 alt="ikuai interface"
 >&lt;/p>
 &lt;p>可以看到总共有4个I226-V的网口，04已经被pve管理口使用了，那么可以把01，02，03分别添加到硬件中。&lt;/p>
 &lt;h2 id="设置引导项">设置引导项
 &lt;/h2>&lt;p>默认优先是从添加的硬盘启动，因为是第一次启动硬盘里还没有数据，所以需要先从上传的ISO文件引导启动，修改启动项为ISO文件&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/A0313AD16FD54168A7C89025AA6AA4BF.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=SmNJeGlsSVc0SXBEVWVrYWJsdTNyeVpPYml0YVJVeGc0Z0hVT1N6WlM5TGppL1JrVHNOY05DeW00TVgycWhOVk55YUE0TU09"
 loading="lazy"
 alt="ikuai引导"
 >&lt;/p>
 &lt;h2 id="安装">安装
 &lt;/h2>&lt;p>经过上边的设置，下边就可以来真正的安装，点击启动&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/A78BA1A00FD69091B9137CA1B519E240.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=L0s5cGd2ZHhMNUl5NTRKaHAvTjVWVzV3aTZmVFRhRHJvcE1iUFZneFoxSzNIWmFYeUhadFJCN1dsOGJYd01qblNLTHoxanc9"
 loading="lazy"
 alt="ikuai install"
 >&lt;/p>
 &lt;p>选择1安装到硬盘，安装成功后就会自动重启。重启后先关闭虚拟机，因为启动项问题 还是从镜像启动的，所以先关机 然后去调整启动项为硬盘&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/B2891BA68D272DC4F94F7F975F545C1E.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=bjhCenFXRWRTcG1sd281Ym5XZThJRmlOdUoyaGtUMjlOTmlzVHZ5SEFQQWtqN1BXTzAwUEpjbmRyNHhMQVhlWWt0dFI0dlk9"
 loading="lazy"
 alt="ikuai boot"
 >&lt;/p>
 &lt;p>调整完成后就可以再次启动ikuai虚拟机了。&lt;/p>
 &lt;h3 id="设置lan">设置LAN
 &lt;/h3>&lt;p>看到下图说明ikuai已经安装并启动成功了&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/96E78C61B9C7CAA22C471057C8020643.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=b0w0Mnh3eThuS0JueUNaajQrNU1LUmpkc0dnRTJITFUvWTNCaDA0b2MzbU1Mb0FQWFZCdGdDTm5zU0xTSC9wL3VFbW9Ka289"
 loading="lazy"
 alt="ikuai"
 >&lt;/p>
 &lt;p>可以看到上图里有四个网口，eth0-eth3,其中eth0是pve一个虚拟网口，是ikuai的管理网口，其他三个网口是直通的三个PIC网口设备，后边进入ikuai设置界面后会把eth1设置为wan口，用来连接光猫拨号使用。&lt;/p>
 &lt;p>选择2设置LAN,我规划的ikuai的管理地址是192.168.1.253&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/DE6C391418B396B32F9CCF2605DEF430.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=TlUwdWJRaGpRZ2llajJNcFpuYU1oYmFoNEpDUStQY084VlNpV2NLVVgzd0MzZVdOQjREcGpPN0JneEtmQXJBVDQ1NURvc2M9"
 loading="lazy"
 alt="ikuai lan"
 >&lt;/p>
 &lt;p>设置成功后就可以不用再理pve了，此时可以通过网页进入ikuai的管理页面，浏览器直接访问192.168.1.253(这个根据自己设置的lan地址来进入)，密码都是admin/admin。初次登录会让改密码，修改为自己常用的密码。&lt;/p>
 &lt;h3 id="配置wan">配置WAN
 &lt;/h3>&lt;p>进入管理页面后会看到WAN口有异常，先配置WAN口&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/4B47574A0DB86053168EBC355DBAD3E9.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=OWlLNVVaL0JXY242anVuNHJDZjdNR3pnRUNKT2ltQUFGN3BhQlJDTUxmVDhBR3htK3hybnZTTXZuQ1IrYUVnVW0zNXM3K2c9"
 loading="lazy"
 alt="ikuai index"
 >&lt;/p>
 &lt;p>绑定wan并设置pppoe拨号上网：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/5AF13981CE3B311EC64240ABD76943F6.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=ejE5UmtyOWZkSlgwMlJDSGU4dENjZmlsbExoYnkxRzRHQ0NJdmZnZ0xmdmFMR0F2KzlERDhyVFgvT1lxa1VQQU9PME5aK3c9"
 loading="lazy"
 alt="ikuai wan"
 >&lt;/p>
 &lt;p>设置好WAN后，此时还没有把WAN口和光猫连在一起，网络还是不行，我们先完成一些其他的配置项。&lt;/p>
 &lt;h3 id="配置lan">配置LAN
 &lt;/h3>&lt;p>将直通给爱快的其他两个口分配给lan&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/5DEDA518AF9ED1A4806E37EC47BD7CC5.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=YWxVV205YnhXcWRyc1VYTkcwcmEvbkNGbVQ3c3VBZ09UOWJacGdnakV0WWViclFiT0gyeTc5c1M2VTFDdm1uNzZ0ZEEvMzg9"
 loading="lazy"
 alt="ikuai lan"
 >&lt;/p>
 &lt;h3 id="dhcp配置">DHCP配置
 &lt;/h3>&lt;p>对连接上来的设备进行ip地址自动分配&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/A081CFBD137F8CB96187484360AF97E7.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RjFDWXBkVGJlbVdYdkpqZTM0QmxzZU1uc3dyajNHZk90N05iSkNpSlR1UUJ2L3VXMEx4czBTUE5GYisyamdXTDlwejZIc289"
 loading="lazy"
 alt="ikuai dhcp"
 >&lt;/p>
@@ -1163,70 +1115,46 @@ alt="ikuai dhcp"
 &lt;p>网关：设置为ikuai自己的ip&lt;/p>
 &lt;p>DNS：设置了一个阿里的和一个114的。&lt;/p>
 &lt;p>其他默认就好。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/98C1F01FB70729ADC48497586250F8CD.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=cFB4czUxV3pvSVh3cm8xd2xxYlB3Y1dEY09uMHVFZS8yNHBJUTk5M3dxMWo0ZW56eVhtY0crakdvdGdlek4zQi94Ti9BRmc9"
 loading="lazy"
 alt="ikuai dhcp add"
 >&lt;/p>
 &lt;p>然后重启dhcp服务。&lt;/p>
 &lt;h3 id="upnp">UPNP
 &lt;/h3>&lt;p>开启ikuai的UPNP服务&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/884FC4595B931D9989209265CF9BA440.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=VW54V3VOcDcvYVBFRnFQQjlSb1NIdWVOMkpwTEFNdjU1dklnaDRvN2pEZmpxS2paTGE3Y3JBRUpLM2RRU2ZqbjBGUFRDT0k9"
 loading="lazy"
 alt="ikuai upnp"
 >&lt;/p>
 &lt;p>ikuai的设置基本已经设置完毕了。剩下的就是要接入互联网了。&lt;/p>
-&lt;p>把光猫连在j4125机器的eth1上，路由器接到机器的eth3上来开启wifi，整个家庭的网络就已经通了。&lt;/p></description></item><item><title>畅网J4125安装Proxmox VE(PVE)8.0</title><link>https://konghanghang.github.io/iminling-pages/2024/j4125-install-pve/</link><pubDate>Sat, 23 Mar 2024 09:15:47 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/j4125-install-pve/</guid><description>&lt;p>年前综合考虑买了一台畅网的J4125，低功耗，也能满足一些搞机需求。由于一直忙于工作，一直没有时间研究它，最近终于抽空给机器装上了PVE8.0系统，记录一下折腾的过程。&lt;/p>
+&lt;p>把光猫连在j4125机器的eth1上，路由器接到机器的eth3上来开启wifi，整个家庭的网络就已经通了。&lt;/p></description></item><item><title>畅网J4125安装Proxmox VE(PVE)8.0</title><link>https://konghanghang.github.io/iminling-pages/2024/j4125-install-pve/</link><pubDate>Sat, 23 Mar 2024 09:15:47 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/j4125-install-pve/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=ZG5zSWhxS29UVDdDc25iUEVOTmRiREVtRjdYOHNNMmNnbHVyRXd2QUJZRnVacll6TW8vZ3EzQ0g2ZnFhYXN5TEozU3hQOUU9" alt="Featured image of post 畅网J4125安装Proxmox VE(PVE)8.0" />&lt;p>年前综合考虑买了一台畅网的J4125，低功耗，也能满足一些搞机需求。由于一直忙于工作，一直没有时间研究它，最近终于抽空给机器装上了PVE8.0系统，记录一下折腾的过程。&lt;/p>
 &lt;h2 id="机器配置">机器配置
 &lt;/h2>&lt;p>畅网J4125&lt;/p>
-&lt;div>
 &lt;ul>
-&lt;li>
-英特尔®第十代Gemini Lake低功耗四核处理器
-&lt;/li>
-&lt;li>
-4个Intel i226-V 2.5G网卡
-&lt;/li>
-&lt;li>
-2条SO-DIMM DDR4 2400MHz（兼容2666/3200MHz）
-&lt;/li>
-&lt;li>
-1个mSATA接口、1个SATA3.0硬盘接口
-&lt;/li>
-&lt;li>
-1个HDMI 1.4接口支持4K（4096x2160@30Hz）
-&lt;/li>
-&lt;li>
-1个DP 1.2接口支持4K（4096x2160@60Hz）
-&lt;/li>
-&lt;li>
-4个USB 3.0
-&lt;/li>
-&lt;li>
-全长miniPCle插槽支持USB信号的4G/WiFi通讯模块
-&lt;/li>
-&lt;li>
-直流DC-12V 55*25输入或凤凰端子供电
-&lt;/li>
-&lt;li>
-支持看门狗、GPIO、PXE无盘启动、网络唤醒
-&lt;/li>
+&lt;li>英特尔®第十代Gemini Lake低功耗四核处理器&lt;/li>
+&lt;li>4个Intel i226-V 2.5G网卡&lt;/li>
+&lt;li>2条SO-DIMM DDR4 2400MHz（兼容2666/3200MHz）&lt;/li>
+&lt;li>1个mSATA接口、1个SATA3.0硬盘接口&lt;/li>
+&lt;li>1个HDMI 1.4接口支持4K（4096x2160@30Hz）&lt;/li>
+&lt;li>1个DP 1.2接口支持4K（4096x2160@60Hz）&lt;/li>
+&lt;li>4个USB 3.0&lt;/li>
+&lt;li>全长miniPCle插槽支持USB信号的4G/WiFi通讯模块&lt;/li>
+&lt;li>直流DC-12V 55*25输入或凤凰端子供电&lt;/li>
+&lt;li>支持看门狗、GPIO、PXE无盘启动、网络唤醒&lt;/li>
 &lt;/ul>
-&lt;p>
-我这边是买了一个梵想的256G mSATA硬盘，另外买了两个三星8GB,3200HZ的内存条，整机的硬件算是完成。
-&lt;/p>
-&lt;/div>
+&lt;p>我这边是买了一个梵想的256G mSATA硬盘，另外买了两个三星8GB,3200HZ的内存条，整机的硬件算是完成。&lt;/p>
 &lt;h2 id="准备工作">准备工作
 &lt;/h2>&lt;h3 id="u盘">U盘
 &lt;/h3>&lt;p>安装PVE需要从U盘进行启动，这里使用&lt;a class="link" href="https://www.ventoy.net/cn/download.html" target="_blank" rel="noopener"
 >ventory&lt;/a>来制作启动盘。电脑上插上需要制作启动盘的U盘，然后下载ventory解压后运行&lt;code>ventory2Disk.exe&lt;/code>，设备选择自己的U盘，安装就可以了。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/045CD2CA0832B0F536C60FD0A0CA5156.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=R1ZvOW8rYzdBYlhXYmdFZGl3L0ordU11cjdNRUFlMDBhVW10cUNxSEt4MWxvMFA3R1YxR3FMaDUraG1CNVphN0N0ZDlQS3c9"
 loading="lazy"
 alt="ventory"
 >&lt;/p>
 &lt;h3 id="pve下载">PVE下载
 &lt;/h3>&lt;p>直接&lt;a class="link" href="https://pve.proxmox.com/wiki/Downloads" target="_blank" rel="noopener"
 >PVE官网&lt;/a>进行下载，根据自己的情况下载，我这里下载的是8.0的版本。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/63848743FDBE6EBF831ABDD73BD3588A.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Q0FpelpEUnUxeStGdHFxRjNuZUpabFlGS3hvZGVlSTZoMGtuc3ZjMnJCYlFSbnUvQnhYQlduYWFjWS9ROVpkcXBmaFRZaTg9"
 loading="lazy"
 alt="pve download"
 >&lt;/p>
@@ -1239,66 +1167,52 @@ alt="pve download"
 &lt;p>&lt;strong>pve管理ip：192.168.1.251&lt;/strong>&lt;/p>
 &lt;h3 id="网口规划">网口规划
 &lt;/h3>&lt;p>机器有4个网口，ETH0、ETH1，ETH2，ETH3，我打算是让ETH3来作为管理端口，所以在后边安装的时候选择最后一个网口。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/B520565B40BE8AFD73DFF73909BD3765.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=S3cwNHpESWhZUndqVGtCL04xUFAwdlYzeC91ZHhENExXQklDekpwemtzYWovU2pyc1FXSm52MTFZWUJJZHcwUUlUYlF5eDA9"
 loading="lazy"
 alt="j4125"
 >&lt;/p>
 &lt;h3 id="安装">安装
 &lt;/h3>&lt;p>下边就可以开始安装pve了，机器通过HDMI连接到显示器，并连接键盘和鼠标。然后进行开机，我这台机器是按&lt;code>delete&lt;/code>键进入bios设置,在&lt;code>Boot&lt;/code>选项中选择&lt;code>Boot option #1&lt;/code>中选择上边制作的启动盘，然后F10保存重启。&lt;/p>
-&lt;div id="attachment_464" style="width: 874px" class="wp-caption alignnone">
-![bios](https://www.iminling.com/wp-content/uploads/2024/03/24959220BB5C4D43BDFF77B6BC32C837.png)
-&lt;p id="caption-attachment-464" class="wp-caption-text">
-图片来源网络
-&lt;/p>
-&lt;/div>
+&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/24959220BB5C4D43BDFF77B6BC32C837.png"
+loading="lazy"
+alt="bios"
+>&lt;/p>
 &lt;h4 id="模式选择">模式选择
-&lt;/h4>&lt;p>开机后就进入了安装，选择第一个模式进行安装：&lt;/p>
-&lt;div id="attachment_465" style="width: 870px" class="wp-caption alignnone">
-![pve mode](https://www.iminling.com/wp-content/uploads/2024/03/DD7AE77B7444838AF56187A445C8791F.png)
-&lt;p id="caption-attachment-465" class="wp-caption-text">
-图片来源网络
-&lt;/p>
-&lt;/div>
+&lt;/h4>&lt;p>开机后就进入了安装，选择第一个模式进行安装：
+&lt;img src="https://images.iminling.com/app/hide.php?key=YXZYa20rRGJIRCtoYzA1a0VGaC9QN0dPQTdxOHdWTng2dVNKeUx3RUhOVmVZTldFOWY4MDBYeEtvYm9Xa2s1QXEwS1c2NEE9"
+loading="lazy"
+alt="pve mode"
+>&lt;/p>
 &lt;h4 id="协议">协议
 &lt;/h4>&lt;p>接下来就是同意协议：&lt;/p>
-&lt;div id="attachment_466" style="width: 821px" class="wp-caption alignnone">
-![agree](https://www.iminling.com/wp-content/uploads/2024/03/DD9704DAA2FE4EBB351F5C48BCF713D5.png)
-&lt;p id="caption-attachment-466" class="wp-caption-text">
-图片来源网络
-&lt;/p>
-&lt;/div>
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=YXZYa20rRGJIRCtoYzA1a0VGaC9Qenp5Q0NZVVN5c1EyV3VacWlQWGhKL092Mm00OXRPVGowTWtVWnZxRGFlSzB5RXJZc0U9"
+loading="lazy"
+alt="agree"
+>&lt;/p>
 &lt;h4 id="硬盘选择">硬盘选择
-&lt;/h4>&lt;p>选择硬盘，选择自己的J4125机器中安装的硬盘，不要选择成了U盘。&lt;/p>
-&lt;div id="attachment_467" style="width: 877px" class="wp-caption alignnone">
-![pve disk](https://www.iminling.com/wp-content/uploads/2024/03/3AC2CEA586DFF17A88000A99D8531EB7.png)
-&lt;p id="caption-attachment-467" class="wp-caption-text">
-图片来源网络
-&lt;/p>
-&lt;/div>
+&lt;/h4>&lt;p>选择硬盘，选择自己的J4125机器中安装的硬盘，不要选择成了U盘。
+&lt;img src="https://images.iminling.com/app/hide.php?key=MTVic251b3hPNkxPcWk4L2RXZDN3c2tqQ2Z0V2RGLy82WXp2R2xSZFVZUEhpSW8rVVFlTmZqaWh1Y24vakNyTmtueXdiNm89"
+loading="lazy"
+alt="pve disk"
+>&lt;/p>
 &lt;h4 id="地区设置">地区设置
-&lt;/h4>&lt;p>地区和时区以及键盘设置：&lt;/p>
-&lt;div id="attachment_468" style="width: 884px" class="wp-caption alignnone">
-![pve location](https://www.iminling.com/wp-content/uploads/2024/03/DB8C1DE45939E6E6B782ACA8AA505CDA.png)
-&lt;p id="caption-attachment-468" class="wp-caption-text">
-图片来源网络
-&lt;/p>
-&lt;/div>
+&lt;/h4>&lt;p>地区和时区以及键盘设置：
+&lt;img src="https://images.iminling.com/app/hide.php?key=RE00UnlGYTVZRnBydVd5bjdCeG5pWXBlODFVWTNuTUthQnFWS0d0WmtMaXhTYmRBYjdaamU1UTdNWCtIbXJzQWFFYmErNW89"
+loading="lazy"
+alt="pve location"
+>&lt;/p>
 &lt;h4 id="密码设置">密码设置
-&lt;/h4>&lt;p>管理密码和邮箱设置,&lt;strong>密码在后边登录pve的时候要用到，请牢记。&lt;/strong>&lt;/p>
-&lt;div id="attachment_469" style="width: 885px" class="wp-caption alignnone">
-![pve password](https://www.iminling.com/wp-content/uploads/2024/03/AE66F722B994AE7DA8C3240787B763A7.png)
-&lt;p id="caption-attachment-469" class="wp-caption-text">
-图片来源网络
-&lt;/p>
-&lt;/div>
+&lt;/h4>&lt;p>管理密码和邮箱设置,&lt;strong>密码在后边登录pve的时候要用到，请牢记。&lt;/strong>
+&lt;img src="https://images.iminling.com/app/hide.php?key=Q01pd2g3dFo0SmVOdWdvUUNjQjY2RHNrTlpSTFc4Yzg4eDNFLzZ1MUVLeWpFK1JpdnhET1d1Sm0vUVVmNk1uanI0eUo0OVk9"
+loading="lazy"
+alt="pve password"
+>&lt;/p>
 &lt;h4 id="网络设置">网络设置
-&lt;/h4>&lt;p>接下来的就是重点了，需要指定pve的管理网口以及ip的一些信息&lt;/p>
-&lt;div id="attachment_470" style="width: 865px" class="wp-caption alignnone">
-![pve network](https://www.iminling.com/wp-content/uploads/2024/03/F3114AD0CCF85E1B749E1B5E2B7DD2EA.png)
-&lt;p id="caption-attachment-470" class="wp-caption-text">
-图片来源网络
-&lt;/p>
-&lt;/div>
+&lt;/h4>&lt;p>接下来的就是重点了，需要指定pve的管理网口以及ip的一些信息
+&lt;img src="https://images.iminling.com/app/hide.php?key=SjhTMHBELzNqUjFYZ01xbEtZSWY0Sjh5d2VTQ3BwOEdteTdpbzN3aUovY3o3eGkxTG9LOGZkWWRIUDRqNkIvcG10SVdXZWc9"
+loading="lazy"
+alt="pve network"
+>&lt;/p>
 &lt;p>假如我想让我家的所有设置的ip是&lt;code>192.168.1.xxx&lt;/code>开头,其中第三位的1可以替换为自己想要的网段，比如：&lt;code>192.168.31.xxx&lt;/code>(小米路由器就是用这个网段)&lt;/p>
 &lt;p>详细说明一下这5个选项：&lt;/p>
 &lt;p>管理接口：这里在上边也说了，我打算把管理接口放在ETH3，所以我这里选了最后一个：enp4s0.&lt;/p>
@@ -1308,34 +1222,34 @@ alt="j4125"
 &lt;p>DNS服务器：填写和网关一样的地址就可以了。&lt;/p>
 &lt;p>这里的网关如果填错了也没关系，后边在pve里也可以进行修改，如果填错最直接的表现就是pve没办法上网。这个我在折腾的过程中也遇到了。&lt;/p>
 &lt;p>剩下的就是核对信息，然后进行安装了。等安装完成后会提示让重启。进行重启就可以了，&lt;strong>在重启的时候拔掉U盘&lt;/strong>，防止又从启动盘中进行了启动。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/91E2AEFE6037B5300C4F3ED953CC60AA.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=ZXRPUS82d3lMbUNqVWZWTXg0cVVHb0xaZDc4SGFYNWN2MzdFZm5ZU09KTXltZGdBcFBIak05aXhzaDN0akt6YU84NUZENWs9"
 loading="lazy"
 alt="pve installed"
 >&lt;/p>
 &lt;h2 id="pve设置">PVE设置
 &lt;/h2>&lt;p>上边安装pve后会进行重启，重启后会进入一个命令界面，需要输入账号和密码才能进入&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/7619FFCA83C5DE8958C507AF566F795F.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RVpXQnJCRHFsZVM0cXdtSjN3T1BYblpQYjNOSUJJeEtiYlRQczgwQTlKSk4yTm8xd2NJbGN4Nk94RmR3QW9kbGJJSG5XeDA9"
 loading="lazy"
 alt="pve login"
 >&lt;/p>
 &lt;p>这时候可以把机器连接到电脑，使用电脑通过网页端来设置pve了。正确的连接方式是：在安装过程中的管理端口连上网线，网线的另一端插入到电脑的网线口，并设置电脑端和pve在同一个网段（这个在上边安装的时候已经说明过），比如我的安装网段是192.168.1.xxx，pve管理ip是：192.168.1.251，那么设置电脑的网络为192.168.1.200就可以了。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/822B49833AF1F444A36B271B3311E4C8.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=dmlMc2RYVnRoTHNrNDV3UDlaNi80cG9XZ0VqU2hycTNNUUZXYS84OS9wcEtoa0Q1aS8yLzJEN0JnUkI2VTYzNktpNGYvTWM9"
 loading="lazy"
 alt="ip"
 >&lt;/p>
 &lt;p>设置好后就可以通过网页端访问ip：192.168.1.251:8006来访问了,如果提示不安全则点击高级继续访问：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/CD93DD5C644478C4CE80F2A6A1FDDC62.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=aC9La1lEV1pSUHhsK1ZWcHZPN1hzMXgxVS9aRmZDSzc4N256UmJuOC93Mys3czZib3RJLzVMMmpXOER0aFRSUUMrd1owSFU9"
 loading="lazy"
 alt="access pve"
 >&lt;/p>
 &lt;p>然后输入用户名和密码进行登录，用户名：root，密码是在安装的时候输入的密码。就进入了pve的管理界面：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/F280389CB4DACB73663BEEAC4F6D22F6.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=bStPc2JCOEkvU0YvWXF5YWNTUlZOKzZCWTJZRW5wbEFxSW1Fb3hjYmxEUU5LY1ZkemVUTmpnN0ZOVzU3anpCYjlvODdCL2M9"
 loading="lazy"
 alt="pve manage"
 >&lt;/p>
 &lt;h3 id="网口直通">网口直通
 &lt;/h3>&lt;p>进入后首先需要设置的就是网口直通，进入pve的shell界面，修改/etc/default/grub文件，修改GRUB_CMDLINE_LINUX_DEFAULT=&amp;ldquo;quiet&amp;quot;为GRUB_CMDLINE_LINUX_DEFAULT=&amp;ldquo;quiet intel_iommu=on&amp;rdquo;&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/03/4C57D0FA5670811C19BE26E95DFB47BB.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RVpXQnJCRHFsZVM0cXdtSjN3T1BYaU5LbWpBa3czN2xFTkR1WVNJOGVFNTFJV2VxUXlzVDMyMmF1UjFoOERsSGVUQWdxMUU9"
 loading="lazy"
 alt="pve grub"
 >&lt;/p>
@@ -1353,14 +1267,14 @@ alt="pve grub"
 &lt;/span>&lt;span class="lnt">9
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@pve:~# vim /etc/default/grub
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@pve:~# vim /etc/default/grub
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@pve:~# update-grub
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Generating grub configuration file ...
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Found linux image: /boot/vmlinuz-6.2.16-3-pve
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Found initrd image: /boot/initrd.img-6.2.16-3-pve
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Found memtest86+ 64bit EFI image: /boot/memtest86+x64.efi
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Adding boot menu entry for UEFI Firmware Settings ...
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Adding boot menu entry &lt;span class="k">for&lt;/span> UEFI Firmware Settings ...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">done&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@pve:~# reboot
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>

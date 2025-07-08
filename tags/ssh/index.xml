@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ssh on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/ssh/</link><description>Recent content in Ssh on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 17 Aug 2024 07:12:52 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/ssh/index.xml" rel="self" type="application/rss+xml"/><item><title>WSL2 Ubuntu开启SSH并配置远程登录</title><link>https://konghanghang.github.io/iminling-pages/2024/wsl2-ubuntu-open-ssh-remote-login/</link><pubDate>Sat, 17 Aug 2024 07:12:52 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/wsl2-ubuntu-open-ssh-remote-login/</guid><description>&lt;p>在公司有两台电脑，其中一台正常使用的工作电脑(A)，另一台(B)想要部署一些服务，当做一台服务器来使用，于是就是在B机器上启用了WSL服务，并安装了Ubuntu 22。但是这里遇到一个问题，我总不能一直远程桌面从A中来通过SSH操作B电脑，于是就开始折腾在B电脑开启Ubuntu的远程访问，下边记录一下折腾过程。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ssh on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/ssh/</link><description>Recent content in Ssh on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 17 Aug 2024 07:12:52 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/ssh/index.xml" rel="self" type="application/rss+xml"/><item><title>WSL2 Ubuntu开启SSH并配置远程登录</title><link>https://konghanghang.github.io/iminling-pages/2024/wsl2-ubuntu-open-ssh-remote-login/</link><pubDate>Sat, 17 Aug 2024 07:12:52 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/wsl2-ubuntu-open-ssh-remote-login/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=ektqWVRFVFhvR1dxYVh3L2tER0pPa0dsR00zZUxYZGJHbnNaY1lZankzNEpyMzgyT0ZoclN3bG5CQkVhajB6cjh0bVl3R0U9" alt="Featured image of post WSL2 Ubuntu开启SSH并配置远程登录" />&lt;p>在公司有两台电脑，其中一台正常使用的工作电脑(A)，另一台(B)想要部署一些服务，当做一台服务器来使用，于是就是在B机器上启用了WSL服务，并安装了Ubuntu 22。但是这里遇到一个问题，我总不能一直远程桌面从A中来通过SSH操作B电脑，于是就开始折腾在B电脑开启Ubuntu的远程访问，下边记录一下折腾过程。&lt;/p>
 &lt;h2 id="准备">准备
 &lt;/h2>&lt;p>A电脑需要有SSH远程访问工具，使用自带的powershell或者其他第三方的工具都是可以的。&lt;/p>
 &lt;p>B电脑需要开启WSL并安装好Ubuntu子程序。&lt;/p>
@@ -12,10 +12,10 @@
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">ai&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="nx">DESKTOP&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">KKMQ55S&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nx">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nx">apt&lt;/span>&lt;span class="err">$&lt;/span> &lt;span class="nx">sudo&lt;/span> &lt;span class="nx">apt&lt;/span> &lt;span class="nx">install&lt;/span> &lt;span class="nx">openssh&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">server&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="nx">y&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Building&lt;/span> &lt;span class="nx">dependency&lt;/span> &lt;span class="nx">tree&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="nx">state&lt;/span> &lt;span class="nx">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:/etc/apt$ sudo apt install openssh-server -y
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading package lists... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Building dependency tree... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading state information... Done
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>等待安装成功后就可以对ssh服务进行启用：&lt;/p>
@@ -27,8 +27,8 @@
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$ sudo service ssh restart
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> * Restarting OpenBSD Secure Shell server sshd [ OK ]
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$ sudo service ssh restart
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> * Restarting OpenBSD Secure Shell server sshd &lt;span class="o">[&lt;/span> OK &lt;span class="o">]&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$ service ssh status
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> * sshd is running
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
@@ -45,13 +45,13 @@
 &lt;/span>&lt;span class="lnt">7
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ai&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">DESKTOP&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">KKMQ55S&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">sudo&lt;/span> &lt;span class="n">apt&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="n">net&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">tools&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Reading&lt;/span> &lt;span class="n">package&lt;/span> &lt;span class="n">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="n">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Setting&lt;/span> &lt;span class="n">up&lt;/span> &lt;span class="n">net&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">tools&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mf">1.60&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="n">git20181103&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="n">eebece&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="n">ubuntu5&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Processing&lt;/span> &lt;span class="n">triggers&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">man&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">db&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mf">2.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ai&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">DESKTOP&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">KKMQ55S&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">ifconfig&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">eth0&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">flags&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">4163&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">UP&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">BROADCAST&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">RUNNING&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">MULTICAST&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">mtu&lt;/span> &lt;span class="mi">1500&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">inet&lt;/span> &lt;span class="mf">172.17&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">33.211&lt;/span> &lt;span class="n">netmask&lt;/span> &lt;span class="mf">255.255&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">240.0&lt;/span> &lt;span class="n">broadcast&lt;/span> &lt;span class="mf">172.17&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">47.255&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$ sudo apt install net-tools
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading package lists... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Setting up net-tools &lt;span class="o">(&lt;/span>1.60+git20181103.0eebece-1ubuntu5&lt;span class="o">)&lt;/span> ...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Processing triggers &lt;span class="k">for&lt;/span> man-db &lt;span class="o">(&lt;/span>2.10.2-1&lt;span class="o">)&lt;/span> ...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$ ifconfig
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">eth0: &lt;span class="nv">flags&lt;/span>&lt;span class="o">=&lt;/span>4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu &lt;span class="m">1500&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 172.17.33.211 netmask 255.255.240.0 broadcast 172.17.47.255
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>如上，通过ifconfig命令查看到ubuntu机器的ip是172.17.33.211，那么可以在B机器中进行远程ubuntu机器，看一下是否可以正常远程：&lt;/p>
@@ -65,18 +65,18 @@
 &lt;/span>&lt;span class="lnt">6
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">C:\Users\ai001&amp;gt;ssh ai@172.17.33.211
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@172.17.33.211&amp;#39;s password:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.10.16.3-microsoft-standard-WSL2 x86_64)
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt;ssh ai@172.17.33.211
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@172.17.33.211&lt;span class="err">&amp;#39;&lt;/span>s password:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to Ubuntu 22.04.3 LTS &lt;span class="o">(&lt;/span>GNU/Linux 5.10.16.3-microsoft-standard-WSL2 x86_64&lt;span class="o">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last login: Fri Aug 16 16:15:43 2024 from 127.0.0.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last login: Fri Aug &lt;span class="m">16&lt;/span> 16:15:43 &lt;span class="m">2024&lt;/span> from 127.0.0.1
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>可以看到才已经正常开启了ssh并可以连接。&lt;/p>
 &lt;h2 id="其他机器访问">其他机器访问
 &lt;/h2>&lt;p>上边已经对WSL的Ubuntu开启了SSH访问，接下来还需要通过其他的机器来连接这个机器，连接示意图如下：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/08/B96A62FB450691107BCD008A6CD63A5D.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Ni9teHZsaWUwOGliZUkyc05OdTFxQmJzOUlwU0pFZkZwNnR0d2d5U2ZSMkgvL2M5Y1ZvL1dLQ2l1bThGYkRDUndyUlloVjQ9"
 loading="lazy"
 alt="wsl ubuntu"
 >&lt;/p>
@@ -97,15 +97,15 @@ alt="wsl ubuntu"
 &lt;/span>&lt;span class="lnt">9
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh interface portproxy add v4tov4 listenport=22 listenaddress=0.0.0.0 connectport=22 connectaddress=localhost
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh interface portproxy add v4tov4 &lt;span class="nv">listenport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">22&lt;/span> &lt;span class="nv">listenaddress&lt;/span>&lt;span class="o">=&lt;/span>0.0.0.0 &lt;span class="nv">connectport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">22&lt;/span> &lt;span class="nv">connectaddress&lt;/span>&lt;span class="o">=&lt;/span>localhost
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh interface portproxy show v4tov4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh interface portproxy show v4tov4
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">侦听 ipv4: 连接到 ipv4:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">地址 端口 地址 端口
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">--------------- ---------- --------------- ----------
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 22 localhost 22
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 &lt;span class="m">22&lt;/span> localhost &lt;span class="m">22&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>经过上边的步骤后，我们还需要对电脑B进行防火墙放行22端口的入站流量，命令如下，name可以自定义，我这里是对ssh放行的，所以取名字就叫ssh，&lt;a class="link" href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/netsh-advfirewall-firewall-control-firewall-behavior" target="_blank" rel="noopener"
@@ -115,7 +115,7 @@ alt="wsl ubuntu"
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh advfirewall firewall add rule name=ssh dir=in action=allow protocol=TCP localport=22
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh advfirewall firewall add rule &lt;span class="nv">name&lt;/span>&lt;span class="o">=&lt;/span>ssh &lt;span class="nv">dir&lt;/span>&lt;span class="o">=&lt;/span>in &lt;span class="nv">action&lt;/span>&lt;span class="o">=&lt;/span>allow &lt;span class="nv">protocol&lt;/span>&lt;span class="o">=&lt;/span>TCP &lt;span class="nv">localport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">22&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>然后就可以在电脑A通过电脑B的22端口访问到电脑B的WSL Ubuntu子系统了。&lt;/p>
@@ -127,9 +127,9 @@ alt="wsl ubuntu"
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">k@admin:~$ ssh ai@192.168.6.39
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.10.16.3-microsoft-standard-WSL2 x86_64)
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last login: Sat Aug 17 14:36:06 2024 from 172.17.32.1
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">k@admin:~$ ssh ai@192.168.6.39
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to Ubuntu 22.04.3 LTS &lt;span class="o">(&lt;/span>GNU/Linux 5.10.16.3-microsoft-standard-WSL2 x86_64&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last login: Sat Aug &lt;span class="m">17&lt;/span> 14:36:06 &lt;span class="m">2024&lt;/span> from 172.17.32.1
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ai@DESKTOP-KKMQ55S:~$
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -150,16 +150,16 @@ alt="wsl ubuntu"
 &lt;/span>&lt;span class="lnt">10
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh interface portproxy add v4tov4 listenport=18080 listenaddress=0.0.0.0 connectport=18080 connectaddress=172.17.33.211
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh interface portproxy add v4tov4 &lt;span class="nv">listenport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">18080&lt;/span> &lt;span class="nv">listenaddress&lt;/span>&lt;span class="o">=&lt;/span>0.0.0.0 &lt;span class="nv">connectport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">18080&lt;/span> &lt;span class="nv">connectaddress&lt;/span>&lt;span class="o">=&lt;/span>172.17.33.211
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh interface portproxy show all
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh interface portproxy show all
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">侦听 ipv4: 连接到 ipv4:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">地址 端口 地址 端口
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">--------------- ---------- --------------- ----------
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 22 localhost 22
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 18080 172.17.33.211 18080
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 &lt;span class="m">22&lt;/span> localhost &lt;span class="m">22&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0.0.0.0 &lt;span class="m">18080&lt;/span> 172.17.33.211 &lt;span class="m">18080&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>如果对代理规则或者防火墙配置错误可以通过以下命令来进行删除，代理规则根据监听的端口和ip来进行删除，防火墙则通过name来进行删除。&lt;/p>
@@ -172,10 +172,10 @@ alt="wsl ubuntu"
 &lt;/span>&lt;span class="lnt">5
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh interface portproxy delete v4tov4 listenport=18080 listenaddress=0.0.0.0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:\Users\ai001&amp;gt; netsh advfirewall firewall delete rule name=tomcat
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh interface portproxy delete v4tov4 &lt;span class="nv">listenport&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="m">18080&lt;/span> &lt;span class="nv">listenaddress&lt;/span>&lt;span class="o">=&lt;/span>0.0.0.0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PS C:&lt;span class="se">\U&lt;/span>sers&lt;span class="se">\a&lt;/span>i001&amp;gt; netsh advfirewall firewall delete rule &lt;span class="nv">name&lt;/span>&lt;span class="o">=&lt;/span>tomcat
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">已删除 1 规则。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">已删除 &lt;span class="m">1&lt;/span> 规则。
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">确定。
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -454,4 +454,200 @@ alt="wsl ubuntu"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>然后再通过查看监狱状态的命令查看ip是否已经被取消掉。&lt;/p>
-&lt;p>以上就是通过安装fail2ban来对暴力破解ssh密码进行拦截，另外也可以通过修改ssh的端口来进行简单的拦截，通常默认的ssh端口是22，如果换了端口他们想要找到这个ssh端口也是要花费一些时间的，再就是可以通过禁用密码只使用key来登录，会更安全一些，这个可以参考我的另一篇文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/" >修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>。希望可以帮到大家。&lt;/p></description></item></channel></rss>
+&lt;p>以上就是通过安装fail2ban来对暴力破解ssh密码进行拦截，另外也可以通过修改ssh的端口来进行简单的拦截，通常默认的ssh端口是22，如果换了端口他们想要找到这个ssh端口也是要花费一些时间的，再就是可以通过禁用密码只使用key来登录，会更安全一些，这个可以参考我的另一篇文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/" >修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>。希望可以帮到大家。&lt;/p></description></item><item><title>修改SSH端口使用公钥登录并禁用root密码登录</title><link>https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/</link><pubDate>Fri, 05 Jan 2024 15:14:15 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=b0w0Mnh3eThuS0JueUNaajQrNU1LVXlDSVZsMEY4YlRqQU9leUEzazk0eVJXU2xxRFlLV1pKbXhmdnFpUnArVE1GbTEvZlU9" alt="Featured image of post 修改SSH端口使用公钥登录并禁用root密码登录" />&lt;p>不得不说这个世界上坏人还是比较多的，以为购买一台服务器后部署自己的服务后就可以高枕无忧了吗？NO，总有刁民想还朕，默认的SSH端口是22，这个是SSH协议的规范，那么大部分人购买了服务器后也不会想着去更改这个端口，那么就会被一些不法分子利用，服务器用户名默认root，端口默认22，那么他们就会通过这个来扫你的机器，不停的尝试登录，如果我们设置的密码强度不够，那么很快就会被穷举出来，然后你的服务器就被别人控制。今天我们就来做三步操作增强我们服务器的安全性。&lt;/p>
+&lt;h2 id="配置公钥">配置公钥
+&lt;/h2>&lt;h3 id="生成密钥对">生成密钥对
+&lt;/h3>&lt;p>我们首先要做的就是生成一对密钥，可以使用ssh-keygen来生成一对，生成语法如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ssh-keygen -t rsa -f ~/.ssh/my-ssh-key -C [USERNAME]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>其中&lt;/p>
+&lt;p>-t 指定算法，一般使用rsa非对称加密算法&lt;/p>
+&lt;p>-f 指定生成的密钥对存放的路径，可以不指定。&lt;/p>
+&lt;p>-C 为该密钥对分配一个用户名，只是为了分组使用，可以随意命名。&lt;/p>
+&lt;p>当我们执行生成命令时，如果不指定文件路径，默认会放在当前用户的.ssh目录下，并会为改密钥设置密码，默认不设置，直接回车跳过，经过这个命令就生成了一对密钥，公钥名称：id_rsa.pub，私钥名称：id_rsa&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ ssh-keygen -t rsa
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Generating public/private rsa key pair.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Enter file in which to save the key &lt;span class="o">(&lt;/span>/Users/aaa/.ssh/id_rsa&lt;span class="o">)&lt;/span>:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Enter passphrase &lt;span class="o">(&lt;/span>empty &lt;span class="k">for&lt;/span> no passphrase&lt;span class="o">)&lt;/span>:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Enter same passphrase again:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Your identification has been saved in /Users/aaa/.ssh/id_rsa
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Your public key has been saved in /Users/aaa/.ssh/id_rsa.pub
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The key fingerprint is:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SHA256:03Gf81aw0hniwCGSylV1VbOntYOrgsw1RicsUxWwKs aaa
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The key&lt;span class="err">&amp;#39;&lt;/span>s randomart image is:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+---&lt;span class="o">[&lt;/span>RSA 3072&lt;span class="o">]&lt;/span>----+
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> .oo.o &lt;span class="nv">ooB&lt;/span>&lt;span class="o">=&lt;/span>o&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> o. o o B.oo&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> . o + O.*.o&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> o . &lt;span class="o">=&lt;/span> XoOo&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> S . +oOo.&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> . Eo.ooo&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> + . .o&lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> o . &lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+----&lt;span class="o">[&lt;/span>SHA256&lt;span class="o">]&lt;/span>-----+
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ls .ssh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">config id_rsa.pub
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">id_rsa known_hosts
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="上传公钥"> 上传公钥
+&lt;/h3>&lt;p>生成密钥后，我们需要做的是把公钥上传的需要登录的服务器上，这样子我们才能在自己本地或者其他服务器上使用私钥去登录到这台服务器。上传公钥有两种方式，一种是我们直接拷贝公钥里的内容到需要登录服务器的&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">~/.ssh/authorized_keys
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>文件中，如果文件不存在直接新建一个。另一种是直接使用ssh-copy-id命令来完成。&lt;/p>
+&lt;h4 id="直接上传文件内容">直接上传文件内容
+&lt;/h4>&lt;p>我这里使用scp命令把文件传到服务器上，然后在服务器上把内容写入到authorized_keys中。上传命令中端口是非必填的默认是22端口，如果没有修改端口可以添加此参数，后边的.pub文件就是你要上传的文件，后边紧跟着你服务器的用户名@ip:具体服务器路径&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># scp [-P 端口] ./my-ssh-key.pub [USERNAME]@[EXTERNAL_IP_ADDRESS]:/root/.ssh&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">scp ./my-ssh-key.pub root@192.168.31.1:/root/.ssh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 上传成功后，ssh登录到服务器上，把上传的pub文件追加到.ssh目录下的authorized_keys中。&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ssh root@192.168.31.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ &lt;span class="nb">cd&lt;/span> .ssh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ cat my-ssh-key.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过上边步骤就上传好了pub公钥了，就可以使用key来登录了。下边介绍一下使用ssh-copy-id来上传。&lt;/p>
+&lt;h4 id="ssh-copy-id上传">ssh-copy-id上传
+&lt;/h4>&lt;p>这个上传就很简单了，直接使用命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># ssh-copy-id -i ./my-ssh-key.pub [USERNAME]@[EXTERNAL_IP_ADDRESS] [-p 端口]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ssh-copy-id -i ./my-ssh-key.pub root@192.168.31.1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>-i 指定要上传的文件路径，&lt;/p>
+&lt;p>-p 指定端口，默认22，如果没修改过ssh端口就直接不需要该参数&lt;/p>
+&lt;h4 id="公钥登录">公钥登录
+&lt;/h4>&lt;p>在登录前要先确认要登录的服务器是否开启了支持公钥登录，其实现在大部分服务器都是默认支持的，如果遇到登录不了的情况可以检查一下是否开启，具体的文件路径是/etc/ssh/sshd_conf,设置以下参数为yes：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PasswordAuthentication yes　　　　　　&lt;span class="c1"># 口令登录&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">RSAAuthentication yes　　　　　　　　　&lt;span class="c1"># RSA认证&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PubkeyAuthentication yes　　　　　　　&lt;span class="c1"># 公钥登录&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果有修改需要重启一下服务器的sshd服务：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">service sshd restart
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后就可以在本地或者其他服务器使用ssh并指定要使用的私钥文件目录来连接这个远程的服务器了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># ssh -i .ssh/my-ssh-key [USERNAME]@[EXTERNAL_IP_ADDRESS] [-p 端口]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ssh -i .ssh/my-ssh-key root@192.168.31.1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过上边步骤就可以使用公钥连接到服务器了。&lt;/p>
+&lt;h2 id="修改ssh端口">修改SSH端口
+&lt;/h2>&lt;p>默认的ssh端口是22，是在/etc/ssh/sshd_conf中配置的，在这个配置文件中我们先找到原来的配置22端口，然后复制一行出来，改成另外一个端口，比如我改成1024端口，那么此时22端口和1024端口应该都是可以通过SSH来访问的，这里一定要小心，不能一上来就把22端口干掉，万一配置错误就凉凉了。所以配置两个端口，保证22端口是肯定可以使用的，然后再添加一个新的端口，配置后重启sshd服务。然后看新配置的端口是否可以访问SSH，如果可以那说明配置没有问题，就可以干掉原来的22端口了。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">Port &lt;span class="m">22&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Port &lt;span class="m">1024&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>配置的属性就叫Port。&lt;/p>
+&lt;h2 id="禁用密码登录">禁用密码登录
+&lt;/h2>&lt;p>上边已经配置了使用公钥登录，并且也修改了SSH的端口，但是root用户的密码还在，那么一旦一些人扫到了服务器的1024端口是ssh，那么他们还是会不停的尝试密码，暴力破解密码，所以需要把密码登录关掉，只用公钥来登录。同样也是修改/etc/ssh/sshd_conf，修改PasswordAuthentication为no就可以了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">PasswordAuthentication no 　　　　　　&lt;span class="c1"># 口令登录&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">RSAAuthentication yes　　　　　　　　　&lt;span class="c1"># RSA认证&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PubkeyAuthentication yes　　　　　　　&lt;span class="c1"># 公钥登录&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>经过上边的配置就可以禁用掉root用户的密码登录功能，并修改了SSH登录的端口，这样子服务器的安全性就提高了一些。&lt;/p>
+&lt;h2 id="遇到的问题">遇到的问题
+&lt;/h2>&lt;p>在第一步上传公钥到服务器的时候，上传成功了，但是始终无法通过公钥去登录到服务器，研究了好久发现是服务器上的目录权限不正确，正确的权限应该是下边这样子的:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ chmod &lt;span class="m">700&lt;/span> ~/.ssh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ chmod &lt;span class="m">600&lt;/span> ~/.ssh/authorized_keys
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item></channel></rss>

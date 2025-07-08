@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/linux/</link><description>Recent content in Linux on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Wed, 04 Dec 2024 15:04:19 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux管理磁盘分区-挂载新的磁盘到系统</title><link>https://konghanghang.github.io/iminling-pages/2024/linux-mount-new-disk/</link><pubDate>Wed, 04 Dec 2024 15:04:19 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/linux-mount-new-disk/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/12/06E75D7C2E1274607D0E030129712389.jpg"
-loading="lazy"
-alt="disk"
->&lt;/p>
-&lt;p>最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/linux/</link><description>Recent content in Linux on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Wed, 04 Dec 2024 15:04:19 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux管理磁盘分区-挂载新的磁盘到系统</title><link>https://konghanghang.github.io/iminling-pages/2024/linux-mount-new-disk/</link><pubDate>Wed, 04 Dec 2024 15:04:19 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/linux-mount-new-disk/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=STRHaU84cVVtSm1LSEZrWHVLdDhqbzZPUURSR0EzWDB5a3RJL2RIdWgwZUVHWTFNQjV6WEtndkhQQUcxb3VlQjNGNzg5eWc9" alt="Featured image of post Linux管理磁盘分区-挂载新的磁盘到系统" />&lt;p>最近购买了两个服务器，其中一个带了一个1T的磁盘，另一个带了一个3T的磁盘，默认这两个磁盘都是没有挂载状态的，需要自己手动进行挂载，于是就开始了研究如何在linux中进行磁盘分区以及磁盘挂载，接下来记录一下折腾过程。&lt;/p>
 &lt;h2 id="3t盘挂载">3T盘挂载
 &lt;/h2>&lt;h3 id="磁盘查看">磁盘查看
 &lt;/h3>&lt;p>先使用fdisk查看磁盘&lt;/p>
@@ -31,27 +27,27 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">21
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk -l
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sda: 20 GiB, 21474836480 bytes, 41943040 sectors
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk -l
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sda: &lt;span class="m">20&lt;/span> GiB, &lt;span class="m">21474836480&lt;/span> bytes, &lt;span class="m">41943040&lt;/span> sectors
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of &lt;span class="m">1&lt;/span> * &lt;span class="nv">512&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size &lt;span class="o">(&lt;/span>logical/physical&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size &lt;span class="o">(&lt;/span>minimum/optimal&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disklabel type: gpt
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk identifier: 0DA7595A-DE2A-1042-8C4F-3C883C4D7BA6
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Device Start End Sectors Size Type
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 262144 41943006 41680863 19.9G Linux filesystem
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda14 2048 8191 6144 3M BIOS boot
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 8192 262143 253952 124M EFI System
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 &lt;span class="m">262144&lt;/span> &lt;span class="m">41943006&lt;/span> &lt;span class="m">41680863&lt;/span> 19.9G Linux filesystem
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda14 &lt;span class="m">2048&lt;/span> &lt;span class="m">8191&lt;/span> &lt;span class="m">6144&lt;/span> 3M BIOS boot
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 &lt;span class="m">8192&lt;/span> &lt;span class="m">262143&lt;/span> &lt;span class="m">253952&lt;/span> 124M EFI System
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition table entries are not in disk order.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 2.93 TiB, 3221225472000 bytes, 6291456000 sectors
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 2.93 TiB, &lt;span class="m">3221225472000&lt;/span> bytes, &lt;span class="m">6291456000&lt;/span> sectors
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of &lt;span class="m">1&lt;/span> * &lt;span class="nv">512&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size &lt;span class="o">(&lt;/span>logical/physical&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size &lt;span class="o">(&lt;/span>minimum/optimal&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>可以看到&lt;code>/dev/sdb&lt;/code>有一个2.93TB的硬盘，下边来对这个磁盘进行分区并添加。&lt;/p>
@@ -66,10 +62,10 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="nx">host&lt;/span>&lt;span class="p">:~&lt;/span>&lt;span class="err">#&lt;/span> &lt;span class="nx">apt&lt;/span> &lt;span class="nx">install&lt;/span> &lt;span class="nx">parted&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Building&lt;/span> &lt;span class="nx">dependency&lt;/span> &lt;span class="nx">tree&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="nx">state&lt;/span> &lt;span class="nx">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# apt install parted
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading package lists... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Building dependency tree... Done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Reading state information... Done
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>然后执行&lt;code>parted /dev/sdb&lt;/code>对&lt;code>/dev/sdb&lt;/code>这个盘进行处理，输入命令后会进入命令模式，需要经过几个步骤&lt;/p>
@@ -102,23 +98,23 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">18
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# parted /dev/sdb
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# parted /dev/sdb
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">GNU Parted 3.5
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Using /dev/sdb
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to GNU Parted! Type &amp;#39;help&amp;#39; to view a list of commands.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mklabel gpt
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mkpart primary ext4 0% 100%
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) print
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Model: QEMU QEMU HARDDISK (scsi)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to GNU Parted! Type &lt;span class="s1">&amp;#39;help&amp;#39;&lt;/span> to view a list of commands.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> mklabel gpt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> mkpart primary ext4 0% 100%
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> print
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Model: QEMU QEMU HARDDISK &lt;span class="o">(&lt;/span>scsi&lt;span class="o">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 3221GB
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512B/512B
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size &lt;span class="o">(&lt;/span>logical/physical&lt;span class="o">)&lt;/span>: 512B/512B
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition Table: gpt
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk Flags:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Number Start End Size File system Name Flags
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 1 1049kB 3221GB 3221GB ext4 primary
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="m">1&lt;/span> 1049kB 3221GB 3221GB ext4 primary
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) quit
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> quit
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Information: You may need to update /etc/fstab.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -143,20 +139,20 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">14
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# mkfs.ext4 /dev/sdb1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mke2fs 1.47.0 (5-Feb-2023)
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Discarding device blocks: done
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Creating filesystem with 786431488 4k blocks and 196608000 inodes
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# mkfs.ext4 /dev/sdb1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mke2fs 1.47.0 &lt;span class="o">(&lt;/span>5-Feb-2023&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Discarding device blocks: &lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Creating filesystem with &lt;span class="m">786431488&lt;/span> 4k blocks and &lt;span class="m">196608000&lt;/span> inodes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem UUID: f2275364-6fa6-4ae0-a214-5bd98552f5b1
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Superblock backups stored on blocks:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 102400000, 214990848, 512000000, 550731776, 644972544
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 102400000, 214990848, 512000000, 550731776, &lt;span class="m">644972544&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Allocating group tables: done
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Writing inode tables: done
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Creating journal (262144 blocks): done
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Writing superblocks and filesystem accounting information: done
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Allocating group tables: &lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Writing inode tables: &lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Creating journal &lt;span class="o">(&lt;/span>&lt;span class="m">262144&lt;/span> blocks&lt;span class="o">)&lt;/span>: &lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Writing superblocks and filesystem accounting information: &lt;span class="k">done&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>经过上边就已经对刚分的那个盘进行了格式化。&lt;/p>
@@ -187,26 +183,26 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">21
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# mkdir /data
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# mkdir /data
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@host:~# df -h
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem Size Used Avail Use% Mounted on
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 979M 0 979M 0% /dev
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 979M &lt;span class="m">0&lt;/span> 979M 0% /dev
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 732K 198M 1% /run
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 20G 2.1G 17G 12% /
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 990M 0 990M 0% /dev/shm
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M 0 5.0M 0% /run/lock
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 990M &lt;span class="m">0&lt;/span> 990M 0% /dev/shm
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M &lt;span class="m">0&lt;/span> 5.0M 0% /run/lock
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 124M 12M 113M 10% /boot/efi
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 0 198M 0% /run/user/0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M &lt;span class="m">0&lt;/span> 198M 0% /run/user/0
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@host:~# mount /dev/sdb1 /data
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@host:~# df -h
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Filesystem Size Used Avail Use% Mounted on
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 979M 0 979M 0% /dev
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">udev 979M &lt;span class="m">0&lt;/span> 979M 0% /dev
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 732K 198M 1% /run
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 20G 2.1G 17G 12% /
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 990M 0 990M 0% /dev/shm
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M 0 5.0M 0% /run/lock
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 990M &lt;span class="m">0&lt;/span> 990M 0% /dev/shm
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 5.0M &lt;span class="m">0&lt;/span> 5.0M 0% /run/lock
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 124M 12M 113M 10% /boot/efi
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M 0 198M 0% /run/user/0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">tmpfs 198M &lt;span class="m">0&lt;/span> 198M 0% /run/user/0
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sdb1 2.9T 28K 2.8T 1% /data
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -219,8 +215,8 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host-c:~# vim /etc/fstab
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sdb1 /data ext4 defaults 0 2
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host-c:~# vim /etc/fstab
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sdb1 /data ext4 defaults &lt;span class="m">0&lt;/span> &lt;span class="m">2&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>如上添加一行&lt;code>/dev/sdb1 /data ext4 defaults 0 2&lt;/code>就可以重启后自动实现挂载。&lt;/p>
@@ -252,25 +248,25 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">21
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk -l
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: 1000 GiB, 1073741824000 bytes, 2097152000 sectors
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk -l
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sdb: &lt;span class="m">1000&lt;/span> GiB, &lt;span class="m">1073741824000&lt;/span> bytes, &lt;span class="m">2097152000&lt;/span> sectors
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of &lt;span class="m">1&lt;/span> * &lt;span class="nv">512&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size &lt;span class="o">(&lt;/span>logical/physical&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size &lt;span class="o">(&lt;/span>minimum/optimal&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sda: 20 GiB, 21474836480 bytes, 41943040 sectors
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk /dev/sda: &lt;span class="m">20&lt;/span> GiB, &lt;span class="m">21474836480&lt;/span> bytes, &lt;span class="m">41943040&lt;/span> sectors
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk model: QEMU HARDDISK
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of 1 * 512 = 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size (logical/physical): 512 bytes / 512 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size (minimum/optimal): 512 bytes / 512 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Units: sectors of &lt;span class="m">1&lt;/span> * &lt;span class="nv">512&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Sector size &lt;span class="o">(&lt;/span>logical/physical&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">I/O size &lt;span class="o">(&lt;/span>minimum/optimal&lt;span class="o">)&lt;/span>: &lt;span class="m">512&lt;/span> bytes / &lt;span class="m">512&lt;/span> bytes
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disklabel type: gpt
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Disk identifier: 0DA7595A-DE2A-1042-8C4F-3C883C4D7BA6
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Device Start End Sectors Size Type
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 262144 41943006 41680863 19.9G Linux filesystem
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda14 2048 8191 6144 3M BIOS boot
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 8192 262143 253952 124M EFI System
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda1 &lt;span class="m">262144&lt;/span> &lt;span class="m">41943006&lt;/span> &lt;span class="m">41680863&lt;/span> 19.9G Linux filesystem
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda14 &lt;span class="m">2048&lt;/span> &lt;span class="m">8191&lt;/span> &lt;span class="m">6144&lt;/span> 3M BIOS boot
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/dev/sda15 &lt;span class="m">8192&lt;/span> &lt;span class="m">262143&lt;/span> &lt;span class="m">253952&lt;/span> 124M EFI System
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition table entries are not in disk order.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
@@ -309,32 +305,32 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">27
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk /dev/sdb
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# fdisk /dev/sdb
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to fdisk (util-linux 2.38.1).
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Changes will remain in memory only, until you decide to write them.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to fdisk &lt;span class="o">(&lt;/span>util-linux 2.38.1&lt;span class="o">)&lt;/span>.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Changes will remain in memory only, &lt;span class="k">until&lt;/span> you decide to write them.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Be careful before using the write command.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Device does not contain a recognized partition table.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new DOS (MBR) disklabel with disk identifier 0x17afed0e.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new DOS &lt;span class="o">(&lt;/span>MBR&lt;span class="o">)&lt;/span> disklabel with disk identifier 0x17afed0e.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command (m for help): o
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new DOS (MBR) disklabel with disk identifier 0xa7272020.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command &lt;span class="o">(&lt;/span>m &lt;span class="k">for&lt;/span> &lt;span class="nb">help&lt;/span>&lt;span class="o">)&lt;/span>: o
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new DOS &lt;span class="o">(&lt;/span>MBR&lt;span class="o">)&lt;/span> disklabel with disk identifier 0xa7272020.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command (m for help): n
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition type
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> p primary (0 primary, 0 extended, 4 free)
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> e extended (container for logical partitions)
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Select (default p): p
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition number (1-4, default 1): 1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">First sector (2048-2097151999, default 2048):
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-2097151999, default 2097151999):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command &lt;span class="o">(&lt;/span>m &lt;span class="k">for&lt;/span> &lt;span class="nb">help&lt;/span>&lt;span class="o">)&lt;/span>: n
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition &lt;span class="nb">type&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> p primary &lt;span class="o">(&lt;/span>&lt;span class="m">0&lt;/span> primary, &lt;span class="m">0&lt;/span> extended, &lt;span class="m">4&lt;/span> free&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> e extended &lt;span class="o">(&lt;/span>container &lt;span class="k">for&lt;/span> logical partitions&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Select &lt;span class="o">(&lt;/span>default p&lt;span class="o">)&lt;/span>: p
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Partition number &lt;span class="o">(&lt;/span>1-4, default 1&lt;span class="o">)&lt;/span>: &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">First sector &lt;span class="o">(&lt;/span>2048-2097151999, default 2048&lt;span class="o">)&lt;/span>:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Last sector, +/-sectors or +/-size&lt;span class="o">{&lt;/span>K,M,G,T,P&lt;span class="o">}&lt;/span> &lt;span class="o">(&lt;/span>2048-2097151999, default 2097151999&lt;span class="o">)&lt;/span>:
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new partition 1 of type &amp;#39;Linux&amp;#39; and of size 1000 GiB.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Created a new partition &lt;span class="m">1&lt;/span> of &lt;span class="nb">type&lt;/span> &lt;span class="s1">&amp;#39;Linux&amp;#39;&lt;/span> and of size &lt;span class="m">1000&lt;/span> GiB.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command (m for help): w
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Command &lt;span class="o">(&lt;/span>m &lt;span class="k">for&lt;/span> &lt;span class="nb">help&lt;/span>&lt;span class="o">)&lt;/span>: w
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The partition table has been altered.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Calling ioctl() to re-read partition table.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Calling ioctl&lt;span class="o">()&lt;/span> to re-read partition table.
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Syncing disks.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -353,13 +349,13 @@ alt="disk"
 &lt;/span>&lt;span class="lnt">8
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@host:~# parted /dev/sdb
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@host:~# parted /dev/sdb
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">GNU Parted 3.5
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Using /dev/sdb
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to GNU Parted! Type &amp;#39;help&amp;#39; to view a list of commands.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mklabel msdos
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) mkpart primary ext4 0% 100%
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">(parted) quit
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Welcome to GNU Parted! Type &lt;span class="s1">&amp;#39;help&amp;#39;&lt;/span> to view a list of commands.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> mklabel msdos
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> mkpart primary ext4 0% 100%
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">(&lt;/span>parted&lt;span class="o">)&lt;/span> quit
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Information: You may need to update /etc/fstab.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -639,10 +635,7 @@ alt="disk"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>然后再通过查看监狱状态的命令查看ip是否已经被取消掉。&lt;/p>
-&lt;p>以上就是通过安装fail2ban来对暴力破解ssh密码进行拦截，另外也可以通过修改ssh的端口来进行简单的拦截，通常默认的ssh端口是22，如果换了端口他们想要找到这个ssh端口也是要花费一些时间的，再就是可以通过禁用密码只使用key来登录，会更安全一些，这个可以参考我的另一篇文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/" >修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>。希望可以帮到大家。&lt;/p></description></item><item><title>linux双栈网络设置IPv4优先</title><link>https://konghanghang.github.io/iminling-pages/2023/linux-use-ipv4-first/</link><pubDate>Sun, 03 Sep 2023 02:58:44 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/linux-use-ipv4-first/</guid><description>&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/09/IPv4-vs-IPv6.jpeg"
-loading="lazy"
->&lt;/p>
-&lt;p>双协议栈技术就是指在一台设备上同时启用 IPv4 协议栈和 IPv6 协议栈，这样就可以同时使用 IPv4 和 IPv6 的网络。但是在默认情况下都会以IPv6网络优先，只有 IPv6 无法访问的时候才会尝试访问 IPv4，某些特定的应用和场景下，我们并不想要 IPv6 优先，这时候就需要修改一些配置文件让 IPv4 优先。&lt;/p>
+&lt;p>以上就是通过安装fail2ban来对暴力破解ssh密码进行拦截，另外也可以通过修改ssh的端口来进行简单的拦截，通常默认的ssh端口是22，如果换了端口他们想要找到这个ssh端口也是要花费一些时间的，再就是可以通过禁用密码只使用key来登录，会更安全一些，这个可以参考我的另一篇文章：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/modify-ssh-port-and-use-publick-key-login/" >修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>修改SSH端口使用公钥登录并禁用root密码登录&lt;/a>。希望可以帮到大家。&lt;/p></description></item><item><title>linux双栈网络设置IPv4优先</title><link>https://konghanghang.github.io/iminling-pages/2023/linux-use-ipv4-first/</link><pubDate>Sun, 03 Sep 2023 02:58:44 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/linux-use-ipv4-first/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=cU9DUVBIUnEzWktLQnpML0x0b090RkVtOGRNa0VnNXpMMFNSSFZKcTNsZkQ3eXdWNDlnZS9pNWZvNHFXdVNZV0JZVVpBREE9" alt="Featured image of post linux双栈网络设置IPv4优先" />&lt;p>双协议栈技术就是指在一台设备上同时启用 IPv4 协议栈和 IPv6 协议栈，这样就可以同时使用 IPv4 和 IPv6 的网络。但是在默认情况下都会以IPv6网络优先，只有 IPv6 无法访问的时候才会尝试访问 IPv4，某些特定的应用和场景下，我们并不想要 IPv6 优先，这时候就需要修改一些配置文件让 IPv4 优先。&lt;/p>
 &lt;h2 id="查看网络优先级">查看网络优先级
 &lt;/h2>&lt;p>可以通过以下命令来查看当前的机器是以哪个网络优先的：&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -651,7 +644,7 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2000::97e4
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -662,7 +655,7 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">192.168.0.235
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -686,19 +679,19 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">13
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Add another rule to the RFC 3484 precedence table. See section 2.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># and 10.3 in RFC 3484. The default is:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::1/128 50
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/0 40
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence 2002::/16 30
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/96 20
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::ffff:0:0/96 10
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># For sites which prefer IPv4 connections change the last line to
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::ffff:0:0/96 100
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Add another rule to the RFC 3484 precedence table. See section 2.1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># and 10.3 in RFC 3484. The default is:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::1/128 50&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/0 40&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence 2002::/16 30&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/96 20&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::ffff:0:0/96 10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># For sites which prefer IPv4 connections change the last line to&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::ffff:0:0/96 100&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>里边有一行提示：&lt;code>For sites which prefer IPv4 connections change the last line to&lt;/code>，想要IPv4出栈，可以设置：&lt;code>precedence ::ffff:0:0/96 100&lt;/code>&lt;/p>
@@ -720,19 +713,19 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">13
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Add another rule to the RFC 3484 precedence table. See section 2.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># and 10.3 in RFC 3484. The default is:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::1/128 50
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/0 40
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence 2002::/16 30
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::/96 20
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#precedence ::ffff:0:0/96 10
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># For sites which prefer IPv4 connections change the last line to
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">precedence ::ffff:0:0/96 100
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># precedence &amp;lt;mask&amp;gt; &amp;lt;value&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Add another rule to the RFC 3484 precedence table. See section 2.1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># and 10.3 in RFC 3484. The default is:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::1/128 50&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/0 40&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence 2002::/16 30&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::/96 20&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#precedence ::ffff:0:0/96 10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># For sites which prefer IPv4 connections change the last line to&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">precedence ::ffff:0:0/96 &lt;span class="m">100&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>修改后保存，然后再使用curl访问网站，不指定使用的IPv4还是IPv6，默认情况下就走了IPv4，如下：&lt;/p>
@@ -742,7 +735,7 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# curl ip.sb -4
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">192.168.0.235
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
@@ -770,14 +763,14 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">17
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@gc:~# ip address
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@gc:~# ip address
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu &lt;span class="m">65536&lt;/span> qdisc noqueue state UNKNOWN group default qlen &lt;span class="m">1000&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet 127.0.0.1/8 scope host lo
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> inet6 ::1/128 scope host
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> valid_lft forever preferred_lft forever
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc fq state UP group default qlen 1000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2: eth0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu &lt;span class="m">1500&lt;/span> qdisc fq state UP group default qlen &lt;span class="m">1000&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> link/ether 00:16:3c:6b:b7:c3 brd ff:ff:ff:ff:ff:ff
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> altname enp0s3
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> altname ens3
@@ -802,14 +795,14 @@ loading="lazy"
 &lt;/span>&lt;span class="lnt">8
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.autoconf = 0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.autoconf = 0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.accept_ra = 0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.accept_ra = 0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.disable_ipv6 = 1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.disable_ipv6 = 1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.lo.disable_ipv6 = 1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.eth0.disable_ipv6 = 1
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.autoconf &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.autoconf &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.accept_ra &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.accept_ra &lt;span class="o">=&lt;/span> &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.all.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.default.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.lo.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net.ipv6.conf.eth0.disable_ipv6 &lt;span class="o">=&lt;/span> &lt;span class="m">1&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>然后使用 &lt;code>sysctl -p&lt;/code> 来重新加载配置文件，此时查看 &lt;code>ip a&lt;/code> 就可以发现 IPv6 已经被禁止了。&lt;/p>
@@ -1020,210 +1013,4 @@ loading="lazy"
 &lt;/div>&lt;p>整个安装过程也不是很麻烦，跟着官方的步骤走就可以了，这里记录一下自己的安装过程，方便以后快速安装。&lt;/p>
 &lt;p> &lt;/p>
 &lt;p> &lt;/p>
-&lt;p> &lt;/p></description></item><item><title>linux服务器快速安装docker和docker-compose</title><link>https://konghanghang.github.io/iminling-pages/2023/linux-install-docker/</link><pubDate>Fri, 09 Jun 2023 21:49:42 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/linux-install-docker/</guid><description>&lt;p>记录一下安装docker的过程，具体的安装步骤都是参考docker的官方网站进行的安装。&lt;/p>
-&lt;h2 id="ubuntu安装">ubuntu安装
-&lt;/h2>&lt;h3 id="卸载旧版">卸载旧版
-&lt;/h3>&lt;p>执行下边的命令&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="nx">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">ubuntu&lt;/span>&lt;span class="p">:~&lt;/span>&lt;span class="err">$&lt;/span> &lt;span class="nx">sudo&lt;/span> &lt;span class="nx">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">get&lt;/span> &lt;span class="nx">remove&lt;/span> &lt;span class="nx">docker&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">engine&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">io&lt;/span> &lt;span class="nx">containerd&lt;/span> &lt;span class="nx">runc&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">lists&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Building&lt;/span> &lt;span class="nx">dependency&lt;/span> &lt;span class="nx">tree&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Reading&lt;/span> &lt;span class="nx">state&lt;/span> &lt;span class="nx">information&lt;/span>&lt;span class="o">...&lt;/span> &lt;span class="nx">Done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">E&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">Unable&lt;/span> &lt;span class="nx">to&lt;/span> &lt;span class="nx">locate&lt;/span> &lt;span class="kn">package&lt;/span> &lt;span class="nx">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nx">engine&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>执行上边的命令清除以前的安装。&lt;/p>
-&lt;h3 id="设置源">设置源
-&lt;/h3>&lt;p>执行以下命令：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">sudo&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">update&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">sudo&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">install&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ca&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">certificates&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">curl&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">gnupg&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lsb&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">release&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 添加docker官方GPG key&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">curl&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">fsSL&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">gpg&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">o&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">keyrings&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">asc&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 执行&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">echo&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu &lt;/span>&lt;span class="se">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>&lt;span class="s2"> $(. /etc/os-release &amp;amp;&amp;amp; echo &amp;#34;&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;) stable&amp;#34;&lt;/span> &lt;span class="o">|&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sudo&lt;/span> &lt;span class="n">tee&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">dev&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">null&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>设置安装源。&lt;/p>
-&lt;h3 id="安装">安装
-&lt;/h3>&lt;p>先更新刚才安装的源，然后就可以执行安装了：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 更新
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get update
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 安装
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>上边的安装是安装最新版本，如果想安装特定版本则需要先查看有哪些可以安装的版本：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ubuntu&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">VM&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~$&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cache&lt;/span> &lt;span class="n">madison&lt;/span> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">16&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">15&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">14&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ce&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.10&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">13&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="n">ubuntu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">focal&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">download&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ubuntu&lt;/span> &lt;span class="n">focal&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">stable&lt;/span> &lt;span class="n">amd64&lt;/span> &lt;span class="n">Packages&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>找到版本后执行以下命令来进行安装：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 版本是上个命令输出的第个列5:20.10.16~3-0~ubuntu-focal
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install docker-ce=&amp;lt;VERSION_STRING&amp;gt; docker-ce-cli=&amp;lt;VERSION_STRING&amp;gt; containerd.io docker-compose-plugin
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>安装后就可以使用了。&lt;/p>
-&lt;h3 id="不使用sudo">不使用sudo
-&lt;/h3>&lt;p>ubuntu的系统如果使用的不是root安装，每次运行命令都是需要使用sudo,相对来说是比较麻烦的，如果不想使用sudo，可以使用下面的命令来解决：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo groupadd docker
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[sudo] password for root:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">groupadd: group &amp;#39;docker&amp;#39; already exists
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ sudo gpasswd -a ${USER} docker
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Adding user ubuntu to group docker
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu@VM-20-3-ubuntu:~$ newgrp - docker
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>这样子使用起来就方便了很多。&lt;/p>
-&lt;h2 id="debain安装">debain安装
-&lt;/h2>&lt;p>前两步和ubuntu基本一样，删除旧版，然后设置源。&lt;/p>
-&lt;h3 id="删除旧版以及更新apt">删除旧版以及更新apt
-&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># 删除旧版
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get remove docker docker-engine docker.io containerd runc
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 更新apt包索引
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get update
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="添加gpg">添加gpg
-&lt;/h3>&lt;p>执行以下命令添加gpg&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="c1"># mkdir -p /etc/apt/keyrings&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span> &lt;span class="o">~&lt;/span> &lt;span class="c1"># curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>如果在添加gpg的时候报错：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">gpg: command not found
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>则可以先安装gpg：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@s9707:~# apt-get install gnupg gnupg2
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="设置仓库">设置仓库
-&lt;/h3>&lt;p>通过以下命令添加仓库&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">root&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">s9707&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">~&lt;/span>&lt;span class="c1"># echo \&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian &lt;/span>&lt;span class="se">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>&lt;span class="s2"> $(. /etc/os-release &amp;amp;&amp;amp; echo &amp;#34;&lt;/span>&lt;span class="o">$&lt;/span>&lt;span class="n">VERSION_CODENAME&lt;/span>&lt;span class="s2">&amp;#34;) stable&amp;#34;&lt;/span> &lt;span class="o">|&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tee&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">etc&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">d&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">list&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">dev&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">null&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>然后再次更新apt包索引：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@s9707 ~ # apt-get update
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="安装docker">安装docker
-&lt;/h3>&lt;p>接下来就是安装：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>整个安装过程也不是很麻烦，跟着官方的步骤走就可以了，这里记录一下自己的安装过程，方便以后快速安装。&lt;/p></description></item></channel></rss>
+&lt;p> &lt;/p></description></item></channel></rss>

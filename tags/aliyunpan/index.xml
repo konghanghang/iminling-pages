@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Aliyunpan on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/aliyunpan/</link><description>Recent content in Aliyunpan on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 06 Jul 2024 03:11:29 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/aliyunpan/index.xml" rel="self" type="application/rss+xml"/><item><title>docker搭建aliyunpan-sync时实增量同步阿里云盘文件</title><link>https://konghanghang.github.io/iminling-pages/2024/docker-deploy-aliyunpan-sync/</link><pubDate>Sat, 06 Jul 2024 03:11:29 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/docker-deploy-aliyunpan-sync/</guid><description>&lt;p>在前边的文章中介绍了如何快速的搭建&lt;a class="link" href="https://www.iminling.com/2024/04/20/586.html" title="搭建属于自己的影视小站：小雅Alist安装及使用"
-target="_blank" rel="noopener"
->小雅alist&lt;/a>来满足大家的观影需求，但是有一些剧小雅更新没那么及时，这时候就需要大家八仙过海了。如何及时找到自己要观看的剧，并成功观看呢？下边就带着大家一起使用&lt;a class="link" href="https://github.com/tickstep/aliyunpan" target="_blank" rel="noopener"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Aliyunpan on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/aliyunpan/</link><description>Recent content in Aliyunpan on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sat, 06 Jul 2024 03:11:29 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/aliyunpan/index.xml" rel="self" type="application/rss+xml"/><item><title>docker搭建aliyunpan-sync时实增量同步阿里云盘文件</title><link>https://konghanghang.github.io/iminling-pages/2024/docker-deploy-aliyunpan-sync/</link><pubDate>Sat, 06 Jul 2024 03:11:29 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/docker-deploy-aliyunpan-sync/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=dTRuQi9oWFFCZ2JmUDF2bDRUUFVERFNJZnc2Sm43RTU4dXlnVzViM3pMYzdEenBDM0t4MDBwbkM2eTY5QlZ1MSt2UjhuRjQ9" alt="Featured image of post docker搭建aliyunpan-sync时实增量同步阿里云盘文件" />&lt;p>在前边的文章中介绍了如何快速的搭建&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/how-to-build-xiaoya-alist-and-use/" >小雅alist&lt;/a>来满足大家的观影需求，但是有一些剧小雅更新没那么及时，这时候就需要大家八仙过海了。如何及时找到自己要观看的剧，并成功观看呢？下边就带着大家一起使用&lt;a class="link" href="https://github.com/tickstep/aliyunpan" target="_blank" rel="noopener"
 >aliyunpan-sync&lt;/a>工具来同步阿里云盘的数据。&lt;/p>
 &lt;h2 id="网盘选择">网盘选择
 &lt;/h2>&lt;p>这里为什么要选择阿里云盘呢？因为阿里网盘资源比较多，更新也比较快，然后网上也找了同步阿里云盘的同步工具：&lt;a class="link" href="https://github.com/tickstep/aliyunpan" target="_blank" rel="noopener"
@@ -8,14 +6,12 @@ target="_blank" rel="noopener"
 target="_blank" rel="noopener"
 >https://t.me/yunpanpan&lt;/a>。&lt;/p>
 &lt;h2 id="安装aliyunpan-sync">安装aliyunpan-sync
-&lt;/h2>&lt;p>我这里使用的是docker compose进行的安装，如果还没有安装docker的同学可以参考的我的文章把docker 给安装一下：&lt;a class="link" href="https://www.iminling.com/2023/06/10/164.html" title="docker安装"
-target="_blank" rel="noopener"
->docker安装&lt;/a>。&lt;/p>
+&lt;/h2>&lt;p>我这里使用的是docker compose进行的安装，如果还没有安装docker的同学可以参考的我的文章把docker 给安装一下：&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2023/linux-install-docker/" >docker安装&lt;/a>。&lt;/p>
 &lt;h3 id="获取阿里云盘token">获取阿里云盘token
 &lt;/h3>&lt;p>要想从阿里云盘里下载文件，肯定是需要先登录阿里云盘才能进行数据同步，如何登录阿里云盘aliyunpan-sync工具里也有具体的说明：&lt;a class="link" href="https://github.com/tickstep/aliyunpan/blob/main/docs/manual.md#%E7%99%BB%E5%BD%95%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E5%B8%90%E5%8F%B7" target="_blank" rel="noopener"
 >登录阿里云盘&lt;/a>，需要先在&lt;a class="link" href="https://github.com/tickstep/aliyunpan/releases" target="_blank" rel="noopener"
 >release&lt;/a>页面下载一个对应系统的release，我的操作系统是mac m1芯片我就下载arm那个&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/07/FAEE60916F633EC24FFD16E75F5AAB73.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=R0FVYnRhNEJZWmVoZTdMQTkyOFRxVUM3cmN3TUZPbjFZSWF4OVNablFBWUsxNGNpYW83dkJpZFduaWMrV1YzOXBhd0lmR2s9"
 loading="lazy"
 alt="aliyunpan sync release"
 >&lt;/p>
@@ -41,27 +37,27 @@ alt="aliyunpan sync release"
 &lt;/span>&lt;span class="lnt">17
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ Mac-mini in ~/Downloads/aliyunpan-v0.3.2-darwin-macos-arm64 [10:03:26]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">$&lt;/span> &lt;span class="n">ls&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">README&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">md&lt;/span> &lt;span class="n">manual&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">md&lt;/span> &lt;span class="n">sync&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sh&lt;/span> &lt;span class="n">webdav&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sh&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">aliyunpan&lt;/span> &lt;span class="n">plugin&lt;/span> &lt;span class="n">sync_drive&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">aliyunpan_config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">json&lt;/span> &lt;span class="n">sync&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bat&lt;/span> &lt;span class="n">webdav&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bat&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ Mac-mini in ~/Downloads/aliyunpan-v0.3.2-darwin-macos-arm64 [10:03:26]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ls
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">README.md manual.md sync.sh webdav.sh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">aliyunpan plugin sync_drive
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">aliyunpan_config.json sync.bat webdav.bat
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ Mac-mini in ~/Downloads/aliyunpan-v0.3.2-darwin-macos-arm64 [10:03:28]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">$&lt;/span> &lt;span class="n">aliyunpan&lt;/span> &lt;span class="n">login&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">zsh&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">command&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">found&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">aliyunpan&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ aliyunpan login
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">zsh: &lt;span class="nb">command&lt;/span> not found: aliyunpan
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># k @ Mac-mini in ~/Downloads/aliyunpan-v0.3.2-darwin-macos-arm64 [10:03:42] C:127&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">$&lt;/span> &lt;span class="o">./&lt;/span>&lt;span class="n">aliyunpan&lt;/span> &lt;span class="n">login&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">请在浏览器打开以下链接进行登录，链接有效时间为&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="err">分钟。&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">注意：你需要进行一次授权一次扫码的两次登录。&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">openapi&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">alipan&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">oauth&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">authorize&lt;/span>&lt;span class="err">?&lt;/span>&lt;span class="n">client_id&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">cf9f70e8fc6143031375&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">redirect_uri&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">https&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="n">A&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">F&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Fapi&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tickstep&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Fauth&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Ftickstep&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Faliyunpan&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Ftoken&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Fopenapi&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">F0bd327267c41f7b2fcadf927&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Fauth2&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">scope&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">base&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">file&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">all&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">file&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">all&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">write&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ ./aliyunpan login
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">请在浏览器打开以下链接进行登录，链接有效时间为5分钟。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">注意：你需要进行一次授权一次扫码的两次登录。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">https://openapi.alipan.com/oauth/authorize?client_id&lt;span class="o">=&lt;/span>cf9f70e8fc6143031375&lt;span class="p">&amp;amp;&lt;/span>&lt;span class="nv">redirect_uri&lt;/span>&lt;span class="o">=&lt;/span>https%3A%2F%2Fapi.tickstep.com%2Fauth%2Ftickstep%2Faliyunpan%2Ftoken%2Fopenapi%2F0bd327267c41f7b2fcadf927%2Fauth2&lt;span class="p">&amp;amp;&lt;/span>&lt;span class="nv">scope&lt;/span>&lt;span class="o">=&lt;/span>user:base,file:all:read,file:all:write
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">请在浏览器里面完成扫码登录，然后再按&lt;/span>&lt;span class="n">Enter键继续&lt;/span>&lt;span class="o">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">请在浏览器里面完成扫码登录，然后再按Enter键继续...
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>打开url就需要使用手机端的阿里云盘进行扫码登录，提示进行授权：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/07/2F4D63F1408D9F02A15CC4F6E7533A1B.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=UHVPZkRvYkllMlN2SzRMa09qTXcxRDR3aTBhZHVsNmdCaTlwbzlmMXhqcXhvS2lPSnFRS1lKbjB6TnM4VkpNcXQxSUVhV0k9"
 loading="lazy"
 alt="aliyunpan authority"
 >&lt;/p>
@@ -84,18 +80,18 @@ alt="aliyunpan authority"
 &lt;/span>&lt;span class="lnt">12
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="o">$&lt;/span> &lt;span class="n">tree&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">├──&lt;/span> &lt;span class="n">config&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">├──&lt;/span> &lt;span class="n">docker&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">compose&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">yaml&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">├──&lt;/span> &lt;span class="n">js&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">│&lt;/span> &lt;span class="err">├──&lt;/span> &lt;span class="n">download_handler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">js&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sample&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">│&lt;/span> &lt;span class="err">├──&lt;/span> &lt;span class="n">sync_handler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">js&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">│&lt;/span> &lt;span class="err">├──&lt;/span> &lt;span class="n">sync_handler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">js&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sample&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">│&lt;/span> &lt;span class="err">├──&lt;/span> &lt;span class="n">token_handler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">js&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">│&lt;/span> &lt;span class="err">├──&lt;/span> &lt;span class="n">token_handler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">js&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sample&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">│&lt;/span> &lt;span class="err">└──&lt;/span> &lt;span class="n">upload_handler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">js&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sample&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">└──&lt;/span> &lt;span class="n">sync_drive&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ tree
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── config
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── docker-compose.yaml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── js
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ ├── download_handler.js.sample
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ ├── sync_handler.js
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ ├── sync_handler.js.sample
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ ├── token_handler.js
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ ├── token_handler.js.sample
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ └── upload_handler.js.sample
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── sync_drive
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>config目录是用来挂在配置文件的，等下token是要填在这个目录下的&lt;code>aliyunpan_config.json&lt;/code>文件里的。&lt;/p>
@@ -149,57 +145,57 @@ alt="aliyunpan authority"
 &lt;/span>&lt;span class="lnt">43
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">version&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;3&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">services&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sync&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">image&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">tickstep&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">aliyunpan&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">sync&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">v0&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mf">3.2&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">container_name&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">aliyunpan&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">sync&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">restart&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">unless&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">stopped&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">volumes&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># （必须）映射的本地目录&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">webdav&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">home&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">rw&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># （可选）可以指定JS插件sync_handler.js用于过滤文件，详见插件说明&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">#- ./config/sync_handler.js:/home/app/config/plugin/js/sync_handler.js&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">./&lt;/span>&lt;span class="n">js&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">home&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">config&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">plugin&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">js&lt;/span>&lt;span class="o">/&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># （推荐）挂载sync_drive同步数据库到本地，这样即使容器销毁，同步数据库还可以用于以后使用&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">./&lt;/span>&lt;span class="n">sync_drive&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">home&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">config&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">sync_drive&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># （必须）映射token凭据文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="o">./&lt;/span>&lt;span class="n">config&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">aliyunpan_config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">home&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">config&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">aliyunpan_config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">json&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">extra_hosts&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">host&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">docker&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">internal&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">host&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">gateway&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">environment&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 时区，东8区&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">TZ&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Asia&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Shanghai&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 下载文件并发数&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">ALIYUNPAN_DOWNLOAD_PARALLEL&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">2&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 上传文件并发数&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">ALIYUNPAN_UPLOAD_PARALLEL&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">2&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 下载数据块大小，单位为KB，默认为10240KB，建议范围1024KB~10240KB&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">ALIYUNPAN_DOWNLOAD_BLOCK_SIZE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">1024&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 上传数据块大小，单位为KB，默认为10240KB，建议范围1024KB~10240KB&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">ALIYUNPAN_UPLOAD_BLOCK_SIZE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">10240&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 指定网盘文件夹作为备份目标目录，不要指定根目录&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">ALIYUNPAN_PAN_DIR&lt;/span>&lt;span class="o">=/&lt;/span>&lt;span class="err">来自分享&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 备份模式：upload(备份本地文件到云盘), download(备份云盘文件到本地)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">ALIYUNPAN_SYNC_MODE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">download&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 备份策略: exclusive(排他备份文件，目标目录多余的文件会被删除),increment(增量备份文件，目标目录多余的文件不会被删除)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">#- ALIYUNPAN_SYNC_POLICY=increment&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 备份周期, 支持两种: infinity(永久循环备份),onetime(只运行一次备份)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">#- ALIYUNPAN_SYNC_CYCLE=infinity&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 网盘：backup(备份盘), resource(资源盘)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">ALIYUNPAN_SYNC_DRIVE&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">resource&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 是否显示文件备份过程日志，true-显示，false-不显示&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">ALIYUNPAN_SYNC_LOG&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="bp">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 本地文件修改检测延迟间隔，单位秒。如果本地文件会被频繁修改，例如录制视频文件，配置好该时间可以避免上传未录制好的文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">ALIYUNPAN_LOCAL_DELAY_TIME&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">60&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;3&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">sync&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">tickstep/aliyunpan-sync:v0.3.2&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">container_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">aliyunpan-sync&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">restart&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">unless-stopped&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># （必须）映射的本地目录&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">/data/webdav/data:/home/app/data:rw&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># （可选）可以指定JS插件sync_handler.js用于过滤文件，详见插件说明&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c">#- ./config/sync_handler.js:/home/app/config/plugin/js/sync_handler.js&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./js:/home/app/config/plugin/js/&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># （推荐）挂载sync_drive同步数据库到本地，这样即使容器销毁，同步数据库还可以用于以后使用&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./sync_drive:/home/app/config/sync_drive&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># （必须）映射token凭据文件&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">./config/aliyunpan_config.json:/home/app/config/aliyunpan_config.json&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">extra_hosts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">host.docker.internal:host-gateway&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">environment&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 时区，东8区&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">TZ=Asia/Shanghai&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 下载文件并发数&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ALIYUNPAN_DOWNLOAD_PARALLEL=2&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 上传文件并发数&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ALIYUNPAN_UPLOAD_PARALLEL=2&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 下载数据块大小，单位为KB，默认为10240KB，建议范围1024KB~10240KB&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ALIYUNPAN_DOWNLOAD_BLOCK_SIZE=1024&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 上传数据块大小，单位为KB，默认为10240KB，建议范围1024KB~10240KB&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ALIYUNPAN_UPLOAD_BLOCK_SIZE=10240&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 指定网盘文件夹作为备份目标目录，不要指定根目录&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ALIYUNPAN_PAN_DIR=/来自分享&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 备份模式：upload(备份本地文件到云盘), download(备份云盘文件到本地)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ALIYUNPAN_SYNC_MODE=download&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 备份策略: exclusive(排他备份文件，目标目录多余的文件会被删除),increment(增量备份文件，目标目录多余的文件不会被删除)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c">#- ALIYUNPAN_SYNC_POLICY=increment&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 备份周期, 支持两种: infinity(永久循环备份),onetime(只运行一次备份)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c">#- ALIYUNPAN_SYNC_CYCLE=infinity&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 网盘：backup(备份盘), resource(资源盘)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ALIYUNPAN_SYNC_DRIVE=resource&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 是否显示文件备份过程日志，true-显示，false-不显示&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ALIYUNPAN_SYNC_LOG=true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 本地文件修改检测延迟间隔，单位秒。如果本地文件会被频繁修改，例如录制视频文件，配置好该时间可以避免上传未录制好的文件&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ALIYUNPAN_LOCAL_DELAY_TIME=60&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>重点说一下上边的四个配置：&lt;/p>
 &lt;p>第一个是挂载配置下的&lt;code>映射的本地目录&lt;/code>，这个是把阿里云盘的数据下载下来的目录，需要把他挂载在一个比较大的存储路径。&lt;/p>
 &lt;p>第二个是备份模式：&lt;code>ALIYUNPAN_SYNC_MOD&lt;/code>，我这里是把云盘文件下载到本地，所以模式是&lt;code>download&lt;/code>。&lt;/p>
 &lt;p>第三个是网盘：&lt;code>ALIYUNPAN_SYNC_DRIVE&lt;/code>，阿里云盘分为备份盘和资源盘，我这里大部分转存的文件都是放在资源盘，所以这里配置&lt;code>resource&lt;/code>。&lt;/p>
 &lt;p>第四个是备份目标目录：&lt;code>ALIYUNPAN_PAN_DIR&lt;/code>，这个配置就是当前容器需要下载的目录，上边指定了需要下载资源盘的文件，但是肯定不能整个资源盘都下载，只需要指定特定的目录下载就行了，比如我转存的文件都是放在&lt;code>来自分享&lt;/code>目录下，我这里就配置来自分享。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/07/9BB509B435FAFEFE2A9CE751D2D1E313.jpg"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=STRHaU84cVVtSm1LSEZrWHVLdDhqcStzK1ZoYjdmc3lJRXBsekxKcjNjYmpxajdFVFVhcWZrejg4TUwrQTJRdFo0OGZDcmc9"
 loading="lazy"
 alt="aliyunpan share"
 >&lt;/p>
@@ -216,16 +212,31 @@ alt="aliyunpan share"
 &lt;/div>&lt;p>此时虽然启动了容器，但是因为没有配置token，容器会一直重启，但是此时目录config目录下就会多出一个aliyun_config.json的文件，编辑文件找到&lt;code>accessToken&lt;/code>属性，把第一步生成好的token替换进去就可以了。保存文件后等待容器下一次重启或者手动重启容器就可以了。此时就可以了。&lt;/p>
 &lt;h2 id="验证">验证
 &lt;/h2>&lt;p>接下来就是找一个文件保存到云盘的指定要下载的目录，我是&lt;code>来自分享&lt;/code>，然后去看一下目录有没有进行下载。也可以通过查看容器的日志：&lt;/p>
-&lt;pre class="corepress-code-pre">root@docker:~/images/aliyunpancli# docker compose logs -tf --tail 10
-WARN[0000] /root/images/aliyunpancli/docker-compose.yaml: `version` is obsolete
-aliyunpan-sync | 2024-07-06T02:52:51.522742265Z 扫描到云盘文件：/来自分享/Cover the sky.S01E61.2023.2160p.WEB.DL.H265.DDP2.0-BestWEB.mkv
-aliyunpan-sync | 2024-07-06T02:52:56.282356345Z 完成全部文件的同步下载，等待下一次扫描
-aliyunpan-sync | 2024-07-06T02:53:51.550419129Z 开始进行文件扫描...
-aliyunpan-sync | 2024-07-06T02:53:51.756156867Z 扫描到云盘文件：/来自分享/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv
-aliyunpan-sync | 2024-07-06T02:53:51.756982180Z 扫描到云盘文件：/来自分享/Cover the sky.S01E61.2023.2160p.WEB.DL.H265.DDP2.0-BestWEB.mkv
-aliyunpan-sync | 2024-07-06T02:53:56.554962070Z 下载文件：/来自分享/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv
-下载到本地:/home/app/data/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv ↓ 773.00MB/779.46MB(99.17%) 9.64MB/s............下载完毕：/home/app/data/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv&lt;/pre>
-&lt;p>通过日志可以看出它在不停的扫描，检测到新文件就开始进行下载。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">root@docker:~/images/aliyunpancli# docker compose logs -tf --tail &lt;span class="m">10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">WARN&lt;span class="o">[&lt;/span>0000&lt;span class="o">]&lt;/span> /root/images/aliyunpancli/docker-compose.yaml: &lt;span class="sb">`&lt;/span>version&lt;span class="sb">`&lt;/span> is obsolete
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">aliyunpan-sync &lt;span class="p">|&lt;/span> 2024-07-06T02:52:51.522742265Z 扫描到云盘文件：/来自分享/Cover the sky.S01E61.2023.2160p.WEB.DL.H265.DDP2.0-BestWEB.mkv
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">aliyunpan-sync &lt;span class="p">|&lt;/span> 2024-07-06T02:52:56.282356345Z 完成全部文件的同步下载，等待下一次扫描
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">aliyunpan-sync &lt;span class="p">|&lt;/span> 2024-07-06T02:53:51.550419129Z 开始进行文件扫描...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">aliyunpan-sync &lt;span class="p">|&lt;/span> 2024-07-06T02:53:51.756156867Z 扫描到云盘文件：/来自分享/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">aliyunpan-sync &lt;span class="p">|&lt;/span> 2024-07-06T02:53:51.756982180Z 扫描到云盘文件：/来自分享/Cover the sky.S01E61.2023.2160p.WEB.DL.H265.DDP2.0-BestWEB.mkv
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">aliyunpan-sync &lt;span class="p">|&lt;/span> 2024-07-06T02:53:56.554962070Z 下载文件：/来自分享/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">下载到本地:/home/app/data/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv ↓ 773.00MB/779.46MB&lt;span class="o">(&lt;/span>99.17%&lt;span class="o">)&lt;/span> 9.64MB/s............下载完毕：/home/app/data/Jade Dynasty.S02E43.2022.2160p.WEB-DL.H265.DDP2.0-BestWEB.mkv
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>通过日志可以看出它在不停的扫描，检测到新文件就开始进行下载。&lt;/p>
 &lt;h2 id="js通知">JS通知
 &lt;/h2>&lt;p>在docker compose文件中，指定了js文件的目录，那么要怎么使用呢？官方也有一些具体的例子：&lt;a class="link" href="https://github.com/tickstep/aliyunpan/blob/main/docs/manual.md#JavaScript%E6%8F%92%E4%BB%B6" target="_blank" rel="noopener"
 >JavaScript插件&lt;/a>，我这里需要提供一个下载完成通知的功能，保存文件后什么时候下载完成是大家比较关心的，总不能总是查看日志。&lt;/p>
@@ -307,76 +318,76 @@ aliyunpan-sync | 2024-07-06T02:53:56.554962070Z 下载文件：/来自分享/Jad
 &lt;/span>&lt;span class="lnt">73
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="o">------------------------------------------------------------------------------------------&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="err">函数说明：同步备份&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">同步文件后的回调函数&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="err">参数说明&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">context&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">当前调用的上下文信息&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;appName&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;aliyunpan&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;version&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;v0.1.3&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;userId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;11001d48564f43b3bc5662874f04bb11&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;nickname&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;tickstep&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;fileDriveId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;19519111&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;albumDriveId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;29519122&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">appName&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">应用名称，当前固定为&lt;/span>&lt;span class="n">aliyunpan&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">version&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">版本号&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">userId&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">当前登录用户的&lt;/span>&lt;span class="n">ID&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">nickname&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">用户昵称&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">fileDriveId&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">用户文件网盘&lt;/span>&lt;span class="n">ID&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">albumDriveId&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">用户相册网盘&lt;/span>&lt;span class="n">ID&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">params&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">同步文件后的参数&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;action&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;upload&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;actionResult&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;driveId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;19519221&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;fileName&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;1.txt&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;filePath&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;D:/goprojects/dev/upload/1.txt&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;fileSha1&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;294C8F24C56042710813E95C55A0B018299BA9A7&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;fileSize&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;28077&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;fileType&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;file&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="s2">&amp;#34;fileUpdatedAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;2022-03-04 15:19:47&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">action&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">同步动作，&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">download&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">下载文件，&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">upload&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">上传文件，&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">delete_local&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">删除本地文件，&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">delete_pan&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">删除云盘文件，&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">create_local_folder&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">创建本地文件夹，&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">create_pan_folder&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">创建云盘文件夹&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">actionResult&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">同步结果，&lt;/span>&lt;span class="n">success&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">成功，&lt;/span>&lt;span class="n">fail&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">失败&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">driveId&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">网盘&lt;/span>&lt;span class="n">ID&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">fileName&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">文件名称&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">filePath&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">文件完整路径&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">fileSha1&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">文件&lt;/span>&lt;span class="n">SHA1&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">fileSize&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">文件大小，单位&lt;/span>&lt;span class="n">B&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">fileType&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">文件类型，&lt;/span>&lt;span class="n">file&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">文件，&lt;/span>&lt;span class="n">folder&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="err">文件夹&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="n">fileUpdatedAt&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="err">文件修改时间&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="err">返回值说明&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="err">（无）&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">//&lt;/span> &lt;span class="o">------------------------------------------------------------------------------------------&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">function&lt;/span> &lt;span class="n">syncFileFinishCallback&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">console&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">params&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">var&lt;/span> &lt;span class="n">header&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;User-Agent&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Content-Type&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;application/json&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Accept&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;application/json&amp;#34;&lt;/span>
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-javascript" data-lang="javascript">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// ------------------------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 函数说明：同步备份-同步文件后的回调函数
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 参数说明
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// context - 当前调用的上下文信息
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;appName&amp;#34;: &amp;#34;aliyunpan&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;version&amp;#34;: &amp;#34;v0.1.3&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;userId&amp;#34;: &amp;#34;11001d48564f43b3bc5662874f04bb11&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;nickname&amp;#34;: &amp;#34;tickstep&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;fileDriveId&amp;#34;: &amp;#34;19519111&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;albumDriveId&amp;#34;: &amp;#34;29519122&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// appName - 应用名称，当前固定为aliyunpan
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// version - 版本号
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// userId - 当前登录用户的ID
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// nickname - 用户昵称
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// fileDriveId - 用户文件网盘ID
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// albumDriveId - 用户相册网盘ID
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// params - 同步文件后的参数
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;action&amp;#34;: &amp;#34;upload&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;actionResult&amp;#34;: &amp;#34;success&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;driveId&amp;#34;: &amp;#34;19519221&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;fileName&amp;#34;: &amp;#34;1.txt&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;filePath&amp;#34;: &amp;#34;D:/goprojects/dev/upload/1.txt&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;fileSha1&amp;#34;: &amp;#34;294C8F24C56042710813E95C55A0B018299BA9A7&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;fileSize&amp;#34;: &amp;#34;28077&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;fileType&amp;#34;: &amp;#34;file&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// &amp;#34;fileUpdatedAt&amp;#34;: &amp;#34;2022-03-04 15:19:47&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// action - 同步动作，
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// download-下载文件，
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// upload-上传文件，
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// delete_local-删除本地文件，
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// delete_pan-删除云盘文件，
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// create_local_folder-创建本地文件夹，
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// create_pan_folder-创建云盘文件夹
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// actionResult - 同步结果，success-成功，fail-失败
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// driveId - 网盘ID
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// fileName - 文件名称
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// filePath - 文件完整路径
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// fileSha1 - 文件SHA1
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// fileSize - 文件大小，单位B
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// fileType - 文件类型，file-文件，folder-文件夹
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// fileUpdatedAt - 文件修改时间
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 返回值说明
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// （无）
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// ------------------------------------------------------------------------------------------
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="kd">function&lt;/span> &lt;span class="nx">syncFileFinishCallback&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">context&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">params&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">params&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">var&lt;/span> &lt;span class="nx">header&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;User-Agent&amp;#34;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Content-Type&amp;#34;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;application/json&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Accept&amp;#34;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;application/json&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">};&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">try&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">var&lt;/span> &lt;span class="n">text&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;文件名：&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">params&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;fileName&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34; 同步完成, 同步结果: &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">params&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;actionResult&amp;#34;&lt;/span>&lt;span class="p">];&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">params&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;actionResult&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">===&lt;/span> &lt;span class="s2">&amp;#34;fail&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">var&lt;/span> &lt;span class="n">reqData&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;chat_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;这里是自己的id&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;text&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">text&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">try&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">var&lt;/span> &lt;span class="nx">text&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;文件名：&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="nx">params&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;fileName&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34; 同步完成, 同步结果: &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="nx">params&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;actionResult&amp;#34;&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">params&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;actionResult&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">===&lt;/span> &lt;span class="s2">&amp;#34;fail&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">var&lt;/span> &lt;span class="nx">reqData&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;chat_id&amp;#34;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;这里是自己的id&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;text&amp;#34;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">text&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">};&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">var&lt;/span> &lt;span class="n">r&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">PluginUtil&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Http&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">post&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">header&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;https://api.telegram.org/{这里替换具体的电报机器人token}/sendMessage&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">JSON&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">stringify&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">reqData&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">var&lt;/span> &lt;span class="nx">r&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">PluginUtil&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Http&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">post&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">header&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;https://api.telegram.org/{这里替换具体的电报机器人token}/sendMessage&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">JSON&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">stringify&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">reqData&lt;/span>&lt;span class="p">));&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span> &lt;span class="n">catch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span> &lt;span class="o">!==&lt;/span> &lt;span class="s2">&amp;#34;Error&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">throw&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">e&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">e&lt;/span> &lt;span class="o">!==&lt;/span> &lt;span class="s2">&amp;#34;Error&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="nx">e&lt;/span>&lt;span class="p">;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
@@ -384,7 +395,7 @@ aliyunpan-sync | 2024-07-06T02:53:56.554962070Z 下载文件：/来自分享/Jad
 &lt;/div>
 &lt;/div>&lt;p>怎么创建电报机器人以及获取自己的id这里就不再说了，大家可以网上搜索一下，如果后续时间充裕，我也会详细教大家如何创建机器人和查看自己的id。&lt;/p>
 &lt;p>text就是通知的内容，来看一下最终的通知效果：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/07/05B5E84F322C5B0AB5CFF6A562CEADFC.jpg"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Nzd2MWN1T2xseG0rcFptY0V2UnVZYkJXRzN3b2EyMC9LeWszckhUZmY2TGZZWllQUFFST1hIbnNwa1BGWmVrWmVnM2dUTG89"
 loading="lazy"
 alt="aliyunpan sync notification"
 >&lt;/p></description></item></channel></rss>

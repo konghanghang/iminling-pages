@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Frpc on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/frpc/</link><description>Recent content in Frpc on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 09 Apr 2023 06:23:58 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/frpc/index.xml" rel="self" type="application/rss+xml"/><item><title>openwrt系统frps配置使用</title><link>https://konghanghang.github.io/iminling-pages/2023/openwrt-frps-configuration/</link><pubDate>Sun, 09 Apr 2023 06:23:58 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/openwrt-frps-configuration/</guid><description>&lt;p>宽带给了公网ip，所以想在自己家搭建一个frp的服务端，这样子就可以当做一台服务器，来进行内网穿透使用了。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Frpc on 记录点滴 - 分享</title><link>https://konghanghang.github.io/iminling-pages/tags/frpc/</link><description>Recent content in Frpc on 记录点滴 - 分享</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>iminling.com</copyright><lastBuildDate>Sun, 09 Apr 2023 06:23:58 +0000</lastBuildDate><atom:link href="https://konghanghang.github.io/iminling-pages/tags/frpc/index.xml" rel="self" type="application/rss+xml"/><item><title>openwrt系统frps配置使用</title><link>https://konghanghang.github.io/iminling-pages/2023/openwrt-frps-configuration/</link><pubDate>Sun, 09 Apr 2023 06:23:58 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2023/openwrt-frps-configuration/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=Z1BQTnU0azJ3OUdjSkc0Sm9FS0JsaWgwTmU3MTNabHFNUDBVV2YyalBiWlcyNEV2NGljaSt0cTFteWZjWDhEVTl5R0xreW89" alt="Featured image of post openwrt系统frps配置使用" />&lt;p>宽带给了公网ip，所以想在自己家搭建一个frp的服务端，这样子就可以当做一台服务器，来进行内网穿透使用了。&lt;/p>
 &lt;h2 id="frps配置">frps配置
 &lt;/h2>&lt;p>我家里是使用的r2s刷的openwrt系统，所以可以在r2s中进行frps的搭建，找到对应的菜单：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/1681048330252.jpg"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=RE00UnlGYTVZRnBydVd5bjdCeG5pWXBhRjZOZStzNTd2bEhRVU1GT1h5QXV3Q0RSY2ZESFlqbDk2YWNBUjhGcWVpMm5OS3M9"
 loading="lazy"
 >&lt;/p>
 &lt;p>端口绑定默认7000，直接使用就可以了，我们这里主要是使用http和https服务，所以填写对应的http和https绑定端口就可以了，可以和端口绑定设置成同一个端口。&lt;/p>
@@ -9,12 +9,12 @@ loading="lazy"
 &lt;/h2>&lt;p>在高级选项中我们可以设置一个子域名，这样子我们就可以使用改域名的子域名来进行访问不同的内网穿透服务。对应的子域名下也有一行提示：&lt;/p>
 &lt;blockquote>
 &lt;p>如果subdomain_host不为空，可以在frpc配置文件中设置类型为http(s)的subdomain；subdomain为test，路由将使用test.frps.com&lt;/p>&lt;/blockquote>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/489b5400b50f60b56447af44a18341ec.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=U1V5NUZ5WlYrTGt1dElzaVc2VkgreEFPbU9tNytXcE5JWkZ0ZWRpdGQyR0pPeXU3VElMTUxWVHhNYUQ4bkFINWJQS2pGUzA9"
 loading="lazy"
 >&lt;/p>
 &lt;h2 id="管理面板设置">管理面板设置
 &lt;/h2>&lt;p>我们可以在管理面板查看到当前已经连接的客户端，以及每个客户端的流量使用情况，所以还是有必要进行一下设置。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/a3b4a82854f5665e9121f057d71f80b9.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=MW1JSWw0SWk1ZlExSnEvM1lGOUFtaFpkVEJoQmFnTzc2MGN6a3RveU93Y2JWeGI0NURENVpocG5ZbjVNcXN6Y0VneVdPa009"
 loading="lazy"
 >&lt;/p>
 &lt;p>面板绑定端口7500，那么我们就可以使用openwrt的管理ip:7500来登录到frps的管理界面。&lt;/p>
@@ -22,7 +22,7 @@ loading="lazy"
 &lt;/h2>&lt;h3 id="管理界面端口配置">管理界面端口配置
 &lt;/h3>&lt;p>我们在家里的时候可以使用内网ip:7500来访问，但是不在家的时候就没办法了。不慌，因为我有公网ip，那么我就可以通过端口转发，使用的域名+特定端口来访问到内网的7500端口。通过网络防火墙进行端口转发配置。&lt;/p>
 &lt;p>配置管理界面的端口转发，通过&lt;code>域名:7500&lt;/code>访问到内网openwrt系统的7500端口。&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/81b1d5e9cd4cfd2ad84557fa31f8a401.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=Rkx4TUllS2M5S3Z2RTFJY3BteUxsRUdqVDMvYkUvZEhWbkxSWkoyalJOTmJMV2lYU3dIbGllRFRKZURncWc0MEdUSE1VNUU9"
 loading="lazy"
 >&lt;/p>
 &lt;h3 id="绑定端口配置">绑定端口配置
@@ -33,7 +33,7 @@ loading="lazy"
 &lt;p>到这里我们的frps服务端就搭建好了，接下来我们来配置客户端进行连接。&lt;/p>
 &lt;h2 id="客户端连接">客户端连接
 &lt;/h2>&lt;p>我们主要先在需要内网穿透的机器上安装frp的客户端，我这里是一个路由器刷的openwrt系统，所以安装frpc就可以了：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/9c8e8a6e6d4ea5bfcf8d82a288aba913.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=a1FrUFljeXlvVkh4YU9pRVRLRy9ST0I1Y09LNTRPWXJpNktpQk1PV2c0aHpaVUZoMW5pb0FteTlERDRRSW1EcTBtL29IR289"
 loading="lazy"
 >&lt;/p>
 &lt;p>服务器：其实就是我们frps服务端的ip，因为我使用的是宽带的动态ip，所以ip是会变的，我不能直接使用ip，但是我在家里的openwrt中配置了DDNS，那么我就可以使用ddns的域名来作为服务器，填入ddns中的域名。&lt;/p>
@@ -41,7 +41,7 @@ loading="lazy"
 &lt;p>令牌：和frps中的令牌一致。&lt;/p>
 &lt;p>http和https穿透服务端口：7000，和服务端一致。&lt;/p>
 &lt;p>经过上边的配置我们就可以和服务端连上了，但是我们还没办法通过公网来访问我们其他需要穿透的服务，我们还需要建一条规则。在下方frp setting页面的下方点击添加，新建一个服务：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/36e2c4682ea0816f2a20b91d2c9af36d.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=eDNyUlZOS2RsNkM4MVZOTXZpSVlVQ05NQmY0bUh4eGZGbEZpR2tKa2UyUmlFb0d3VUp2R25yUk5nUWY5c1Eza3JlOW1pV0U9"
 loading="lazy"
 >&lt;/p>
 &lt;p>开启状态：开启。&lt;/p>
@@ -52,7 +52,7 @@ loading="lazy"
 &lt;p>内网主机端口：我们访问的是管理界面，默认80端口。&lt;/p>
 &lt;p>服务备注名：自定义的一个名称。&lt;/p>
 &lt;p>其他的默认就可以了。然后点击保存并应用。完成后如下图：&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2023/04/ca5ce0494c7c0868dd10460616318694.png"
+&lt;p>&lt;img src="https://images.iminling.com/app/hide.php?key=YWdXSzlpSW1BNzd5NVpDc2Y2bllzd3daVjMzc3B4WHpzeDdQUWYwWHRZS3VDL1pFR3M0aFZzNGRIaldxUHVmSmJPOGNVYjg9"
 loading="lazy"
 >&lt;/p>
 &lt;p>如上图我添加的子域名是gzax6,那么我还需要去添加一条解析才能使用gzax6.frps.com:7000来访问我的ax6这个路由器的管理界面。&lt;/p>
