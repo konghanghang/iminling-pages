@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0       # 必须设置为 0 才能拉远程分支
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
