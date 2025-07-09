@@ -4,6 +4,9 @@ theme: hugo-theme-stack
 title: 记录点滴 - 分享
 copyright: iminling.com
 
+# Google Analytics configuration
+googleAnalytics: G-396775573
+
 # Set hasCJKLanguage to true since we're using Chinese
 hasCJKLanguage: true
 
