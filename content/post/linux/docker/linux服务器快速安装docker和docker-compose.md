@@ -57,7 +57,7 @@ ubuntu@VM-20-3-ubuntu:~$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg
 ubuntu@VM-20-3-ubuntu:~$ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 
 设置安装源。
@@ -160,8 +160,6 @@ root@s9707 ~ # curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/a
 root@s9707:~# apt-get install gnupg gnupg2
 ```
 
-&nbsp;
-
 ### 设置仓库
 
 通过以下命令添加仓库
@@ -170,7 +168,7 @@ root@s9707:~# apt-get install gnupg gnupg2
 root@s9707:~# echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 
 
