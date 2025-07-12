@@ -42,7 +42,7 @@
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>ubuntu@VM-20-3-ubuntu:~$ <span class=nb>echo</span> <span class=se>\
 </span></span></span><span class=line><span class=cl><span class=se></span>  <span class=s2>&#34;deb [arch=</span><span class=k>$(</span>dpkg --print-architecture<span class=k>)</span><span class=s2> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
 </span></span></span><span class=line><span class=cl><span class=s2>  </span><span class=k>$(</span>. /etc/os-release <span class=o>&amp;&amp;</span> <span class=nb>echo</span> <span class=s2>&#34;</span><span class=nv>$VERSION_CODENAME</span><span class=s2>&#34;</span><span class=k>)</span><span class=s2> stable&#34;</span> <span class=p>|</span> <span class=se>\
-</span></span></span><span class=line><span class=cl><span class=se></span>  sudo tee /etc/apt/sources.list.d/docker.list <span class=p>&amp;</span>gt<span class=p>;</span> /dev/null
+</span></span></span><span class=line><span class=cl><span class=se></span>  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
 </span></span></code></pre></td></tr></table></div></div><p>设置安装源。</p><h3 id=安装>安装</h3><p>先更新刚才安装的源，然后就可以执行安装了：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
@@ -91,14 +91,14 @@
 </span></span><span class=line><span class=cl>root@s9707 ~ <span class=c1># curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc</span>
 </span></span></code></pre></td></tr></table></div></div><p>如果在添加gpg的时候报错：<code>gpg: command not found</code></p><p>则可以先安装gpg：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>root@s9707:~# apt-get install gnupg gnupg2
-</span></span></code></pre></td></tr></table></div></div><p> </p><h3 id=设置仓库>设置仓库</h3><p>通过以下命令添加仓库</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><h3 id=设置仓库>设置仓库</h3><p>通过以下命令添加仓库</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>root@s9707:~# <span class=nb>echo</span> <span class=se>\
 </span></span></span><span class=line><span class=cl><span class=se></span>  <span class=s2>&#34;deb [arch=</span><span class=k>$(</span>dpkg --print-architecture<span class=k>)</span><span class=s2> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
 </span></span></span><span class=line><span class=cl><span class=s2>  </span><span class=k>$(</span>. /etc/os-release <span class=o>&amp;&amp;</span> <span class=nb>echo</span> <span class=s2>&#34;</span><span class=nv>$VERSION_CODENAME</span><span class=s2>&#34;</span><span class=k>)</span><span class=s2> stable&#34;</span> <span class=p>|</span> <span class=se>\
-</span></span></span><span class=line><span class=cl><span class=se></span>  tee /etc/apt/sources.list.d/docker.list <span class=p>&amp;</span>gt<span class=p>;</span> /dev/null
+</span></span></span><span class=line><span class=cl><span class=se></span>  tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
 </span></span></code></pre></td></tr></table></div></div><p>然后再次更新apt包索引：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>root@s9707 ~ <span class=c1># apt-get update</span>
 </span></span></code></pre></td></tr></table></div></div><h3 id=安装docker>安装docker</h3><p>接下来就是安装：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
