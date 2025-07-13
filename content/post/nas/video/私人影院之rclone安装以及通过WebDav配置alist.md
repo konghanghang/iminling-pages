@@ -16,8 +16,6 @@ tags:
 ---
 上一篇文章介绍了对[alist的安装]({{< ref "/post/nas/video/私人影院之搭建自己的alist服务端并添加常见网盘.md" >}})，本篇文章则来介绍一下rclone把alist里挂载的网盘再套娃挂载到本地磁盘，为后续emby直接读取本地的挂载文件做准备。那么接下来就开始折腾rclone.
 
-![rclone ](https://www.iminling.com/wp-content/uploads/2024/10/FE27085E1D15A96BA8B9CD0E182FA3C9.png)
-
 ## 配置文件
 
 本文使用docker compose来进行安装，可以[docker-hub](https://hub.docker.com/r/rclone/rclone)找到rclone的官方镜像地址，安装可以参考rclone的官方[安装教程](https://rclone.org/install/#docker)。
