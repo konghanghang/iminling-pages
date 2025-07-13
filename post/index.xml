@@ -2387,10 +2387,6 @@ alt="emby 302 success"
 &lt;/div>
 &lt;/div>&lt;p>唯一的区别就是mklable命令，原来是gpt（GPT分区），现在改成msdos（MBR分区），其他命令都一样。分区完成后进行格式化，挂载等一系列操作。&lt;/p>
 &lt;p>以上就是针对小于2T以及大于2T的盘的挂载教程，希望可以帮到大家。&lt;/p></description></item><item><title>私人影院之rclone安装以及通过WebDav配置alist</title><link>https://konghanghang.github.io/iminling-pages/2024/install-rclone-and-configuration/</link><pubDate>Sun, 13 Oct 2024 02:04:10 +0000</pubDate><guid>https://konghanghang.github.io/iminling-pages/2024/install-rclone-and-configuration/</guid><description>&lt;img src="https://images.iminling.com/app/hide.php?key=bEt3WUtUZk13dFI3Z0FyckVUZGdnQS94cHhoaHlzMVdsNGp1c0tHVG0vVjhLRHZYbzE2Unl1VlVPdWpFUjdqMllSZE5jVGc9" alt="Featured image of post 私人影院之rclone安装以及通过WebDav配置alist" />&lt;p>上一篇文章介绍了对&lt;a class="link" href="https://konghanghang.github.io/iminling-pages/2024/build-alist-server/" >alist的安装&lt;/a>，本篇文章则来介绍一下rclone把alist里挂载的网盘再套娃挂载到本地磁盘，为后续emby直接读取本地的挂载文件做准备。那么接下来就开始折腾rclone.&lt;/p>
-&lt;p>&lt;img src="https://www.iminling.com/wp-content/uploads/2024/10/FE27085E1D15A96BA8B9CD0E182FA3C9.png"
-loading="lazy"
-alt="rclone "
->&lt;/p>
 &lt;h2 id="配置文件">配置文件
 &lt;/h2>&lt;p>本文使用docker compose来进行安装，可以&lt;a class="link" href="https://hub.docker.com/r/rclone/rclone" target="_blank" rel="noopener"
 >docker-hub&lt;/a>找到rclone的官方镜像地址，安装可以参考rclone的官方&lt;a class="link" href="https://rclone.org/install/#docker" target="_blank" rel="noopener"
